@@ -1,0 +1,128 @@
+'use client';
+
+import { useState } from 'react';
+import FadeIn from '../motion/FadeIn';
+import CaseStudyDrawer from '../ui/CaseStudyDrawer';
+
+// Mock data assets (placeholders)
+const PLACEHOLDER_IMG = "/placeholder.svg";
+
+const cases = [
+    {
+        id: 'realfi',
+        title: 'RealFi',
+        subtitle: 'Financial inclusion platform for emerging markets',
+        role: 'Product Designer',
+        period: '2023-2024 (Input Output)',
+        tags: ['Web3', 'Fintech', 'Product Design'],
+        description: {
+            challenge: 'Design a financial platform enabling 3 billion underbanked people to access credit, insurance, and identity services through blockchain infrastructure.',
+            work: [
+                'User research with target markets in emerging economies',
+                'Complex lending workflows simplified for low-connectivity environments',
+                'Design system built for scale across multiple financial products',
+                'Daily collaboration with product, engineering, and blockchain teams'
+            ],
+            outcome: 'Platform launched 2024. Active lending to SMEs in East Africa. Part of Cardano\'s $80bn blockchain ecosystem.'
+        },
+        links: {
+            live: 'https://realfi.co'
+        },
+        images: {
+            thumbnail: "/images/realfi/credit-analysis.webp", // Local image
+            hero: "/images/realfi/financial-analysis.webp", // Local image
+            gallery: [
+                "/images/realfi/impact-analysis.webp",
+                "/images/realfi/credit-analysis.webp"
+            ]
+        }
+    },
+
+    {
+        id: 'stellar',
+        title: 'Stellar Observatory',
+        subtitle: 'Interactive Generative Art Console',
+        role: 'Design Engineer',
+        period: '2025',
+        tags: ['Generative Art', 'React', 'Canvas', 'UI Design'],
+        description: {
+            challenge: 'Design a futuristic, immersive interface for manipulating generative cosmic visualizations in real-time, blending diegetic UI elements with performant web graphics.',
+            work: [
+                'Built a high-performance rendering engine using Canvas API & React',
+                'Designed a comprehensive sci-fi design system with retro-futuristic aesthetics',
+                'Implemented complex state management for real-time parameter tuning',
+                'Created a "vault" system for users to save and catalog unique generative outputs'
+            ],
+            outcome: 'A highly engaging interactive playground that demonstrates the intersection of creative coding, complex state management, and thematic UI design.'
+        },
+        links: {
+            live: 'https://playground-jet-omega.vercel.app/'
+        },
+        images: {
+            thumbnail: "/images/stellar-observatory.png",
+            hero: "/images/stellar-observatory.png",
+            gallery: ["/images/stellar-observatory.png"] // Using the same image for now as we only have one
+        }
+    },
+    {
+        id: 'sidechains',
+        title: 'Sidechain Interoperability',
+        subtitle: 'Developer infrastructure for blockchain crosschain protocols',
+        role: 'Product Designer',
+        period: '2023-2024 (Input Output)',
+        tags: ['Blockchain', 'Dev Tools', 'Infrastructure'],
+        description: {
+            challenge: 'Design developer tooling for Cardano\'s sidechain ecosystem — enabling seamless interoperability between Cardano, Ethereum, Bitcoin, and other blockchains.',
+            work: [
+                'Technical abstraction for developer audiences',
+                'Dashboard design for crosschain transactions',
+                'Documentation and onboarding flows for blockchain developers',
+                'Simplified complex concepts without losing technical depth'
+            ],
+            outcome: 'Enabled Cardano\'s crosschain infrastructure. Live technology supporting ecosystem growth. Contributed to Wanchain integration launch.'
+        },
+        links: {},
+        images: {
+            thumbnail: "/images/sidechains/hero.png",
+            hero: "/images/sidechains/hero.png",
+            gallery: ["/images/sidechains/diagram.png"]
+        }
+    }
+];
+
+export default function CaseStudies() {
+    const [activeDrawer, setActiveDrawer] = useState<string | null>(null);
+
+    const handleToggle = (id: string) => {
+        setActiveDrawer(prev => prev === id ? null : id);
+    };
+
+    return (
+        <section id="work" className="bg-bg-primary py-24 md:py-32 scroll-mt-20">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <FadeIn>
+                    <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-8">
+                        <div>
+                            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">Selected Projects</h2>
+                            <p className="text-text-muted text-lg max-w-xl">
+                                Deep dives into complex problem solving for fintech, blockchain, and data systems.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="space-y-4">
+                        {cases.map((project, idx) => (
+                            <CaseStudyDrawer
+                                key={project.id}
+                                project={project}
+                                isOpen={activeDrawer === project.id}
+                                onToggle={() => handleToggle(project.id)}
+                                priority={idx === 0}
+                            />
+                        ))}
+                    </div>
+                </FadeIn>
+            </div>
+        </section>
+    );
+}

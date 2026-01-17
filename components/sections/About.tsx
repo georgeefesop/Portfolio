@@ -1,0 +1,94 @@
+'use client';
+
+import FadeIn from '../motion/FadeIn';
+import Image from 'next/image';
+import ImageWithFallback from '@/components/ui/ImageWithFallback';
+import { Linkedin, ExternalLink, Mail, Youtube } from 'lucide-react';
+
+export default function About() {
+    return (
+        <section id="about" className="bg-bg-primary py-24 scroll-mt-20">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <FadeIn>
+                    <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-start">
+
+                        {/* Image Column */}
+                        <div className="md:col-span-5 lg:col-span-4">
+                            <div className="relative aspect-square rounded-2xl overflow-hidden bg-bg-tertiary border border-border-medium">
+                                {/* Replace with actual profile image */}
+                                <ImageWithFallback
+                                    src="/images/FB_IMG_1654720751146.jpg"
+                                    alt="George Efesop"
+                                    fill
+                                    className="object-cover"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Content Column */}
+                        <div className="md:col-span-7 lg:col-span-8 space-y-8">
+                            <div>
+                                <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-6">About</h2>
+                                <div className="prose prose-invert prose-lg text-text-secondary">
+                                    <p>
+                                        I&apos;m George, a product designer currently based in Cyprus.
+                                    </p>
+                                    <p>
+                                        I spent two years at <span className="text-white font-medium">Input Output</span> as a Product Designer, working on Cardano blockchain infrastructure — specifically RealFi (a financial platform for emerging markets) and sidechain interoperability.
+                                    </p>
+                                    <p>
+                                        I specialize in taking complex technical products and making them intuitive. This usually means working with funded startups building in Web3, fintech, or SaaS.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div className="bg-bg-secondary p-8 rounded-xl border border-border-subtle">
+                                <h3 className="text-xl font-bold text-text-primary mb-4">What I bring:</h3>
+                                <ul className="space-y-3">
+                                    {[
+                                        'Experience designing at scale (Cardano\'s $80bn ecosystem)',
+                                        'AI-native workflows (Cursor, generative tools, modern automation)',
+                                        'Full-stack capability (design + Next.js/React development)',
+                                        'Teaching mindset (16k designers follow my content on TikTok)'
+                                    ].map((item, i) => (
+                                        <li key={i} className="flex items-start gap-3 text-text-secondary">
+                                            <span className="text-accent-primary mt-1">→</span>
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                            <div className="space-y-4">
+                                <p className="text-text-secondary">
+                                    Currently taking on 1-2 projects per quarter to ensure quality and focus. If you&apos;re building something ambitious, let&apos;s talk.
+                                </p>
+
+                                <div className="flex flex-wrap gap-6 pt-4">
+                                    {[
+                                        { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/in/giorgoe' },
+                                        { name: 'TikTok', icon: ExternalLink, href: 'https://www.tiktok.com/@georgeefesop' },
+                                        { name: 'YouTube', icon: Youtube, href: 'https://www.youtube.com/@georgeefesop' },
+                                        { name: 'Email', icon: Mail, href: 'mailto:hello@efesop.com' },
+                                    ].map((social) => (
+                                        <a
+                                            key={social.name}
+                                            href={social.href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="flex items-center gap-2 text-text-primary hover:text-accent-primary transition-colors font-medium group"
+                                        >
+                                            <social.icon size={20} className="group-hover:-translate-y-1 transition-transform" />
+                                            {social.name}
+                                        </a>
+                                    ))}
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </FadeIn>
+            </div>
+        </section>
+    );
+}
