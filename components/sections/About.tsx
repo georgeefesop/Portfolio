@@ -3,7 +3,7 @@
 import FadeIn from '../motion/FadeIn';
 import Image from 'next/image';
 import ImageWithFallback from '@/components/ui/ImageWithFallback';
-import { Linkedin, ExternalLink, Mail, Youtube } from 'lucide-react';
+import { Linkedin, ExternalLink, Mail, Youtube, Phone } from 'lucide-react';
 
 export default function About() {
     return (
@@ -69,7 +69,8 @@ export default function About() {
                                         { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/in/giorgoe' },
                                         { name: 'TikTok', icon: ExternalLink, href: 'https://www.tiktok.com/@georgeefesop' },
                                         { name: 'YouTube', icon: Youtube, href: 'https://www.youtube.com/@georgeefesop' },
-                                        { name: 'Email', icon: Mail, href: 'mailto:hello@efesop.com' },
+                                        { name: 'Email', icon: Mail, href: 'mailto:george.efesop@gmail.com' },
+                                        { name: 'Phone', icon: Phone, href: 'tel:+35797907137' },
                                     ].map((social) => (
                                         <a
                                             key={social.name}

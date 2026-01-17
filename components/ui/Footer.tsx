@@ -1,14 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { Linkedin, Mail, Youtube, ExternalLink } from 'lucide-react';
+import { Linkedin, Mail, Youtube, ExternalLink, Phone } from 'lucide-react';
 
 const socialLinks = [
     { name: 'LinkedIn', href: 'https://linkedin.com/in/giorgoe', icon: Linkedin },
     { name: 'TikTok', href: 'https://www.tiktok.com/@georgeefesop', icon: ExternalLink }, // Lucide doesn't have TikTok, utilizing generic or custom if needed
     { name: 'YouTube', href: 'https://www.youtube.com/@georgeefesop', icon: Youtube },
     { name: 'Behance', href: 'https://www.behance.net/giorgo', icon: ExternalLink },
-    { name: 'Email', href: 'mailto:hello@efesop.com', icon: Mail },
+    { name: 'Email', href: 'mailto:george.efesop@gmail.com', icon: Mail },
+    { name: 'Phone', href: 'tel:+35797907137', icon: Phone },
 ];
 
 export default function Footer() {

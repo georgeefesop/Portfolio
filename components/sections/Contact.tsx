@@ -22,11 +22,26 @@ export default function Contact() {
 
     const onSubmit = async (data: ContactFormData) => {
         setIsSubmitting(true);
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        console.log(data);
-        setIsSubmitting(false);
-        setIsSuccess(true);
+        try {
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to send message');
+            }
+
+            setIsSuccess(true);
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            alert('Failed to send message. Please try emailing directly.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -163,7 +178,7 @@ export default function Contact() {
                             </button>
 
                             <p className="text-center text-text-muted text-sm pt-4">
-                                Or email directly: <a href="mailto:hello@efesop.com" className="text-text-primary hover:text-white underline decoration-accent-primary/50 hover:decoration-accent-primary transition-all">hello@efesop.com</a>
+                                Or contact directly: <a href="mailto:george.efesop@gmail.com" className="text-text-primary hover:text-white underline decoration-accent-primary/50 hover:decoration-accent-primary transition-all">george.efesop@gmail.com</a> | <a href="tel:+35797907137" className="text-text-primary hover:text-white underline decoration-accent-primary/50 hover:decoration-accent-primary transition-all">+357 97 907 137</a>
                             </p>
                         </form>
                     )}
