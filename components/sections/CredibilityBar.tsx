@@ -23,8 +23,8 @@ export default function CredibilityBar() {
                         <div className="hidden md:block w-px h-12 bg-border-medium/50"></div>
 
                         <div className="flex flex-col items-center md:items-end text-center md:text-right">
-                            <span className="text-4xl font-bold text-white mb-1">50+ Projects</span>
-                            <span className="text-text-muted text-sm uppercase tracking-widest font-mono">Shipped to Market</span>
+                            <span className="text-4xl font-bold text-white mb-1">16K+ Followers</span>
+                            <span className="text-text-muted text-sm uppercase tracking-widest font-mono">across socials</span>
                         </div>
                     </div>
                 </FadeIn>
