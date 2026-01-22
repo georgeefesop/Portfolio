@@ -131,6 +131,8 @@ const panelContent = {
 
 export default function ProductCanvas({ step, setStep }: { step: StepId, setStep: React.Dispatch<React.SetStateAction<StepId>> }) {
     const [isMobile, setIsMobile] = useState(false);
+    const [isSmallMobile, setIsSmallMobile] = useState(false);
+    const [isNarrowDesktop, setIsNarrowDesktop] = useState(false);
     const [mounted, setMounted] = useState(false);
     const [introAnim, setIntroAnim] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
@@ -157,18 +159,23 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
     const cardRefF = useRef<HTMLDivElement>(null);
     const [cardHeights, setCardHeights] = useState({ A: 180, C: 180, D: 180, F: 280 });
 
-    // Initial Gate (Mobile check only)
+    // Initial Gate (Mobile and viewport width checks)
     useEffect(() => {
         setMounted(true);
-        const checkMobile = () => {
-            const mobile = window.innerWidth < 768;
+        const checkViewport = () => {
+            const width = window.innerWidth;
+            const mobile = width < 1024;
+            const smallMobile = width < 770;
+            const narrowDesktop = width >= 1024 && width < 1300;
             setIsMobile(mobile);
+            setIsSmallMobile(smallMobile);
+            setIsNarrowDesktop(narrowDesktop);
             // Default dimensions based on device
             setPosDimensions(mobile ? { width: 340, height: 620 } : { width: 900, height: 560 });
         };
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
+        checkViewport();
+        window.addEventListener('resize', checkViewport);
+        return () => window.removeEventListener('resize', checkViewport);
     }, []);
 
     // Reset POS dimensions/offset when switching steps
@@ -462,13 +469,14 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                 };
             }
 
-            // Hero Ticket (Persist from Step 0 - Hidden on mobile)
+            // Hero Ticket (Persist from Step 0 - Hidden below 1300px width)
             else if (id === 'sticky-F') {
-                if (isMobile) {
+                if (isMobile || isNarrowDesktop) {
+                    // Hide on mobile and narrow desktop (< 1300px)
                     layout = { x: 0, y: 0, opacity: 0, scale: 0, zIndex: 0 };
                 } else {
-                    // Desktop: Park on LEFT side
-                    layout = { x: -520, y: 0, opacity: 0.9, scale: 0.85, zIndex: 15, width: 260 };
+                    // Wide Desktop (>= 1300px): Park on LEFT side
+                    layout = { x: -520, y: 0, opacity: 0.9, scale: 0.85, zIndex: 25, width: 260 };
                 }
             }
 
@@ -493,7 +501,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
 
             // Mobile S3
             if (isMobile) {
-                if (id === 'dashboard-frame') layout = { x: 0, y: 35, opacity: 1, scale: 1, zIndex: 5 };
+                if (id === 'dashboard-frame') layout = { x: 0, y: 20, opacity: 1, scale: 1, zIndex: 5 };
                 else if (id === 'panel-order-center') layout = { x: 0, y: 0, opacity: 0, scale: 0, zIndex: 0 };
                 else if (id === 'panel-checkout') layout = { x: 0, y: 0, opacity: 0, scale: 0, zIndex: 0 };
             }
@@ -520,10 +528,10 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
             />
 
 
-            {/* --- Bottom Controls --- */}
+            {/* --- Navigation Controls --- */}
             <div className={cn(
                 "absolute left-0 w-full flex flex-col items-center gap-3 z-50 pointer-events-none transition-all duration-500",
-                isMobile ? "bottom-8 pb-safe" : "bottom-[76px]"
+                isSmallMobile ? "bottom-8 pb-safe" : "top-36"
             )}>
                 {/* Tap to Continue */}
                 <div className={cn(
@@ -880,11 +888,13 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                 }}
                                 className={cn(
                                     "bg-zinc-900/95 border border-zinc-700 rounded-xl shadow-2xl overflow-hidden flex flex-col relative",
-                                    !isResizing && "transition-all duration-500"
+                                    !isResizing && "transition-all duration-500",
+                                    step !== 2 && "pointer-events-none"
                                 )}
                                 style={{
                                     width: step === 2 ? posDimensions.width : (isMobile ? 340 : 900),
                                     height: step === 2 ? posDimensions.height : (isMobile ? 380 : 560),
+                                    maxHeight: isMobile ? 'calc(100dvh - 320px)' : 'none',
                                 }}
                                 onClick={(e) => e.stopPropagation()}
                             >
