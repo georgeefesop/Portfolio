@@ -65,13 +65,14 @@ function InteractiveCanvas({ steps }: { steps: typeof processSteps }) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [size, setSize] = useState({ w: 0, h: 0 });
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const isTablet = typeof window !== 'undefined' && window.innerWidth >= 768 && window.innerWidth < 1024;
 
     useEffect(() => {
         if (!containerRef.current) return;
         const updateSize = () => {
             const { offsetWidth } = containerRef.current!;
             // Compact height for single row
-            const h = isMobile ? steps.length * 240 + 100 : 400;
+            const h = isMobile ? steps.length * 240 + 100 : (isTablet ? 750 : 400);
             setSize({ w: offsetWidth, h });
         };
         updateSize();
@@ -83,12 +84,12 @@ function InteractiveCanvas({ steps }: { steps: typeof processSteps }) {
 
     return (
         <div ref={containerRef} className="relative w-full" style={{ height: size.h }}>
-            <CanvasNodes steps={steps} size={size} containerRef={containerRef} isMobile={isMobile} />
+            <CanvasNodes steps={steps} size={size} containerRef={containerRef} isMobile={isMobile} isTablet={isTablet} />
         </div>
     );
 }
 
-function CanvasNodes({ steps, size, containerRef, isMobile }: { steps: any[], size: any, containerRef: any, isMobile: boolean }) {
+function CanvasNodes({ steps, size, containerRef, isMobile, isTablet }: { steps: any[], size: any, containerRef: any, isMobile: boolean, isTablet: boolean }) {
     // FIX: Don't call useMotionValue in loop. Instantiate directly in useRef to maintain stable number of hooks.
     const motionValues = useRef(steps.map(() => ({
         x: new MotionValue(0),
@@ -97,11 +98,11 @@ function CanvasNodes({ steps, size, containerRef, isMobile }: { steps: any[], si
 
     React.useLayoutEffect(() => {
         steps.forEach((_, i) => {
-            const pos = getInitialPosition(i, size.w, size.h, isMobile);
+            const pos = getInitialPosition(i, size.w, size.h, isMobile, isTablet);
             motionValues[i].x.set(pos.x);
             motionValues[i].y.set(pos.y);
         });
-    }, [size, isMobile, steps, motionValues]); // motionValues stable ref
+    }, [size, isMobile, isTablet, steps, motionValues]); // motionValues stable ref
 
     // Jiggle fix for line attachment
     useEffect(() => {
@@ -118,7 +119,7 @@ function CanvasNodes({ steps, size, containerRef, isMobile }: { steps: any[], si
         <>
             <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible" style={{ zIndex: 0 }}>
                 {steps.map((_, i) => {
-                    if (i === steps.length - 1) return null;
+                    if (i === steps.length - 1 || isMobile || isTablet) return null;
                     return (
                         <SmartConnection
                             key={`line-${i}`}
@@ -242,10 +243,31 @@ function ProcessNode({ step, index, x, y, containerRef }: any) {
     )
 }
 
-function getInitialPosition(index: number, w: number, h: number, isMobile: boolean) {
+function getInitialPosition(index: number, w: number, h: number, isMobile: boolean, isTablet: boolean) {
     if (isMobile) {
         // Simple Vertical Stack
         return { x: (w - 260) / 2, y: index * 240 + 20 };
+    }
+
+    if (isTablet) {
+        // Tablet: 2x2 Grid
+        const cols = 2;
+        const cardW = 260;
+        const gapX = 40;
+        const gapY = 280; // Vertical spacing including card height
+
+        // Center the 2x2 block
+        const totalW = cols * cardW + (cols - 1) * gapX;
+        const startX = (w - totalW) / 2;
+        const startY = 50;
+
+        const col = index % 2;
+        const row = Math.floor(index / 2);
+
+        return {
+            x: startX + col * (cardW + gapX),
+            y: startY + row * gapY
+        };
     }
 
     // Desktop: Single Row 

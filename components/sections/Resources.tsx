@@ -25,7 +25,7 @@ export default function Resources() {
         <section id="resources" className="bg-bg-primary py-24 scroll-mt-20">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <FadeIn>
-                    <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-4">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-4">
                         <div>
                             <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-2">Tutorials & Resources</h2>
                             <p className="text-text-secondary">Curated insights and tutorials.</p>

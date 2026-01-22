@@ -6,18 +6,6 @@ import ImageWithFallback from '@/components/ui/ImageWithFallback';
 
 const projects = [
     {
-        title: 'Bank of Cyprus Dashboard',
-        category: 'Fintech • UX/UI',
-        image: '/images/gallery/boc.png',
-        link: 'https://www.behance.net/gallery/127314683/Bank-of-Cyprus-Dashboard-Re-Design-UX-UI'
-    },
-    {
-        title: 'Labline Health Dashboard',
-        category: 'SaaS • HealthTech',
-        image: '/images/gallery/labline.png',
-        link: 'https://www.behance.net/gallery/228295245/Labline-Health-Tracking-Biomarker-Dashboard'
-    },
-    {
         title: 'Shackle App',
         category: 'Mobile • Hospitality',
         image: '/images/gallery/shackle.jpg',
@@ -36,10 +24,10 @@ const projects = [
         link: 'https://www.behance.net/gallery/125867375/Travel-App-Concept'
     },
     {
-        title: 'Crypto Wallet',
-        category: 'Web3 • Finance',
-        image: '/placeholder.svg',
-        link: 'https://www.behance.net/gallery/146051771/Crypto-Wallet-App'
+        title: 'Labline Health Dashboard',
+        category: 'SaaS • HealthTech',
+        image: '/images/gallery/labline.png',
+        link: 'https://www.behance.net/gallery/228295245/Labline-Health-Tracking-Biomarker-Dashboard'
     }
 ];
 
@@ -48,18 +36,18 @@ export default function Gallery() {
         <section className="bg-bg-primary py-24">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <FadeIn>
-                    <div className="flex flex-col md:flex-row justify-between items-end mb-12">
-                        <div>
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12">
+                        <div className="text-left">
                             <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-2">More Projects</h2>
                             <p className="text-text-secondary">Explorations, concepts, and smaller builds.</p>
                         </div>
-                        <Link href="https://behance.net/georgeefesop" target="_blank" className="text-accent-primary hover:text-white transition-colors mt-4 md:mt-0 font-medium">
+                        <Link href="https://behance.net/georgeefesop" target="_blank" className="text-accent-primary hover:text-white transition-colors mt-4 md:mt-0 font-medium text-left">
                             View all on Behance →
                         </Link>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {projects.slice(0, 4).map((project, idx) => (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {projects.filter(p => !p.title.includes('Travel')).slice(0, 3).map((project, idx) => (
                             <a
                                 key={idx}
                                 href={project.link}

@@ -10,10 +10,10 @@ export default function About() {
         <section id="about" className="bg-bg-primary py-24 scroll-mt-20">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <FadeIn>
-                    <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-16 items-start">
+                    <div className="block md:grid md:grid-cols-12 md:gap-16 items-start clearfix">
 
-                        {/* Image Column */}
-                        <div className="md:col-span-5 lg:col-span-4">
+                        {/* Image Column - Floated on Mobile */}
+                        <div className="float-right w-1/2 md:w-full md:float-none md:col-span-5 lg:col-span-4 mb-6 ml-6 md:ml-0 md:mb-0">
                             <div className="relative aspect-square rounded-2xl overflow-hidden bg-bg-tertiary border border-border-medium">
                                 {/* Replace with actual profile image */}
                                 <ImageWithFallback
@@ -31,18 +31,19 @@ export default function About() {
                                 <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-6">About</h2>
                                 <div className="prose prose-invert prose-lg text-text-secondary">
                                     <p>
-                                        I&apos;m George, a product designer currently based in Cyprus.
+                                        I&apos;m George, a product designer based in Cyprus.
                                     </p>
                                     <p>
-                                        I spent two years at <span className="text-white font-medium">Input Output</span> as a Product Designer, working on Cardano blockchain infrastructure — specifically RealFi (a financial platform for emerging markets) and sidechain interoperability.
+                                        Previously at <span className="text-white font-medium">Input Output</span>, I designed Cardano blockchain infrastructure, focusing on RealFi platforms and sidechain interoperability.
                                     </p>
                                     <p>
-                                        I specialize in taking complex technical products and making them intuitive. This usually means working with funded startups building in Web3, fintech, or SaaS.
+                                        I specialize in simplifying complex technical products, partnering with funded startups in Web3, fintech, and SaaS.
                                     </p>
                                 </div>
                             </div>
 
-                            <div className="bg-bg-secondary p-8 rounded-xl border border-border-subtle">
+                            {/* What I Bring - Mobile & Desktop (Hidden on Tablet) */}
+                            <div className="bg-bg-secondary p-8 rounded-xl border border-border-subtle block md:hidden lg:block">
                                 <h3 className="text-xl font-bold text-text-primary mb-4">What I bring:</h3>
                                 <ul className="space-y-3">
                                     {[
@@ -86,6 +87,24 @@ export default function About() {
                                 </div>
                             </div>
 
+                        </div>
+
+                        {/* What I Bring - Tablet Only (Full Width) */}
+                        <div className="hidden md:block lg:hidden col-span-12 mt-8 bg-bg-secondary p-8 rounded-xl border border-border-subtle">
+                            <h3 className="text-xl font-bold text-text-primary mb-4">What I bring:</h3>
+                            <ul className="space-y-3">
+                                {[
+                                    'Experience designing at scale (Cardano\'s $80bn ecosystem)',
+                                    'AI-native workflows (Cursor, generative tools, modern automation)',
+                                    'Full-stack capability (design + Next.js/React development)',
+                                    'Teaching mindset (16k designers follow my content on TikTok)'
+                                ].map((item, i) => (
+                                    <li key={i} className="flex items-start gap-3 text-text-secondary">
+                                        <span className="text-accent-primary mt-1">→</span>
+                                        {item}
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
                     </div>
                 </FadeIn>

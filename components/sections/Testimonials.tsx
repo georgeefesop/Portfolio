@@ -31,7 +31,7 @@ const testimonials = [
 
 export default function Testimonials() {
     return (
-        <section className="bg-bg-primary py-24 pb-32 border-b border-border-subtle">
+        <section className="bg-bg-primary py-24 pb-32">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <FadeIn>
                     <div className="mb-16 md:text-center max-w-2xl md:mx-auto">
@@ -44,7 +44,7 @@ export default function Testimonials() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {testimonials.map((item, idx) => (
-                        <FadeIn key={idx} delay={idx * 0.1}>
+                        <FadeIn key={idx} delay={idx * 0.1} className={idx > 0 ? 'hidden md:block' : ''}>
                             <div className="bg-bg-secondary p-8 rounded-2xl border border-border-subtle relative h-full flex flex-col hover:border-accent-primary/30 transition-colors">
                                 <Quote className="absolute top-8 right-8 text-bg-tertiary w-12 h-12 rotate-180" />
 

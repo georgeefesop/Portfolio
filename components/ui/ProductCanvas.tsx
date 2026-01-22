@@ -491,7 +491,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                     x: 0,
                     y: isMobile ? 56 : 10,
                     opacity: 1,
-                    scale: isMobile ? 0.75 : 0.8,
+                    scale: isMobile ? 0.86 : 0.8,
                     zIndex: 20
                 };
             }
