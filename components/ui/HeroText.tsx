@@ -9,7 +9,7 @@ function cn(...classes: (string | undefined | null | false)[]) {
 
 interface HeroTextProps {
     scrollProgress: MotionValue<number>;
-    step: StepId;
+    step?: StepId;
 }
 
 export default function HeroText({ scrollProgress, step }: HeroTextProps) {

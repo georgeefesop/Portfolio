@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(request: Request) {
     try {
         const data = await request.json();
@@ -12,6 +10,9 @@ export async function POST(request: Request) {
             console.log('Contact form submission (no API key):', data);
             return NextResponse.json({ success: true, message: 'Message received (email not configured)' });
         }
+
+        // Initialize Resend only when API key is available
+        const resend = new Resend(process.env.RESEND_API_KEY);
 
         // Send email using Resend
         const { data: emailData, error } = await resend.emails.send({
