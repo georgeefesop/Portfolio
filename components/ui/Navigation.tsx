@@ -15,29 +15,31 @@ const navLinks = [
 
 export default function Navigation() {
     const [isOpen, setIsOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
     const [activeSection, setActiveSection] = useState('');
 
-    // Handle scroll spy for active section
+    // Handle scroll for background and active section
     useEffect(() => {
         const handleScroll = () => {
-            const sections = navLinks.map(link => link.href.substring(1));
+            // Background toggle
+            setScrolled(window.scrollY > 50);
 
+            // Active Section Spy
+            const sections = navLinks.map(link => link.href.substring(1));
             const current = sections.find(section => {
                 const element = document.getElementById(section);
                 if (element) {
                     const rect = element.getBoundingClientRect();
-                    // Active if the section encompasses the "trigger point" (e.g., 300px from top)
-                    // This creates a stable "active" zone for each section
                     return rect.top <= 300 && rect.bottom > 300;
                 }
                 return false;
             });
-
-            // Set active section (or clear it if we're in the Hero/top gap)
             setActiveSection(current || '');
         };
 
         window.addEventListener('scroll', handleScroll);
+        // Check initially
+        handleScroll();
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
@@ -56,11 +58,11 @@ export default function Navigation() {
 
     return (
         <nav
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${activeSection ? 'bg-black/80 backdrop-blur-md border-b border-border-subtle' : 'bg-transparent'
+            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-black/80 backdrop-blur-md border-b border-border-subtle' : 'bg-transparent'
                 }`}
         >
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center h-24">
+                <div className="flex justify-between items-center h-16 md:h-24">
                     {/* Logo */}
                     <Link href="/" className="text-2xl font-bold tracking-tight text-white hover:text-accent-primary transition-colors">
                         efesop

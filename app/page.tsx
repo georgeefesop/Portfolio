@@ -1,4 +1,4 @@
-import Hero from "@/components/sections/Hero";
+import ProductHero from "@/components/sections/ProductHero";
 import Intro from "@/components/sections/Intro";
 import CredibilityBar from "@/components/sections/CredibilityBar";
 import CaseStudies from "@/components/sections/CaseStudies";
@@ -18,7 +18,7 @@ export default function Home() {
         Hero is imported from previous part. 
         It has a black background which transitions to bg-primary (#0F0F0F) in the following sections.
       */}
-            <Hero />
+            <ProductHero />
             <CredibilityBar />
             <Intro />
             <CaseStudies />
