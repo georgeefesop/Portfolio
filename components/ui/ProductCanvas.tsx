@@ -34,10 +34,6 @@ const stickyContent = {
         friction: { id: "TKT-102", title: "Kitchen Sync Failed", text: "Connection lost • 2m ago", variant: "orange", tag: "Bug", user: "KD" },
         solution: { title: "Real-time Sync", text: "Instant KDS connection", variant: "primary" }
     },
-    B: {
-        friction: { id: "TKT-184", title: "Missing Modifiers", text: "Latte missing oat milk", variant: "orange", tag: "Bug", user: "GE" },
-        solution: { title: "Smart Modifiers", text: "Auto-prompts & rules", variant: "primary" }
-    },
     C: {
         friction: { id: "TKT-129", title: "Inventory Drift", text: "-14 units discrepancy", variant: "default", tag: "Backend", user: "SYS" },
         solution: { title: "Live Inventory", text: "Synced with every sale", variant: "default" }
@@ -156,9 +152,10 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
 
     // Refs for measuring card heights
     const cardRefA = useRef<HTMLDivElement>(null);
-    const cardRefF = useRef<HTMLDivElement>(null);
+    const cardRefC = useRef<HTMLDivElement>(null);
     const cardRefD = useRef<HTMLDivElement>(null);
-    const [cardHeights, setCardHeights] = useState({ A: 180, F: 280, D: 180 });
+    const cardRefF = useRef<HTMLDivElement>(null);
+    const [cardHeights, setCardHeights] = useState({ A: 180, C: 180, D: 180, F: 280 });
 
     // Initial Gate (Mobile check only)
     useEffect(() => {
@@ -179,6 +176,9 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
         if (step !== 2) {
             setPosDimensions(isMobile ? { width: 340, height: 620 } : { width: 900, height: 560 });
             setPosOffset({ x: 0, y: 0 });
+        } else if (isMobile) {
+            // Specific responsive height for mobile Step 2 to fit within the gap
+            setPosDimensions({ width: 340, height: 380 });
         }
     }, [step, isMobile]);
 
@@ -216,8 +216,9 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
         const measureHeights = () => {
             const heights = {
                 A: cardRefA.current?.offsetHeight || 180,
-                F: cardRefF.current?.offsetHeight || 280,
-                D: cardRefD.current?.offsetHeight || 180
+                C: cardRefC.current?.offsetHeight || 180,
+                D: cardRefD.current?.offsetHeight || 180,
+                F: cardRefF.current?.offsetHeight || 280
             };
             setCardHeights(heights);
         };
@@ -359,8 +360,9 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
 
             // Use actual measured heights
             const heightA = cardHeights.A;
-            const heightF = cardHeights.F;
+            const heightC = cardHeights.C;
             const heightD = cardHeights.D;
+            const heightF = cardHeights.F;
 
             // Position 1 (Top of list) for F
             const POS_1_Y_F = HEADER_Y + GAP_HEADER + (heightF / 2);
@@ -379,27 +381,9 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
             // Col 2: In Progress (x: 0)
             // Col 3: Blocked (x: 300)
 
-            // A: Kitchen Sync (Visible but faded on Desktop S1)
+            // A: Kitchen Sync (Hidden on Slide 1)
             else if (id === 'sticky-A') {
-                layout = {
-                    x: 300,
-                    y: POS_1_Y_F,
-                    opacity: introAnim ? 0.3 : 1,
-                    scale: 1,
-                    zIndex: 6,
-                    width: 260
-                };
-            }
-            // B: Missing Modifiers (Visible but faded on Desktop S1)
-            else if (id === 'sticky-B') {
-                layout = {
-                    x: 300,
-                    y: POS_2_Y_D,
-                    opacity: introAnim ? 0.3 : 1,
-                    scale: 1,
-                    zIndex: 6,
-                    width: 260
-                };
+                layout = { x: 0, y: 0, opacity: 0, scale: 0, zIndex: 0 };
             }
             // D: Split Bill (Backlog - Bottom, moves to Top when F leaves)
             else if (id === 'sticky-D') {
@@ -417,19 +401,18 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                 const startX = -300;
                 const targetX = 0;
                 const startY = POS_1_Y_F;
-                // Hero card is taller, so calculate its target position using its own height
                 const targetY = HEADER_Y + GAP_HEADER + (heightF / 2);
 
                 layout = {
                     x: introAnim ? targetX : startX,
                     y: introAnim ? targetY : startY,
-                    opacity: 1,  // Always full opacity - hero card
+                    opacity: 1,
                     scale: introAnim ? 1.05 : 1,
                     zIndex: 10,
                     width: 260
                 };
             }
-            // C: Inventory (Review - Top)
+            // C: Inventory (Review - Column 3)
             else if (id === 'sticky-C') {
                 layout = {
                     x: 300,
@@ -472,23 +455,19 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
             if (id === 'sticky-sketch') {
                 layout = {
                     x: 0,
-                    y: 10,
+                    y: isMobile ? 56 : 10,
                     opacity: 1,
-                    scale: isMobile ? 0.85 : 0.8, // 0.8 Scale for Desktop (Corrections)
+                    scale: isMobile ? 0.75 : 0.8,
                     zIndex: 20
                 };
             }
 
-            // Hero Ticket (Persist from Step 0)
+            // Hero Ticket (Persist from Step 0 - Hidden on mobile)
             else if (id === 'sticky-F') {
                 if (isMobile) {
-                    // Mobile: Dock to top, small scale
-                    layout = { x: 0, y: -320, opacity: 0.9, scale: 0.6, zIndex: 15, width: 260 };
+                    layout = { x: 0, y: 0, opacity: 0, scale: 0, zIndex: 0 };
                 } else {
                     // Desktop: Park on LEFT side
-                    // Wireframe is 900px * 0.8 = 720px wide. 360px from center.
-                    // Ticket is 260px wide.
-                    // Position at -520 gives -> decent gap
                     layout = { x: -520, y: 0, opacity: 0.9, scale: 0.85, zIndex: 15, width: 260 };
                 }
             }
@@ -514,9 +493,9 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
 
             // Mobile S3
             if (isMobile) {
-                if (id === 'dashboard-frame') layout = { x: 0, y: 0, opacity: 1, scale: 0.9, zIndex: 5 }; // Increased scale for mobile layout
-                else if (id === 'panel-order-center') layout = { x: 0, y: 180, opacity: 1, scale: 0.8, zIndex: 30 };
-                else if (id === 'panel-checkout') layout = { x: 0, y: -180, opacity: 1, scale: 0.8, zIndex: 30 };
+                if (id === 'dashboard-frame') layout = { x: 0, y: 35, opacity: 1, scale: 1, zIndex: 5 };
+                else if (id === 'panel-order-center') layout = { x: 0, y: 0, opacity: 0, scale: 0, zIndex: 0 };
+                else if (id === 'panel-checkout') layout = { x: 0, y: 0, opacity: 0, scale: 0, zIndex: 0 };
             }
         }
 
@@ -540,16 +519,6 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                 }}
             />
 
-            {/* --- Canvas Header --- */}
-            <div className="absolute top-36 left-0 w-full flex flex-col items-center gap-4 z-50 pointer-events-none transition-all duration-500">
-
-                {/* POS Context Header */}
-                {!isMobile && (
-                    <div className="text-zinc-500 font-mono text-xs uppercase tracking-[0.2em] opacity-60">
-                        Project: POS System
-                    </div>
-                )}
-            </div>
 
             {/* --- Bottom Controls --- */}
             <div className={cn(
@@ -559,7 +528,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                 {/* Tap to Continue */}
                 <div className={cn(
                     "flex items-center gap-2 text-zinc-400 text-xs uppercase tracking-widest pointer-events-auto cursor-pointer hover:text-zinc-300 transition-colors",
-                    isMobile && "mb-2 scale-90"
+                    isMobile && "mb-2 scale-90 translate-y-[20px]"
                 )} onClick={(e) => { e.stopPropagation(); handleNext(); }}>
                     <ArrowRight size={12} />
                     <span>Tap to continue</span>
@@ -618,7 +587,6 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                 {(() => {
                     const mode = step === 0 ? 'friction' : 'solution';
                     const cA = stickyContent.A[mode];
-                    const cB = stickyContent.B[mode];
                     const cC = stickyContent.C[mode];
                     const cD = stickyContent.D[mode];
                     const cF = stickyContent.F[mode];
@@ -641,13 +609,10 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                     {step === 0 ? <TicketUI data={cA} dimmed={introAnim} compact={false} /> : <StickyUI title={cA.title} text={cA.text} variant={cA.variant as any} />}
                                 </div>
                             </AnimatedElement>
-                            <AnimatedElement layout={getLayout('sticky-B', step)}>
-                                <div onClick={(e) => e.stopPropagation()}>
-                                    {step === 0 ? <TicketUI data={cB} dimmed={false} compact={false} /> : <StickyUI title={cB.title} text={cB.text} variant={cB.variant as any} />}
-                                </div>
-                            </AnimatedElement>
                             <AnimatedElement layout={getLayout('sticky-C', step)}>
-                                {step === 0 ? <TicketUI data={cC} dimmed={introAnim} compact={false} /> : <StickyUI title={cC.title} text={cC.text} variant={cC.variant as any} />}
+                                <div ref={cardRefC}>
+                                    {step === 0 ? <TicketUI data={cC} dimmed={introAnim} compact={false} /> : <StickyUI title={cC.title} text={cC.text} variant={cC.variant as any} />}
+                                </div>
                             </AnimatedElement>
                             <AnimatedElement layout={getLayout('sticky-D', step)}>
                                 <div ref={cardRefD}>
@@ -676,98 +641,77 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                 <>
                                     {/* Annotation 1: Quick Categories (Top Left) */}
                                     <motion.div
-                                        initial={{ opacity: 0, scale: 0.8, x: -20, rotate: -3 }}
-                                        animate={{ opacity: 1, scale: 1, x: 0, rotate: -3 }}
+                                        initial={{ opacity: 0, scale: 0.8, y: -10 }}
+                                        animate={{ opacity: 1, scale: 1, y: 0 }}
                                         exit={{ opacity: 0 }}
-                                        transition={{ delay: 2.2, type: "spring" }} // Delayed
-                                        className="absolute top-[77px] -left-28 z-50 pointer-events-none"
+                                        transition={{ delay: 2.2, type: "spring" }}
+                                        className="absolute top-[35px] left-4 md:-left-28 z-50 pointer-events-none"
                                         style={{ fontFamily: 'var(--font-caveat)' }}
                                     >
-                                        <div className="text-2xl text-accent-primary font-bold whitespace-nowrap drop-shadow-lg relative">
+                                        <div className="text-xl md:text-2xl text-accent-primary font-bold whitespace-nowrap drop-shadow-lg relative">
                                             Quick Categories
-                                            <svg className="absolute -top-6 left-1/2 w-28 h-24 text-accent-primary/80 translate-x-4" viewBox="0 0 100 90" fill="none" stroke="currentColor" strokeWidth="2">
-                                                <path d="M 0 60 Q 40 60 80 85" strokeLinecap="round" />
-                                                <path d="M 72 87 L 80 85 L 82 75" strokeLinecap="round" strokeLinejoin="round" />
-                                            </svg>
                                         </div>
                                     </motion.div>
 
                                     {/* Annotation 2: Menu Tile Grid (Left Middle) */}
                                     <motion.div
-                                        initial={{ opacity: 0, scale: 0.8, x: -20, rotate: 2 }}
-                                        animate={{ opacity: 1, scale: 1, x: 0, rotate: 2 }}
+                                        initial={{ opacity: 0, scale: 0.8, y: -10 }}
+                                        animate={{ opacity: 1, scale: 1, y: 0 }}
                                         exit={{ opacity: 0 }}
-                                        transition={{ delay: 2.4, type: "spring" }} // Delayed
-                                        className="absolute top-[200px] -left-28 z-50 pointer-events-none"
+                                        transition={{ delay: 2.4, type: "spring" }}
+                                        className="absolute top-[125px] left-4 md:-left-28 z-50 pointer-events-none"
                                         style={{ fontFamily: 'var(--font-caveat)' }}
                                     >
-                                        <div className="text-2xl text-accent-primary font-bold whitespace-nowrap drop-shadow-lg relative">
+                                        <div className="text-xl md:text-2xl text-accent-primary font-bold whitespace-nowrap drop-shadow-lg relative">
                                             Menu Tile Grid
-                                            <svg className="absolute top-2 left-full w-16 h-8 text-accent-primary/80 -translate-y-1/2" viewBox="0 0 60 30" fill="none" stroke="currentColor" strokeWidth="2">
-                                                <path d="M 5 20 Q 30 5 50 15" strokeLinecap="round" />
-                                                <path d="M 42 10 L 50 15 L 44 22" strokeLinecap="round" strokeLinejoin="round" />
-                                            </svg>
                                         </div>
                                     </motion.div>
 
                                     {/* Annotation 3: Live Order Panel (Right Top) */}
                                     <motion.div
-                                        initial={{ opacity: 0, scale: 0.8, x: 20, rotate: -3 }}
-                                        animate={{ opacity: 1, scale: 1, x: 0, rotate: -3 }}
+                                        initial={{ opacity: 0, scale: 0.8, y: -10 }}
+                                        animate={{ opacity: 1, scale: 1, y: 0 }}
                                         exit={{ opacity: 0 }}
-                                        transition={{ delay: 2.6, type: "spring" }} // Delayed
-                                        className="absolute top-32 -right-28 z-50 pointer-events-none"
+                                        transition={{ delay: 2.6, type: "spring" }}
+                                        className="absolute top-32 md:top-32 right-4 md:-right-28 z-50 pointer-events-none"
                                         style={{ fontFamily: 'var(--font-caveat)' }}
                                     >
-                                        <div className="text-2xl text-accent-primary font-bold whitespace-nowrap drop-shadow-lg relative">
+                                        <div className="text-xl md:text-2xl text-accent-primary font-bold whitespace-nowrap drop-shadow-lg relative text-right">
                                             Live Order Panel
-                                            <svg className="absolute top-6 -left-8 w-12 h-12 text-accent-primary/80" viewBox="0 0 50 50" fill="none" stroke="currentColor" strokeWidth="2">
-                                                <path d="M 40 5 Q 20 25 5 40" strokeLinecap="round" />
-                                                <path d="M 5 30 L 5 40 L 15 42" strokeLinecap="round" strokeLinejoin="round" />
-                                            </svg>
                                         </div>
                                     </motion.div>
 
                                     {/* Annotation 4: One-Tap Actions (Right Bottom) */}
                                     <motion.div
-                                        initial={{ opacity: 0, scale: 0.8, x: 20, y: 20, rotate: 4 }}
-                                        animate={{ opacity: 1, scale: 1, x: 0, y: 0, rotate: 4 }}
+                                        initial={{ opacity: 0, scale: 0.8, y: 10 }}
+                                        animate={{ opacity: 1, scale: 1, y: 0 }}
                                         exit={{ opacity: 0 }}
-                                        transition={{ delay: 2.8, type: "spring" }} // Delayed
-                                        className="absolute bottom-[134px] -right-[170px] z-50 pointer-events-none"
+                                        transition={{ delay: 2.8, type: "spring" }}
+                                        className="absolute bottom-[230px] md:bottom-[134px] right-4 md:-right-[170px] z-50 pointer-events-none"
                                         style={{ fontFamily: 'var(--font-caveat)' }}
                                     >
-                                        <div className="text-2xl text-accent-primary font-bold whitespace-nowrap drop-shadow-lg relative pl-4">
+                                        <div className="text-xl md:text-2xl text-accent-primary font-bold whitespace-nowrap drop-shadow-lg relative text-right">
                                             One-Tap Actions
-                                            <svg className="absolute top-4 -left-16 w-24 h-8 text-accent-primary/80" viewBox="0 0 100 30" fill="none" stroke="currentColor" strokeWidth="2">
-                                                <path d="M 90 15 Q 50 15 5 15" strokeLinecap="round" />
-                                                <path d="M 12 8 L 5 15 L 12 22" strokeLinecap="round" strokeLinejoin="round" />
-                                            </svg>
                                         </div>
                                     </motion.div>
 
                                     {/* Annotation 5: Connection Status (Top Right) */}
                                     <motion.div
-                                        initial={{ opacity: 0, scale: 0.8, y: -20, rotate: 2 }}
-                                        animate={{ opacity: 1, scale: 1, y: 0, rotate: 2 }}
+                                        initial={{ opacity: 0, scale: 0.8, y: -20 }}
+                                        animate={{ opacity: 1, scale: 1, y: 0 }}
                                         exit={{ opacity: 0 }}
-                                        transition={{ delay: 3.0, type: "spring" }} // Delayed
-                                        className="absolute -top-16 right-0 z-50 pointer-events-none"
+                                        transition={{ delay: 3.0, type: "spring" }}
+                                        className="absolute top-[-30px] md:-top-16 right-4 md:right-0 z-50 pointer-events-none"
                                         style={{ fontFamily: 'var(--font-caveat)' }}
                                     >
-                                        <div className="text-2xl text-accent-primary font-bold whitespace-nowrap drop-shadow-lg relative">
+                                        <div className="text-xl md:text-2xl text-accent-primary font-bold whitespace-nowrap drop-shadow-lg relative text-right md:text-center">
                                             Connection Status
-                                            <svg className="absolute top-8 left-1/2 w-8 h-16 text-accent-primary/80 -translate-x-1/2" viewBox="0 0 30 60" fill="none" stroke="currentColor" strokeWidth="2">
-                                                <path d="M 15 0 Q 15 25 15 50" strokeLinecap="round" />
-                                                <path d="M 8 42 L 15 50 L 22 42" strokeLinecap="round" strokeLinejoin="round" />
-                                            </svg>
                                         </div>
                                     </motion.div>
                                 </>
                             )}
                         </AnimatePresence>
 
-                        {/* Main Wireframe Screen */}
                         <motion.div
                             initial="hidden"
                             animate={step === 1 ? "show" : "hidden"}
@@ -780,7 +724,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                             }}
                             className={cn(
                                 "bg-zinc-900/20 backdrop-blur-sm border-2 border-dashed border-zinc-400/60 rounded-xl p-0 flex flex-col overflow-hidden transition-all duration-500",
-                                isMobile ? "w-[340px] h-[620px]" : "w-[900px] h-[560px]"
+                                isMobile ? "w-[340px] h-[480px]" : "w-[900px] h-[560px]"
                             )}
                         >
                             {/* Top Bar Wireframe */}
@@ -940,7 +884,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                 )}
                                 style={{
                                     width: step === 2 ? posDimensions.width : (isMobile ? 340 : 900),
-                                    height: step === 2 ? posDimensions.height : (isMobile ? 620 : 560),
+                                    height: step === 2 ? posDimensions.height : (isMobile ? 380 : 560),
                                 }}
                                 onClick={(e) => e.stopPropagation()}
                             >
@@ -958,10 +902,10 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                     </>
                                 )}
                                 {/* Top Bar */}
-                                <motion.div variants={{ hidden: { opacity: 0, y: -10 }, show: { opacity: 1, y: 0 } }} className="h-12 bg-zinc-900 border-b border-zinc-700 flex items-center justify-between px-4">
+                                <motion.div variants={{ hidden: { opacity: 0, y: -10 }, show: { opacity: 1, y: 0 } }} className={cn("bg-zinc-900 border-b border-zinc-700 flex items-center justify-between px-4", isEffectiveMobile ? "h-8" : "h-12")}>
                                     <span className={cn("font-bold text-zinc-100 tracking-tight", isEffectiveMobile ? "text-xs" : "text-sm")}>Aster Café</span>
                                     <div className={cn("flex gap-4 font-medium", isEffectiveMobile ? "text-[10px]" : "text-xs")}>
-                                        <span className="text-white px-3 py-1.5 bg-zinc-800 rounded-md shadow-sm border border-zinc-600">Checkout</span>
+                                        <span className={cn("text-white transition-colors", isEffectiveMobile ? "py-1.5" : "px-3 py-1.5 bg-zinc-800 rounded-md shadow-sm border border-zinc-600")}>Checkout</span>
                                         <span className="text-zinc-500 py-1.5 hover:text-zinc-300 cursor-default transition-colors">Orders</span>
                                         <span className="text-zinc-500 py-1.5 hover:text-zinc-300 cursor-default transition-colors">Reports</span>
                                     </div>
@@ -976,7 +920,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                     {/* LEFT: Menu Grid */}
                                     <div className={cn("flex flex-col bg-zinc-900/50 min-h-0", isEffectiveMobile ? "flex-[60] border-b border-zinc-700" : "flex-[65] border-r border-zinc-700")}>
                                         {/* Search + Categories */}
-                                        <motion.div variants={{ hidden: { opacity: 0, x: -10 }, show: { opacity: 1, x: 0 } }} className="p-4 border-b border-zinc-800 space-y-3">
+                                        <motion.div variants={{ hidden: { opacity: 0, x: -10 }, show: { opacity: 1, x: 0 } }} className={cn("border-b border-zinc-800 space-y-3", isEffectiveMobile ? "p-2" : "p-4")}>
                                             {/* Search Bar */}
                                             {!isEffectiveMobile && (
                                                 <div className="relative">
@@ -1011,9 +955,9 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                         {/* Menu Grid */}
                                         <motion.div
                                             variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.03, delayChildren: 0.3 } } }}
-                                            className="flex-1 p-4 overflow-y-auto scrollbar-custom"
+                                            className={cn("flex-1 overflow-y-auto scrollbar-custom", isEffectiveMobile ? "p-2" : "p-4")}
                                         >
-                                            <div className={cn("grid gap-4", isEffectiveMobile ? "grid-cols-3" : "grid-cols-3 xl:grid-cols-4")}>
+                                            <div className={cn("grid", isEffectiveMobile ? "grid-cols-3 gap-2" : "grid-cols-3 xl:grid-cols-4 gap-4")}>
                                                 {menuItems
                                                     .filter(item => selectedCategory === 'All' || item.category === selectedCategory)
                                                     .map((item, i) => (
@@ -1027,7 +971,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                             onClick={() => addToCart(item)}
                                                             className="bg-zinc-800/50 border border-zinc-700/50 rounded-lg overflow-hidden cursor-pointer hover:border-zinc-500/50 hover:bg-zinc-800 transition-colors group"
                                                         >
-                                                            <div className="aspect-[4/3] bg-zinc-900 relative overflow-hidden">
+                                                            <div className={cn("bg-zinc-900 relative overflow-hidden", isEffectiveMobile ? "aspect-video" : "aspect-[4/3]")}>
                                                                 {/* Category Image */}
                                                                 <motion.img
                                                                     initial={{ scale: 1.05 }}
@@ -1062,7 +1006,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                                 {/* Hover Overlay Gradient */}
                                                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
                                                             </div>
-                                                            <div className="p-3 relative">
+                                                            <div className={cn("relative", isEffectiveMobile ? "p-2" : "p-3")}>
                                                                 <h3 className={cn("font-bold text-zinc-100 leading-tight", isEffectiveMobile ? "text-xs" : "text-sm")}>{item.name}</h3>
                                                                 <p className={cn("text-zinc-500 mt-0.5", isEffectiveMobile ? "text-[9px]" : "text-[10px]")}>{item.category}</p>
                                                             </div>
@@ -1091,7 +1035,14 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                         )}
 
                                         {/* Order Items List */}
-                                        <div className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-custom">
+                                        <div className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-custom relative">
+                                            {isEffectiveMobile && orderItems.length === 0 && (
+                                                <div className="absolute inset-0 flex items-center justify-center p-6 text-center">
+                                                    <span className="text-[10px] text-zinc-600 font-medium uppercase tracking-tight leading-relaxed">
+                                                        Tap menu items<br />to add to order
+                                                    </span>
+                                                </div>
+                                            )}
                                             <AnimatePresence>
                                                 {orderItems.map((item, i) => (
                                                     <motion.div
@@ -1099,7 +1050,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                         initial={{ opacity: 0, x: -10 }}
                                                         animate={{ opacity: 1, x: 0 }}
                                                         exit={{ opacity: 0, height: 0 }}
-                                                        className="flex items-start gap-3 p-2 rounded-lg hover:bg-zinc-800/50 group"
+                                                        className={cn("flex items-start rounded-lg hover:bg-zinc-800/50 group", isEffectiveMobile ? "gap-2 p-1" : "gap-3 p-2")}
                                                     >
                                                         <div className="flex items-center gap-1 mt-0.5">
                                                             <button onClick={(e) => { e.stopPropagation(); updateQuantity(i, -1); }} className="w-5 h-5 flex items-center justify-center bg-zinc-800 text-zinc-500 hover:text-zinc-200 rounded border border-zinc-700/50 cursor-pointer">-</button>
@@ -1143,7 +1094,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                         )}
 
                                         {/* Total + Actions */}
-                                        <motion.div variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }} className="p-3 border-t border-zinc-800 bg-zinc-900">
+                                        <motion.div variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }} className={cn("border-t border-zinc-800 bg-zinc-900", isEffectiveMobile ? "p-1.5" : "p-3")}>
                                             {!isEffectiveMobile && (
                                                 <div className="flex justify-between items-center mb-3">
                                                     <span className="font-medium text-zinc-400 text-sm">Total</span>
@@ -1240,7 +1191,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                 </AnimatePresence>
 
                                 {/* Bottom Status Bar */}
-                                <motion.div variants={{ hidden: { opacity: 0 }, show: { opacity: 1 } }} className="h-6 bg-zinc-950 border-t border-zinc-800 flex items-center justify-between px-4">
+                                <motion.div variants={{ hidden: { opacity: 0 }, show: { opacity: 1 } }} className={cn("bg-zinc-950 border-t border-zinc-800 flex items-center justify-between px-4", isEffectiveMobile ? "h-[14px]" : "h-6")}>
                                     <div className="flex items-center gap-3 text-[9px] text-zinc-600">
                                         <span className="flex items-center gap-1">
                                             <span className="w-1 h-1 bg-green-500 rounded-full" />
