@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 const navLinks = [
     { name: 'Work', href: '#work' },
     { name: 'Services', href: '#services' },
+    { name: 'How I Work', href: '#how-i-work' },
     { name: 'Resources', href: '#resources' },
     { name: 'About', href: '#about' },
     { name: 'Contact', href: '#contact' },
@@ -52,7 +53,8 @@ export default function Navigation() {
                 top: offsetTop,
                 behavior: 'smooth'
             });
-            setIsOpen(false);
+            // Delay closing menu to allow scroll to complete
+            setTimeout(() => setIsOpen(false), 100);
         }
     };
 

@@ -45,13 +45,23 @@ export default function CaseStudyDrawer({ project, isOpen, onToggle, priority = 
         <>
             <div
                 className={`group border transition-all duration-500 rounded-xl overflow-hidden ${isOpen
-                    ? 'bg-bg-secondary border-white/10'
+                    ? 'bg-bg-secondary border-white/10 cursor-pointer'
                     : 'bg-transparent border-white/5 hover:bg-white/[0.02] hover:border-accent-primary/30'
                     }`}
+                onClick={(e) => {
+                    // Close if clicked anywhere on the card while open
+                    // But ignore if user is selecting text
+                    if (isOpen && !window.getSelection()?.toString()) {
+                        onToggle();
+                    }
+                }}
             >
                 {/* Collapsed Header / Trigger */}
                 <button
-                    onClick={onToggle}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        onToggle();
+                    }}
                     className="w-full text-left p-6 flex flex-col md:flex-row gap-6 md:items-center focus:outline-none"
                     aria-expanded={isOpen}
                 >
@@ -64,7 +74,7 @@ export default function CaseStudyDrawer({ project, isOpen, onToggle, priority = 
                             quality={100}
                             priority={priority}
                             sizes="(max-width: 768px) 100vw, 300px"
-                            className="object-cover transition-transform duration-700 group-hover:scale-105"
+                            className={`object-cover transition-transform duration-700 group-hover:scale-105 ${project.id === 'realfi' ? 'scale-[1.03]' : ''}`}
                         />
                     </div>
 
@@ -156,7 +166,8 @@ export default function CaseStudyDrawer({ project, isOpen, onToggle, priority = 
                                                 href={project.links.live}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="inline-flex items-center gap-2 px-6 py-3 bg-accent-primary/10 hover:bg-accent-primary/20 text-accent-primary rounded-lg font-semibold transition-colors"
+                                                className="inline-flex items-center gap-2 px-6 py-3 bg-accent-primary/10 hover:bg-accent-primary/20 text-accent-primary rounded-lg font-semibold transition-colors relative z-10"
+                                                onClick={(e) => e.stopPropagation()}
                                             >
                                                 View live platform <ExternalLink size={16} />
                                             </a>
@@ -169,7 +180,10 @@ export default function CaseStudyDrawer({ project, isOpen, onToggle, priority = 
                                     {project.images.gallery.map((img, idx) => (
                                         <button
                                             key={idx}
-                                            onClick={() => setLightboxIndex(idx)}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                setLightboxIndex(idx);
+                                            }}
                                             className={`relative rounded-lg overflow-hidden bg-bg-tertiary cursor-zoom-in hover:brightness-110 transition-all ${project.id === 'stellar' ? 'aspect-video col-span-2' : 'aspect-[4/3]'}`}
                                         >
                                             <ImageWithFallback
@@ -185,8 +199,11 @@ export default function CaseStudyDrawer({ project, isOpen, onToggle, priority = 
                                 {/* Close Button at bottom */}
                                 <div className="mt-12 flex justify-center">
                                     <button
-                                        onClick={onToggle}
-                                        className="flex items-center gap-2 text-text-muted hover:text-white transition-colors text-sm font-medium px-4 py-2 hover:bg-bg-tertiary rounded-full"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onToggle();
+                                        }}
+                                        className="flex items-center gap-2 text-text-muted hover:text-white transition-colors text-sm font-medium px-4 py-2 hover:bg-bg-tertiary rounded-full relative z-10"
                                     >
                                         <ChevronUp size={16} />
                                         Collapse Case Study

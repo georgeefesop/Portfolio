@@ -35,7 +35,7 @@ const processSteps = [
 
 export default function Process() {
     return (
-        <section className="bg-bg-primary py-32 overflow-hidden relative border-b border-border-subtle select-none">
+        <section id="how-i-work" className="bg-bg-primary py-32 overflow-hidden relative border-b border-border-subtle select-none scroll-mt-20">
             {/* Background Grid */}
             <div className="absolute inset-0 opacity-[0.03]"
                 style={{

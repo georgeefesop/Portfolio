@@ -29,7 +29,7 @@ const cases = [
             live: 'https://realfi.co'
         },
         images: {
-            thumbnail: "/images/realfi/credit-analysis.webp", // Local image
+            thumbnail: "/images/realfi/realfi-thumbnail.png", // Local image
             hero: "/images/realfi/financial-analysis.webp", // Local image
             gallery: [
                 "/images/realfi/impact-analysis.webp",
@@ -59,9 +59,13 @@ const cases = [
             live: 'https://playground-jet-omega.vercel.app/'
         },
         images: {
-            thumbnail: "/images/stellar-observatory.png",
-            hero: "/images/stellar-observatory.png",
-            gallery: ["/images/stellar-observatory.png"] // Using the same image for now as we only have one
+            thumbnail: "/images/stellar/so-1.png",
+            hero: "/images/stellar/so-1.png",
+            gallery: [
+                "/images/stellar/so-1.png",
+                "/images/stellar/so-2.png",
+                "/images/stellar/so-3.png"
+            ]
         }
     },
     {
@@ -83,9 +87,9 @@ const cases = [
         },
         links: {},
         images: {
-            thumbnail: "/images/sidechains/hero.png",
+            thumbnail: "/images/sidechains/sidechain-thumbnail.png",
             hero: "/images/sidechains/hero.png",
-            gallery: ["/images/sidechains/diagram.png"]
+            gallery: []
         }
     }
 ];

@@ -170,8 +170,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
             setIsMobile(mobile);
             setIsSmallMobile(smallMobile);
             setIsNarrowDesktop(narrowDesktop);
-            // Default dimensions based on device
-            setPosDimensions(mobile ? { width: 340, height: 620 } : { width: 900, height: 560 });
+            // State updates only - dimensions handled by useEffect
         };
         checkViewport();
         window.addEventListener('resize', checkViewport);
@@ -179,15 +178,25 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
     }, []);
 
     // Reset POS dimensions/offset when switching steps
+    // Reset/Update POS dimensions when switching steps or resizing
     useEffect(() => {
         if (step !== 2) {
             setPosDimensions(isMobile ? { width: 340, height: 620 } : { width: 900, height: 560 });
             setPosOffset({ x: 0, y: 0 });
-        } else if (isMobile) {
-            // Specific responsive height for mobile Step 2 to fit within the gap
-            setPosDimensions({ width: 340, height: 380 });
+        } else {
+            // Step 2 Logic
+            if (isSmallMobile) {
+                // Phone (< 770px) - Compact
+                setPosDimensions({ width: 340, height: 380 });
+            } else if (isMobile) {
+                // Tablet (770px - 1024px) - Intermediate Stable
+                setPosDimensions({ width: 420, height: 480 });
+            } else {
+                // Desktop (>= 1024px)
+                setPosDimensions({ width: 900, height: 560 });
+            }
         }
-    }, [step, isMobile]);
+    }, [step, isMobile, isSmallMobile]);
 
     const handleResize = (direction: string, delta: { x: number, y: number }) => {
         setPosDimensions(prevDim => {

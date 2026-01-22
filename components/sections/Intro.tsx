@@ -30,8 +30,8 @@ export default function Intro() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-border-subtle pt-12">
                         {[
                             {
-                                title: "Systemic Thinking",
-                                desc: "Design that mirrors your data structures. I build scalable design systems that map directly to your component architecture."
+                                title: "Systems Thinking",
+                                desc: "I turn complex workflows into clear, shippable product structure — flows, states, edge cases, and component logic that engineers can build."
                             },
                             {
                                 title: "Zero-to-One",
