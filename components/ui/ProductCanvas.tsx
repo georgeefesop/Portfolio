@@ -152,6 +152,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
     const [posOffset, setPosOffset] = useState({ x: 0, y: 0 });
     const [isResizing, setIsResizing] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
+    const cartContainerRef = useRef<HTMLDivElement>(null);
 
     // Refs for measuring card heights
     const cardRefA = useRef<HTMLDivElement>(null);
@@ -307,6 +308,17 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
             const exists = prev.find(i => i.name === item.name);
             if (exists) {
                 return prev.map(i => i.name === item.name ? { ...i, qty: i.qty + 1 } : i);
+            }
+            // If new item, scroll to bottom (on tablet/mobile)
+            if (isMobile) {
+                setTimeout(() => {
+                    if (cartContainerRef.current) {
+                        cartContainerRef.current.scrollTo({
+                            top: cartContainerRef.current.scrollHeight,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 100);
             }
             return [...prev, { name: item.name, modifiers: "", price: item.price, qty: 1 }];
         });
@@ -530,8 +542,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
         <div
             ref={containerRef}
             onClick={handleCanvasClick}
-            className={cn("relative w-full flex items-center justify-center overflow-hidden bg-black transition-opacity duration-500",
-                isMobile ? "h-[100svh]" : "h-full",
+            className={cn("relative w-full flex items-center justify-center overflow-hidden bg-black transition-opacity duration-500 h-full",
                 mounted ? "opacity-100" : "opacity-0"
             )}
         >
@@ -1061,7 +1072,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                         )}
 
                                         {/* Order Items List */}
-                                        <div className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-custom relative">
+                                        <div ref={cartContainerRef} className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-custom relative">
                                             {isEffectiveMobile && orderItems.length === 0 && (
                                                 <div className="absolute inset-0 flex items-center justify-center p-6 text-center">
                                                     <span className="text-[10px] text-zinc-600 font-medium uppercase tracking-tight leading-relaxed">
@@ -1073,9 +1084,10 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                 {orderItems.map((item, i) => (
                                                     <motion.div
                                                         key={i}
-                                                        initial={{ opacity: 0, x: -10 }}
-                                                        animate={{ opacity: 1, x: 0 }}
-                                                        exit={{ opacity: 0, height: 0 }}
+                                                        initial={{ opacity: 0, x: -10, scale: 0.95 }}
+                                                        animate={{ opacity: 1, x: 0, scale: 1 }}
+                                                        exit={{ opacity: 0, height: 0, scale: 0.9 }}
+                                                        transition={{ duration: 0.3, ease: "easeOut" }}
                                                         className={cn("flex items-start rounded-lg hover:bg-zinc-800/50 group", isEffectiveMobile ? "gap-2 p-1" : "gap-3 p-2")}
                                                     >
                                                         <div className="flex items-center gap-1 mt-0.5">

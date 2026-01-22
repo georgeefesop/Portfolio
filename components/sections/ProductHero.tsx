@@ -12,7 +12,7 @@ export default function ProductHero() {
     const [step, setStep] = useState<StepId>(0);
 
     return (
-        <section className="relative h-dvh w-full overflow-hidden bg-black">
+        <section className="relative h-[100svh] w-full overflow-hidden bg-black">
             <div className="absolute inset-0 z-0">
                 <ProductCanvas step={step} setStep={setStep} />
             </div>
