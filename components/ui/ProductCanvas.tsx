@@ -132,6 +132,7 @@ const panelContent = {
 export default function ProductCanvas({ step, setStep }: { step: StepId, setStep: React.Dispatch<React.SetStateAction<StepId>> }) {
     const [isMobile, setIsMobile] = useState(false);
     const [isSmallMobile, setIsSmallMobile] = useState(false);
+    const [isNarrowMobile, setIsNarrowMobile] = useState(false);
     const [isNarrowDesktop, setIsNarrowDesktop] = useState(false);
     const [mounted, setMounted] = useState(false);
     const [introAnim, setIntroAnim] = useState(false);
@@ -166,9 +167,11 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
             const width = window.innerWidth;
             const mobile = width < 1024;
             const smallMobile = width < 770;
+            const narrowMobile = width < 390;
             const narrowDesktop = width >= 1024 && width < 1300;
             setIsMobile(mobile);
             setIsSmallMobile(smallMobile);
+            setIsNarrowMobile(narrowMobile);
             setIsNarrowDesktop(narrowDesktop);
             // State updates only - dimensions handled by useEffect
         };
@@ -185,9 +188,12 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
             setPosOffset({ x: 0, y: 0 });
         } else {
             // Step 2 Logic
-            if (isSmallMobile) {
+            if (isNarrowMobile) {
+                // Narrow Phone (< 390px) - Thinner to fit
+                setPosDimensions({ width: 320, height: 420 });
+            } else if (isSmallMobile) {
                 // Phone (< 770px) - Compact
-                setPosDimensions({ width: 340, height: 380 });
+                setPosDimensions({ width: 340, height: 420 });
             } else if (isMobile) {
                 // Tablet (770px - 1024px) - Intermediate Stable
                 setPosDimensions({ width: 420, height: 480 });
@@ -524,7 +530,8 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
         <div
             ref={containerRef}
             onClick={handleCanvasClick}
-            className={cn("relative w-full h-full flex items-center justify-center overflow-hidden bg-black transition-opacity duration-500",
+            className={cn("relative w-full flex items-center justify-center overflow-hidden bg-black transition-opacity duration-500",
+                isMobile ? "h-[100svh]" : "h-full",
                 mounted ? "opacity-100" : "opacity-0"
             )}
         >
@@ -776,7 +783,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
 
                                     {/* Menu Grid */}
                                     <div className="flex-1 p-4 overflow-hidden">
-                                        <div className={cn("grid gap-3 h-full content-start", isMobile ? "grid-cols-3" : "grid-cols-4")}>
+                                        <div className={cn("grid gap-3 h-full content-start", isNarrowMobile ? "grid-cols-2" : (isMobile ? "grid-cols-3" : "grid-cols-4"))}>
                                             {[1, 2, 3, 4, 5, 6, 7, 8].slice(0, isMobile ? 6 : 8).map(i => (
                                                 <motion.div
                                                     key={i}
@@ -976,7 +983,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                             variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.03, delayChildren: 0.3 } } }}
                                             className={cn("flex-1 overflow-y-auto scrollbar-custom", isEffectiveMobile ? "p-2" : "p-4")}
                                         >
-                                            <div className={cn("grid", isEffectiveMobile ? "grid-cols-3 gap-2" : "grid-cols-3 xl:grid-cols-4 gap-4")}>
+                                            <div className={cn("grid", isNarrowMobile ? "grid-cols-2 gap-2" : (isEffectiveMobile ? "grid-cols-3 gap-2" : "grid-cols-3 xl:grid-cols-4 gap-4"))}>
                                                 {menuItems
                                                     .filter(item => selectedCategory === 'All' || item.category === selectedCategory)
                                                     .map((item, i) => (
