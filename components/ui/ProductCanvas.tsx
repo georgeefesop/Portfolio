@@ -947,7 +947,6 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                     !isResizing && "transition-all duration-500",
                                     step !== 2 && "pointer-events-none"
                                 )}
-                                id="dashboard-frame"
                                 style={{
                                     width: step === 2 ? posDimensions.width : (isMobile ? 340 : 900),
                                     height: step === 2 ? posDimensions.height : (isMobile ? 400 : 560),
@@ -1825,7 +1824,7 @@ function SplashScreen() {
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="absolute inset-0 z-[200] bg-zinc-950/80 backdrop-blur-md flex flex-col items-center justify-center pointer-events-none rounded-xl"
+            className="absolute inset-0 z-[200] bg-zinc-950/70 backdrop-blur-xl flex flex-col items-center justify-center pointer-events-none rounded-xl"
         >
             <div className="relative flex flex-col items-center gap-6">
                 {/* Logo Mark */}

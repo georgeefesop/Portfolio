@@ -1,125 +1,15 @@
 'use client';
 
-import { motion, AnimatePresence, MotionValue, useTransform, Variants } from 'framer-motion';
+import { motion, MotionValue, useTransform, Variants } from 'framer-motion';
 import { StepId } from '../sections/ProductHero';
 
 function cn(...classes: (string | undefined | null | false)[]) {
     return classes.filter(Boolean).join(' ');
 }
 
-import { useRef, useEffect, useState } from 'react';
-
 interface HeroTextProps {
     scrollProgress: MotionValue<number>;
     step?: StepId;
-}
-
-function HeroAnnotationArrow({ isMobile, startRef }: { isMobile: boolean, startRef: React.RefObject<HTMLElement | null> }) {
-    const [path, setPath] = useState("");
-    const [arrowheadPath, setArrowheadPath] = useState("");
-
-    useEffect(() => {
-        const calculatePath = () => {
-            const startElement = startRef.current;
-            const endElement = document.getElementById('dashboard-frame');
-
-            if (!startElement || !endElement) return;
-
-            const startRect = startElement.getBoundingClientRect();
-            const endRect = endElement.getBoundingClientRect();
-
-            // Start point (right side of the 'R')
-            const startX = startRect.right;
-            const startY = startRect.top + (startRect.height / 2);
-
-            // Find the nearest point on the endRect boundary (all 4 sides)
-            // dashboard-frame could be anywhere.
-
-            // Candidate points on the 4 segment lines
-            const nearestX = Math.max(endRect.left, Math.min(startX, endRect.right));
-            const nearestY = Math.max(endRect.top, Math.min(startY, endRect.bottom));
-
-            // If start point is inside the rect, something is wrong, but we'll use nearest boundary point
-            let targetX = nearestX;
-            let targetY = nearestY;
-
-            // If we are outside, the nearest point on the AABB is (nearestX, nearestY)
-            // However, to make it look like it's pointing TO an edge, we force it to the boundary
-            const distLeft = Math.abs(startX - endRect.left);
-            const distRight = Math.abs(startX - endRect.right);
-            const distTop = Math.abs(startY - endRect.top);
-            const distBottom = Math.abs(startY - endRect.bottom);
-
-            const minDist = Math.min(distLeft, distRight, distTop, distBottom);
-
-            if (minDist === distLeft) { targetX = endRect.left; targetY = nearestY; }
-            else if (minDist === distRight) { targetX = endRect.right; targetY = nearestY; }
-            else if (minDist === distTop) { targetX = nearestX; targetY = endRect.top; }
-            else { targetX = nearestX; targetY = endRect.bottom; }
-
-            const dx = targetX - startX;
-            const dy = targetY - startY;
-
-            // Curvature: control point should be pushed "outwards" from the straight line
-            // We'll push it UP and slightly towards the center
-            const cpX = startX + dx * 0.4;
-            const cpY = Math.min(startY, targetY) - (isMobile ? 120 : 180);
-
-            setPath(`M ${startX} ${startY} Q ${cpX} ${cpY} ${targetX} ${targetY}`);
-
-            // Arrowhead logic: Calculate angle from control point to target
-            const angle = Math.atan2(targetY - cpY, targetX - cpX);
-            const headLen = 16;
-            const head1X = targetX - headLen * Math.cos(angle - Math.PI / 5);
-            const head1Y = targetY - headLen * Math.sin(angle - Math.PI / 5);
-            const head2X = targetX - headLen * Math.cos(angle + Math.PI / 5);
-            const head2Y = targetY - headLen * Math.sin(angle + Math.PI / 5);
-
-            setArrowheadPath(`M ${head1X} ${head1Y} L ${targetX} ${targetY} L ${head2X} ${head2Y}`);
-        };
-
-        calculatePath();
-        window.addEventListener('resize', calculatePath);
-        const timer = setTimeout(calculatePath, 600);
-        return () => {
-            window.removeEventListener('resize', calculatePath);
-            clearTimeout(timer);
-        };
-    }, [startRef, isMobile]);
-
-    if (!path) return null;
-
-    return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 pointer-events-none z-0"
-        >
-            <svg width="100%" height="100%" fill="none" className="text-accent-primary opacity-80">
-                <motion.path
-                    d={path}
-                    stroke="currentColor"
-                    strokeWidth="5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    initial={{ pathLength: 0 }}
-                    animate={{ pathLength: 1 }}
-                    transition={{ duration: 0.25, delay: 1.8, ease: "easeOut" }}
-                />
-                <motion.path
-                    d={arrowheadPath}
-                    stroke="currentColor"
-                    strokeWidth="5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    initial={{ opacity: 0, pathLength: 0 }}
-                    animate={{ opacity: 1, pathLength: 1 }}
-                    transition={{ delay: 2.05, duration: 0.1, ease: "easeOut" }}
-                />
-            </svg>
-        </motion.div>
-    );
 }
 
 export default function HeroText({ scrollProgress, step }: HeroTextProps) {
@@ -143,16 +33,6 @@ export default function HeroText({ scrollProgress, step }: HeroTextProps) {
         }
     };
 
-    const refR = useRef<HTMLSpanElement>(null);
-    const [isMobileScreen, setIsMobileScreen] = useState(false);
-
-    useEffect(() => {
-        const checkMobile = () => setIsMobileScreen(window.innerWidth < 768);
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
-    }, []);
-
     return (
         <motion.div
             className="absolute inset-0 z-10 w-full h-full p-6 md:p-12 lg:p-16 flex flex-col justify-between pointer-events-none select-none"
@@ -172,7 +52,7 @@ export default function HeroText({ scrollProgress, step }: HeroTextProps) {
                 {/* Left Side: Main Title */}
                 <motion.div
                     variants={itemVariants}
-                    className="md:max-w-2xl text-left transition-all duration-500 relative z-10"
+                    className="md:max-w-2xl text-left transition-all duration-500"
                 >
                     <div className="mb-1 md:mb-2">
                         <span className="text-lg md:text-3xl font-serif italic text-white font-light tracking-wide font-['Times_New_Roman'] whitespace-nowrap">
@@ -180,31 +60,13 @@ export default function HeroText({ scrollProgress, step }: HeroTextProps) {
                         </span>
                     </div>
                     <h1 className="font-black tracking-tighter text-white leading-[0.85] transition-all duration-500 text-3xl md:text-5xl lg:text-7xl uppercase">
-                        <span className="md:hidden block whitespace-nowrap">Product Designe<span ref={isMobileScreen ? refR : null}>r</span></span>
-                        <span className="hidden md:block">PRODUCT<br />DESIGNER<span ref={!isMobileScreen ? refR : null}>R</span></span>
+                        <span className="md:hidden block whitespace-nowrap">Product Designer</span>
+                        <span className="hidden md:block">PRODUCT<br />DESIGNER</span>
                         <span className="text-white/50 font-medium tracking-tight block mt-1 md:mt-2 text-lg md:text-3xl">
                             FOR COMPLEX SYSTEMS
                         </span>
                     </h1>
-
-                    {/* Annotation Arrow for Step 3 - Mobile */}
-                    <AnimatePresence>
-                        {step === 2 && (
-                            <div className="md:hidden">
-                                <HeroAnnotationArrow isMobile={true} startRef={refR} />
-                            </div>
-                        )}
-                    </AnimatePresence>
                 </motion.div>
-
-                {/* Desktop Arrow - Component handles its own visibility via Step 3 trigger */}
-                <AnimatePresence>
-                    {step === 2 && (
-                        <div className="hidden md:block">
-                            <HeroAnnotationArrow isMobile={false} startRef={refR} />
-                        </div>
-                    )}
-                </AnimatePresence>
 
                 {/* Right Side: Details + CTA (Hidden on mobile) */}
                 <motion.div
