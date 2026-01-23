@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Users, Rocket, Target, Zap, Shield, AlertCircle, CheckCircle, Clock, Activity, Lock, AlertTriangle, ArrowRight, Lightbulb, Coffee, Receipt, List, ChefHat, CreditCard, LayoutGrid, ChevronLeft, ChevronRight, Check, Plus, Minus } from 'lucide-react';
+import { Search, Users, Rocket, Target, Zap, Shield, AlertCircle, CheckCircle, Clock, Activity, Lock, AlertTriangle, ArrowRight, Lightbulb, Coffee, Receipt, List, ChefHat, CreditCard, LayoutGrid, ChevronLeft, ChevronRight, Check, Plus, Minus, Volume2, VolumeX, X } from 'lucide-react';
 
 function cn(...classes: (string | undefined | null | false)[]) {
     return classes.filter(Boolean).join(' ');
@@ -82,22 +82,118 @@ const decisionContent = [
 // Content for Scene 4 panels
 // Menu items with realistic prices
 const menuItems = [
-    { name: 'Latte', price: 5.50, category: 'Coffee' },
-    { name: 'Cappuccino', price: 5.00, category: 'Coffee' },
-    { name: 'Americano', price: 4.00, category: 'Coffee' },
-    { name: 'Mocha', price: 6.00, category: 'Coffee' },
-    { name: 'Espresso', price: 3.50, category: 'Coffee' },
-    { name: 'Flat White', price: 5.25, category: 'Coffee' },
-    { name: 'Earl Grey', price: 4.50, category: 'Tea' },
-    { name: 'Matcha Latte', price: 6.00, category: 'Tea' },
-    { name: 'Chai Latte', price: 5.50, category: 'Tea' },
-    { name: 'Peppermint', price: 4.00, category: 'Tea' },
-    { name: 'English Bfast', price: 4.00, category: 'Tea' },
-    { name: 'Bagel', price: 3.50, category: 'Pastry' },
-    { name: 'Croissant', price: 4.00, category: 'Pastry' },
-    { name: 'Pain au Choc', price: 4.50, category: 'Pastry' },
-    { name: 'Danish', price: 4.25, category: 'Pastry' },
-    { name: 'Muffin', price: 3.75, category: 'Pastry' }
+    {
+        name: 'Latte', price: 5.50, category: 'Coffee',
+        modifiers: [
+            { name: "Size", type: "radio", options: ["Sm", "Med", "Lg"], default: "Med" },
+            { name: "Milk", type: "radio", options: ["Whole", "Oat", "Almond", "Soy"], default: "Whole" },
+            { name: "Extras", type: "checkbox", options: ["Extra Shot", "Vanilla", "Caramel"] }
+        ]
+    },
+    {
+        name: 'Cappuccino', price: 5.00, category: 'Coffee',
+        modifiers: [
+            { name: "Size", type: "radio", options: ["Sm", "Med", "Lg"], default: "Med" },
+            { name: "Milk", type: "radio", options: ["Whole", "Oat", "Almond", "Soy"], default: "Whole" },
+            { name: "Extras", type: "checkbox", options: ["Extra Shot", "Cocoa Dust"] }
+        ]
+    },
+    {
+        name: 'Americano', price: 4.00, category: 'Coffee',
+        modifiers: [
+            { name: "Size", type: "radio", options: ["Sm", "Med", "Lg"], default: "Med" },
+            { name: "Extras", type: "checkbox", options: ["Extra Shot", "Splash of Milk"] }
+        ]
+    },
+    {
+        name: 'Mocha', price: 6.00, category: 'Coffee',
+        modifiers: [
+            { name: "Size", type: "radio", options: ["Sm", "Med", "Lg"], default: "Med" },
+            { name: "Milk", type: "radio", options: ["Whole", "Oat", "Almond"], default: "Whole" },
+            { name: "Extras", type: "checkbox", options: ["Whipped Cream", "Extra Shot"] }
+        ]
+    },
+    {
+        name: 'Espresso', price: 3.50, category: 'Coffee',
+        modifiers: [
+            { name: "Type", type: "radio", options: ["Single", "Double"], default: "Double" }
+        ]
+    },
+    {
+        name: 'Flat White', price: 5.25, category: 'Coffee',
+        modifiers: [
+            { name: "Size", type: "radio", options: ["Sm", "Med", "Lg"], default: "Med" },
+            { name: "Milk", type: "radio", options: ["Whole", "Oat", "Almond"], default: "Whole" }
+        ]
+    },
+    {
+        name: 'Earl Grey', price: 4.50, category: 'Tea',
+        modifiers: [
+            { name: "Size", type: "radio", options: ["Sm", "Med", "Lg"], default: "Med" },
+            { name: "Extras", type: "checkbox", options: ["Honey", "Lemon", "Milk"] }
+        ]
+    },
+    {
+        name: 'Matcha Latte', price: 6.00, category: 'Tea',
+        modifiers: [
+            { name: "Size", type: "radio", options: ["Sm", "Med", "Lg"], default: "Med" },
+            { name: "Sweetness", type: "radio", options: ["None", "Normal", "Sweet"], default: "Normal" }
+        ]
+    },
+    {
+        name: 'Chai Latte', price: 5.50, category: 'Tea',
+        modifiers: [
+            { name: "Size", type: "radio", options: ["Sm", "Med", "Lg"], default: "Med" },
+            { name: "Milk", type: "radio", options: ["Whole", "Oat", "Almond"], default: "Whole" }
+        ]
+    },
+    {
+        name: 'Peppermint', price: 4.00, category: 'Tea',
+        modifiers: [
+            { name: "Size", type: "radio", options: ["Sm", "Med", "Lg"], default: "Med" },
+            { name: "Extras", type: "checkbox", options: ["Honey", "Lemon"] }
+        ]
+    },
+    {
+        name: 'English Bfast', price: 4.00, category: 'Tea',
+        modifiers: [
+            { name: "Size", type: "radio", options: ["Sm", "Med", "Lg"], default: "Med" },
+            { name: "Extras", type: "checkbox", options: ["Milk", "Honey"] }
+        ]
+    },
+    {
+        name: 'Bagel', price: 3.50, category: 'Pastry',
+        modifiers: [
+            { name: "Preparation", type: "radio", options: ["Toasted", "Untoasted"], default: "Toasted" },
+            { name: "Add-ons", type: "checkbox", options: ["Cream Cheese", "Butter", "Jam"] }
+        ]
+    },
+    {
+        name: 'Croissant', price: 4.00, category: 'Pastry',
+        modifiers: [
+            { name: "Preparation", type: "radio", options: ["Warmed", "Room Temp"], default: "Room Temp" },
+            { name: "Add-ons", type: "checkbox", options: ["Butter", "Jam", "Cheese"] }
+        ]
+    },
+    {
+        name: 'Pain au Choc', price: 4.50, category: 'Pastry',
+        modifiers: [
+            { name: "Preparation", type: "radio", options: ["Warmed", "Room Temp"], default: "Room Temp" }
+        ]
+    },
+    {
+        name: 'Danish', price: 4.25, category: 'Pastry',
+        modifiers: [
+            { name: "Preparation", type: "radio", options: ["Warmed", "Room Temp"], default: "Room Temp" }
+        ]
+    },
+    {
+        name: 'Muffin', price: 3.75, category: 'Pastry',
+        modifiers: [
+            { name: "Preparation", type: "radio", options: ["Warmed", "Room Temp"], default: "Room Temp" },
+            { name: "Add-ons", type: "checkbox", options: ["Butter"] }
+        ]
+    }
 ];
 
 const panelContent = {
@@ -180,6 +276,144 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
     const cardRefD = useRef<HTMLDivElement>(null);
     const cardRefF = useRef<HTMLDivElement>(null);
     const [cardHeights, setCardHeights] = useState({ A: 180, C: 180, D: 180, F: 280 });
+
+    // Modifier Popup State
+    const [modifierPopupItem, setModifierPopupItem] = useState<any>(null);
+    const [currentModifiers, setCurrentModifiers] = useState<Record<string, any>>({});
+    const [modifierQuantity, setModifierQuantity] = useState(1);
+
+    // Volume State
+    const [isMuted, setIsMuted] = useState(false);
+
+    // Haptic hover sound
+    const playHoverSound = () => {
+        if (isMuted || showSplash) return;
+        try {
+            const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+
+            // Create oscillators for a pleasant bell-like sound
+            const osc1 = audioContext.createOscillator();
+            const osc2 = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            // Frequencies for a pleasant chord (C and E notes, high octave)
+            osc1.frequency.setValueAtTime(1046.5, audioContext.currentTime); // C6
+            osc2.frequency.setValueAtTime(1318.5, audioContext.currentTime); // E6
+
+            osc1.type = 'sine';
+            osc2.type = 'sine';
+
+            // Connect oscillators to gain
+            osc1.connect(gainNode);
+            osc2.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            // Envelope: quick attack, gentle decay
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.03, audioContext.currentTime + 0.01); // Very subtle volume
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.15);
+
+            // Play
+            osc1.start(audioContext.currentTime);
+            osc2.start(audioContext.currentTime);
+            osc1.stop(audioContext.currentTime + 0.15);
+            osc2.stop(audioContext.currentTime + 0.15);
+
+            // Cleanup
+            setTimeout(() => audioContext.close(), 200);
+        } catch (e) {
+            // Silently fail if audio context not supported
+        }
+    };
+
+    // Add to cart sound - upward "pop"
+    const playAddToCartSound = () => {
+        if (isMuted || showSplash) return;
+        try {
+            const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+            const osc = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            osc.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            // Upward sweep from 400Hz to 800Hz
+            osc.frequency.setValueAtTime(400, audioContext.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.1);
+            osc.type = 'sine';
+
+            // Quick pop envelope
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.15, audioContext.currentTime + 0.01);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1);
+
+            osc.start(audioContext.currentTime);
+            osc.stop(audioContext.currentTime + 0.1);
+
+            setTimeout(() => audioContext.close(), 150);
+        } catch (e) { }
+    };
+
+    // Quantity change sound - quick click
+    const playQuantitySound = () => {
+        if (isMuted || showSplash) return;
+        try {
+            const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+            const osc = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            osc.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            // Short, sharp click at 1200Hz
+            osc.frequency.setValueAtTime(1200, audioContext.currentTime);
+            osc.type = 'square';
+
+            // Very short envelope for click
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.06, audioContext.currentTime + 0.005);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.03);
+
+            osc.start(audioContext.currentTime);
+            osc.stop(audioContext.currentTime + 0.03);
+
+            setTimeout(() => audioContext.close(), 50);
+        } catch (e) { }
+    };
+
+    // Send to kitchen sound - success chime
+    const playSendToKitchenSound = () => {
+        if (isMuted || showSplash) return;
+        try {
+            const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+
+            // Three note ascending arpeggio (C-E-G major chord)
+            const playNote = (freq: number, startTime: number, duration: number) => {
+                const osc = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+
+                osc.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+
+                osc.frequency.setValueAtTime(freq, startTime);
+                osc.type = 'sine';
+
+                gainNode.gain.setValueAtTime(0, startTime);
+                gainNode.gain.linearRampToValueAtTime(0.12, startTime + 0.01);
+                gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+
+                osc.start(startTime);
+                osc.stop(startTime + duration);
+            };
+
+            const now = audioContext.currentTime;
+            playNote(523.25, now, 0.15);        // C5
+            playNote(659.25, now + 0.08, 0.15); // E5
+            playNote(783.99, now + 0.16, 0.25); // G5
+
+            setTimeout(() => audioContext.close(), 500);
+        } catch (e) { }
+    };
 
     // Initial Gate (Mobile and viewport width checks)
     useEffect(() => {
@@ -364,7 +598,76 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
     //         }
     //     }, TICK_RATE);
     //     return () => clearInterval(timer);
-    // }, [isPaused, step]);
+    // Modifier Popup Logic
+    const openModifierPopup = (item: any) => {
+        setModifierPopupItem(item);
+        setModifierQuantity(1);
+        const defaults: Record<string, any> = {};
+        if (item.modifiers) {
+            item.modifiers.forEach((mod: any) => {
+                if (mod.default) {
+                    defaults[mod.name] = mod.default;
+                } else if (mod.type === 'checkbox') {
+                    defaults[mod.name] = [];
+                }
+            });
+        }
+        setCurrentModifiers(defaults);
+    };
+
+    const toggleModifier = (modName: string, value: string, type: 'radio' | 'checkbox') => {
+        setCurrentModifiers(prev => {
+            if (type === 'radio') {
+                return { ...prev, [modName]: value };
+            } else {
+                const current = prev[modName] || [];
+                if (current.includes(value)) {
+                    return { ...prev, [modName]: current.filter((v: string) => v !== value) };
+                } else {
+                    return { ...prev, [modName]: [...current, value] };
+                }
+            }
+        });
+    };
+
+    const addModifiersToCart = () => {
+        if (!modifierPopupItem) return;
+
+        playAddToCartSound();
+
+        // Format modifiers string
+        const modsList: string[] = [];
+        modifierPopupItem.modifiers?.forEach((mod: any) => {
+            const val = currentModifiers[mod.name];
+            if (val) {
+                if (Array.isArray(val)) {
+                    if (val.length > 0) modsList.push(val.join(', '));
+                } else {
+                    modsList.push(val);
+                }
+            }
+        });
+
+        const modifiersStr = modsList.join(' • ');
+
+        setOrderItems(prev => {
+            // Check if exact item exists (same name + same modifiers)
+            const existingIdx = prev.findIndex(i => i.name === modifierPopupItem.name && i.modifiers === modifiersStr);
+            if (existingIdx >= 0) {
+                const newItems = [...prev];
+                newItems[existingIdx].qty += modifierQuantity;
+                return newItems;
+            }
+            return [...prev, {
+                name: modifierPopupItem.name,
+                price: modifierPopupItem.price,
+                qty: modifierQuantity,
+                modifiers: modifiersStr
+            }];
+        });
+
+        setModifierPopupItem(null);
+    };
 
     // Reset progress on manual nav
     const handleNext = (e?: React.MouseEvent) => {
@@ -1098,6 +1401,21 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                     {showSplash && <SplashScreen />}
                                 </AnimatePresence>
 
+                                {/* MODIFIER POPUP */}
+                                <AnimatePresence>
+                                    {modifierPopupItem && (
+                                        <ModifierPopup
+                                            item={modifierPopupItem}
+                                            currentModifiers={currentModifiers}
+                                            onClose={() => setModifierPopupItem(null)}
+                                            onAdd={addModifiersToCart}
+                                            onToggleModifier={toggleModifier}
+                                            quantity={modifierQuantity}
+                                            setQuantity={setModifierQuantity}
+                                        />
+                                    )}
+                                </AnimatePresence>
+
                                 {/* Top Bar */}
                                 <motion.div variants={{ hidden: { opacity: 0, y: -10 }, show: { opacity: 1, y: 0 } }} className={cn("bg-zinc-900 border-b border-zinc-700 flex items-center justify-between px-4 rounded-t-[10px]", isEffectiveMobile ? "h-8" : "h-12")}>
                                     <div className="flex items-center gap-2">
@@ -1127,10 +1445,10 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                     <div className={cn("flex flex-col min-h-0", !isLandscapeLayout ? "flex-[60] border-b border-zinc-700 bg-zinc-800/40" : "flex-[65] border-r border-zinc-700 bg-zinc-900/50")}>
                                         {/* Search + Categories */}
                                         {/* Search + Categories */}
-                                        <motion.div variants={{ hidden: { opacity: 0, x: -10 }, show: { opacity: 1, x: 0 } }} className={cn("space-y-3 flex flex-col justify-center", isEffectiveMobile ? "p-1" : "p-4 border-b border-zinc-800")}>
+                                        <motion.div variants={{ hidden: { opacity: 0, x: -10 }, show: { opacity: 1, x: 0 } }} className={cn("flex items-center gap-3", isEffectiveMobile ? "p-1" : "p-4 border-b border-zinc-800")}>
                                             {/* Search Bar: Re-enabled for Tablet Portrait as requested */}
                                             {!isEffectiveMobile && (
-                                                <div className="relative">
+                                                <div className="relative flex-1">
                                                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={14} />
                                                     <input
                                                         type="text"
@@ -1142,18 +1460,18 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                 </div>
                                             )}
                                             {/* Category Tabs */}
-                                            <div className={cn("flex gap-2 overflow-x-auto pb-1 scrollbar-hide", isEffectiveMobile && "pt-1")}>
+                                            <div className={cn("flex gap-2", isEffectiveMobile ? "overflow-x-auto scrollbar-hide flex-1" : "flex-shrink-0")}>
                                                 {['All', 'Coffee', 'Tea', 'Pastry'].map((cat, i) => (
                                                     <button
                                                         key={cat}
                                                         className={cn(
-                                                            "rounded-full font-medium whitespace-nowrap cursor-pointer border",
-                                                            isEffectiveMobile ? "px-3 py-1 text-[10px]" : "px-4 py-1.5 text-xs",
+                                                            "inline-flex items-center justify-center rounded-full font-medium whitespace-nowrap cursor-pointer border transition-all duration-200",
+                                                            isEffectiveMobile ? "px-4 py-1.5 text-[11px]" : "px-5 py-2 text-xs",
                                                             selectedCategory === cat
-                                                                ? "bg-accent-primary text-black shadow-sm border-accent-primary"
-                                                                : "bg-zinc-700 text-zinc-200 hover:bg-zinc-600 border-zinc-500"
+                                                                ? "bg-accent-primary text-black shadow-md shadow-accent-primary/20 border-accent-primary font-semibold"
+                                                                : "bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700 hover:text-white border-zinc-700/50 hover:border-zinc-600"
                                                         )}
-                                                        onClick={() => setSelectedCategory(cat)}
+                                                        onClick={() => { playQuantitySound(); setSelectedCategory(cat); }}
                                                     >
                                                         {cat}
                                                     </button>
@@ -1184,47 +1502,32 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                                 : { hidden: { opacity: 1, y: 0 }, show: { opacity: 1, y: 0 } }
                                                             }
                                                             whileTap={{ scale: 0.98 }}
-                                                            onClick={() => addToCart(item)}
-                                                            className="bg-zinc-800 border border-zinc-700/50 rounded-lg overflow-hidden cursor-pointer hover:border-zinc-500/50 hover:bg-zinc-700 transition-colors group"
+                                                            onClick={() => {
+                                                                if (item.modifiers) openModifierPopup(item);
+                                                                else { playAddToCartSound(); addToCart(item); }
+                                                            }}
+                                                            onMouseEnter={playHoverSound}
+                                                            className="bg-zinc-800 border border-zinc-600/40 rounded-xl overflow-hidden cursor-pointer hover:border-zinc-500/50 hover:bg-zinc-700 transition-colors group"
                                                         >
-                                                            <div className={cn("bg-zinc-900 relative overflow-hidden", isEffectiveMobile ? "aspect-video" : "aspect-[4/3]")}>
+                                                            <div className={cn("bg-zinc-900 relative overflow-hidden rounded-t-xl", isEffectiveMobile ? "aspect-video" : "aspect-[4/3]")}>
                                                                 {/* Category Image */}
                                                                 <motion.img
                                                                     initial={{ scale: 1.05 }}
                                                                     transition={{ duration: 0.3, ease: "easeOut" }}
-                                                                    src={
-                                                                        (item.name.includes('Americano')) ? '/menu/americano.png' :
-                                                                            (item.name.includes('Espresso')) ? '/menu/espresso.png' :
-                                                                                (item.name.includes('Cappuccino')) ? '/menu/cappuccino.png' :
-                                                                                    (item.name.includes('Flat White')) ? '/menu/flat_white.png' :
-                                                                                        (item.name.includes('Pain')) ? '/menu/pain_au_chocolat.png' :
-                                                                                            (item.name.includes('Mocha') || item.name.includes('Choc')) ? '/menu/mocha.png' :
-                                                                                                (item.name.includes('Bagel')) ? '/menu/bagel.png' :
-                                                                                                    (item.name.includes('Muffin')) ? '/menu/muffin.png' :
-                                                                                                        (item.name.includes('Danish')) ? '/menu/danish.png' :
-                                                                                                            (item.name.includes('Chai')) ? '/menu/chai_latte.png' :
-                                                                                                                (item.name.includes('Pepper')) ? '/menu/peppermint_tea.png' :
-                                                                                                                    (item.name.includes('Bfast')) ? '/menu/english_breakfast.png' :
-                                                                                                                        (item.name.includes('Tea') || item.name.includes('Grey')) ? '/menu/black_tea.png' :
-                                                                                                                            item.category === 'Coffee' ? '/menu/coffee.png' :
-                                                                                                                                item.category === 'Tea' ? '/menu/tea.png' :
-                                                                                                                                    '/menu/pastry.png'
-                                                                    }
+                                                                    src={getItemImageSrc(item.name, item.category)}
                                                                     alt={item.name}
-                                                                    className="w-full h-full object-cover opacity-100 group-hover:scale-105 will-change-transform transition-transform duration-500"
+                                                                    className="w-full h-full object-cover opacity-100"
                                                                 />
 
-                                                                {/* Price Tag Overlay */}
-                                                                <div className="absolute top-1 right-1 bg-black/40 backdrop-blur-md px-1.5 py-0.5 rounded text-[10px] font-bold text-white border border-white/10 shadow-lg">
-                                                                    €{item.price.toFixed(2)}
-                                                                </div>
+                                                                {/* Flash Wipe Effect */}
+                                                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full group-hover:transition-transform group-hover:duration-700 group-hover:ease-in-out" />
 
                                                                 {/* Hover Overlay Gradient */}
                                                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
                                                             </div>
-                                                            <div className={cn("relative", isEffectiveMobile ? "p-2" : "p-3")}>
-                                                                <h3 className={cn("font-medium tracking-wide text-zinc-100 leading-tight truncate", isEffectiveMobile ? "text-[10px] xs:text-xs" : "text-sm")}>{item.name}</h3>
-                                                                <p className={cn("text-zinc-400 mt-0.5", isEffectiveMobile ? "text-[10px]" : "text-[11px]")}>{item.category}</p>
+                                                            <div className={cn("relative flex items-center justify-between", isEffectiveMobile ? "p-2" : "p-3")}>
+                                                                <h3 className={cn("!font-[400] tracking-wide text-zinc-100 leading-tight truncate", isEffectiveMobile ? "text-[10px] xs:text-xs" : "text-sm")}>{item.name}</h3>
+                                                                <span className={cn("!font-[400] text-zinc-400 ml-2 shrink-0", isEffectiveMobile ? "text-[10px]" : "text-sm")}>€{item.price.toFixed(2)}</span>
                                                             </div>
                                                         </motion.div>
                                                     ))}
@@ -1242,12 +1545,20 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                     <Receipt size={16} className="text-accent-primary" />
                                                     <span className="font-semibold text-zinc-200 text-sm">Order</span>
                                                 </div>
-                                                <button
-                                                    onClick={(e) => { e.stopPropagation(); clearCart(); }}
-                                                    className="text-[10px] text-zinc-500 hover:text-zinc-300 transition-colors bg-zinc-800 px-2 py-1 rounded cursor-pointer"
-                                                >
-                                                    Clear
-                                                </button>
+                                                <div className="flex items-center gap-2">
+                                                    <button
+                                                        onClick={(e) => { e.stopPropagation(); setIsMuted(!isMuted); }}
+                                                        className="text-zinc-500 hover:text-zinc-300 transition-colors p-1"
+                                                    >
+                                                        {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
+                                                    </button>
+                                                    <button
+                                                        onClick={(e) => { e.stopPropagation(); clearCart(); }}
+                                                        className="text-[10px] text-zinc-500 hover:text-zinc-300 transition-colors bg-zinc-800 px-2 py-1 rounded cursor-pointer"
+                                                    >
+                                                        Clear
+                                                    </button>
+                                                </div>
                                             </div>
                                         )}
 
@@ -1271,11 +1582,11 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                         className={cn("flex items-start rounded-lg hover:bg-zinc-800/50 group", isEffectiveMobile ? "gap-2 p-1" : "gap-3 p-2")}
                                                     >
                                                         <div className="flex items-center gap-1 mt-0.5">
-                                                            <button onClick={(e) => { e.stopPropagation(); updateQuantity(i, -1); }} className="w-6 h-6 flex items-center justify-center bg-zinc-700 text-zinc-300 hover:text-white rounded border border-zinc-600 cursor-pointer">-</button>
+                                                            <button onClick={(e) => { e.stopPropagation(); playQuantitySound(); updateQuantity(i, -1); }} className="w-6 h-6 flex items-center justify-center bg-zinc-700 text-zinc-300 hover:text-white rounded border border-zinc-600 cursor-pointer">-</button>
                                                             <div className="w-6 h-6 flex items-center justify-center bg-black/40 rounded text-xs font-medium text-zinc-200 border border-white/5">
                                                                 {item.qty}
                                                             </div>
-                                                            <button onClick={(e) => { e.stopPropagation(); updateQuantity(i, 1); }} className="w-6 h-6 flex items-center justify-center bg-zinc-700 text-zinc-300 hover:text-white rounded border border-zinc-600 cursor-pointer">+</button>
+                                                            <button onClick={(e) => { e.stopPropagation(); playQuantitySound(); updateQuantity(i, 1); }} className="w-6 h-6 flex items-center justify-center bg-zinc-700 text-zinc-300 hover:text-white rounded border border-zinc-600 cursor-pointer">+</button>
                                                         </div>
                                                         <div className="flex-1 min-w-0">
                                                             <div className="flex justify-between">
@@ -1349,7 +1660,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                     </button>
                                                 )}
                                                 <button
-                                                    onClick={(e) => { e.stopPropagation(); sendToKitchen(); }}
+                                                    onClick={(e) => { e.stopPropagation(); playSendToKitchenSound(); sendToKitchen(); }}
                                                     className={cn("bg-accent-primary hover:bg-accent-primary/90 text-black font-bold rounded transition-all shadow-lg relative overflow-hidden cursor-pointer", isEffectiveMobile ? "flex-1 py-2 text-xs" : "flex-[3] py-2.5 text-sm")}
                                                 >
                                                     <AnimatePresence mode="wait">
@@ -2010,6 +2321,122 @@ function SplashScreen() {
 
             {/* Background Texture/Gradient */}
             <div className="absolute inset-0 bg-radial-gradient from-accent-primary/5 to-transparent opacity-30 pointer-events-none" />
+        </motion.div>
+    );
+}
+
+// --- Helper Functions ---
+
+function getItemImageSrc(name: string, category: string) {
+    if (name.includes('Americano')) return '/menu/americano.png';
+    if (name.includes('Espresso')) return '/menu/espresso.png';
+    if (name.includes('Cappuccino')) return '/menu/cappuccino.png';
+    if (name.includes('Flat White')) return '/menu/flat_white.png';
+    if (name.includes('Pain')) return '/menu/pain_au_chocolat.png';
+    if (name.includes('Mocha') || name.includes('Choc')) return '/menu/mocha.png';
+    if (name.includes('Bagel')) return '/menu/bagel.png';
+    if (name.includes('Muffin')) return '/menu/muffin.png';
+    if (name.includes('Danish')) return '/menu/danish.png';
+    if (name.includes('Chai')) return '/menu/chai_latte.png';
+    if (name.includes('Pepper')) return '/menu/peppermint_tea.png';
+    if (name.includes('Bfast')) return '/menu/english_breakfast.png';
+    if (name.includes('Tea') || name.includes('Grey')) return '/menu/black_tea.png';
+    if (category === 'Coffee') return '/menu/coffee.png';
+    if (category === 'Tea') return '/menu/tea.png';
+    return '/menu/pastry.png';
+}
+
+// --- Modifier Popup Component ---
+
+function ModifierPopup({ item, onClose, onAdd, currentModifiers, onToggleModifier, quantity, setQuantity }: any) {
+    const calculateTotal = () => (item.price * quantity).toFixed(2);
+
+    return (
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 z-[60] flex items-end sm:items-center justify-center pointer-events-auto"
+        >
+            {/* Backdrop */}
+            <div className="absolute inset-0 bg-black/60" onClick={onClose} />
+
+            {/* Card */}
+            <motion.div
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                exit={{ y: "100%" }}
+                transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                className="relative w-full sm:w-[400px] bg-zinc-900 sm:rounded-2xl rounded-t-2xl border border-zinc-700 shadow-2xl overflow-hidden flex flex-col max-h-[85%] sm:max-h-[80%]"
+                onClick={e => e.stopPropagation()}
+            >
+                {/* Header */}
+                <div className="flex items-center gap-3 p-4 border-b border-zinc-800 bg-zinc-900 relative z-10 shrink-0">
+                    <div className="w-12 h-12 rounded-lg overflow-hidden bg-zinc-800 border border-zinc-700 flex-shrink-0 shadow-sm">
+                        <img src={getItemImageSrc(item.name, item.category)} alt={item.name} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                        <h3 className="text-base font-bold text-white leading-tight">{item.name}</h3>
+                        <p className="text-zinc-400 text-xs font-medium">€{item.price.toFixed(2)}</p>
+                    </div>
+                    <button onClick={onClose} className="p-1.5 -mr-1 text-zinc-500 hover:text-white transition-colors cursor-pointer rounded-full hover:bg-zinc-800">
+                        <X size={18} />
+                    </button>
+                </div>
+
+                {/* Modifiers Scroll Area - Compact */}
+                <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-custom">
+                    {item.modifiers?.map((mod: any) => (
+                        <div key={mod.name} className="space-y-1.5">
+                            <div className="flex justify-between items-baseline px-0.5">
+                                <h4 className="text-xs font-bold text-zinc-400 uppercase tracking-wider">{mod.name}</h4>
+                                {mod.type === 'radio' && <span className="text-[9px] text-accent-primary font-bold tracking-wide uppercase">Required</span>}
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                                {mod.options.map((opt: string) => {
+                                    const isSelected = mod.type === 'radio'
+                                        ? currentModifiers[mod.name] === opt
+                                        : currentModifiers[mod.name]?.includes(opt);
+
+                                    return (
+                                        <button
+                                            key={opt}
+                                            onClick={() => onToggleModifier(mod.name, opt, mod.type)}
+                                            className={cn(
+                                                "px-3 py-1.5 rounded-lg text-xs font-medium transition-all border flex items-center gap-2 group cursor-pointer shadow-sm relative overflow-hidden",
+                                                isSelected
+                                                    ? "bg-accent-primary text-black border-accent-primary font-bold"
+                                                    : "bg-zinc-800/50 text-zinc-400 border-zinc-700/50 hover:bg-zinc-800 hover:text-zinc-200 hover:border-zinc-600"
+                                            )}
+                                        >
+                                            <span className="relative z-10">{opt}</span>
+                                        </button>
+                                    )
+                                })}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Footer */}
+                <div className="p-3 border-t border-zinc-800 bg-zinc-900 space-y-3 shrink-0 pb-safe">
+                    <div className="flex items-center justify-between">
+                        <span className="text-xs font-medium text-zinc-500">Quantity</span>
+                        <div className="flex items-center gap-3 bg-zinc-800/50 rounded-lg p-1 border border-zinc-700/50">
+                            <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-7 h-7 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-700 rounded-md transition-colors cursor-pointer"><Minus size={14} /></button>
+                            <span className="w-5 text-center font-mono font-bold text-sm text-white">{quantity}</span>
+                            <button onClick={() => setQuantity(quantity + 1)} className="w-7 h-7 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-700 rounded-md transition-colors cursor-pointer"><Plus size={14} /></button>
+                        </div>
+                    </div>
+                    <button
+                        onClick={onAdd}
+                        className="w-full py-3 bg-accent-primary hover:bg-accent-primary/90 text-black font-bold text-sm rounded-lg shadow-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer"
+                    >
+                        <span>Add to Order</span>
+                        <span className="font-mono">€{calculateTotal()}</span>
+                    </button>
+                </div>
+            </motion.div>
         </motion.div>
     );
 }

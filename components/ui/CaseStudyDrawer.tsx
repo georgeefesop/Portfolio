@@ -218,36 +218,102 @@ export default function CaseStudyDrawer({ project, isOpen, onToggle, priority = 
             {/* Lightbox Portal/Overlay */}
             <AnimatePresence>
                 {lightboxIndex !== null && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4"
-                        onClick={() => setLightboxIndex(null)}
-                    >
-                        {/* Close Button */}
-                        <button
-                            className="absolute top-6 right-6 text-white/50 hover:text-white transition-colors"
-                            onClick={() => setLightboxIndex(null)}
-                        >
-                            <X size={32} />
-                        </button>
-
-                        {/* Image */}
-                        <div
-                            className="relative w-full max-w-5xl aspect-video rounded-lg overflow-hidden shadow-2xl"
-                            onClick={(e) => e.stopPropagation()} // Prevent close when clicking image
-                        >
-                            <ImageWithFallback
-                                src={project.images.gallery[lightboxIndex]}
-                                alt="Gallery View"
-                                fill
-                                className="object-contain"
-                            />
-                        </div>
-                    </motion.div>
+                    <Lightbox
+                        src={project.images.gallery[lightboxIndex]}
+                        alt={`${project.title} detail view`}
+                        onClose={() => setLightboxIndex(null)}
+                    />
                 )}
             </AnimatePresence>
         </>
+    );
+}
+
+// --- Lightbox Component with Zoom/Pan ---
+
+function Lightbox({ src, alt, onClose }: { src: string, alt: string, onClose: () => void }) {
+    const [scale, setScale] = useState(1);
+    const [isDragging, setIsDragging] = useState(false);
+
+    // Reset scale when image changes (if we were swiping, but here we just open/close)
+    // For single image view, state reset on mount is sufficient.
+
+    const handleWheel = (e: React.WheelEvent) => {
+        e.stopPropagation();
+        // Determine zoom direction
+        const delta = -e.deltaY;
+        const speed = 0.002;
+        const newScale = scale + (delta * speed);
+
+        // Clamp scale between 1 and 4
+        setScale(Math.min(Math.max(1, newScale), 4));
+    };
+
+    const handleDoubleClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setScale(prev => prev > 1 ? 1 : 2.5);
+    };
+
+    return (
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-center justify-center overflow-hidden touch-none"
+            onClick={onClose}
+            onWheel={handleWheel}
+        >
+            {/* Close Button */}
+            <button
+                className="absolute top-6 right-6 z-[110] text-white/50 hover:text-white transition-colors bg-black/20 p-2 rounded-full backdrop-blur-md"
+                onClick={onClose}
+            >
+                <X size={32} />
+            </button>
+
+            {/* Hint Overlay (fades out) */}
+            <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5, duration: 0.5 }}
+                className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[110] text-white/40 text-xs font-mono bg-black/40 px-3 py-1.5 rounded-full pointer-events-none select-none"
+            >
+                Scroll to Zoom • Drag to Pan
+            </motion.div>
+
+            {/* Draggable Image Container */}
+            <motion.div
+                className="relative w-full h-full flex items-center justify-center"
+            >
+                <motion.div
+                    className="relative w-full max-w-7xl h-full p-4 flex items-center justify-center cursor-move"
+                    drag={scale > 1}
+                    dragConstraints={{
+                        left: -1000 * scale,
+                        right: 1000 * scale,
+                        top: -800 * scale,
+                        bottom: 800 * scale
+                    }}
+                    dragElastic={0.1}
+                    onDragStart={() => setIsDragging(true)}
+                    onDragEnd={() => setTimeout(() => setIsDragging(false), 50)}
+                    style={{ scale }}
+                    animate={{ scale }}
+                    transition={{ type: "spring", damping: 30, stiffness: 200 }}
+                    onDoubleClick={handleDoubleClick}
+                >
+                    {/* Using standard img for direct control, wrapped in layout */}
+                    <div className="relative w-full h-full flex items-center justify-center">
+                        <img
+                            src={src}
+                            alt={alt}
+                            className="max-w-full max-h-full object-contain select-none shadow-2xl drop-shadow-2xl pointer-events-auto"
+                            draggable={false}
+                            onClick={(e) => e.stopPropagation()}
+                        />
+                    </div>
+                </motion.div>
+            </motion.div>
+        </motion.div>
     );
 }
