@@ -1,21 +1,21 @@
 'use client';
 
 import FadeIn from '../motion/FadeIn';
-import { Zap, Layout, BarChart3, Sparkles, Code, Clock } from 'lucide-react';
+import { Zap, Layout, BarChart3, Sparkles, Megaphone, Clock } from 'lucide-react';
 
 const services = [
     {
         title: 'MVP Design + Development',
         description: 'Research → Prototype → Launch in 4-6 weeks. Full-stack execution with Next.js & Design Systems. Ideal for funded startups.',
-        price: 'From €10k',
+        price: 'From €12.5k',
         timeline: '4–6 weeks',
-        range: 'Typical €10–18k',
+        range: 'Typical €12.5–25k',
         scope: 'Includes: discovery, design, build, handoff',
         icon: Zap
     },
     {
-        title: 'Landing Page Design + Build',
-        description: 'High-converting pages for product launches. Custom animations and performance optimized. 1-2 week turnaround.',
+        title: 'Landing Pages & Hero Sections',
+        description: 'High-converting pages and killer hero sections. Custom animations and performance optimized.',
         price: 'From €2.5k',
         timeline: '1–2 weeks',
         range: 'Typical €2.5–6k',
@@ -32,27 +32,27 @@ const services = [
         icon: BarChart3
     },
     {
-        title: 'AI Integration & Workflows',
-        description: 'Custom AI features, image generation pipelines, and automation. AI-native design process for faster timelines.',
+        title: 'AI & Brand Assets',
+        description: 'Custom AI pipelines + GenAI image/video production for unique brand assets.',
         price: 'From €5k',
         timeline: '2–6 weeks',
         range: 'Typical €5–12k',
-        scope: 'Includes: scoped workflow, prototype, plan',
+        scope: 'Includes: automation, image/video generation, pipelines',
         icon: Sparkles
     },
     {
-        title: 'Design Systems & Components',
-        description: 'Scalable component libraries and style guides. Figma to code handoff and documentation for growing teams.',
+        title: 'Growth & Ad Creatives',
+        description: 'High-performance ad creatives and technical growth setup. From strategy to asset production.',
         price: 'From €2.5k',
-        timeline: '3–6 weeks',
-        range: 'Typical €2.5–8k',
-        scope: 'Includes: components, tokens, documentation',
-        icon: Code
+        timeline: '2–4 weeks',
+        range: 'Typical €2.5–6k',
+        scope: 'Includes: ad variants, technical SEO, campaign setup',
+        icon: Megaphone
     },
     {
         title: 'Hourly Consulting',
         description: 'Design audits, prototyping, and technical advisory. Flexible engagement for specific problem solving.',
-        price: '€100/hour',
+        price: '€120/hour',
         timeline: 'Async-first • Min. 3h',
         range: 'Min. 3 hours',
         scope: 'Audits, prototypes, technical guidance',

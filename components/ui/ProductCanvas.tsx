@@ -85,32 +85,32 @@ const menuItems = [
     {
         name: 'Latte', price: 5.50, category: 'Coffee',
         modifiers: [
-            { name: "Size", type: "radio", options: ["Sm", "Med", "Lg"], default: "Med" },
-            { name: "Milk", type: "radio", options: ["Whole", "Oat", "Almond", "Soy"], default: "Whole" },
-            { name: "Extras", type: "checkbox", options: ["Extra Shot", "Vanilla", "Caramel"] }
+            { name: "Size", type: "radio", options: ["Sm", "Med", { label: "Lg", price: 0.75 }], default: "Med" },
+            { name: "Milk", type: "radio", options: ["Whole", { label: "Oat", price: 0.50 }, { label: "Almond", price: 0.50 }, { label: "Soy", price: 0.50 }], default: "Whole" },
+            { name: "Extras", type: "checkbox", options: [{ label: "Extra Shot", price: 1.00 }, "Vanilla", "Caramel"] }
         ]
     },
     {
         name: 'Cappuccino', price: 5.00, category: 'Coffee',
         modifiers: [
-            { name: "Size", type: "radio", options: ["Sm", "Med", "Lg"], default: "Med" },
-            { name: "Milk", type: "radio", options: ["Whole", "Oat", "Almond", "Soy"], default: "Whole" },
-            { name: "Extras", type: "checkbox", options: ["Extra Shot", "Cocoa Dust"] }
+            { name: "Size", type: "radio", options: ["Sm", "Med", { label: "Lg", price: 0.75 }], default: "Med" },
+            { name: "Milk", type: "radio", options: ["Whole", { label: "Oat", price: 0.50 }, { label: "Almond", price: 0.50 }], default: "Whole" },
+            { name: "Extras", type: "checkbox", options: [{ label: "Extra Shot", price: 1.00 }, "Cocoa Dust"] }
         ]
     },
     {
         name: 'Americano', price: 4.00, category: 'Coffee',
         modifiers: [
-            { name: "Size", type: "radio", options: ["Sm", "Med", "Lg"], default: "Med" },
-            { name: "Extras", type: "checkbox", options: ["Extra Shot", "Splash of Milk"] }
+            { name: "Size", type: "radio", options: ["Sm", "Med", { label: "Lg", price: 0.50 }], default: "Med" },
+            { name: "Extras", type: "checkbox", options: [{ label: "Extra Shot", price: 1.00 }, "Splash of Milk"] }
         ]
     },
     {
         name: 'Mocha', price: 6.00, category: 'Coffee',
         modifiers: [
-            { name: "Size", type: "radio", options: ["Sm", "Med", "Lg"], default: "Med" },
-            { name: "Milk", type: "radio", options: ["Whole", "Oat", "Almond"], default: "Whole" },
-            { name: "Extras", type: "checkbox", options: ["Whipped Cream", "Extra Shot"] }
+            { name: "Size", type: "radio", options: ["Sm", "Med", { label: "Lg", price: 0.75 }], default: "Med" },
+            { name: "Milk", type: "radio", options: ["Whole", { label: "Oat", price: 0.50 }, { label: "Almond", price: 0.50 }], default: "Whole" },
+            { name: "Extras", type: "checkbox", options: ["Whipped Cream", { label: "Extra Shot", price: 1.00 }] }
         ]
     },
     {
@@ -129,35 +129,35 @@ const menuItems = [
     {
         name: 'Earl Grey', price: 4.50, category: 'Tea',
         modifiers: [
-            { name: "Size", type: "radio", options: ["Sm", "Med", "Lg"], default: "Med" },
+            { name: "Size", type: "radio", options: ["Sm", "Med", { label: "Lg", price: 0.50 }], default: "Med" },
             { name: "Extras", type: "checkbox", options: ["Honey", "Lemon", "Milk"] }
         ]
     },
     {
         name: 'Matcha Latte', price: 6.00, category: 'Tea',
         modifiers: [
-            { name: "Size", type: "radio", options: ["Sm", "Med", "Lg"], default: "Med" },
+            { name: "Size", type: "radio", options: ["Sm", "Med", { label: "Lg", price: 0.75 }], default: "Med" },
             { name: "Sweetness", type: "radio", options: ["None", "Normal", "Sweet"], default: "Normal" }
         ]
     },
     {
         name: 'Chai Latte', price: 5.50, category: 'Tea',
         modifiers: [
-            { name: "Size", type: "radio", options: ["Sm", "Med", "Lg"], default: "Med" },
-            { name: "Milk", type: "radio", options: ["Whole", "Oat", "Almond"], default: "Whole" }
+            { name: "Size", type: "radio", options: ["Sm", "Med", { label: "Lg", price: 0.75 }], default: "Med" },
+            { name: "Milk", type: "radio", options: ["Whole", { label: "Oat", price: 0.50 }, { label: "Almond", price: 0.50 }], default: "Whole" }
         ]
     },
     {
         name: 'Peppermint', price: 4.00, category: 'Tea',
         modifiers: [
-            { name: "Size", type: "radio", options: ["Sm", "Med", "Lg"], default: "Med" },
+            { name: "Size", type: "radio", options: ["Sm", "Med", { label: "Lg", price: 0.50 }], default: "Med" },
             { name: "Extras", type: "checkbox", options: ["Honey", "Lemon"] }
         ]
     },
     {
         name: 'English Bfast', price: 4.00, category: 'Tea',
         modifiers: [
-            { name: "Size", type: "radio", options: ["Sm", "Med", "Lg"], default: "Med" },
+            { name: "Size", type: "radio", options: ["Sm", "Med", { label: "Lg", price: 0.50 }], default: "Med" },
             { name: "Extras", type: "checkbox", options: ["Milk", "Honey"] }
         ]
     },
@@ -165,7 +165,7 @@ const menuItems = [
         name: 'Bagel', price: 3.50, category: 'Pastry',
         modifiers: [
             { name: "Preparation", type: "radio", options: ["Toasted", "Untoasted"], default: "Toasted" },
-            { name: "Add-ons", type: "checkbox", options: ["Cream Cheese", "Butter", "Jam"] }
+            { name: "Add-ons", type: "checkbox", options: [{ label: "Cream Cheese", price: 0.50 }, "Butter", "Jam"] }
         ]
     },
     {
@@ -279,14 +279,44 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
 
     // Modifier Popup State
     const [modifierPopupItem, setModifierPopupItem] = useState<any>(null);
+    const [modifierPopupPos, setModifierPopupPos] = useState<{ x: number, y: number } | null>(null);
     const [currentModifiers, setCurrentModifiers] = useState<Record<string, any>>({});
     const [modifierQuantity, setModifierQuantity] = useState(1);
+    const dashboardRef = useRef<HTMLDivElement>(null);
 
     // Volume State
     const [isMuted, setIsMuted] = useState(false);
 
-    // Haptic hover sound
+    // Upward sweep "pop" sound for hover
     const playHoverSound = () => {
+        if (isMuted || showSplash) return;
+        try {
+            const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+            const osc = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            osc.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            // Upward sweep from 400Hz to 800Hz
+            osc.frequency.setValueAtTime(400, audioContext.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.1);
+            osc.type = 'sine';
+
+            // Quick pop envelope
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+            gainNode.gain.linearRampToValueAtTime(0.05, audioContext.currentTime + 0.01);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1);
+
+            osc.start(audioContext.currentTime);
+            osc.stop(audioContext.currentTime + 0.1);
+
+            setTimeout(() => audioContext.close(), 150);
+        } catch (e) { }
+    };
+
+    // Bell-like chord for adding to cart
+    const playAddToCartSound = () => {
         if (isMuted || showSplash) return;
         try {
             const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -310,7 +340,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
 
             // Envelope: quick attack, gentle decay
             gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-            gainNode.gain.linearRampToValueAtTime(0.03, audioContext.currentTime + 0.01); // Very subtle volume
+            gainNode.gain.linearRampToValueAtTime(0.45, audioContext.currentTime + 0.01); // Further increased volume for cart feedback
             gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.15);
 
             // Play
@@ -321,36 +351,6 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
 
             // Cleanup
             setTimeout(() => audioContext.close(), 200);
-        } catch (e) {
-            // Silently fail if audio context not supported
-        }
-    };
-
-    // Add to cart sound - upward "pop"
-    const playAddToCartSound = () => {
-        if (isMuted || showSplash) return;
-        try {
-            const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-            const osc = audioContext.createOscillator();
-            const gainNode = audioContext.createGain();
-
-            osc.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-
-            // Upward sweep from 400Hz to 800Hz
-            osc.frequency.setValueAtTime(400, audioContext.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.1);
-            osc.type = 'sine';
-
-            // Quick pop envelope
-            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-            gainNode.gain.linearRampToValueAtTime(0.15, audioContext.currentTime + 0.01);
-            gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.1);
-
-            osc.start(audioContext.currentTime);
-            osc.stop(audioContext.currentTime + 0.1);
-
-            setTimeout(() => audioContext.close(), 150);
         } catch (e) { }
     };
 
@@ -599,7 +599,33 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
     //     }, TICK_RATE);
     //     return () => clearInterval(timer);
     // Modifier Popup Logic
-    const openModifierPopup = (item: any) => {
+    const openModifierPopup = (item: any, e: React.MouseEvent) => {
+        // Calculate position relative to dashboardRef
+        if (dashboardRef.current) {
+            const dashboardRect = dashboardRef.current.getBoundingClientRect();
+            // Calculate relative coordinates
+            let x = e.clientX - dashboardRect.left;
+            let y = e.clientY - dashboardRect.top;
+
+            // Offset slightly to not cover the item completely (float to right/bottom usually)
+            x += 20;
+            y += 20;
+
+            // Clamp to bounds to prevent cutoff
+            // Popup width approx 320px, Height approx 400px (max)
+            const popupW = 320;
+            const popupH = 400;
+
+            if (x + popupW > dashboardRect.width) x = dashboardRect.width - popupW - 20;
+            if (y + popupH > dashboardRect.height) y = dashboardRect.height - popupH - 20;
+
+            // Ensure non-negative
+            if (x < 10) x = 10;
+            if (y < 10) y = 10;
+
+            setModifierPopupPos({ x, y });
+        }
+
         setModifierPopupItem(item);
         setModifierQuantity(1);
         const defaults: Record<string, any> = {};
@@ -635,6 +661,21 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
 
         playAddToCartSound();
 
+        // Calculate actual unit price with modifiers
+        let unitPrice = modifierPopupItem.price;
+        modifierPopupItem.modifiers?.forEach((mod: any) => {
+            const val = currentModifiers[mod.name];
+            if (val) {
+                const choices = Array.isArray(val) ? val : [val];
+                choices.forEach(choice => {
+                    const opt = mod.options.find((o: any) => (typeof o === 'string' ? o : o.label) === choice);
+                    if (opt && typeof opt !== 'string' && opt.price) {
+                        unitPrice += opt.price;
+                    }
+                });
+            }
+        });
+
         // Format modifiers string
         const modsList: string[] = [];
         modifierPopupItem.modifiers?.forEach((mod: any) => {
@@ -652,7 +693,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
 
         setOrderItems(prev => {
             // Check if exact item exists (same name + same modifiers)
-            const existingIdx = prev.findIndex(i => i.name === modifierPopupItem.name && i.modifiers === modifiersStr);
+            const existingIdx = prev.findIndex(i => i.name === modifierPopupItem.name && i.modifiers === modifiersStr && i.price === unitPrice);
             if (existingIdx >= 0) {
                 const newItems = [...prev];
                 newItems[existingIdx].qty += modifierQuantity;
@@ -660,7 +701,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
             }
             return [...prev, {
                 name: modifierPopupItem.name,
-                price: modifierPopupItem.price,
+                price: unitPrice,
                 qty: modifierQuantity,
                 modifiers: modifiersStr
             }];
@@ -1380,6 +1421,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                     height: step === 2 ? posDimensions.height : (isMobile ? 400 : 560),
                                     maxHeight: 'none', // Removed max-height constraint to allow full calculated height
                                 }}
+                                ref={dashboardRef}
                                 onClick={(e) => e.stopPropagation()}
                             >
                                 {/* Resize Handles */}
@@ -1412,6 +1454,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                             onToggleModifier={toggleModifier}
                                             quantity={modifierQuantity}
                                             setQuantity={setModifierQuantity}
+                                            pos={modifierPopupPos}
                                         />
                                     )}
                                 </AnimatePresence>
@@ -1502,8 +1545,8 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                                 : { hidden: { opacity: 1, y: 0 }, show: { opacity: 1, y: 0 } }
                                                             }
                                                             whileTap={{ scale: 0.98 }}
-                                                            onClick={() => {
-                                                                if (item.modifiers) openModifierPopup(item);
+                                                            onClick={(e) => {
+                                                                if (item.modifiers) openModifierPopup(item, e);
                                                                 else { playAddToCartSound(); addToCart(item); }
                                                             }}
                                                             onMouseEnter={playHoverSound}
@@ -1706,20 +1749,20 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                             initial={{ opacity: 0, y: 20, scale: 0.9 }}
                                             animate={{ opacity: 1, y: 0, scale: 1 }}
                                             exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-                                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100] w-72 bg-zinc-900 shadow-[0_0_50px_rgba(0,0,0,0.8)] rounded-lg border border-zinc-800 overflow-hidden"
+                                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100] w-[350px] bg-zinc-900 shadow-[0_0_50px_rgba(0,0,0,0.8)] rounded-xl border border-zinc-800 overflow-hidden"
                                         >
-                                            <div className="bg-zinc-800 px-3 py-2.5 border-b border-zinc-700/50 flex justify-between items-center text-zinc-400">
-                                                <div className="flex items-center gap-2">
-                                                    <Receipt size={12} className="text-accent-primary" />
-                                                    <span className="text-[10px] font-bold uppercase tracking-widest">Kitchen Ticket</span>
+                                            <div className="bg-zinc-800 px-4 py-3 border-b border-zinc-700/50 flex justify-between items-center text-zinc-400">
+                                                <div className="flex items-center gap-2.5">
+                                                    <Receipt size={14} className="text-accent-primary" />
+                                                    <span className="text-xs font-bold uppercase tracking-widest">Kitchen Ticket</span>
                                                 </div>
-                                                <span className="text-[10px] font-mono font-bold text-zinc-500">#184-A</span>
+                                                <span className="text-xs font-mono font-bold text-zinc-500">#184-A</span>
                                             </div>
-                                            <div className="p-4 bg-zinc-900/50 space-y-3">
-                                                <div className="space-y-2">
+                                            <div className="p-5 bg-zinc-900/50 space-y-4">
+                                                <div className="space-y-3">
                                                     {toastItems.map((item, i) => (
-                                                        <div key={i} className="flex justify-between items-center text-[11px]">
-                                                            <div className="flex gap-3">
+                                                        <div key={i} className="flex justify-between items-center text-sm">
+                                                            <div className="flex gap-4">
                                                                 <span className="font-bold text-accent-primary">{item.qty}x</span>
                                                                 <span className="text-zinc-300 font-medium">{item.name}</span>
                                                             </div>
@@ -1727,8 +1770,8 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                         </div>
                                                     ))}
                                                 </div>
-                                                <div className="pt-3 border-t border-dashed border-zinc-800 flex justify-center text-center">
-                                                    <span className="text-[10px] text-zinc-500 font-medium uppercase tracking-tight">Order Route: Main Kitchen</span>
+                                                <div className="pt-4 border-t border-dashed border-zinc-800 flex justify-center text-center">
+                                                    <span className="text-[11px] text-zinc-500 font-medium uppercase tracking-tight">Order Route: Main Kitchen</span>
                                                 </div>
                                             </div>
                                             {/* Small timer bar at bottom */}
@@ -2261,66 +2304,212 @@ function Tooltip({ text, position = "bottom" }: { text: string, position?: "top"
     );
 }
 
-// Splash Screen Component
+// Splash Screen Component - Auto-Login Sequence
 function SplashScreen() {
+    const [pinLength, setPinLength] = useState(0);
+    const [status, setStatus] = useState("Locked");
+    const [isSuccess, setIsSuccess] = useState(false);
+    const [activeKey, setActiveKey] = useState<number | string | null>(null);
+
+    // Sound Effects
+    const playKeySound = (isAction = false) => {
+        try {
+            const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+            if (!AudioContext) return;
+            const ctx = new AudioContext();
+
+            // Resume context immediately to minimize latency
+            if (ctx.state === 'suspended') ctx.resume();
+
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            const now = ctx.currentTime;
+
+            // Standard POS "beep" - exact and sharp
+            osc.frequency.setValueAtTime(isAction ? 1200 : 1000, now);
+            osc.type = 'sine';
+
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(0.05, now + 0.005); // Rapid attack
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+
+            osc.start(now);
+            osc.stop(now + 0.1);
+            setTimeout(() => ctx.close(), 200);
+        } catch (e) { }
+    };
+
+    const playLoginSound = () => {
+        try {
+            const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+            if (!AudioContext) return;
+            const ctx = new AudioContext();
+            const now = ctx.currentTime;
+
+            // Nice startup chord
+            const playTone = (freq: number, delay: number, dur: number) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.frequency.value = freq;
+                osc.type = 'sine';
+
+                gain.gain.setValueAtTime(0, now + delay);
+                gain.gain.linearRampToValueAtTime(0.1, now + delay + 0.05);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + delay + dur);
+
+                osc.start(now + delay);
+                osc.stop(now + delay + dur);
+            };
+
+            // E Major 7th ish
+            playTone(329.63, 0, 1.5); // E4
+            playTone(415.30, 0.1, 1.5); // G#4
+            playTone(493.88, 0.2, 1.5); // B4
+            playTone(622.25, 0.3, 2.0); // D#5
+
+            setTimeout(() => ctx.close(), 2500);
+        } catch (e) { }
+    };
+
+    useEffect(() => {
+        // Animation Sequence
+        const timeouts: NodeJS.Timeout[] = [];
+
+        const typeKey = (key: number | string, delay: number, isAction = false) => {
+            timeouts.push(setTimeout(() => {
+                // Trigger everything in the same tick
+                setActiveKey(key);
+                playKeySound(isAction);
+                if (!isAction) {
+                    setPinLength(prev => prev + 1);
+                }
+
+                // Clear highlight after a short, matched duration
+                setTimeout(() => setActiveKey(null), 100);
+            }, delay));
+        };
+
+        // Start entering PIN - 4 numbers only
+        typeKey(1, 800);
+        typeKey(5, 1250);
+        typeKey(9, 1600);
+        typeKey(3, 2000);
+
+        // Press Enter
+        typeKey('Enter', 2550, true);
+
+        // Verification
+        timeouts.push(setTimeout(() => {
+            setStatus("Verifying...");
+        }, 2800));
+
+        // Success
+        timeouts.push(setTimeout(() => {
+            setIsSuccess(true);
+            setStatus("Welcome, George");
+            playLoginSound();
+        }, 3400));
+
+        return () => timeouts.forEach(clearTimeout);
+    }, []);
+
     return (
         <motion.div
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: "easeInOut" }}
-            className="absolute inset-0 z-[200] bg-zinc-950/70 backdrop-blur-xl flex flex-col items-center justify-center pointer-events-none rounded-xl"
+            transition={{ duration: 0.8, ease: "easeInOut", delay: 0.2 }} // Slightly faster fade
+            className="absolute inset-0 z-[200] flex pointer-events-none rounded-xl overflow-hidden"
         >
-            <div className="relative flex flex-col items-center gap-6">
-                {/* Logo Mark */}
+            {/* Left Side: Semi-transparent backdrop with descriptive text */}
+            <div className="flex-1 bg-zinc-950/60 backdrop-blur-md transition-all duration-1000 flex flex-col items-center justify-center p-12 text-center">
                 <motion.div
-                    initial={{ scale: 0.8, opacity: 0, y: 20 }}
-                    animate={{ scale: 1, opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-                    className="w-16 h-16 rounded-2xl bg-gradient-to-br from-zinc-800 to-zinc-900 border border-zinc-700 shadow-2xl flex items-center justify-center relative overflow-hidden"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 1, delay: 0.3 }}
+                    className="max-w-md"
                 >
-                    <div className="absolute inset-0 bg-gradient-to-tr from-accent-primary/20 to-transparent opacity-50" />
-                    <span className="font-serif text-3xl text-zinc-100 font-bold z-10">A</span>
-                </motion.div>
-
-                {/* Text Content */}
-                <div className="flex flex-col items-center gap-2">
-                    <motion.h1
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
-                        className="text-2xl font-bold text-white tracking-tight"
-                    >
-                        Aster Café
-                    </motion.h1>
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ duration: 0.8, ease: "easeOut", delay: 0.5 }}
-                        className="flex items-center gap-2"
-                    >
-                        <span className="w-1.5 h-1.5 bg-accent-primary rounded-full animate-pulse" />
-                        <span className="text-xs font-mono font-bold text-accent-primary uppercase tracking-widest">MVP Prototype</span>
-                    </motion.div>
-                </div>
-
-                {/* Loading Bar */}
-                <motion.div
-                    className="w-32 h-1 bg-zinc-800 rounded-full overflow-hidden mt-4"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.6, duration: 0.4 }}
-                >
-                    <motion.div
-                        className="h-full bg-accent-primary origin-left"
-                        initial={{ scaleX: 0 }}
-                        animate={{ scaleX: 1 }}
-                        transition={{ duration: 1.8, ease: "easeInOut", delay: 0.5 }}
-                    />
+                    <h1 className="text-4xl font-bold text-white tracking-tighter leading-tight">
+                        Interactive MVP<br />Prototype
+                    </h1>
+                    <div className="h-px w-12 bg-accent-primary my-6 mx-auto opacity-50" />
+                    <p className="text-zinc-400 font-mono text-[10px] uppercase tracking-[0.2em] leading-relaxed">
+                        Coffee Shop POS Terminal v1.4<br />
+                        <span className="text-zinc-500">George Efesopoulos • 2024</span>
+                    </p>
                 </motion.div>
             </div>
 
-            {/* Background Texture/Gradient */}
-            <div className="absolute inset-0 bg-radial-gradient from-accent-primary/5 to-transparent opacity-30 pointer-events-none" />
+            {/* Right Side: Login Terminal */}
+            <motion.div
+                initial={{ x: "100%" }}
+                animate={{ x: 0 }}
+                exit={{ x: "100%", opacity: 0 }}
+                transition={{ type: "spring", damping: 30, stiffness: 200 }}
+                className="w-full sm:w-[320px] bg-zinc-900 border-l border-zinc-800 shadow-2xl flex flex-col justify-center p-8 relative z-10"
+            >
+                {/* User Profile */}
+                <div className="flex flex-col items-center gap-4 mb-10">
+                    <div className="w-24 h-24 rounded-full bg-zinc-800 border-2 border-zinc-700 p-1 shadow-inner relative">
+                        {/* Avatar Placeholder */}
+                        <div className="w-full h-full rounded-full bg-gradient-to-br from-zinc-700 to-zinc-800 flex items-center justify-center text-zinc-500 font-bold text-3xl">
+                            GE
+                        </div>
+                        {/* Status Dot */}
+                        <div className={cn("absolute bottom-1 right-1 w-5 h-5 rounded-full border-4 border-zinc-900 transition-colors duration-500",
+                            isSuccess ? "bg-accent-primary" : "bg-zinc-500"
+                        )} />
+                    </div>
+                    <div className="text-center">
+                        <h2 className="text-white font-bold text-xl tracking-tight">George Efesopoulos</h2>
+                        <p className={cn("text-xs font-mono uppercase tracking-widest transition-colors duration-300 mt-1.5",
+                            isSuccess ? "text-accent-primary" : "text-zinc-500"
+                        )}>{status}</p>
+                    </div>
+                </div>
+
+                {/* PIN Dots */}
+                <div className="flex justify-center gap-5 mb-10">
+                    {[1, 2, 3, 4].map(i => (
+                        <motion.div
+                            key={i}
+                            animate={{
+                                scale: i <= pinLength ? [1, 1.2, 1] : 1,
+                                backgroundColor: i <= pinLength ? (isSuccess ? "#AB7B62" : "#e4e4e7") : "#27272a"
+                            }}
+                            className={cn("w-3 h-3 rounded-full ring-2 ring-offset-2 ring-offset-zinc-900 transition-colors",
+                                i <= pinLength ? (isSuccess ? "ring-accent-primary bg-accent-primary" : "ring-zinc-200 bg-zinc-200") : "ring-zinc-700 bg-zinc-800"
+                            )}
+                        />
+                    ))}
+                </div>
+
+                {/* Keypad Visuals */}
+                <div className="grid grid-cols-3 gap-3">
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 'Del', 0, 'Enter'].map(key => (
+                        <div
+                            key={key}
+                            className={cn("h-12 rounded-xl flex items-center justify-center font-mono transition-all duration-150 border",
+                                typeof key === 'number' ? "text-lg" : "text-[10px] uppercase tracking-wider font-bold",
+                                activeKey === key
+                                    ? "bg-zinc-700 text-white border-zinc-600 scale-95"
+                                    : "bg-transparent text-zinc-600 border-transparent",
+                                key === 'Enter' && "text-accent-primary/80"
+                            )}
+                        >
+                            {key}
+                        </div>
+                    ))}
+                </div>
+
+
+            </motion.div>
         </motion.div>
     );
 }
@@ -2348,95 +2537,118 @@ function getItemImageSrc(name: string, category: string) {
 
 // --- Modifier Popup Component ---
 
-function ModifierPopup({ item, onClose, onAdd, currentModifiers, onToggleModifier, quantity, setQuantity }: any) {
-    const calculateTotal = () => (item.price * quantity).toFixed(2);
+function ModifierPopup({ item, onClose, onAdd, currentModifiers, onToggleModifier, quantity, setQuantity, pos }: any) {
+    const calculateTotal = () => {
+        let total = item.price;
+        item.modifiers?.forEach((mod: any) => {
+            const selected = currentModifiers[mod.name];
+            if (selected) {
+                const choices = Array.isArray(selected) ? selected : [selected];
+                choices.forEach(choice => {
+                    const opt = mod.options.find((o: any) => (typeof o === 'string' ? o : o.label) === choice);
+                    if (opt && typeof opt !== 'string' && opt.price) {
+                        total += opt.price;
+                    }
+                });
+            }
+        });
+        return (total * quantity).toFixed(2);
+    };
 
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute inset-0 z-[60] flex items-end sm:items-center justify-center pointer-events-auto"
+        <div
+            className="absolute z-[60] pointer-events-auto shadow-2xl rounded-2xl overflow-hidden flex flex-col bg-zinc-900 border border-zinc-700"
+            style={{
+                left: pos?.x || 0,
+                top: pos?.y || 0,
+                width: 320,
+                maxHeight: 450,
+            }}
+            onClick={e => e.stopPropagation()}
         >
-            {/* Backdrop */}
-            <div className="absolute inset-0 bg-black/60" onClick={onClose} />
+            {/* Transparent Backdrop to catch clicks outside - actually we handle this with ClickAwayListener style or just a fixed inset invisible div */}
+            {/* To allow clicking outside to close, we can use a fixed inset transparent div BEHIND this card but inside the popup component wrapper if we had one. 
+                But here we are just returning the card. The parent container likely doesn't have a backdrop now.
+                Actually, let's add a fixed transparent inset to the parent render or just rely on the fact that clicking "dashboard" might not close it unless we handle it.
+                The simplest "click outside" is an invisible fixed overlay.
+            */}
+            <div className="fixed inset-0 z-[-1]" onClick={onClose} />
 
-            {/* Card */}
-            <motion.div
-                initial={{ y: "100%" }}
-                animate={{ y: 0 }}
-                exit={{ y: "100%" }}
-                transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                className="relative w-full sm:w-[400px] bg-zinc-900 sm:rounded-2xl rounded-t-2xl border border-zinc-700 shadow-2xl overflow-hidden flex flex-col max-h-[85%] sm:max-h-[80%]"
-                onClick={e => e.stopPropagation()}
-            >
-                {/* Header */}
-                <div className="flex items-center gap-3 p-4 border-b border-zinc-800 bg-zinc-900 relative z-10 shrink-0">
-                    <div className="w-12 h-12 rounded-lg overflow-hidden bg-zinc-800 border border-zinc-700 flex-shrink-0 shadow-sm">
-                        <img src={getItemImageSrc(item.name, item.category)} alt={item.name} className="w-full h-full object-cover" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                        <h3 className="text-base font-bold text-white leading-tight">{item.name}</h3>
-                        <p className="text-zinc-400 text-xs font-medium">€{item.price.toFixed(2)}</p>
-                    </div>
-                    <button onClick={onClose} className="p-1.5 -mr-1 text-zinc-500 hover:text-white transition-colors cursor-pointer rounded-full hover:bg-zinc-800">
-                        <X size={18} />
-                    </button>
+            {/* Header */}
+            <div className="flex items-center gap-3 p-3 border-b border-zinc-800 bg-zinc-900 relative z-10 shrink-0">
+                <div className="w-10 h-10 rounded-lg overflow-hidden bg-zinc-800 border border-zinc-700 flex-shrink-0 shadow-sm">
+                    <img src={getItemImageSrc(item.name, item.category)} alt={item.name} className="w-full h-full object-cover" />
                 </div>
+                <div className="flex-1 min-w-0">
+                    <h3 className="text-sm font-bold text-white leading-tight">{item.name}</h3>
+                    <p className="text-accent-primary text-xl font-bold mt-1 tracking-tight">€{calculateTotal()}</p>
+                </div>
+                {/* Close button optional since clicking outside works, but good for UX */}
+                <button onClick={onClose} className="p-1 text-zinc-500 hover:text-white transition-colors cursor-pointer rounded-full hover:bg-zinc-800">
+                    <X size={14} />
+                </button>
+            </div>
 
-                {/* Modifiers Scroll Area - Compact */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-custom">
-                    {item.modifiers?.map((mod: any) => (
-                        <div key={mod.name} className="space-y-1.5">
-                            <div className="flex justify-between items-baseline px-0.5">
-                                <h4 className="text-xs font-bold text-zinc-400 uppercase tracking-wider">{mod.name}</h4>
-                                {mod.type === 'radio' && <span className="text-[9px] text-accent-primary font-bold tracking-wide uppercase">Required</span>}
-                            </div>
-                            <div className="flex flex-wrap gap-2">
-                                {mod.options.map((opt: string) => {
-                                    const isSelected = mod.type === 'radio'
-                                        ? currentModifiers[mod.name] === opt
-                                        : currentModifiers[mod.name]?.includes(opt);
+            {/* Modifiers Scroll Area */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-custom bg-zinc-900/95">
+                {item.modifiers?.map((mod: any) => (
+                    <div key={mod.name} className="space-y-2">
+                        <div className="flex justify-between items-baseline px-0.5">
+                            <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">{mod.name}</h4>
+                            {mod.type === 'radio' && <span className="text-[8px] text-accent-primary font-bold tracking-wide uppercase">Req</span>}
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                            {mod.options.map((opt: any) => {
+                                const label = typeof opt === 'string' ? opt : opt.label;
+                                const isSelected = mod.type === 'radio'
+                                    ? currentModifiers[mod.name] === label
+                                    : currentModifiers[mod.name]?.includes(label);
 
-                                    return (
-                                        <button
-                                            key={opt}
-                                            onClick={() => onToggleModifier(mod.name, opt, mod.type)}
-                                            className={cn(
-                                                "px-3 py-1.5 rounded-lg text-xs font-medium transition-all border flex items-center gap-2 group cursor-pointer shadow-sm relative overflow-hidden",
+                                return (
+                                    <button
+                                        key={label}
+                                        onClick={() => onToggleModifier(mod.name, label, mod.type)}
+                                        className={cn(
+                                            "px-4 py-2.5 rounded-xl text-xs font-medium transition-all border flex items-center gap-2 group cursor-pointer shadow-sm relative overflow-hidden",
+                                            isSelected
+                                                ? "bg-accent-primary text-black border-accent-primary font-bold"
+                                                : "bg-zinc-800 text-zinc-400 border-zinc-700 hover:bg-zinc-700 hover:text-zinc-200"
+                                        )}
+                                    >
+                                        <span className="relative z-10">{label}</span>
+                                        {typeof opt !== 'string' && opt.price && (
+                                            <span className={cn("text-[10px] font-bold transition-colors ml-0.5",
                                                 isSelected
-                                                    ? "bg-accent-primary text-black border-accent-primary font-bold"
-                                                    : "bg-zinc-800/50 text-zinc-400 border-zinc-700/50 hover:bg-zinc-800 hover:text-zinc-200 hover:border-zinc-600"
-                                            )}
-                                        >
-                                            <span className="relative z-10">{opt}</span>
-                                        </button>
-                                    )
-                                })}
-                            </div>
+                                                    ? "text-black/50"
+                                                    : "text-accent-primary"
+                                            )}>
+                                                +€{opt.price.toFixed(2)}
+                                            </span>
+                                        )}
+                                    </button>
+                                )
+                            })}
                         </div>
-                    ))}
-                </div>
+                    </div>
+                ))}
+            </div>
 
-                {/* Footer */}
-                <div className="p-3 border-t border-zinc-800 bg-zinc-900 space-y-3 shrink-0 pb-safe">
-                    <div className="flex items-center justify-between">
-                        <span className="text-xs font-medium text-zinc-500">Quantity</span>
-                        <div className="flex items-center gap-3 bg-zinc-800/50 rounded-lg p-1 border border-zinc-700/50">
-                            <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-7 h-7 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-700 rounded-md transition-colors cursor-pointer"><Minus size={14} /></button>
-                            <span className="w-5 text-center font-mono font-bold text-sm text-white">{quantity}</span>
-                            <button onClick={() => setQuantity(quantity + 1)} className="w-7 h-7 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-700 rounded-md transition-colors cursor-pointer"><Plus size={14} /></button>
-                        </div>
+            {/* Footer */}
+            <div className="p-4 border-t border-zinc-800 bg-zinc-900 shrink-0">
+                <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 bg-zinc-800 rounded-xl p-1 border border-zinc-700 h-12">
+                        <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 h-10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-700 rounded-lg transition-colors cursor-pointer"><Minus size={14} /></button>
+                        <span className="w-6 text-center font-mono font-bold text-sm text-white">{quantity}</span>
+                        <button onClick={() => setQuantity(quantity + 1)} className="w-10 h-10 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-700 rounded-lg transition-colors cursor-pointer"><Plus size={14} /></button>
                     </div>
                     <button
                         onClick={onAdd}
-                        className="w-full py-3 bg-accent-primary hover:bg-accent-primary/90 text-black font-bold text-sm rounded-lg shadow-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer"
+                        className="flex-1 h-12 bg-accent-primary hover:bg-accent-primary/90 text-black font-bold text-sm rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer"
                     >
                         <span>Add to Order</span>
-                        <span className="font-mono">€{calculateTotal()}</span>
                     </button>
                 </div>
-            </motion.div>
-        </motion.div>
+            </div>
+        </div>
     );
 }
