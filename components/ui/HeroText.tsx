@@ -17,7 +17,6 @@ interface HeroTextProps {
 function HeroAnnotationArrow({ isMobile, startRef }: { isMobile: boolean, startRef: React.RefObject<HTMLElement | null> }) {
     const [path, setPath] = useState("");
     const [arrowheadPath, setArrowheadPath] = useState("");
-    const [dimensions, setDimensions] = useState({ width: 0, height: 0, top: 0, left: 0 });
 
     useEffect(() => {
         const calculatePath = () => {
@@ -29,44 +28,64 @@ function HeroAnnotationArrow({ isMobile, startRef }: { isMobile: boolean, startR
             const startRect = startElement.getBoundingClientRect();
             const endRect = endElement.getBoundingClientRect();
 
-            // Screen coordinates
+            // Start point (right side of the 'R')
             const startX = startRect.right;
             const startY = startRect.top + (startRect.height / 2);
-            const endX = endRect.left;
-            const endY = endRect.top + (endRect.height / 4); // Point to upper side of dashboard
 
-            // SVG coordinates (relative to a full-screen SVG)
-            // We'll use a full screen SVG overlay for precise positioning
-            const dx = endX - startX;
-            const dy = endY - startY;
+            // Find the nearest point on the endRect boundary (all 4 sides)
+            // dashboard-frame could be anywhere.
 
-            // Simplified quadratic curve
-            // Control point: halfway across, slightly higher
+            // Candidate points on the 4 segment lines
+            const nearestX = Math.max(endRect.left, Math.min(startX, endRect.right));
+            const nearestY = Math.max(endRect.top, Math.min(startY, endRect.bottom));
+
+            // If start point is inside the rect, something is wrong, but we'll use nearest boundary point
+            let targetX = nearestX;
+            let targetY = nearestY;
+
+            // If we are outside, the nearest point on the AABB is (nearestX, nearestY)
+            // However, to make it look like it's pointing TO an edge, we force it to the boundary
+            const distLeft = Math.abs(startX - endRect.left);
+            const distRight = Math.abs(startX - endRect.right);
+            const distTop = Math.abs(startY - endRect.top);
+            const distBottom = Math.abs(startY - endRect.bottom);
+
+            const minDist = Math.min(distLeft, distRight, distTop, distBottom);
+
+            if (minDist === distLeft) { targetX = endRect.left; targetY = nearestY; }
+            else if (minDist === distRight) { targetX = endRect.right; targetY = nearestY; }
+            else if (minDist === distTop) { targetX = nearestX; targetY = endRect.top; }
+            else { targetX = nearestX; targetY = endRect.bottom; }
+
+            const dx = targetX - startX;
+            const dy = targetY - startY;
+
+            // Curvature: control point should be pushed "outwards" from the straight line
+            // We'll push it UP and slightly towards the center
             const cpX = startX + dx * 0.4;
-            const cpY = startY + dy * 0.1;
+            const cpY = Math.min(startY, targetY) - (isMobile ? 120 : 180);
 
-            setPath(`M ${startX} ${startY} Q ${cpX} ${cpY} ${endX} ${endY}`);
+            setPath(`M ${startX} ${startY} Q ${cpX} ${cpY} ${targetX} ${targetY}`);
 
-            // Arrowhead (pointing to the left)
-            const angle = Math.atan2(endY - cpY, endX - cpX);
-            const headLen = 15;
-            const head1X = endX - headLen * Math.cos(angle - Math.PI / 6);
-            const head1Y = endY - headLen * Math.sin(angle - Math.PI / 6);
-            const head2X = endX - headLen * Math.cos(angle + Math.PI / 6);
-            const head2Y = endY - headLen * Math.sin(angle + Math.PI / 6);
+            // Arrowhead logic: Calculate angle from control point to target
+            const angle = Math.atan2(targetY - cpY, targetX - cpX);
+            const headLen = 16;
+            const head1X = targetX - headLen * Math.cos(angle - Math.PI / 5);
+            const head1Y = targetY - headLen * Math.sin(angle - Math.PI / 5);
+            const head2X = targetX - headLen * Math.cos(angle + Math.PI / 5);
+            const head2Y = targetY - headLen * Math.sin(angle + Math.PI / 5);
 
-            setArrowheadPath(`M ${head1X} ${head1Y} L ${endX} ${endY} L ${head2X} ${head2Y}`);
+            setArrowheadPath(`M ${head1X} ${head1Y} L ${targetX} ${targetY} L ${head2X} ${head2Y}`);
         };
 
         calculatePath();
         window.addEventListener('resize', calculatePath);
-        // Recalculate after a short delay for any layout transitions
         const timer = setTimeout(calculatePath, 600);
         return () => {
             window.removeEventListener('resize', calculatePath);
             clearTimeout(timer);
         };
-    }, [startRef]);
+    }, [startRef, isMobile]);
 
     if (!path) return null;
 
@@ -77,26 +96,26 @@ function HeroAnnotationArrow({ isMobile, startRef }: { isMobile: boolean, startR
             exit={{ opacity: 0 }}
             className="fixed inset-0 pointer-events-none z-0"
         >
-            <svg width="100%" height="100%" fill="none" className="text-accent-primary opacity-60">
+            <svg width="100%" height="100%" fill="none" className="text-accent-primary opacity-80">
                 <motion.path
                     d={path}
                     stroke="currentColor"
-                    strokeWidth="4"
+                    strokeWidth="5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     initial={{ pathLength: 0 }}
                     animate={{ pathLength: 1 }}
-                    transition={{ duration: 0.3, delay: 1.8, ease: "easeOut" }}
+                    transition={{ duration: 0.25, delay: 1.8, ease: "easeOut" }}
                 />
                 <motion.path
                     d={arrowheadPath}
                     stroke="currentColor"
-                    strokeWidth="4"
+                    strokeWidth="5"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 2.1, duration: 0.2 }}
+                    initial={{ opacity: 0, pathLength: 0 }}
+                    animate={{ opacity: 1, pathLength: 1 }}
+                    transition={{ delay: 2.05, duration: 0.1, ease: "easeOut" }}
                 />
             </svg>
         </motion.div>
@@ -125,6 +144,14 @@ export default function HeroText({ scrollProgress, step }: HeroTextProps) {
     };
 
     const refR = useRef<HTMLSpanElement>(null);
+    const [isMobileScreen, setIsMobileScreen] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobileScreen(window.innerWidth < 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     return (
         <motion.div
@@ -153,8 +180,8 @@ export default function HeroText({ scrollProgress, step }: HeroTextProps) {
                         </span>
                     </div>
                     <h1 className="font-black tracking-tighter text-white leading-[0.85] transition-all duration-500 text-3xl md:text-5xl lg:text-7xl uppercase">
-                        <span className="md:hidden block whitespace-nowrap">Product Designer</span>
-                        <span className="hidden md:block">PRODUCT<br />DESIGNER<span ref={refR}>R</span></span>
+                        <span className="md:hidden block whitespace-nowrap">Product Designe<span ref={isMobileScreen ? refR : null}>r</span></span>
+                        <span className="hidden md:block">PRODUCT<br />DESIGNER<span ref={!isMobileScreen ? refR : null}>R</span></span>
                         <span className="text-white/50 font-medium tracking-tight block mt-1 md:mt-2 text-lg md:text-3xl">
                             FOR COMPLEX SYSTEMS
                         </span>
