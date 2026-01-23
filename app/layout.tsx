@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono, Caveat } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/ui/Navigation";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono" });
@@ -24,6 +25,7 @@ export default function RootLayout({
         <Navigation />
         {children}
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
