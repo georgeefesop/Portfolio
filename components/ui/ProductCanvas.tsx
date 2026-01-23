@@ -521,7 +521,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                     y: isMobile ? 56 : 10,
                     opacity: 1,
                     scale: isMobile ? 0.86 : 0.8,
-                    zIndex: 20
+                    zIndex: 30
                 };
             }
 
@@ -1478,7 +1478,7 @@ function AnimatedElement({
             }}
             aria-hidden={isHidden}
             // @ts-ignore - inert is part of the HTML standard but React types might be lagging
-            inert={isHidden ? "" : undefined}
+            inert={isHidden ? true : undefined}
             tabIndex={isHidden ? -1 : undefined}
         >
             {children}
