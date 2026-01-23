@@ -81,9 +81,8 @@ export default function Contact() {
 
     const handleWhatsApp = async (e: React.MouseEvent) => {
         e.preventDefault();
-        const isValid = await trigger(['name', 'email', 'description']);
-        if (!isValid) return;
 
+        // Don't validate, just get whatever data is there
         const data = getValues();
         const text = encodeURIComponent(`Hi George — I'd like to start a project.\n\n${getFormattedMessage(data)}`);
 

@@ -255,8 +255,8 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                 // Bottom constraint: Nav controls. Increasing bottom buffer + 15px extra.
                 // TWEAK: For wider portrait (>770px), user requests raising MVP (~30px) and raising controls (~20px).
                 const isWidePortrait = width > 770;
-                const topC = isWidePortrait ? 215 : 245; // Raised 30px if wide
-                const bottomC = isWidePortrait ? 185 : 165; // Controls raised 20px if wide
+                const topC = isWidePortrait ? 215 : 220; // Mobile: 220 (was 245), Wide: 215
+                const bottomC = isWidePortrait ? 185 : 140; // Mobile: 140 (was 165), Wide: 185
 
                 const pHeight = height - topC - bottomC;
 
@@ -704,8 +704,8 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
             )}>
                 {/* Tap to Continue */}
                 <div className={cn(
-                    "flex items-center gap-2 text-white text-xs uppercase tracking-widest pointer-events-auto cursor-pointer hover:text-zinc-200 transition-colors mb-[-10px]",
-                    isMobile && "mb-2 scale-90 translate-y-[20px]"
+                    "flex items-center gap-2 text-white text-xs uppercase tracking-widest pointer-events-auto cursor-pointer hover:text-zinc-200 transition-colors",
+                    isMobile ? "scale-90 -translate-y-[10px]" : "mb-[-10px]"
                 )} onClick={(e) => { e.stopPropagation(); handleNext(); }}>
                     <ArrowRight size={12} />
                     <span>Tap to continue</span>

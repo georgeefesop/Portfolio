@@ -14,14 +14,15 @@ export default function About() {
 
                         {/* Image Column - Floated on Mobile */}
                         <div className="float-right w-[40%] md:w-full md:float-none md:col-span-5 lg:col-span-4 mb-6 ml-6 md:ml-0 md:mb-0">
-                            <div className="relative aspect-square rounded-2xl overflow-hidden md:w-[60%] md:ml-auto">
-                                {/* Replace with actual profile image */}
-                                <ImageWithFallback
-                                    src="/images/george-profile-new.png"
-                                    alt="George Efesop"
-                                    fill
-                                    className="object-cover"
-                                />
+                            <div className="relative aspect-square rounded-2xl overflow-hidden md:w-[60%] md:ml-auto bg-gradient-to-br from-accent-primary/20 to-purple-500/20 p-1 border-2 border-accent-primary/30">
+                                <div className="relative w-full h-full rounded-xl overflow-hidden bg-bg-secondary">
+                                    <ImageWithFallback
+                                        src="/images/george-about.jpg"
+                                        alt="George Efesop"
+                                        fill
+                                        className="object-cover"
+                                    />
+                                </div>
                             </div>
                         </div>
 

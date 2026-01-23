@@ -7,27 +7,27 @@ const services = [
     {
         title: 'MVP Design + Development',
         description: 'Research → Prototype → Launch in 4-6 weeks. Full-stack execution with Next.js & Design Systems. Ideal for funded startups.',
-        price: 'From €12k',
+        price: 'From €10k',
         timeline: '4–6 weeks',
-        range: 'Typical €12–18k',
+        range: 'Typical €10–18k',
         scope: 'Includes: discovery, design, build, handoff',
         icon: Zap
     },
     {
         title: 'Landing Page Design + Build',
         description: 'High-converting pages for product launches. Custom animations and performance optimized. 1-2 week turnaround.',
-        price: 'From €4k',
+        price: 'From €2k',
         timeline: '1–2 weeks',
-        range: 'Typical €4–8k',
+        range: 'Typical €2–6k',
         scope: 'Includes: design, build, animation, performance',
         icon: Layout
     },
     {
         title: 'SaaS Dashboard Design',
         description: 'Turning complex data into intuitive interfaces. Specialized in Fintech, HealthTech, and Web3 platforms.',
-        price: 'From €10k',
+        price: 'From €5k',
         timeline: '4–8 weeks',
-        range: 'Typical €10–18k',
+        range: 'Typical €5–15k',
         scope: 'Includes: core flows, states, UI system',
         icon: BarChart3
     },
@@ -43,9 +43,9 @@ const services = [
     {
         title: 'Design Systems & Components',
         description: 'Scalable component libraries and style guides. Figma to code handoff and documentation for growing teams.',
-        price: 'From €8k',
+        price: 'From €5k',
         timeline: '3–6 weeks',
-        range: 'Typical €8–15k',
+        range: 'Typical €5–12k',
         scope: 'Includes: components, tokens, documentation',
         icon: Code
     },
