@@ -143,6 +143,19 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
         { name: "Croissant", modifiers: "Warmed", price: 4.00, qty: 1 },
         { name: "Avocado Toast", modifiers: "Poached Egg", price: 12.00, qty: 1 }
     ]);
+    const [showSplash, setShowSplash] = useState(false);
+
+    // Trigger splash only when entering Product scene (step 2)
+    useEffect(() => {
+        if (step === 2) {
+            setShowSplash(true);
+            const timer = setTimeout(() => setShowSplash(false), 2800);
+            return () => clearTimeout(timer);
+        } else {
+            setShowSplash(false);
+        }
+    }, [step]);
+
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [showKitchenTicket, setShowKitchenTicket] = useState(false);
 
@@ -954,6 +967,12 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                         <ResizeHandle direction="sw" onResize={(d) => handleResize('sw', d)} onResizeStart={() => setIsResizing(true)} onResizeEnd={() => setIsResizing(false)} />
                                     </>
                                 )}
+
+                                {/* SPLASH SCREEN OVERLAY */}
+                                <AnimatePresence>
+                                    {showSplash && <SplashScreen />}
+                                </AnimatePresence>
+
                                 {/* Top Bar */}
                                 <motion.div variants={{ hidden: { opacity: 0, y: -10 }, show: { opacity: 1, y: 0 } }} className={cn("bg-zinc-900 border-b border-zinc-700 flex items-center justify-between px-4 rounded-t-[10px]", isEffectiveMobile ? "h-8" : "h-12")}>
                                     <div className="flex items-center gap-2">
@@ -1788,6 +1807,70 @@ function Tooltip({ text, position = "bottom" }: { text: string, position?: "top"
                 "absolute w-2 h-2 bg-zinc-900 border-zinc-700 rotate-45 left-1/2 -translate-x-1/2",
                 position === "top" ? "bottom-[-5px] border-b border-r" : "top-[-5px] border-l border-t"
             )} />
+        </motion.div>
+    );
+}
+
+// Splash Screen Component
+function SplashScreen() {
+    return (
+        <motion.div
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: "easeInOut" }}
+            className="absolute inset-0 z-[200] bg-zinc-950 flex flex-col items-center justify-center pointer-events-none rounded-xl"
+        >
+            <div className="relative flex flex-col items-center gap-6">
+                {/* Logo Mark */}
+                <motion.div
+                    initial={{ scale: 0.8, opacity: 0, y: 20 }}
+                    animate={{ scale: 1, opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+                    className="w-16 h-16 rounded-2xl bg-gradient-to-br from-zinc-800 to-zinc-900 border border-zinc-700 shadow-2xl flex items-center justify-center relative overflow-hidden"
+                >
+                    <div className="absolute inset-0 bg-gradient-to-tr from-accent-primary/20 to-transparent opacity-50" />
+                    <span className="font-serif text-3xl text-zinc-100 font-bold z-10">A</span>
+                </motion.div>
+
+                {/* Text Content */}
+                <div className="flex flex-col items-center gap-2">
+                    <motion.h1
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
+                        className="text-2xl font-bold text-white tracking-tight"
+                    >
+                        Aster Café
+                    </motion.h1>
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.8, ease: "easeOut", delay: 0.5 }}
+                        className="flex items-center gap-2"
+                    >
+                        <span className="w-1.5 h-1.5 bg-accent-primary rounded-full animate-pulse" />
+                        <span className="text-xs font-mono font-bold text-accent-primary uppercase tracking-widest">MVP Prototype</span>
+                    </motion.div>
+                </div>
+
+                {/* Loading Bar */}
+                <motion.div
+                    className="w-32 h-1 bg-zinc-800 rounded-full overflow-hidden mt-4"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.6, duration: 0.4 }}
+                >
+                    <motion.div
+                        className="h-full bg-accent-primary origin-left"
+                        initial={{ scaleX: 0 }}
+                        animate={{ scaleX: 1 }}
+                        transition={{ duration: 1.8, ease: "easeInOut", delay: 0.2 }}
+                    />
+                </motion.div>
+            </div>
+
+            {/* Background Texture/Gradient */}
+            <div className="absolute inset-0 bg-radial-gradient from-accent-primary/5 to-transparent opacity-30 pointer-events-none" />
         </motion.div>
     );
 }
