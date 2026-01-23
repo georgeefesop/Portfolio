@@ -12,6 +12,68 @@ interface HeroTextProps {
     step?: StepId;
 }
 
+function HeroAnnotationArrow({ isMobile }: { isMobile: boolean }) {
+    // Desktop: Heading is bottom-left, Canvas is center. Arrow goes from bottom-left UP and RIGHT.
+    // Mobile: Heading is top-leftish, Canvas is center. Arrow goes from top DOWN.
+    const path = isMobile
+        ? "M 10 10 Q 30 50 20 90" // Simple mobile curve
+        : "M 20 180 Q 40 50 160 20"; // Desktop curve: from heading up and right
+
+    return (
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className={cn(
+                "absolute pointer-events-none z-50",
+                isMobile
+                    ? "top-[100px] left-[60%]"
+                    : "bottom-[120px] left-[380px] lg:left-[450px]"
+            )}
+        >
+            <svg
+                width={isMobile ? "100" : "200"}
+                height={isMobile ? "100" : "200"}
+                viewBox={isMobile ? "0 0 100 100" : "0 0 200 200"}
+                fill="none"
+                className="text-accent-primary"
+            >
+                <motion.path
+                    d={path}
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+                />
+                <motion.path
+                    d={isMobile ? "M 10 80 L 20 90 L 30 80" : "M 145 35 L 160 20 L 140 15"}
+                    stroke="currentColor"
+                    strokeWidth="4"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.3 }}
+                />
+                <motion.text
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1.5 }}
+                    x={isMobile ? "35" : "110"}
+                    y={isMobile ? "85" : "55"}
+                    className="fill-accent-primary font-bold text-[12px] md:text-[14px]"
+                    style={{ fontFamily: 'var(--font-caveat)' }}
+                >
+                    Final Polished UI
+                </motion.text>
+            </svg>
+        </motion.div>
+    );
+}
+
 export default function HeroText({ scrollProgress, step }: HeroTextProps) {
     const y = useTransform(scrollProgress, [0, 1], [0, -20]);
     const opacity = useTransform(scrollProgress, [0, 0.5], [1, 0]);
@@ -66,7 +128,25 @@ export default function HeroText({ scrollProgress, step }: HeroTextProps) {
                             FOR COMPLEX SYSTEMS
                         </span>
                     </h1>
+
+                    {/* Annotation Arrow for Step 3 - Mobile */}
+                    <AnimatePresence>
+                        {step === 2 && (
+                            <div className="md:hidden">
+                                <HeroAnnotationArrow isMobile={true} />
+                            </div>
+                        )}
+                    </AnimatePresence>
                 </motion.div>
+
+                {/* Desktop Arrow - Positioned relative to the main content area */}
+                <AnimatePresence>
+                    {step === 2 && (
+                        <div className="hidden md:block">
+                            <HeroAnnotationArrow isMobile={false} />
+                        </div>
+                    )}
+                </AnimatePresence>
 
                 {/* Right Side: Details + CTA (Hidden on mobile) */}
                 <motion.div
@@ -100,5 +180,9 @@ export default function HeroText({ scrollProgress, step }: HeroTextProps) {
                 </motion.div>
             </div>
         </motion.div>
+    );
+}
+            </div >
+        </motion.div >
     );
 }
