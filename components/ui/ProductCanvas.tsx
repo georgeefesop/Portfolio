@@ -1506,7 +1506,7 @@ function StickyUI({ title, text, variant = "default", size = "md" }: { title: st
 function TicketUI({ data, dimmed, showAssigned, compact }: { data: any, dimmed?: boolean, showAssigned?: boolean, compact?: boolean }) {
     if (!data) return null;
     return (
-        <div className={cn("bg-bg-secondary/90 backdrop-blur-md rounded-xl border border-border-subtle shadow-lg flex flex-col transition-all duration-300 group select-none relative hover:border-border-medium",
+        <div className={cn("bg-zinc-800/80 backdrop-blur-md rounded-xl border-2 border-zinc-700 shadow-lg flex flex-col transition-all duration-300 group select-none relative hover:border-zinc-600",
             compact ? "w-[240px] p-4 gap-2" : "w-[260px] p-5 gap-3",
             dimmed && "opacity-40" // Increased from opacity-15
         )}>
@@ -1546,19 +1546,19 @@ function TicketUI({ data, dimmed, showAssigned, compact }: { data: any, dimmed?:
                 <div className={cn("space-y-2 pt-2 border-t border-border-subtle transition-opacity", dimmed && "opacity-30")}>
                     {data.impact && (
                         <div className="flex gap-2">
-                            <span className="text-[10px] font-mono text-zinc-600 uppercase w-16 flex-shrink-0">Impact:</span>
+                            <span className="text-[10px] font-mono font-bold text-zinc-500 uppercase w-16 flex-shrink-0">Impact:</span>
                             <span className="text-xs text-zinc-400">{data.impact}</span>
                         </div>
                     )}
                     {data.goal && (
                         <div className="flex gap-2">
-                            <span className="text-[10px] font-mono text-zinc-600 uppercase w-16 flex-shrink-0">Goal:</span>
+                            <span className="text-[10px] font-mono font-bold text-zinc-500 uppercase w-16 flex-shrink-0">Goal:</span>
                             <span className="text-xs text-accent-primary font-medium">{data.goal}</span>
                         </div>
                     )}
                     {data.constraints && (
                         <div className="flex gap-2">
-                            <span className="text-[10px] font-mono text-zinc-600 uppercase w-16 flex-shrink-0">Context:</span>
+                            <span className="text-[10px] font-mono font-bold text-zinc-500 uppercase w-16 flex-shrink-0">Context:</span>
                             <span className="text-xs text-zinc-500">{data.constraints}</span>
                         </div>
                     )}
@@ -1582,7 +1582,7 @@ function TicketUI({ data, dimmed, showAssigned, compact }: { data: any, dimmed?:
             {/* Assigned Cue (Internal) */}
             {!compact && showAssigned && (
                 <div className="absolute bottom-5 right-5">
-                    <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-zinc-800/80 border border-zinc-700/50 backdrop-blur-sm shadow-sm opacity-90">
+                    <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-zinc-900 border border-zinc-800 backdrop-blur-sm shadow-sm opacity-90">
                         <span className="w-1.5 h-1.5 bg-accent-primary rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
                         <span className="text-[9px] text-zinc-400 font-medium tracking-wide">
                             Assigned: <span className="text-zinc-200">George</span>
