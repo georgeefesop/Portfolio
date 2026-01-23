@@ -52,7 +52,7 @@ const services = [
     {
         title: 'Hourly Consulting',
         description: 'Design audits, prototyping, and technical advisory. Flexible engagement for specific problem solving.',
-        price: '€150/hour',
+        price: '€100/hour',
         timeline: 'Async-first • Min. 3h',
         range: 'Min. 3 hours',
         scope: 'Audits, prototypes, technical guidance',
