@@ -71,7 +71,7 @@ export default function HeroText({ scrollProgress, step }: HeroTextProps) {
                 {/* Right Side: Details + CTA (Hidden on mobile) */}
                 <motion.div
                     variants={itemVariants}
-                    className="hidden md:flex text-right flex-col items-end gap-6 transition-all duration-500 mt-4 md:mt-0"
+                    className="hidden md:flex text-right flex-col items-end gap-3 transition-all duration-500 mt-4 md:mt-0"
                 >
                     {/* Secondary Info */}
                     <div className="space-y-1 transition-all">
@@ -91,7 +91,7 @@ export default function HeroText({ scrollProgress, step }: HeroTextProps) {
                         </a>
                     </div>
 
-                    <div className="flex items-center gap-2 transition-all mt-2 md:mt-4">
+                    <div className="flex items-center gap-2 transition-all mt-1 md:mt-2">
                         <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-green-500 animate-pulse" />
                         <span className="font-mono tracking-widest uppercase text-zinc-400 text-[10px] md:text-sm">
                             Available for select projects

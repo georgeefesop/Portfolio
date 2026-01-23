@@ -133,11 +133,15 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
     const [isMobile, setIsMobile] = useState(false);
     const [isSmallMobile, setIsSmallMobile] = useState(false);
     const [isNarrowMobile, setIsNarrowMobile] = useState(false);
+    const [isTablet, setIsTablet] = useState(false); // New: Tablet Portrait (approx 768-1023)
+    const [isTabletLandscape, setIsTabletLandscape] = useState(false); // New: Tablet Landscape
     const [isNarrowDesktop, setIsNarrowDesktop] = useState(false);
     const [mounted, setMounted] = useState(false);
     const [introAnim, setIntroAnim] = useState(false);
     const [isPaused, setIsPaused] = useState(false);
     const [progress, setProgress] = useState(0);
+    // Explicit orientation state for cleaner logic
+    const [isPortrait, setIsPortrait] = useState(true);
     const [orderItems, setOrderItems] = useState<any[]>([
         { name: "Latte", modifiers: "Oat • Lg", price: 5.50, qty: 1 },
         { name: "Croissant", modifiers: "Warmed", price: 4.00, qty: 1 },
@@ -182,14 +186,27 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
         setMounted(true);
         const checkViewport = () => {
             const width = window.innerWidth;
+            const height = window.innerHeight;
+
             const mobile = width < 1024;
-            const smallMobile = width < 770;
+            const smallMobile = width < 600; // Adjusted from 770 to 600 to let 768px tablets use the Tablet layout
             const narrowMobile = width < 390;
+            // Tablet: Broadly defined as mobile width but > 600px OR specific portrait dimensions
+            const tablet = (width >= 600 && width < 1024) || (width >= 768 && width <= 1024);
+            // Tablet Landscape: Often looks like desktop width (>1024) but has touch/tablet characteristics or limited height relative to width
+            // Surface Pro 7 landscape is 1368x912. 
+            const tabletLandscape = width >= 1024 && width <= 1400 && height <= 1000;
+
             const narrowDesktop = width >= 1024 && width < 1300;
+
             setIsMobile(mobile);
             setIsSmallMobile(smallMobile);
             setIsNarrowMobile(narrowMobile);
+            setIsTablet(tablet);
+            setIsTabletLandscape(tabletLandscape);
             setIsNarrowDesktop(narrowDesktop);
+            const portrait = height >= width; // Treated square as portrait for vertical stacking
+            setIsPortrait(portrait);
             // State updates only - dimensions handled by useEffect
         };
         checkViewport();
@@ -199,27 +216,82 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
 
     // Reset POS dimensions/offset when switching steps
     // Reset/Update POS dimensions when switching steps or resizing
+    // Reset/Update POS dimensions when switching steps or resizing window
     useEffect(() => {
-        if (step !== 2) {
-            setPosDimensions(isMobile ? { width: 340, height: 620 } : { width: 900, height: 560 });
-            setPosOffset({ x: 0, y: 0 });
-        } else {
-            // Step 2 Logic
-            if (isNarrowMobile) {
-                // Narrow Phone (< 390px) - Thinner to fit
+        const updateDimensions = () => {
+            if (step !== 2) {
+                setPosDimensions(isMobile ? { width: 340, height: 620 } : { width: 900, height: 560 });
+                setPosOffset({ x: 0, y: 0 });
+                return;
+            }
+
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            // Re-evaluate viewport state locally for this update to ensure sync
+            // (Note: we use the state vars isMobile etc for consistency, but for pure constraints we use window)
+            const isLocalPortrait = height >= width;
+
+            // Dynamic Calculation: Fill space minus margins
+            // For Large Desktop (>1300px), reduce top margin significantly (was 380) since nav is moved to bottom
+            // For Mid-range Desktop (1024-1300px), also reduce top margin since nav is at top
+            const isLargeDesktop = width > 1300;
+            const isMidRangeDesktop = width >= 1024 && width <= 1300;
+            // Increased mid-range from 180 to 210 to add ~30px buffer between progress bar and MVP top
+            const topMargin = isLargeDesktop ? 220 : (isMidRangeDesktop ? 210 : 380);
+
+            // Default Landscape Margins
+            const availableWidth = width - 80 - 20;
+            // Reduced bottom margin from 120 to 80 (40px reduction) to raise MVP bottom
+            const availableHeight = height - topMargin - 80;
+
+            if (isLocalPortrait && (width < 1024)) {
+                // Portrait Mode (Mobile & Tablet)
+                // Width: Full screen width minus 60px (30px padding on each side)
+                const pWidth = width - 60;
+
+                // Height: 
+                // Top constraint: "Complex Systems" text. increasing gap to 50px + 15px extra. StartY ≈ 245px.
+                // Bottom constraint: Nav controls. Increasing bottom buffer + 15px extra.
+                // TWEAK: For wider portrait (>770px), user requests raising MVP (~30px) and raising controls (~20px).
+                const isWidePortrait = width > 770;
+                const topC = isWidePortrait ? 215 : 245; // Raised 30px if wide
+                const bottomC = isWidePortrait ? 185 : 165; // Controls raised 20px if wide
+
+                const pHeight = height - topC - bottomC;
+
+                setPosDimensions({
+                    width: Math.min(pWidth, 800),
+                    height: Math.max(pHeight, 320)
+                });
+            } else if (isTabletLandscape) {
+                // Surface Pro 7 landscape is 1368x912. 
+                setPosDimensions({
+                    width: Math.min(availableWidth, 1100),
+                    height: Math.min(availableHeight, 650)
+                });
+            } else if (isNarrowMobile) {
                 setPosDimensions({ width: 320, height: 420 });
-            } else if (isSmallMobile) {
-                // Phone (< 770px) - Compact
-                setPosDimensions({ width: 340, height: 420 });
             } else if (isMobile) {
-                // Tablet (770px - 1024px) - Intermediate Stable
+                // Fallback
                 setPosDimensions({ width: 420, height: 480 });
             } else {
-                // Desktop (>= 1024px)
-                setPosDimensions({ width: 900, height: 560 });
+                // Desktop: Dynamic but capped at 1100x650 for aesthetics
+                // Allow larger max width/height on large desktop if desired
+                setPosDimensions({
+                    width: Math.min(availableWidth, 1100),
+                    height: Math.min(availableHeight, isLargeDesktop ? 750 : 650)
+                });
             }
-        }
-    }, [step, isMobile, isSmallMobile]);
+        };
+
+        // Run initially
+        updateDimensions();
+
+        // Run on resize
+        window.addEventListener('resize', updateDimensions);
+        return () => window.removeEventListener('resize', updateDimensions);
+    }, [step, isMobile, isSmallMobile, isTablet, isNarrowMobile, isTabletLandscape, isPortrait]);
 
     const handleResize = (direction: string, delta: { x: number, y: number }) => {
         setPosDimensions(prevDim => {
@@ -408,6 +480,13 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
         let layout: LayoutProps = { x: 0, y: 0, opacity: 0, scale: 0.8, zIndex: 0 };
         const isDesktop = !isMobile;
 
+        // Tablet Landscape Offset: Move content UP to avoid bottom text overlap
+        // Verified: -40px provides good spacing from bottom text while keeping clear of top nav
+        const landscapeOffsetY = isTabletLandscape ? -20 : 0;
+
+        // Tablet Portrait Scale boost
+        const tabletScaleBoost = isTablet ? 1.3 : 1; // 30-40% boost
+
         // --- SCENE 1: IDEA BOARD (TRELLO / TICKETS) ---
         if (currentStep === 0) {
             // POSITIONING CONSTANTS
@@ -501,7 +580,9 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                 // Viewport cropping approach: centered and focused
                 if (id === 'sticky-F') {
                     // Main Hero Card (POS redesign)
-                    layout = { x: 0, y: 0, opacity: 1, scale: 0.95, zIndex: 10, width: 280 };
+                    // Tablet Portrait: Scale 1.25, Mobile: 0.95
+                    const mScale = isTablet ? 1.25 : 0.95;
+                    layout = { x: 0, y: 0, opacity: 1, scale: mScale, zIndex: 10, width: 280 };
                 }
                 else {
                     // Hide ALL other cards on Slide 1 mobile to prevent load flicker
@@ -518,9 +599,9 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
             if (id === 'sticky-sketch') {
                 layout = {
                     x: 0,
-                    y: isMobile ? 56 : 10,
+                    y: (isMobile ? 56 : 10) + landscapeOffsetY,
                     opacity: 1,
-                    scale: isMobile ? 0.86 : 0.8,
+                    scale: (isMobile ? 0.86 : 0.8) * tabletScaleBoost,
                     zIndex: 30
                 };
             }
@@ -546,8 +627,10 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
             if (id === 'sticky-sketch') layout = { x: 0, y: 0, opacity: 0, scale: 0.6, zIndex: 0 };
 
             // Dashboard Frame (Main POS) - Shifted down to avoid header overlap
-            // Use manual offsets if in Step 2
-            if (id === 'dashboard-frame') layout = { x: posOffset.x, y: 10 + posOffset.y, opacity: 1, scale: 1, zIndex: 5 };
+            // Use manual offsets if in Step 2. Add landscapeOffsetY.
+            // Large Desktop: Lift UP (-40) to utilize space. Others: slight down (10).
+            const desktopBaseY = (!isMobile && !isNarrowDesktop && !isTablet) ? -40 : 10;
+            if (id === 'dashboard-frame') layout = { x: posOffset.x, y: desktopBaseY + posOffset.y + landscapeOffsetY, opacity: 1, scale: 1, zIndex: 5 };
 
             // Hide old floating panels (content now integrated into dashboard)
             else if (id === 'panel-order-center') layout = { x: 0, y: 0, opacity: 0, scale: 0, zIndex: 0 };
@@ -555,9 +638,32 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
             else if (id === 'panel-payment') layout = { x: 0, y: 0, opacity: 0, scale: 0, zIndex: 0 };
             else if (id === 'panel-kitchen') layout = { x: 0, y: 0, opacity: 0, scale: 0, zIndex: 0 };
 
-            // Mobile S3
-            if (isMobile) {
-                if (id === 'dashboard-frame') layout = { x: 0, y: 20, opacity: 1, scale: 1, zIndex: 5 };
+            if (isMobile || (isTablet && isPortrait)) {
+                if (id === 'dashboard-frame') {
+                    // Mobile/Tablet Portrait Positioning
+                    // We calculated height based on TopMargin ~220 and BottomMargin ~140.
+                    // Total available vertical space centers at window.innerHeight / 2.
+                    // Our center point should be shifted down to account for the larger top margin.
+                    // Top: 220, Bottom: 140. Diff = 80px. Shift center down by 40px?
+                    // Actually, let's just push it down to clear the header.
+                    // Default center is 0.
+                    // If height is calculated to fit, we just need to ensure y places it correctly.
+
+                    // Let's assume the component centers automatically (0,0). 
+                    // If we want the TOP of the card to be at ~220px from screen top:
+                    // Screen Top = -window.innerHeight/2
+                    // Card Top = y - height/2
+                    // We want: Card Top = Screen Top + 220
+                    // y - h/2 = -WinH/2 + 220
+                    // y = -WinH/2 + 220 + h/2
+
+                    // We can simplify: Just shift down by roughly 40-50px from center seem to resolve most alignment issues in past.
+                    // Let's calculate a precise offset if possible, otherwise use a safe static offset.
+                    // Update: For Tablet (>770), user requested raising it by ~30px.
+                    const portraitOffsetY = isTablet ? 10 : 40;
+
+                    layout = { x: 0, y: portraitOffsetY, opacity: 1, scale: 1, zIndex: 5 };
+                }
                 else if (id === 'panel-order-center') layout = { x: 0, y: 0, opacity: 0, scale: 0, zIndex: 0 };
                 else if (id === 'panel-checkout') layout = { x: 0, y: 0, opacity: 0, scale: 0, zIndex: 0 };
             }
@@ -575,23 +681,30 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                 mounted ? "opacity-100" : "opacity-0"
             )}
         >
-            {/* Background Grid */}
-            <div className="absolute inset-0 opacity-[0.10] pointer-events-none"
+            {/* Background Grid - SVG approach for consistent rendering */}
+            < div className="absolute inset-0 opacity-[0.20] pointer-events-none"
                 style={{
-                    backgroundImage: 'linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px)',
+                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath d='M0 40L0 0H40' stroke='%23FFFFFF' stroke-width='1' stroke-opacity='1'/%3E%3C/g%3E%3C/svg%3E")`,
                     backgroundSize: '40px 40px'
                 }}
             />
 
 
             {/* --- Navigation Controls --- */}
+            {/* Logic: Portrait Mobile/Tablet -> Bottom. Large Desktop (>1300) -> Bottom. Everything else -> Top */}
             <div className={cn(
                 "absolute left-0 w-full flex flex-col items-center gap-3 z-50 pointer-events-none transition-all duration-500",
-                isSmallMobile ? "bottom-8 pb-safe" : "top-36"
+                // Portrait modes: Bottom
+                (isMobile && isPortrait) ? "bottom-8 pb-safe" :
+                    (isTablet && isPortrait) ? "bottom-14 pb-safe" :
+                        // Large Desktop: Bottom
+                        (!isMobile && !isNarrowDesktop && !isTablet) ? "bottom-12" :
+                            // Default (includes 825px landscape, tablet landscape, mid-range desktop): Top (raised higher)
+                            "top-20"
             )}>
                 {/* Tap to Continue */}
                 <div className={cn(
-                    "flex items-center gap-2 text-white text-xs uppercase tracking-widest pointer-events-auto cursor-pointer hover:text-zinc-200 transition-colors",
+                    "flex items-center gap-2 text-white text-xs uppercase tracking-widest pointer-events-auto cursor-pointer hover:text-zinc-200 transition-colors mb-[-10px]",
                     isMobile && "mb-2 scale-90 translate-y-[20px]"
                 )} onClick={(e) => { e.stopPropagation(); handleNext(); }}>
                     <ArrowRight size={12} />
@@ -930,7 +1043,19 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                     layout={getLayout('dashboard-frame', step)}
                 >
                     {(() => {
-                        const isEffectiveMobile = isMobile || posDimensions.width < 600;
+                        // Sync: Portrait Device -> Portrait (Stacked) MVP. Landscape Device -> Landscape (Side-by-side) MVP.
+                        // isMobile captures width < 1024.
+                        // We now use posDimensionsWidth to drive "Mobile Density" regardless of window size (e.g. resizing on desktop).
+                        // Lowered threshold to 900 so tax breakdown shows at 1030px window (930px container width)
+                        const isEffectiveMobile = posDimensions.width < 900;
+
+                        // Layout Direction (Row vs Col) driven by Aspect Ratio as requested.
+                        // "more than 1.0" (Landscape) -> Side-by-Side.
+                        // Square (1.0) or Portrait (<1.0) -> Stacked.
+                        // Safety: If width is too small (<500), force Stacked even if landscape ratio (e.g. 300x200).
+                        const aspectRatio = posDimensions.width / posDimensions.height;
+                        const isLandscapeLayout = aspectRatio > 1.0 && posDimensions.width > 500;
+
                         return (
                             <motion.div
                                 initial="hidden"
@@ -950,7 +1075,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                 style={{
                                     width: step === 2 ? posDimensions.width : (isMobile ? 340 : 900),
                                     height: step === 2 ? posDimensions.height : (isMobile ? 400 : 560),
-                                    maxHeight: isMobile ? 'calc(100dvh - 320px)' : 'none',
+                                    maxHeight: 'none', // Removed max-height constraint to allow full calculated height
                                 }}
                                 onClick={(e) => e.stopPropagation()}
                             >
@@ -996,14 +1121,14 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                     </div>
                                 </motion.div>
 
-                                {/* Main Content: 2-Column Layout (Desktop) / Stacked (Mobile) */}
-                                <div className={cn("flex-1 flex min-h-0", isEffectiveMobile ? "flex-col" : "flex-row")}>
+                                {/* Main Content: 2-Column Layout (Landscape) / Stacked (Portrait) */}
+                                <div className={cn("flex-1 flex min-h-0", !isLandscapeLayout ? "flex-col" : "flex-row")}>
                                     {/* LEFT: Menu Grid */}
-                                    <div className={cn("flex flex-col min-h-0", isEffectiveMobile ? "flex-[60] border-b border-zinc-700 bg-zinc-800/40" : "flex-[65] border-r border-zinc-700 bg-zinc-900/50")}>
+                                    <div className={cn("flex flex-col min-h-0", !isLandscapeLayout ? "flex-[60] border-b border-zinc-700 bg-zinc-800/40" : "flex-[65] border-r border-zinc-700 bg-zinc-900/50")}>
                                         {/* Search + Categories */}
                                         {/* Search + Categories */}
                                         <motion.div variants={{ hidden: { opacity: 0, x: -10 }, show: { opacity: 1, x: 0 } }} className={cn("space-y-3 flex flex-col justify-center", isEffectiveMobile ? "p-1" : "p-4 border-b border-zinc-800")}>
-                                            {/* Search Bar */}
+                                            {/* Search Bar: Re-enabled for Tablet Portrait as requested */}
                                             {!isEffectiveMobile && (
                                                 <div className="relative">
                                                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={14} />
@@ -1041,7 +1166,14 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                             variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.03, delayChildren: 0.3 } } }}
                                             className={cn("flex-1 overflow-y-auto scrollbar-custom", isEffectiveMobile ? "p-2" : "p-4")}
                                         >
-                                            <div className={cn("grid", isNarrowMobile ? "grid-cols-2 gap-2" : (isEffectiveMobile ? "grid-cols-3 gap-2" : "grid-cols-3 xl:grid-cols-4 gap-4"))}>
+                                            <div className={cn("grid",
+                                                isNarrowMobile ? "grid-cols-2 gap-2" :
+                                                    // Tablet Portrait: 3 columns as requested
+                                                    isTablet ? "grid-cols-3 gap-2" :
+                                                        isEffectiveMobile ? "grid-cols-3 gap-2" :
+                                                            // Tablet Landscape & Desktop
+                                                            (isTabletLandscape ? "grid-cols-4 gap-4" : "grid-cols-3 xl:grid-cols-4 gap-4")
+                                            )}>
                                                 {menuItems
                                                     .filter(item => (selectedCategory === 'All' || item.category === selectedCategory) && item.name.toLowerCase().includes(searchQuery.toLowerCase()))
                                                     .map((item, i) => (
@@ -1091,7 +1223,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
                                                             </div>
                                                             <div className={cn("relative", isEffectiveMobile ? "p-2" : "p-3")}>
-                                                                <h3 className={cn("font-medium tracking-wide text-zinc-100 leading-tight", isEffectiveMobile ? "text-xs" : "text-sm")}>{item.name}</h3>
+                                                                <h3 className={cn("font-medium tracking-wide text-zinc-100 leading-tight truncate", isEffectiveMobile ? "text-[10px] xs:text-xs" : "text-sm")}>{item.name}</h3>
                                                                 <p className={cn("text-zinc-400 mt-0.5", isEffectiveMobile ? "text-[10px]" : "text-[11px]")}>{item.category}</p>
                                                             </div>
                                                         </motion.div>
@@ -1101,7 +1233,8 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                     </div>
 
                                     {/* RIGHT: Cart & Actions */}
-                                    <div className={cn("flex flex-col bg-zinc-900 border-l border-zinc-800 min-h-0", isEffectiveMobile ? "flex-[40]" : "flex-[35]")}>
+                                    {/* Responsive Cart: On Portrait (Mobile/Tablet), use flex-none to let it shrink to content, max half height */}
+                                    <div className={cn("flex flex-col bg-zinc-900 border-l border-zinc-800 min-h-0", !isLandscapeLayout ? "flex-none max-h-[50%] border-t border-zinc-800" : "flex-[35]")}>
                                         {/* Cart Header */}
                                         {!isEffectiveMobile && (
                                             <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
@@ -1383,7 +1516,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                 </AnimatedElement>
 
             </div>
-        </div>
+        </div >
     );
 }
 
