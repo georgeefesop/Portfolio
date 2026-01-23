@@ -1,7 +1,7 @@
 'use client';
 
 import FadeIn from '../motion/FadeIn';
-import { Play } from 'lucide-react';
+import { Play, Youtube } from 'lucide-react';
 import Image from 'next/image';
 import ImageWithFallback from '@/components/ui/ImageWithFallback';
 
@@ -30,6 +30,15 @@ export default function Resources() {
                             <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-2">Tutorials & Resources</h2>
                             <p className="text-text-secondary">Curated insights and tutorials.</p>
                         </div>
+                        <a
+                            href="https://www.youtube.com/@georgeefesop"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center gap-2 text-accent-primary hover:text-white transition-colors font-medium border border-accent-primary/20 hover:border-accent-primary/50 px-4 py-2 rounded-full"
+                        >
+                            <Youtube size={16} />
+                            Visit Channel
+                        </a>
                     </div>
                 </FadeIn>
 

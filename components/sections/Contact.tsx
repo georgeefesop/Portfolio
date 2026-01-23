@@ -127,7 +127,7 @@ export default function Contact() {
                                             {...register('name', { required: 'Name is required' })}
                                             id="name"
                                             placeholder=" "
-                                            className="peer w-full px-4 pt-5 pb-2 bg-bg-primary border border-border-medium rounded-lg text-text-primary text-base focus:outline-none focus:border-accent-primary focus:ring-1 focus:ring-accent-primary transition-colors placeholder-transparent"
+                                            className="peer w-full px-4 pt-5 pb-2 bg-bg-secondary border border-border-medium rounded-lg text-text-primary text-base focus:outline-none focus:border-accent-primary focus:ring-1 focus:ring-accent-primary transition-colors placeholder-transparent"
                                         />
                                         <label
                                             htmlFor="name"
@@ -147,7 +147,7 @@ export default function Contact() {
                                             })}
                                             id="email"
                                             placeholder=" "
-                                            className="peer w-full px-4 pt-5 pb-2 bg-bg-primary border border-border-medium rounded-lg text-text-primary text-base focus:outline-none focus:border-accent-primary focus:ring-1 focus:ring-accent-primary transition-colors placeholder-transparent"
+                                            className="peer w-full px-4 pt-5 pb-2 bg-bg-secondary border border-border-medium rounded-lg text-text-primary text-base focus:outline-none focus:border-accent-primary focus:ring-1 focus:ring-accent-primary transition-colors placeholder-transparent"
                                         />
                                         <label
                                             htmlFor="email"
@@ -166,7 +166,7 @@ export default function Contact() {
                                         id="description"
                                         rows={3}
                                         placeholder="What are you building, who is it for, and what’s the biggest challenge right now? (Links welcome)"
-                                        className="peer w-full px-4 pt-7 pb-3 bg-bg-primary border border-border-medium rounded-lg text-text-primary text-base focus:outline-none focus:border-accent-primary focus:ring-1 focus:ring-accent-primary transition-colors resize-none placeholder:text-text-muted/50"
+                                        className="peer w-full px-4 pt-7 pb-3 bg-bg-secondary border border-border-medium rounded-lg text-text-primary text-base focus:outline-none focus:border-accent-primary focus:ring-1 focus:ring-accent-primary transition-colors resize-none placeholder:text-text-muted/50"
                                     />
                                     <label
                                         htmlFor="description"
@@ -196,7 +196,7 @@ export default function Contact() {
                                             {...register('company')}
                                             id="company"
                                             placeholder=" "
-                                            className="peer w-full px-4 pt-5 pb-2 bg-bg-primary border border-border-medium rounded-lg text-text-primary focus:outline-none focus:border-accent-primary transition-colors placeholder-transparent"
+                                            className="peer w-full px-4 pt-5 pb-2 bg-bg-secondary border border-border-medium rounded-lg text-text-primary focus:outline-none focus:border-accent-primary transition-colors placeholder-transparent"
                                         />
                                         <label htmlFor="company" className="absolute left-4 top-2 text-xs text-text-muted transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base peer-placeholder-shown:text-text-secondary peer-focus:top-2 peer-focus:text-xs peer-focus:text-accent-primary">
                                             Company / Project Name
@@ -208,7 +208,7 @@ export default function Contact() {
                                         <select
                                             {...register('projectType')}
                                             id="projectType"
-                                            className="peer w-full px-4 pt-5 pb-2 bg-bg-primary border border-border-medium rounded-lg text-text-primary focus:outline-none focus:border-accent-primary transition-colors appearance-none bg-transparent cursor-pointer"
+                                            className="peer w-full px-4 pt-5 pb-2 bg-bg-secondary border border-border-medium rounded-lg text-text-primary focus:outline-none focus:border-accent-primary transition-colors appearance-none bg-transparent cursor-pointer"
                                         >
                                             <option value=""></option>
                                             <option value="MVP">MVP Design + Development</option>
@@ -228,7 +228,7 @@ export default function Contact() {
                                         <select
                                             {...register('budget')}
                                             id="budget"
-                                            className="peer w-full px-4 pt-5 pb-2 bg-bg-primary border border-border-medium rounded-lg text-text-primary focus:outline-none focus:border-accent-primary transition-colors appearance-none bg-transparent cursor-pointer"
+                                            className="peer w-full px-4 pt-5 pb-2 bg-bg-secondary border border-border-medium rounded-lg text-text-primary focus:outline-none focus:border-accent-primary transition-colors appearance-none bg-transparent cursor-pointer"
                                         >
                                             <option value=""></option>
                                             <option value="5-10k">€5k - €10k</option>
@@ -249,7 +249,7 @@ export default function Contact() {
                                 <button
                                     onClick={handleEmail}
                                     disabled={isSubmitting}
-                                    className="flex-1 bg-white/[0.02] hover:bg-white/[0.04] text-white border border-white/10 hover:border-accent-primary backdrop-blur-md font-bold py-4 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    className="flex-1 bg-white/10 hover:bg-white/[0.15] text-white border border-white/10 hover:border-accent-primary backdrop-blur-md font-bold py-4 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {isSubmitting ? <Loader2 className="animate-spin" size={20} /> : <Mail size={20} />}
                                     {isSubmitting ? 'Sending...' : 'Email'}
@@ -257,7 +257,7 @@ export default function Contact() {
                                 <button
                                     onClick={handleWhatsApp}
                                     disabled={isSubmitting}
-                                    className="flex-1 bg-white/[0.02] hover:bg-white/[0.04] text-white border border-white/10 hover:border-accent-primary backdrop-blur-md font-bold py-4 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                                    className="flex-1 bg-white/10 hover:bg-white/[0.15] text-white border border-white/10 hover:border-accent-primary backdrop-blur-md font-bold py-4 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                                 >
                                     <MessageCircle size={20} />
                                     WhatsApp

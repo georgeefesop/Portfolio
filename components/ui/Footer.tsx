@@ -26,7 +26,7 @@ export default function Footer() {
                             Product Designer specializing in complex systems, Web3, and AI integrations. Based in Cyprus.
                         </p>
                         <p className="text-text-dim text-xs mt-8">
-                            © 2026 George Efesop. All rights reserved.
+                            © 2026 George Efesopoulos - Efesop. All rights reserved.
                         </p>
                     </div>
 

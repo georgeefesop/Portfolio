@@ -121,7 +121,21 @@ export default function Navigation() {
                                 <a
                                     key={link.name}
                                     href={link.href}
-                                    onClick={(e) => scrollToSection(e, link.href)}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setIsOpen(false);
+                                        // Wait for menu to close before scrolling
+                                        setTimeout(() => {
+                                            const element = document.querySelector(link.href);
+                                            if (element) {
+                                                const offsetTop = element.getBoundingClientRect().top + window.scrollY - 80;
+                                                window.scrollTo({
+                                                    top: offsetTop,
+                                                    behavior: 'smooth'
+                                                });
+                                            }
+                                        }, 300);
+                                    }}
                                     className={`block px-3 py-3 rounded-md text-base font-medium ${activeSection === link.href.substring(1)
                                         ? 'text-accent-primary bg-bg-secondary'
                                         : 'text-text-secondary hover:text-white hover:bg-bg-secondary'

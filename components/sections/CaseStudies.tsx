@@ -37,6 +37,39 @@ const cases = [
             ]
         }
     },
+    {
+        id: 'ai-tools',
+        title: 'AI User Tools',
+        subtitle: 'SaaS Platform for Generative AI Workflows',
+        role: 'Product Designer',
+        period: '2024',
+        tags: ['SaaS', 'AI', 'Product Design'],
+        description: {
+            challenge: 'Design a unified SaaS platform that aggregates scattered generative AI tools into a seamless, user-friendly workflow for non-technical professionals.',
+            work: [
+                'Developed a modular interface to house diverse AI models (Text, Image, Audio)',
+                'Created a unified design system to normalize controls across different tools',
+                'Designed comprehensive usage analytics and credit management dashboards',
+                'Streamlined the prompt engineering experience with visual helpers'
+            ],
+            outcome: 'Empowered professional users to leverage varying AI models without technical overhead. Reduced workflow time by 60% compared to using fragmented tools.'
+        },
+        links: {},
+        images: {
+            thumbnail: "/images/ai-tools/AIUT-2.png",
+            hero: "/images/ai-tools/AIUT-2.png",
+            gallery: [
+                "/images/ai-tools/AIUT-2.png",
+                "/images/ai-tools/1.PNG",
+                "/images/ai-tools/2.PNG",
+                "/images/ai-tools/3.PNG",
+                "/images/ai-tools/4.PNG",
+                "/images/ai-tools/7.PNG",
+                "/images/ai-tools/8.PNG",
+                "/images/ai-tools/11.PNG"
+            ]
+        }
+    },
 
     {
         id: 'stellar',

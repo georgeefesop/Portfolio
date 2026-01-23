@@ -7,7 +7,7 @@ export default function CredibilityBar() {
         <section className="bg-bg-primary py-16">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <FadeIn>
-                    <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 p-8 rounded-2xl bg-bg-secondary/30 border border-border-subtle/50 backdrop-blur-sm">
+                    <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 p-8 rounded-2xl bg-bg-secondary border border-border-subtle/50 backdrop-blur-sm">
                         <div className="flex flex-col items-center md:items-start text-center md:text-left">
                             <span className="text-4xl font-bold text-white mb-1">12+ Years</span>
                             <span className="text-text-muted text-sm uppercase tracking-widest font-mono">Multidisciplinary Craft</span>

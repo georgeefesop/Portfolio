@@ -5,6 +5,8 @@ import { useScrollProgress } from '@/hooks/useScrollProgress';
 import ProductCanvas from '@/components/ui/ProductCanvas';
 import HeroText from '@/components/ui/HeroText';
 
+import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
+
 export type StepId = 0 | 1 | 2;
 
 export default function ProductHero() {
@@ -14,7 +16,9 @@ export default function ProductHero() {
     return (
         <section className="relative h-[100svh] w-full overflow-hidden bg-black">
             <div className="absolute inset-0 z-0">
-                <ProductCanvas step={step} setStep={setStep} />
+                <ErrorBoundary>
+                    <ProductCanvas step={step} setStep={setStep} />
+                </ErrorBoundary>
             </div>
 
             <HeroText scrollProgress={scrollProgress} step={step} />

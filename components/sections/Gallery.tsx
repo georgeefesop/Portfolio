@@ -18,15 +18,15 @@ const projects = [
         link: 'https://www.behance.net/gallery/126787469/SmartJobs-UX-UI-Design'
     },
     {
-        title: 'Travel App Concept',
-        category: 'Mobile • Travel',
-        image: '/placeholder.svg',
-        link: 'https://www.behance.net/gallery/125867375/Travel-App-Concept'
+        title: 'Bank of Cyprus App',
+        category: 'Mobile • Fintech',
+        image: '/images/gallery/bank-of-cyprus.jpg',
+        link: 'https://www.behance.net/gallery/125867375/Travel-App-Concept' // Keeping link or placeholder if unknown? User didn't provide new link.
     },
     {
         title: 'Labline Health Dashboard',
         category: 'SaaS • HealthTech',
-        image: '/images/gallery/labline.png',
+        image: '/images/gallery/labline-new.jpg',
         link: 'https://www.behance.net/gallery/228295245/Labline-Health-Tracking-Biomarker-Dashboard'
     }
 ];
@@ -47,13 +47,13 @@ export default function Gallery() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {projects.filter(p => !p.title.includes('Travel')).slice(0, 3).map((project, idx) => (
+                        {projects.slice(0, 3).map((project, idx) => (
                             <a
                                 key={idx}
                                 href={project.link}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="group relative aspect-[4/3] rounded-xl overflow-hidden bg-bg-tertiary block border border-border-subtle hover:border-accent-primary/50 transition-colors"
+                                className="group relative aspect-[4/3] rounded-xl overflow-hidden bg-bg-tertiary block border border-border-subtle hover:border-accent-primary/50 transition-colors max-w-[85%] mx-auto md:max-w-none"
                             >
                                 <ImageWithFallback
                                     src={project.image}

@@ -45,8 +45,8 @@ export default function CaseStudyDrawer({ project, isOpen, onToggle, priority = 
         <>
             <div
                 className={`group border transition-all duration-500 rounded-xl overflow-hidden ${isOpen
-                    ? 'bg-bg-secondary border-white/10 cursor-pointer'
-                    : 'bg-transparent border-white/5 hover:bg-white/[0.02] hover:border-accent-primary/30'
+                    ? 'bg-zinc-900 border-white/20 cursor-pointer shadow-2xl'
+                    : 'bg-white/[0.03] border-white/10 hover:bg-white/[0.06] hover:border-accent-primary/30'
                     }`}
                 onClick={(e) => {
                     // Close if clicked anywhere on the card while open
@@ -176,7 +176,7 @@ export default function CaseStudyDrawer({ project, isOpen, onToggle, priority = 
                                 </div>
 
                                 {/* Gallery Grid which triggers Lightbox */}
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className={`grid gap-4 ${project.id === 'ai-tools' ? 'grid-cols-2 md:grid-cols-4' : project.id === 'stellar' ? 'grid-cols-1 lg:grid-cols-3' : 'grid-cols-1 md:grid-cols-2'}`}>
                                     {project.images.gallery.map((img, idx) => (
                                         <button
                                             key={idx}
@@ -184,7 +184,7 @@ export default function CaseStudyDrawer({ project, isOpen, onToggle, priority = 
                                                 e.stopPropagation();
                                                 setLightboxIndex(idx);
                                             }}
-                                            className={`relative rounded-lg overflow-hidden bg-bg-tertiary cursor-zoom-in hover:brightness-110 transition-all ${project.id === 'stellar' ? 'aspect-video col-span-2' : 'aspect-[4/3]'}`}
+                                            className={`relative rounded-lg overflow-hidden bg-bg-tertiary cursor-zoom-in hover:brightness-110 transition-all aspect-video`}
                                         >
                                             <ImageWithFallback
                                                 src={img}

@@ -13,11 +13,11 @@ export default function About() {
                     <div className="block md:grid md:grid-cols-12 md:gap-16 items-start clearfix">
 
                         {/* Image Column - Floated on Mobile */}
-                        <div className="float-right w-1/2 md:w-full md:float-none md:col-span-5 lg:col-span-4 mb-6 ml-6 md:ml-0 md:mb-0">
-                            <div className="relative aspect-square rounded-2xl overflow-hidden bg-bg-tertiary border border-border-medium">
+                        <div className="float-right w-[40%] md:w-full md:float-none md:col-span-5 lg:col-span-4 mb-6 ml-6 md:ml-0 md:mb-0">
+                            <div className="relative aspect-square rounded-2xl overflow-hidden md:w-[60%] md:ml-auto">
                                 {/* Replace with actual profile image */}
                                 <ImageWithFallback
-                                    src="/images/FB_IMG_1654720751146.jpg"
+                                    src="/images/george-profile-new.png"
                                     alt="George Efesop"
                                     fill
                                     className="object-cover"
@@ -28,8 +28,8 @@ export default function About() {
                         {/* Content Column */}
                         <div className="md:col-span-7 lg:col-span-8 space-y-8">
                             <div>
-                                <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-6">About</h2>
-                                <div className="prose prose-invert prose-lg text-text-secondary">
+                                <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-8">About</h2>
+                                <div className="space-y-6 text-base md:text-lg text-text-secondary leading-relaxed max-w-2xl">
                                     <p>
                                         I&apos;m George, a product designer based in Cyprus.
                                     </p>
@@ -43,17 +43,17 @@ export default function About() {
                             </div>
 
                             {/* What I Bring - Mobile & Desktop (Hidden on Tablet) */}
-                            <div className="bg-bg-secondary p-8 rounded-xl border border-border-subtle block md:hidden lg:block">
-                                <h3 className="text-xl font-bold text-text-primary mb-4">What I bring:</h3>
-                                <ul className="space-y-3">
+                            <div className="py-8 border-t border-b border-white/10 block md:hidden lg:block">
+                                <h3 className="text-lg font-bold text-text-primary mb-6 uppercase tracking-widest text-sm">What I bring</h3>
+                                <ul className="space-y-4">
                                     {[
                                         'Experience designing at scale (Cardano\'s $80bn ecosystem)',
                                         'AI-native workflows (Cursor, generative tools, modern automation)',
                                         'Full-stack capability (design + Next.js/React development)',
                                         'Teaching mindset (16k designers follow my content on TikTok)'
                                     ].map((item, i) => (
-                                        <li key={i} className="flex items-start gap-3 text-text-secondary">
-                                            <span className="text-accent-primary mt-1">→</span>
+                                        <li key={i} className="flex items-start gap-4 text-text-secondary text-base">
+                                            <span className="text-accent-primary mt-1.5 h-1.5 w-1.5 rounded-full bg-accent-primary shrink-0 block"></span>
                                             {item}
                                         </li>
                                     ))}
@@ -90,17 +90,17 @@ export default function About() {
                         </div>
 
                         {/* What I Bring - Tablet Only (Full Width) */}
-                        <div className="hidden md:block lg:hidden col-span-12 mt-8 bg-bg-secondary p-8 rounded-xl border border-border-subtle">
-                            <h3 className="text-xl font-bold text-text-primary mb-4">What I bring:</h3>
-                            <ul className="space-y-3">
+                        <div className="hidden md:block lg:hidden col-span-12 mt-12 py-8 border-t border-b border-white/10">
+                            <h3 className="text-lg font-bold text-text-primary mb-6 uppercase tracking-widest text-sm">What I bring</h3>
+                            <ul className="space-y-4">
                                 {[
                                     'Experience designing at scale (Cardano\'s $80bn ecosystem)',
                                     'AI-native workflows (Cursor, generative tools, modern automation)',
                                     'Full-stack capability (design + Next.js/React development)',
                                     'Teaching mindset (16k designers follow my content on TikTok)'
                                 ].map((item, i) => (
-                                    <li key={i} className="flex items-start gap-3 text-text-secondary">
-                                        <span className="text-accent-primary mt-1">→</span>
+                                    <li key={i} className="flex items-start gap-4 text-text-secondary text-base">
+                                        <span className="text-accent-primary mt-1.5 h-1.5 w-1.5 rounded-full bg-accent-primary shrink-0 block"></span>
                                         {item}
                                     </li>
                                 ))}

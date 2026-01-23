@@ -149,7 +149,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
     useEffect(() => {
         if (step === 2) {
             setShowSplash(true);
-            const timer = setTimeout(() => setShowSplash(false), 2800);
+            const timer = setTimeout(() => setShowSplash(false), 2400); // Reduced delay after complete matches animation end (1.8s + 0.5s delay = 2.3s)
             return () => clearTimeout(timer);
         } else {
             setShowSplash(false);
@@ -709,7 +709,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                         animate={{ opacity: 1, scale: 1, y: 0 }}
                                         exit={{ opacity: 0 }}
                                         transition={{ delay: 2.2, type: "spring" }}
-                                        className="absolute top-[35px] left-4 md:-left-28 z-50 pointer-events-none"
+                                        className="absolute top-[85px] left-[66px] md:-left-28 z-50 pointer-events-none"
                                         style={{ fontFamily: 'var(--font-caveat)' }}
                                     >
                                         <div className="text-xl md:text-2xl text-accent-primary font-bold whitespace-nowrap drop-shadow-lg relative">
@@ -723,7 +723,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                         animate={{ opacity: 1, scale: 1, y: 0 }}
                                         exit={{ opacity: 0 }}
                                         transition={{ delay: 2.4, type: "spring" }}
-                                        className="absolute top-[125px] left-4 md:-left-28 z-50 pointer-events-none"
+                                        className="absolute top-[175px] left-4 md:-left-28 z-50 pointer-events-none"
                                         style={{ fontFamily: 'var(--font-caveat)' }}
                                     >
                                         <div className="text-xl md:text-2xl text-accent-primary font-bold whitespace-nowrap drop-shadow-lg relative">
@@ -737,7 +737,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                         animate={{ opacity: 1, scale: 1, y: 0 }}
                                         exit={{ opacity: 0 }}
                                         transition={{ delay: 2.6, type: "spring" }}
-                                        className="absolute top-32 md:top-32 right-4 md:-right-28 z-50 pointer-events-none"
+                                        className="absolute top-[320px] md:top-32 right-4 md:-right-28 z-50 pointer-events-none"
                                         style={{ fontFamily: 'var(--font-caveat)' }}
                                     >
                                         <div className="text-xl md:text-2xl text-accent-primary font-bold whitespace-nowrap drop-shadow-lg relative text-right">
@@ -751,7 +751,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                         animate={{ opacity: 1, scale: 1, y: 0 }}
                                         exit={{ opacity: 0 }}
                                         transition={{ delay: 2.8, type: "spring" }}
-                                        className="absolute bottom-[230px] md:bottom-[134px] right-4 md:-right-[170px] z-50 pointer-events-none"
+                                        className="absolute bottom-[80px] md:bottom-[134px] right-4 md:-right-[170px] z-50 pointer-events-none"
                                         style={{ fontFamily: 'var(--font-caveat)' }}
                                     >
                                         <div className="text-xl md:text-2xl text-accent-primary font-bold whitespace-nowrap drop-shadow-lg relative text-right">
@@ -1447,9 +1447,11 @@ function AnimatedElement({
     dragMomentum?: boolean,
     dragConstraints?: any
 }) {
+    const isHidden = (layout.opacity ?? 1) < 0.01;
+
     return (
         <motion.div
-            className={cn("absolute top-1/2 left-1/2 will-change-transform", className)}
+            className={cn("absolute top-1/2 left-1/2 will-change-transform", className, isHidden && "pointer-events-none invisible")}
             initial={false}
             animate={{
                 x: layout.x,
@@ -1474,6 +1476,10 @@ function AnimatedElement({
                 translateX: "-50%",
                 translateY: "-50%"
             }}
+            aria-hidden={isHidden}
+            // @ts-ignore - inert is part of the HTML standard but React types might be lagging
+            inert={isHidden ? "" : undefined}
+            tabIndex={isHidden ? -1 : undefined}
         >
             {children}
         </motion.div>
@@ -1864,7 +1870,7 @@ function SplashScreen() {
                         className="h-full bg-accent-primary origin-left"
                         initial={{ scaleX: 0 }}
                         animate={{ scaleX: 1 }}
-                        transition={{ duration: 1.8, ease: "easeInOut", delay: 0.2 }}
+                        transition={{ duration: 1.8, ease: "easeInOut", delay: 0.5 }}
                     />
                 </motion.div>
             </div>
