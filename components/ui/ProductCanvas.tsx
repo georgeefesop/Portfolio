@@ -779,14 +779,14 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                             )}
                         >
                             {/* Top Bar Wireframe */}
-                            <motion.div variants={{ hidden: { opacity: 0, y: -10, scale: 0.95 }, show: { opacity: 1, y: 0, scale: [0.95, 1.02, 1] } }} className="h-12 border-b-2 border-dashed border-zinc-600/30 flex items-center justify-between px-4">
-                                <div className="w-24 h-4 border border-zinc-500/60 rounded" />
-                                <div className="flex gap-3">
+                            <motion.div variants={{ hidden: { opacity: 0, y: -10, scale: 0.95 }, show: { opacity: 1, y: 0, scale: [0.95, 1.02, 1] } }} className={cn("h-12 border-b-2 border-dashed border-zinc-500/50 flex items-center justify-between", isMobile ? "px-3" : "px-4")}>
+                                <div className={cn("border border-zinc-400/60 rounded bg-zinc-700/20", isMobile ? "w-12 h-3" : "w-24 h-4")} />
+                                <div className={cn("flex", isMobile ? "gap-1.5" : "gap-3")}>
                                     {[1, 2, 3].map(i => (
-                                        <div key={i} className={cn("w-16 h-6 border border-zinc-600/40 rounded", i === 1 && "bg-zinc-700/20")} />
+                                        <div key={i} className={cn("border border-zinc-500/50 rounded", i === 1 && "bg-zinc-600/30", isMobile ? "w-10 h-5" : "w-16 h-6")} />
                                     ))}
                                 </div>
-                                <div className="w-16 h-4 border border-zinc-500/60 rounded" />
+                                <div className={cn("border border-zinc-400/60 rounded bg-zinc-700/20", isMobile ? "w-8 h-3" : "w-16 h-4")} />
                             </motion.div>
 
                             {/* Main Layout - Responsive */}
@@ -796,14 +796,14 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                     {/* Search + Tabs */}
                                     <motion.div variants={{ hidden: { opacity: 0, x: -10, scale: 0.95 }, show: { opacity: 1, x: 0, scale: [0.95, 1.02, 1] } }} className="p-4 border-b-2 border-dashed border-zinc-500/50 space-y-3">
                                         {/* Search Bar */}
-                                        <div className="h-9 border border-zinc-500/60 rounded-lg flex items-center px-3 gap-2">
-                                            <Search size={12} className="text-zinc-600" />
-                                            <div className="flex-1 h-2 bg-zinc-700/20 rounded" />
+                                        <div className="h-9 border border-zinc-400/60 rounded-lg flex items-center px-3 gap-2 bg-zinc-800/20">
+                                            <Search size={12} className="text-zinc-400" />
+                                            <div className="flex-1 h-2 bg-zinc-600/30 rounded" />
                                         </div>
                                         {/* Category Tabs */}
                                         <div className="flex gap-2">
                                             {[1, 2, 3].map(i => (
-                                                <div key={i} className={cn("px-4 py-1.5 border border-zinc-600/40 rounded-full", i === 1 && "bg-accent-primary/20 border-accent-primary/40")} />
+                                                <div key={i} className={cn("px-4 py-1.5 border border-zinc-500/50 rounded-full", i === 1 && "bg-accent-primary/20 border-accent-primary/60")} />
                                             ))}
                                         </div>
                                     </motion.div>
@@ -818,13 +818,13 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                     className="aspect-square border-2 border-dashed border-zinc-500/50 rounded-lg flex flex-col overflow-hidden"
                                                 >
                                                     {/* Image Area */}
-                                                    <div className="flex-[7] bg-zinc-700/10 flex items-center justify-center">
-                                                        <Coffee size={20} className="text-zinc-600/40" />
+                                                    <div className="flex-[7] bg-zinc-700/20 flex items-center justify-center border-b border-dashed border-zinc-500/30">
+                                                        <Coffee size={20} className="text-zinc-500" />
                                                     </div>
                                                     {/* Info Area */}
-                                                    <div className="flex-[3] p-2 space-y-1">
-                                                        <div className="h-2 w-3/4 bg-zinc-700/20 rounded" />
-                                                        <div className="h-1.5 w-1/2 bg-accent-primary/20 rounded" />
+                                                    <div className="flex-[3] p-2 space-y-1 bg-zinc-800/10">
+                                                        <div className="h-2 w-3/4 bg-zinc-600/30 rounded" />
+                                                        <div className="h-1.5 w-1/2 bg-accent-primary/30 rounded" />
                                                     </div>
                                                 </motion.div>
                                             ))}
@@ -836,12 +836,12 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                 <div className={cn("flex flex-col", isMobile ? "flex-[40]" : "flex-[35]")}>
                                     {/* Ticket Header */}
                                     {!isMobile && (
-                                        <motion.div variants={{ hidden: { opacity: 0, x: 10, scale: 0.95 }, show: { opacity: 1, x: 0, scale: [0.95, 1.02, 1] } }} className="p-3 border-b-2 border-dashed border-zinc-500/50 bg-zinc-700/15 space-y-2">
+                                        <motion.div variants={{ hidden: { opacity: 0, x: 10, scale: 0.95 }, show: { opacity: 1, x: 0, scale: [0.95, 1.02, 1] } }} className="p-3 border-b-2 border-dashed border-zinc-500/50 bg-zinc-700/20 space-y-2">
                                             <div className="flex justify-between items-center">
-                                                <div className="h-3 w-20 bg-zinc-700/30 rounded" />
+                                                <div className="h-3 w-20 bg-zinc-600/40 rounded" />
                                                 <div className="h-5 w-16 border border-zinc-500/60 rounded" />
                                             </div>
-                                            <div className="h-2 w-full bg-zinc-700/20 rounded" />
+                                            <div className="h-2 w-full bg-zinc-600/30 rounded" />
                                         </motion.div>
                                     )}
 
@@ -853,12 +853,12 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                 variants={{ hidden: { opacity: 0, x: 20, scale: 0.9 }, show: { opacity: 1, x: 0, scale: [0.9, 1.05, 1] } }}
                                                 className="flex items-start gap-2 p-2 border border-dashed border-zinc-500/40 rounded"
                                             >
-                                                <div className="w-6 h-6 border border-zinc-500/60 rounded flex-shrink-0" />
+                                                <div className="w-6 h-6 border border-zinc-500/60 rounded flex-shrink-0 bg-zinc-700/20" />
                                                 <div className="flex-1 space-y-1">
-                                                    <div className="h-2.5 w-3/4 bg-zinc-700/20 rounded" />
-                                                    <div className="h-2 w-1/2 bg-zinc-700/15 rounded" />
+                                                    <div className="h-2.5 w-3/4 bg-zinc-600/30 rounded" />
+                                                    <div className="h-2 w-1/2 bg-zinc-600/20 rounded" />
                                                 </div>
-                                                <div className="h-2.5 w-12 bg-zinc-700/20 rounded flex-shrink-0" />
+                                                <div className="h-2.5 w-12 bg-zinc-600/30 rounded flex-shrink-0" />
                                             </motion.div>
                                         ))}
                                     </div>
@@ -899,9 +899,9 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                             </div>
 
                             {/* Bottom Status Bar */}
-                            <motion.div variants={{ hidden: { opacity: 0, scale: 0.95 }, show: { opacity: 1, scale: 1 } }} className="h-6 border-t-2 border-dashed border-zinc-600/30 flex items-center justify-between px-4 bg-zinc-700/10">
-                                <div className="h-2 w-32 bg-zinc-700/20 rounded" />
-                                <div className="h-2 w-16 bg-zinc-700/20 rounded" />
+                            <motion.div variants={{ hidden: { opacity: 0, scale: 0.95 }, show: { opacity: 1, scale: 1 } }} className="h-6 border-t-2 border-dashed border-zinc-500/50 flex items-center justify-between px-4 bg-zinc-700/20">
+                                <div className="h-2 w-32 bg-zinc-600/30 rounded" />
+                                <div className="h-2 w-16 bg-zinc-600/30 rounded" />
                             </motion.div>
 
 
@@ -930,7 +930,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                     }
                                 }}
                                 className={cn(
-                                    "bg-gradient-to-br from-zinc-950 to-black border-2 border-white/15 rounded-xl shadow-2xl overflow-hidden flex flex-col relative",
+                                    "bg-gradient-to-br from-zinc-950 to-black border-2 border-white/15 rounded-xl shadow-2xl overflow-visible flex flex-col relative",
                                     !isResizing && "transition-all duration-500",
                                     step !== 2 && "pointer-events-none"
                                 )}
@@ -955,8 +955,11 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                     </>
                                 )}
                                 {/* Top Bar */}
-                                <motion.div variants={{ hidden: { opacity: 0, y: -10 }, show: { opacity: 1, y: 0 } }} className={cn("bg-zinc-900 border-b border-zinc-700 flex items-center justify-between px-4", isEffectiveMobile ? "h-8" : "h-12")}>
-                                    <span className={cn("font-bold text-zinc-100 tracking-tight", isEffectiveMobile ? "text-xs" : "text-sm")}>Aster Café</span>
+                                <motion.div variants={{ hidden: { opacity: 0, y: -10 }, show: { opacity: 1, y: 0 } }} className={cn("bg-zinc-900 border-b border-zinc-700 flex items-center justify-between px-4 rounded-t-[10px]", isEffectiveMobile ? "h-8" : "h-12")}>
+                                    <div className="flex items-center gap-2">
+                                        {!isEffectiveMobile && <span className="font-bold text-zinc-100 tracking-tight text-sm">Aster Café</span>}
+                                        <span className={cn("font-mono font-bold text-accent-primary bg-accent-primary/10 px-1.5 py-0.5 rounded border border-accent-primary/20", isEffectiveMobile ? "text-[9px]" : "text-[10px]")}>MVP PROTOTYPE</span>
+                                    </div>
                                     <div className={cn("flex gap-4 font-medium", isEffectiveMobile ? "text-[10px]" : "text-xs")}>
                                         <span className={cn("text-white transition-colors", isEffectiveMobile ? "py-1.5" : "px-3 py-1.5 bg-zinc-800 rounded-md shadow-sm border border-zinc-600")}>Checkout</span>
                                         <button onClick={() => handleInactiveClick('Orders')} className="text-zinc-500 py-1.5 hover:text-zinc-300 cursor-pointer transition-colors relative">
@@ -975,12 +978,12 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                 </motion.div>
 
                                 {/* Main Content: 2-Column Layout (Desktop) / Stacked (Mobile) */}
-                                <div className={cn("flex-1 flex overflow-hidden", isEffectiveMobile ? "flex-col" : "flex-row")}>
+                                <div className={cn("flex-1 flex min-h-0", isEffectiveMobile ? "flex-col" : "flex-row")}>
                                     {/* LEFT: Menu Grid */}
-                                    <div className={cn("flex flex-col bg-zinc-900/50 min-h-0", isEffectiveMobile ? "flex-[60] border-b border-zinc-700" : "flex-[65] border-r border-zinc-700")}>
+                                    <div className={cn("flex flex-col min-h-0", isEffectiveMobile ? "flex-[60] border-b border-zinc-700 bg-zinc-800/40" : "flex-[65] border-r border-zinc-700 bg-zinc-900/50")}>
                                         {/* Search + Categories */}
                                         {/* Search + Categories */}
-                                        <motion.div variants={{ hidden: { opacity: 0, x: -10 }, show: { opacity: 1, x: 0 } }} className={cn("space-y-3 flex flex-col justify-center", isEffectiveMobile ? "p-2 min-h-[60px]" : "p-4 border-b border-zinc-800")}>
+                                        <motion.div variants={{ hidden: { opacity: 0, x: -10 }, show: { opacity: 1, x: 0 } }} className={cn("space-y-3 flex flex-col justify-center", isEffectiveMobile ? "p-1" : "p-4 border-b border-zinc-800")}>
                                             {/* Search Bar */}
                                             {!isEffectiveMobile && (
                                                 <div className="relative">
@@ -995,7 +998,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                 </div>
                                             )}
                                             {/* Category Tabs */}
-                                            <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+                                            <div className={cn("flex gap-2 overflow-x-auto pb-1 scrollbar-hide", isEffectiveMobile && "pt-1")}>
                                                 {['All', 'Coffee', 'Tea', 'Pastry'].map((cat, i) => (
                                                     <button
                                                         key={cat}
@@ -1127,11 +1130,11 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                                 <span className={cn("text-zinc-200 truncate font-medium pr-2", isEffectiveMobile ? "text-xs" : "text-sm")}>{item.name}</span>
                                                                 <span className={cn("text-zinc-300", isEffectiveMobile ? "text-xs" : "text-sm")}>€{(item.price * item.qty).toFixed(2)}</span>
                                                             </div>
-                                                            {item.modifiers && <div className={cn("text-zinc-500 truncate", isEffectiveMobile ? "text-[9px]" : "text-[10px]")}>{item.modifiers}</div>}
+                                                            {item.modifiers && <div className={cn("text-zinc-500", isEffectiveMobile ? "text-[9px]" : "text-[10px] truncate")}>{item.modifiers}</div>}
                                                         </div>
                                                         <button
                                                             onClick={(e) => { e.stopPropagation(); removeFromCart(i); }}
-                                                            className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-400 text-zinc-600 transition-opacity"
+                                                            className={cn("p-1 hover:text-red-400 text-zinc-600 transition-opacity", isEffectiveMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100")}
                                                         >
                                                             <Minus size={12} />
                                                         </button>
@@ -1177,13 +1180,22 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                 </div>
                                             )}
                                             <div className="flex gap-2 items-center">
-                                                <button
-                                                    onClick={(e) => { e.stopPropagation(); handleInactiveClick('Hold'); }}
-                                                    className={cn("bg-zinc-600 hover:bg-zinc-500 text-zinc-200 font-medium rounded transition-colors border border-zinc-500 cursor-pointer relative", isEffectiveMobile ? "px-3 py-2 text-[10px]" : "flex-1 py-2.5 text-xs")}
-                                                >
-                                                    Hold
-                                                    {activeTooltip === 'Hold' && <Tooltip text="Not in scope for MVP" position="top" />}
-                                                </button>
+                                                {isEffectiveMobile ? (
+                                                    <button
+                                                        onClick={(e) => { e.stopPropagation(); clearCart(); }}
+                                                        className="px-3 py-2 text-[10px] bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-medium rounded transition-colors border border-zinc-700 cursor-pointer"
+                                                    >
+                                                        Clear
+                                                    </button>
+                                                ) : (
+                                                    <button
+                                                        onClick={(e) => { e.stopPropagation(); handleInactiveClick('Hold'); }}
+                                                        className="flex-1 py-2.5 text-xs bg-zinc-600 hover:bg-zinc-500 text-zinc-200 font-medium rounded transition-colors border border-zinc-500 cursor-pointer relative"
+                                                    >
+                                                        Hold
+                                                        {activeTooltip === 'Hold' && <Tooltip text="Not in scope for MVP" position="top" />}
+                                                    </button>
+                                                )}
                                                 <button
                                                     onClick={(e) => { e.stopPropagation(); sendToKitchen(); }}
                                                     className={cn("bg-accent-primary hover:bg-accent-primary/90 text-black font-bold rounded transition-all shadow-lg relative overflow-hidden cursor-pointer", isEffectiveMobile ? "flex-1 py-2 text-xs" : "flex-[3] py-2.5 text-sm")}
@@ -1215,7 +1227,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                 {isEffectiveMobile && (
                                                     <div className="flex flex-col items-end min-w-[50px] leading-tight">
                                                         <span className="text-[10px] text-zinc-400 font-medium uppercase tracking-tighter">Total</span>
-                                                        <span className="text-[10px] text-zinc-400 font-medium uppercase tracking-tighter">Total</span>
+
                                                         <span className="text-sm font-bold font-mono text-white">€{calculateTotals().total}</span>
                                                     </div>
                                                 )}
@@ -1268,7 +1280,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                 </AnimatePresence>
 
                                 {/* Bottom Status Bar */}
-                                <motion.div variants={{ hidden: { opacity: 0 }, show: { opacity: 1 } }} className={cn("bg-zinc-950 border-t border-zinc-800 flex items-center justify-between px-4", isEffectiveMobile ? "h-[14px]" : "h-6")}>
+                                <motion.div variants={{ hidden: { opacity: 0 }, show: { opacity: 1 } }} className={cn("bg-zinc-950 border-t border-zinc-800 flex items-center justify-between px-4 rounded-b-[10px]", isEffectiveMobile ? "h-[14px]" : "h-6")}>
                                     <div className="flex items-center gap-3 text-[9px] text-zinc-600">
                                         <span className="flex items-center gap-1">
                                             <span className="w-1 h-1 bg-green-500 rounded-full" />
@@ -1496,8 +1508,13 @@ function TicketUI({ data, dimmed, showAssigned, compact }: { data: any, dimmed?:
     return (
         <div className={cn("bg-bg-secondary/90 backdrop-blur-md rounded-xl border border-border-subtle shadow-lg flex flex-col transition-all duration-300 group select-none relative hover:border-border-medium",
             compact ? "w-[240px] p-4 gap-2" : "w-[260px] p-5 gap-3",
-            dimmed && "opacity-15"
+            dimmed && "opacity-40" // Increased from opacity-15
         )}>
+            {/* Ticket Label - Visual Cue */}
+            <div className="absolute -top-2.5 left-4 bg-zinc-800 text-zinc-500 text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded border border-zinc-700 shadow-sm">
+                Ticket
+            </div>
+
             {!compact && (
                 <div className="flex justify-between items-start">
                     {/* ID Pill */}
@@ -1563,23 +1580,15 @@ function TicketUI({ data, dimmed, showAssigned, compact }: { data: any, dimmed?:
             )}
 
             {/* Assigned Cue (Internal) */}
-            {!compact && (
-                <AnimatePresence>
-                    {showAssigned && (
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            className="absolute bottom-5 right-5"
-                        >
-                            <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-zinc-800/80 border border-zinc-700/50 backdrop-blur-sm shadow-sm opacity-90">
-                                <span className="w-1.5 h-1.5 bg-accent-primary rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
-                                <span className="text-[9px] text-zinc-400 font-medium tracking-wide">
-                                    Assigned: <span className="text-zinc-200">George</span>
-                                </span>
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+            {!compact && showAssigned && (
+                <div className="absolute bottom-5 right-5">
+                    <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-zinc-800/80 border border-zinc-700/50 backdrop-blur-sm shadow-sm opacity-90">
+                        <span className="w-1.5 h-1.5 bg-accent-primary rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
+                        <span className="text-[9px] text-zinc-400 font-medium tracking-wide">
+                            Assigned: <span className="text-zinc-200">George</span>
+                        </span>
+                    </div>
+                </div>
             )}
 
             {compact && (
