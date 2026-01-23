@@ -138,6 +138,7 @@ function CanvasNodes({ steps, size, containerRef, isMobile, isTablet }: { steps:
                     x={motionValues[i].x}
                     y={motionValues[i].y}
                     containerRef={containerRef}
+                    isMobile={isMobile}
                 />
             ))}
         </>
@@ -202,10 +203,10 @@ function SmartConnection({ from, to }: { from: { x: any, y: any }, to: { x: any,
     );
 }
 
-function ProcessNode({ step, index, x, y, containerRef }: any) {
+function ProcessNode({ step, index, x, y, containerRef, isMobile }: any) {
     return (
         <motion.div
-            drag
+            drag={!isMobile}
             dragElastic={0.1}
             dragMomentum={false}
             style={{ x, y }}

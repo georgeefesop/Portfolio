@@ -16,9 +16,9 @@ const services = [
     {
         title: 'Landing Page Design + Build',
         description: 'High-converting pages for product launches. Custom animations and performance optimized. 1-2 week turnaround.',
-        price: 'From €2k',
+        price: 'From €2.5k',
         timeline: '1–2 weeks',
-        range: 'Typical €2–6k',
+        range: 'Typical €2.5–6k',
         scope: 'Includes: design, build, animation, performance',
         icon: Layout
     },
@@ -43,9 +43,9 @@ const services = [
     {
         title: 'Design Systems & Components',
         description: 'Scalable component libraries and style guides. Figma to code handoff and documentation for growing teams.',
-        price: 'From €5k',
+        price: 'From €2.5k',
         timeline: '3–6 weeks',
-        range: 'Typical €5–12k',
+        range: 'Typical €2.5–8k',
         scope: 'Includes: components, tokens, documentation',
         icon: Code
     },
