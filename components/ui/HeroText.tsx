@@ -1,43 +1,83 @@
 'use client';
 
-import { motion, MotionValue, useTransform, Variants } from 'framer-motion';
+import { motion, AnimatePresence, MotionValue, useTransform, Variants } from 'framer-motion';
 import { StepId } from '../sections/ProductHero';
 
 function cn(...classes: (string | undefined | null | false)[]) {
     return classes.filter(Boolean).join(' ');
 }
 
+import { useRef, useEffect, useState } from 'react';
+
 interface HeroTextProps {
     scrollProgress: MotionValue<number>;
     step?: StepId;
 }
 
-function HeroAnnotationArrow({ isMobile }: { isMobile: boolean }) {
-    // Desktop: Heading is bottom-left, Canvas is center. Arrow goes from bottom-left UP and RIGHT.
-    // Mobile: Heading is top-leftish, Canvas is center. Arrow goes from top DOWN.
-    const path = isMobile
-        ? "M 10 10 Q 30 50 20 90" // Simple mobile curve
-        : "M 20 180 Q 40 50 160 20"; // Desktop curve: from heading up and right
+function HeroAnnotationArrow({ isMobile, startRef }: { isMobile: boolean, startRef: React.RefObject<HTMLElement | null> }) {
+    const [path, setPath] = useState("");
+    const [arrowheadPath, setArrowheadPath] = useState("");
+    const [dimensions, setDimensions] = useState({ width: 0, height: 0, top: 0, left: 0 });
+
+    useEffect(() => {
+        const calculatePath = () => {
+            const startElement = startRef.current;
+            const endElement = document.getElementById('dashboard-frame');
+
+            if (!startElement || !endElement) return;
+
+            const startRect = startElement.getBoundingClientRect();
+            const endRect = endElement.getBoundingClientRect();
+
+            // Screen coordinates
+            const startX = startRect.right;
+            const startY = startRect.top + (startRect.height / 2);
+            const endX = endRect.left;
+            const endY = endRect.top + (endRect.height / 4); // Point to upper side of dashboard
+
+            // SVG coordinates (relative to a full-screen SVG)
+            // We'll use a full screen SVG overlay for precise positioning
+            const dx = endX - startX;
+            const dy = endY - startY;
+
+            // Simplified quadratic curve
+            // Control point: halfway across, slightly higher
+            const cpX = startX + dx * 0.4;
+            const cpY = startY + dy * 0.1;
+
+            setPath(`M ${startX} ${startY} Q ${cpX} ${cpY} ${endX} ${endY}`);
+
+            // Arrowhead (pointing to the left)
+            const angle = Math.atan2(endY - cpY, endX - cpX);
+            const headLen = 15;
+            const head1X = endX - headLen * Math.cos(angle - Math.PI / 6);
+            const head1Y = endY - headLen * Math.sin(angle - Math.PI / 6);
+            const head2X = endX - headLen * Math.cos(angle + Math.PI / 6);
+            const head2Y = endY - headLen * Math.sin(angle + Math.PI / 6);
+
+            setArrowheadPath(`M ${head1X} ${head1Y} L ${endX} ${endY} L ${head2X} ${head2Y}`);
+        };
+
+        calculatePath();
+        window.addEventListener('resize', calculatePath);
+        // Recalculate after a short delay for any layout transitions
+        const timer = setTimeout(calculatePath, 600);
+        return () => {
+            window.removeEventListener('resize', calculatePath);
+            clearTimeout(timer);
+        };
+    }, [startRef]);
+
+    if (!path) return null;
 
     return (
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className={cn(
-                "absolute pointer-events-none z-50",
-                isMobile
-                    ? "top-[100px] left-[60%]"
-                    : "bottom-[120px] left-[380px] lg:left-[450px]"
-            )}
+            className="fixed inset-0 pointer-events-none z-0"
         >
-            <svg
-                width={isMobile ? "100" : "200"}
-                height={isMobile ? "100" : "200"}
-                viewBox={isMobile ? "0 0 100 100" : "0 0 200 200"}
-                fill="none"
-                className="text-accent-primary"
-            >
+            <svg width="100%" height="100%" fill="none" className="text-accent-primary opacity-60">
                 <motion.path
                     d={path}
                     stroke="currentColor"
@@ -46,29 +86,18 @@ function HeroAnnotationArrow({ isMobile }: { isMobile: boolean }) {
                     strokeLinejoin="round"
                     initial={{ pathLength: 0 }}
                     animate={{ pathLength: 1 }}
-                    transition={{ duration: 1, delay: 0.5, ease: "easeOut" }}
+                    transition={{ duration: 0.3, delay: 1.8, ease: "easeOut" }}
                 />
                 <motion.path
-                    d={isMobile ? "M 10 80 L 20 90 L 30 80" : "M 145 35 L 160 20 L 140 15"}
+                    d={arrowheadPath}
                     stroke="currentColor"
                     strokeWidth="4"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ delay: 1.3 }}
+                    transition={{ delay: 2.1, duration: 0.2 }}
                 />
-                <motion.text
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1.5 }}
-                    x={isMobile ? "35" : "110"}
-                    y={isMobile ? "85" : "55"}
-                    className="fill-accent-primary font-bold text-[12px] md:text-[14px]"
-                    style={{ fontFamily: 'var(--font-caveat)' }}
-                >
-                    Final Polished UI
-                </motion.text>
             </svg>
         </motion.div>
     );
@@ -95,6 +124,8 @@ export default function HeroText({ scrollProgress, step }: HeroTextProps) {
         }
     };
 
+    const refR = useRef<HTMLSpanElement>(null);
+
     return (
         <motion.div
             className="absolute inset-0 z-10 w-full h-full p-6 md:p-12 lg:p-16 flex flex-col justify-between pointer-events-none select-none"
@@ -114,7 +145,7 @@ export default function HeroText({ scrollProgress, step }: HeroTextProps) {
                 {/* Left Side: Main Title */}
                 <motion.div
                     variants={itemVariants}
-                    className="md:max-w-2xl text-left transition-all duration-500"
+                    className="md:max-w-2xl text-left transition-all duration-500 relative z-10"
                 >
                     <div className="mb-1 md:mb-2">
                         <span className="text-lg md:text-3xl font-serif italic text-white font-light tracking-wide font-['Times_New_Roman'] whitespace-nowrap">
@@ -123,7 +154,7 @@ export default function HeroText({ scrollProgress, step }: HeroTextProps) {
                     </div>
                     <h1 className="font-black tracking-tighter text-white leading-[0.85] transition-all duration-500 text-3xl md:text-5xl lg:text-7xl uppercase">
                         <span className="md:hidden block whitespace-nowrap">Product Designer</span>
-                        <span className="hidden md:block">PRODUCT<br />DESIGNER</span>
+                        <span className="hidden md:block">PRODUCT<br />DESIGNER<span ref={refR}>R</span></span>
                         <span className="text-white/50 font-medium tracking-tight block mt-1 md:mt-2 text-lg md:text-3xl">
                             FOR COMPLEX SYSTEMS
                         </span>
@@ -133,17 +164,17 @@ export default function HeroText({ scrollProgress, step }: HeroTextProps) {
                     <AnimatePresence>
                         {step === 2 && (
                             <div className="md:hidden">
-                                <HeroAnnotationArrow isMobile={true} />
+                                <HeroAnnotationArrow isMobile={true} startRef={refR} />
                             </div>
                         )}
                     </AnimatePresence>
                 </motion.div>
 
-                {/* Desktop Arrow - Positioned relative to the main content area */}
+                {/* Desktop Arrow - Component handles its own visibility via Step 3 trigger */}
                 <AnimatePresence>
                     {step === 2 && (
                         <div className="hidden md:block">
-                            <HeroAnnotationArrow isMobile={false} />
+                            <HeroAnnotationArrow isMobile={false} startRef={refR} />
                         </div>
                     )}
                 </AnimatePresence>
@@ -180,9 +211,5 @@ export default function HeroText({ scrollProgress, step }: HeroTextProps) {
                 </motion.div>
             </div>
         </motion.div>
-    );
-}
-            </div >
-        </motion.div >
     );
 }
