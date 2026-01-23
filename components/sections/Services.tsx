@@ -7,37 +7,55 @@ const services = [
     {
         title: 'MVP Design + Development',
         description: 'Research → Prototype → Launch in 4-6 weeks. Full-stack execution with Next.js & Design Systems. Ideal for funded startups.',
-        price: '€10-18k',
+        price: 'From €12k',
+        timeline: '4–6 weeks',
+        range: 'Typical €12–18k',
+        scope: 'Includes: discovery, design, build, handoff',
         icon: Zap
     },
     {
         title: 'Landing Page Design + Build',
         description: 'High-converting pages for product launches. Custom animations and performance optimized. 1-2 week turnaround.',
-        price: '€4-8k',
+        price: 'From €4k',
+        timeline: '1–2 weeks',
+        range: 'Typical €4–8k',
+        scope: 'Includes: design, build, animation, performance',
         icon: Layout
     },
     {
         title: 'SaaS Dashboard Design',
         description: 'Turning complex data into intuitive interfaces. Specialized in Fintech, HealthTech, and Web3 platforms.',
-        price: '€10-18k',
+        price: 'From €10k',
+        timeline: '4–8 weeks',
+        range: 'Typical €10–18k',
+        scope: 'Includes: core flows, states, UI system',
         icon: BarChart3
     },
     {
         title: 'AI Integration & Workflows',
         description: 'Custom AI features, image generation pipelines, and automation. AI-native design process for faster timelines.',
-        price: '€5k+ or consulting',
+        price: 'From €5k',
+        timeline: '2–6 weeks',
+        range: 'Typical €5–12k',
+        scope: 'Includes: scoped workflow, prototype, plan',
         icon: Sparkles
     },
     {
         title: 'Design Systems & Components',
         description: 'Scalable component libraries and style guides. Figma to code handoff and documentation for growing teams.',
-        price: '€8-15k',
+        price: 'From €8k',
+        timeline: '3–6 weeks',
+        range: 'Typical €8–15k',
+        scope: 'Includes: components, tokens, documentation',
         icon: Code
     },
     {
         title: 'Hourly Consulting',
         description: 'Design audits, prototyping, and technical advisory. Flexible engagement for specific problem solving.',
         price: '€150/hour',
+        timeline: 'Async-first • Min. 3h',
+        range: 'Min. 3 hours',
+        scope: 'Audits, prototypes, technical guidance',
         icon: Clock
     }
 ];
@@ -70,10 +88,20 @@ export default function Services() {
                                     {service.description}
                                 </p>
 
-                                <div className="mt-auto pt-4 border-t border-border-subtle">
-                                    <span className="text-lg font-bold text-accent-primary font-mono bg-accent-primary/10 px-2 py-1 rounded">
-                                        {service.price}
-                                    </span>
+                                <div className="mt-auto space-y-3">
+                                    <div className="flex flex-wrap gap-2 items-center">
+                                        <span className="inline-block text-base font-bold text-accent-primary font-mono bg-accent-primary/10 px-2 py-1 rounded">
+                                            {service.price}
+                                        </span>
+                                        <span className="inline-block text-xs font-medium text-text-muted bg-white/5 border border-white/5 px-2 py-1.5 rounded">
+                                            {service.timeline}
+                                        </span>
+                                    </div>
+                                    <div className="flex flex-col gap-0.5">
+                                        <span className="text-xs text-text-muted block">
+                                            {service.scope}
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </FadeIn>
