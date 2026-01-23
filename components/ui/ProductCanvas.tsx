@@ -107,14 +107,14 @@ const panelContent = {
         categories: ["Coffee", "Tea", "Pastry"],
         items: ["Latte", "Cap", "Americano", "Mocha", "Espresso", "Flat W", "Bagel", "Croissant"],
         order: [
-            { n: "Latte (L)", p: "$5.50" },
-            { n: "Cappuccino", p: "$4.50" }
+            { n: "Latte (L)", p: "€5.50" },
+            { n: "Cappuccino", p: "€4.50" }
         ]
     },
     payment: {
         title: "Payment",
         sub: "Split + tip + complete",
-        total: "$12.45",
+        total: "€12.45",
         tips: ["15%", "18%", "20%"]
     },
     kitchen: {
@@ -145,7 +145,10 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
     ]);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [showKitchenTicket, setShowKitchenTicket] = useState(false);
+
     const [selectedCategory, setSelectedCategory] = useState('All');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [activeTooltip, setActiveTooltip] = useState<string | null>(null);
     const [toastItems, setToastItems] = useState<any[]>([]);
     const [menuAnimEnabled, setMenuAnimEnabled] = useState(false);
     const [posDimensions, setPosDimensions] = useState({ width: 900, height: 560 });
@@ -341,8 +344,21 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
         }).filter(item => item.qty > 0));
     };
 
-    const calculateTotal = () => {
-        return orderItems.reduce((sum, item) => sum + (item.price * item.qty), 0).toFixed(2);
+    const calculateTotals = () => {
+        const total = orderItems.reduce((sum, item) => sum + (item.price * item.qty), 0);
+        const taxRate = 0.10; // 10% VAT inclusive
+        const net = total / (1 + taxRate);
+        const tax = total - net;
+        return {
+            net: net.toFixed(2),
+            tax: tax.toFixed(2),
+            total: total.toFixed(2)
+        };
+    };
+
+    const handleInactiveClick = (feature: string) => {
+        setActiveTooltip(feature);
+        setTimeout(() => setActiveTooltip(null), 2500);
     };
 
     const sendToKitchen = () => {
@@ -542,12 +558,12 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
         <div
             ref={containerRef}
             onClick={handleCanvasClick}
-            className={cn("relative w-full flex items-center justify-center overflow-hidden bg-black transition-opacity duration-500 h-full",
+            className={cn("relative w-full flex items-center justify-center overflow-hidden bg-[#05050A] transition-opacity duration-500 h-full",
                 mounted ? "opacity-100" : "opacity-0"
             )}
         >
             {/* Background Grid */}
-            <div className="absolute inset-0 opacity-[0.08] pointer-events-none"
+            <div className="absolute inset-0 opacity-[0.10] pointer-events-none"
                 style={{
                     backgroundImage: 'linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px)',
                     backgroundSize: '40px 40px'
@@ -562,7 +578,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
             )}>
                 {/* Tap to Continue */}
                 <div className={cn(
-                    "flex items-center gap-2 text-zinc-400 text-xs uppercase tracking-widest pointer-events-auto cursor-pointer hover:text-zinc-300 transition-colors",
+                    "flex items-center gap-2 text-white text-xs uppercase tracking-widest pointer-events-auto cursor-pointer hover:text-zinc-200 transition-colors",
                     isMobile && "mb-2 scale-90 translate-y-[20px]"
                 )} onClick={(e) => { e.stopPropagation(); handleNext(); }}>
                     <ArrowRight size={12} />
@@ -914,13 +930,13 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                     }
                                 }}
                                 className={cn(
-                                    "bg-zinc-900/95 border border-zinc-700 rounded-xl shadow-2xl overflow-hidden flex flex-col relative",
+                                    "bg-gradient-to-br from-zinc-950 to-black border-2 border-white/15 rounded-xl shadow-2xl overflow-hidden flex flex-col relative",
                                     !isResizing && "transition-all duration-500",
                                     step !== 2 && "pointer-events-none"
                                 )}
                                 style={{
                                     width: step === 2 ? posDimensions.width : (isMobile ? 340 : 900),
-                                    height: step === 2 ? posDimensions.height : (isMobile ? 380 : 560),
+                                    height: step === 2 ? posDimensions.height : (isMobile ? 400 : 560),
                                     maxHeight: isMobile ? 'calc(100dvh - 320px)' : 'none',
                                 }}
                                 onClick={(e) => e.stopPropagation()}
@@ -943,8 +959,14 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                     <span className={cn("font-bold text-zinc-100 tracking-tight", isEffectiveMobile ? "text-xs" : "text-sm")}>Aster Café</span>
                                     <div className={cn("flex gap-4 font-medium", isEffectiveMobile ? "text-[10px]" : "text-xs")}>
                                         <span className={cn("text-white transition-colors", isEffectiveMobile ? "py-1.5" : "px-3 py-1.5 bg-zinc-800 rounded-md shadow-sm border border-zinc-600")}>Checkout</span>
-                                        <span className="text-zinc-500 py-1.5 hover:text-zinc-300 cursor-default transition-colors">Orders</span>
-                                        <span className="text-zinc-500 py-1.5 hover:text-zinc-300 cursor-default transition-colors">Reports</span>
+                                        <button onClick={() => handleInactiveClick('Orders')} className="text-zinc-500 py-1.5 hover:text-zinc-300 cursor-pointer transition-colors relative">
+                                            Orders
+                                            {activeTooltip === 'Orders' && <Tooltip text="Not in scope for MVP" />}
+                                        </button>
+                                        <button onClick={() => handleInactiveClick('Reports')} className="text-zinc-500 py-1.5 hover:text-zinc-300 cursor-pointer transition-colors relative">
+                                            Reports
+                                            {activeTooltip === 'Reports' && <Tooltip text="Not in scope for MVP" />}
+                                        </button>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <span className="w-1.5 h-1.5 bg-green-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
@@ -957,13 +979,16 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                     {/* LEFT: Menu Grid */}
                                     <div className={cn("flex flex-col bg-zinc-900/50 min-h-0", isEffectiveMobile ? "flex-[60] border-b border-zinc-700" : "flex-[65] border-r border-zinc-700")}>
                                         {/* Search + Categories */}
-                                        <motion.div variants={{ hidden: { opacity: 0, x: -10 }, show: { opacity: 1, x: 0 } }} className={cn("border-b border-zinc-800 space-y-3", isEffectiveMobile ? "p-2" : "p-4")}>
+                                        {/* Search + Categories */}
+                                        <motion.div variants={{ hidden: { opacity: 0, x: -10 }, show: { opacity: 1, x: 0 } }} className={cn("space-y-3 flex flex-col justify-center", isEffectiveMobile ? "p-2 min-h-[60px]" : "p-4 border-b border-zinc-800")}>
                                             {/* Search Bar */}
                                             {!isEffectiveMobile && (
                                                 <div className="relative">
                                                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" size={14} />
                                                     <input
                                                         type="text"
+                                                        value={searchQuery}
+                                                        onChange={(e) => setSearchQuery(e.target.value)}
                                                         placeholder="Search menu..."
                                                         className="w-full pl-9 pr-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm text-zinc-300 placeholder:text-zinc-500 focus:outline-none focus:border-zinc-600"
                                                     />
@@ -979,7 +1004,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                             isEffectiveMobile ? "px-3 py-1 text-[10px]" : "px-4 py-1.5 text-xs",
                                                             selectedCategory === cat
                                                                 ? "bg-accent-primary text-black shadow-sm border-accent-primary"
-                                                                : "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 border-zinc-700"
+                                                                : "bg-zinc-700 text-zinc-200 hover:bg-zinc-600 border-zinc-500"
                                                         )}
                                                         onClick={() => setSelectedCategory(cat)}
                                                     >
@@ -996,7 +1021,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                         >
                                             <div className={cn("grid", isNarrowMobile ? "grid-cols-2 gap-2" : (isEffectiveMobile ? "grid-cols-3 gap-2" : "grid-cols-3 xl:grid-cols-4 gap-4"))}>
                                                 {menuItems
-                                                    .filter(item => selectedCategory === 'All' || item.category === selectedCategory)
+                                                    .filter(item => (selectedCategory === 'All' || item.category === selectedCategory) && item.name.toLowerCase().includes(searchQuery.toLowerCase()))
                                                     .map((item, i) => (
                                                         <motion.div
                                                             key={item.name}
@@ -1006,7 +1031,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                             }
                                                             whileTap={{ scale: 0.98 }}
                                                             onClick={() => addToCart(item)}
-                                                            className="bg-zinc-800/50 border border-zinc-700/50 rounded-lg overflow-hidden cursor-pointer hover:border-zinc-500/50 hover:bg-zinc-800 transition-colors group"
+                                                            className="bg-zinc-800 border border-zinc-700/50 rounded-lg overflow-hidden cursor-pointer hover:border-zinc-500/50 hover:bg-zinc-700 transition-colors group"
                                                         >
                                                             <div className={cn("bg-zinc-900 relative overflow-hidden", isEffectiveMobile ? "aspect-video" : "aspect-[4/3]")}>
                                                                 {/* Category Image */}
@@ -1032,20 +1057,20 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                                                                                                     '/menu/pastry.png'
                                                                     }
                                                                     alt={item.name}
-                                                                    className="w-full h-full object-cover opacity-80 group-hover:opacity-100 will-change-transform"
+                                                                    className="w-full h-full object-cover opacity-100 group-hover:scale-105 will-change-transform transition-transform duration-500"
                                                                 />
 
                                                                 {/* Price Tag Overlay */}
-                                                                <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-md px-2 py-0.5 rounded text-[10px] font-bold text-white border border-white/10 shadow-lg">
-                                                                    ${item.price.toFixed(2)}
+                                                                <div className="absolute top-1 right-1 bg-black/40 backdrop-blur-md px-1.5 py-0.5 rounded text-[10px] font-bold text-white border border-white/10 shadow-lg">
+                                                                    €{item.price.toFixed(2)}
                                                                 </div>
 
                                                                 {/* Hover Overlay Gradient */}
                                                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
                                                             </div>
                                                             <div className={cn("relative", isEffectiveMobile ? "p-2" : "p-3")}>
-                                                                <h3 className={cn("font-bold text-zinc-100 leading-tight", isEffectiveMobile ? "text-xs" : "text-sm")}>{item.name}</h3>
-                                                                <p className={cn("text-zinc-500 mt-0.5", isEffectiveMobile ? "text-[9px]" : "text-[10px]")}>{item.category}</p>
+                                                                <h3 className={cn("font-medium tracking-wide text-zinc-100 leading-tight", isEffectiveMobile ? "text-xs" : "text-sm")}>{item.name}</h3>
+                                                                <p className={cn("text-zinc-400 mt-0.5", isEffectiveMobile ? "text-[10px]" : "text-[11px]")}>{item.category}</p>
                                                             </div>
                                                         </motion.div>
                                                     ))}
@@ -1091,16 +1116,16 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                         className={cn("flex items-start rounded-lg hover:bg-zinc-800/50 group", isEffectiveMobile ? "gap-2 p-1" : "gap-3 p-2")}
                                                     >
                                                         <div className="flex items-center gap-1 mt-0.5">
-                                                            <button onClick={(e) => { e.stopPropagation(); updateQuantity(i, -1); }} className="w-5 h-5 flex items-center justify-center bg-zinc-800 text-zinc-500 hover:text-zinc-200 rounded border border-zinc-700/50 cursor-pointer">-</button>
-                                                            <div className="w-5 h-5 flex items-center justify-center bg-zinc-800/50 rounded text-[10px] font-medium text-zinc-400">
+                                                            <button onClick={(e) => { e.stopPropagation(); updateQuantity(i, -1); }} className="w-6 h-6 flex items-center justify-center bg-zinc-700 text-zinc-300 hover:text-white rounded border border-zinc-600 cursor-pointer">-</button>
+                                                            <div className="w-6 h-6 flex items-center justify-center bg-black/40 rounded text-xs font-medium text-zinc-200 border border-white/5">
                                                                 {item.qty}
                                                             </div>
-                                                            <button onClick={(e) => { e.stopPropagation(); updateQuantity(i, 1); }} className="w-5 h-5 flex items-center justify-center bg-zinc-800 text-zinc-500 hover:text-zinc-200 rounded border border-zinc-700/50 cursor-pointer">+</button>
+                                                            <button onClick={(e) => { e.stopPropagation(); updateQuantity(i, 1); }} className="w-6 h-6 flex items-center justify-center bg-zinc-700 text-zinc-300 hover:text-white rounded border border-zinc-600 cursor-pointer">+</button>
                                                         </div>
                                                         <div className="flex-1 min-w-0">
                                                             <div className="flex justify-between">
-                                                                <span className={cn("text-zinc-300 truncate", isEffectiveMobile ? "text-xs" : "text-sm")}>{item.name}</span>
-                                                                <span className={cn("text-zinc-400", isEffectiveMobile ? "text-xs" : "text-sm")}>${(item.price * item.qty).toFixed(2)}</span>
+                                                                <span className={cn("text-zinc-200 truncate font-medium pr-2", isEffectiveMobile ? "text-xs" : "text-sm")}>{item.name}</span>
+                                                                <span className={cn("text-zinc-300", isEffectiveMobile ? "text-xs" : "text-sm")}>€{(item.price * item.qty).toFixed(2)}</span>
                                                             </div>
                                                             {item.modifiers && <div className={cn("text-zinc-500 truncate", isEffectiveMobile ? "text-[9px]" : "text-[10px]")}>{item.modifiers}</div>}
                                                         </div>
@@ -1122,9 +1147,11 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                     {['Discount', 'Loyalty', 'Split', 'Print'].map(action => (
                                                         <button
                                                             key={action}
-                                                            className="px-2 py-1.5 bg-zinc-800 border border-zinc-700 text-[9px] text-zinc-400 rounded hover:bg-zinc-700 transition-colors cursor-default"
+                                                            onClick={() => handleInactiveClick(action)}
+                                                            className="px-2 py-1.5 bg-zinc-800 border border-zinc-700 text-[9px] text-zinc-400 rounded hover:bg-zinc-700 transition-colors cursor-pointer relative"
                                                         >
                                                             {action}
+                                                            {activeTooltip === action && <Tooltip text="Not in scope for MVP" position="top" />}
                                                         </button>
                                                     ))}
                                                 </div>
@@ -1134,17 +1161,28 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                         {/* Total + Actions */}
                                         <motion.div variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }} className={cn("border-t border-zinc-800 bg-zinc-900", isEffectiveMobile ? "p-1.5" : "p-3")}>
                                             {!isEffectiveMobile && (
-                                                <div className="flex justify-between items-center mb-3">
-                                                    <span className="font-medium text-zinc-400 text-sm">Total</span>
-                                                    <span className="font-bold font-mono text-white text-xl">${calculateTotal()}</span>
+                                                <div className="flex flex-col gap-1 mb-3">
+                                                    <div className="flex justify-between items-center text-xs text-zinc-500">
+                                                        <span>Subtotal</span>
+                                                        <span>€{calculateTotals().net}</span>
+                                                    </div>
+                                                    <div className="flex justify-between items-center text-xs text-zinc-500">
+                                                        <span>VAT (10%)</span>
+                                                        <span>€{calculateTotals().tax}</span>
+                                                    </div>
+                                                    <div className="flex justify-between items-center mt-1 pt-2 border-t border-zinc-800">
+                                                        <span className="font-medium text-zinc-400 text-sm">Total</span>
+                                                        <span className="font-bold font-mono text-white text-xl">€{calculateTotals().total}</span>
+                                                    </div>
                                                 </div>
                                             )}
                                             <div className="flex gap-2 items-center">
                                                 <button
-                                                    onClick={(e) => e.stopPropagation()}
-                                                    className={cn("bg-zinc-800 hover:bg-zinc-700 text-zinc-400 font-medium rounded transition-colors border border-zinc-700 cursor-default", isEffectiveMobile ? "px-3 py-2 text-[10px]" : "flex-1 py-2.5 text-xs")}
+                                                    onClick={(e) => { e.stopPropagation(); handleInactiveClick('Hold'); }}
+                                                    className={cn("bg-zinc-600 hover:bg-zinc-500 text-zinc-200 font-medium rounded transition-colors border border-zinc-500 cursor-pointer relative", isEffectiveMobile ? "px-3 py-2 text-[10px]" : "flex-1 py-2.5 text-xs")}
                                                 >
                                                     Hold
+                                                    {activeTooltip === 'Hold' && <Tooltip text="Not in scope for MVP" position="top" />}
                                                 </button>
                                                 <button
                                                     onClick={(e) => { e.stopPropagation(); sendToKitchen(); }}
@@ -1176,8 +1214,9 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                 </button>
                                                 {isEffectiveMobile && (
                                                     <div className="flex flex-col items-end min-w-[50px] leading-tight">
-                                                        <span className="text-[10px] text-zinc-500 font-medium uppercase tracking-tighter">Total</span>
-                                                        <span className="text-sm font-bold font-mono text-white">${calculateTotal()}</span>
+                                                        <span className="text-[10px] text-zinc-400 font-medium uppercase tracking-tighter">Total</span>
+                                                        <span className="text-[10px] text-zinc-400 font-medium uppercase tracking-tighter">Total</span>
+                                                        <span className="text-sm font-bold font-mono text-white">€{calculateTotals().total}</span>
                                                     </div>
                                                 )}
                                             </div>
@@ -1209,7 +1248,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                                 <span className="font-bold text-accent-primary">{item.qty}x</span>
                                                                 <span className="text-zinc-300 font-medium">{item.name}</span>
                                                             </div>
-                                                            <span className="text-zinc-500 font-mono">${(item.price * item.qty).toFixed(2)}</span>
+                                                            <span className="text-zinc-500 font-mono">€{(item.price * item.qty).toFixed(2)}</span>
                                                         </div>
                                                     ))}
                                                 </div>
@@ -1276,7 +1315,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                             <div className="text-[10px] text-zinc-500">{item.m}</div>
                                         </div>
                                     </div>
-                                    <div className="text-zinc-300">${item.p}</div>
+                                    <div className="text-zinc-300">€{item.p}</div>
                                 </div>
                             ))}
                             {/* Empty state lines */}
@@ -1295,10 +1334,10 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                         <div className="p-3 border-t border-zinc-800 bg-zinc-900 space-y-2">
                             <div className="flex justify-between text-sm font-bold text-white mb-2">
                                 <span>Total</span>
-                                <span>$21.50</span>
+                                <span>€21.50</span>
                             </div>
                             <div className="flex gap-2">
-                                <button className="flex-1 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-400 text-[10px] font-bold rounded transition-colors cursor-default">Hold</button>
+                                <button className="flex-1 py-2 bg-zinc-700 hover:bg-zinc-600 text-zinc-300 text-[10px] font-bold rounded transition-colors cursor-default border border-zinc-600">Hold</button>
                                 <button className="flex-[3] py-2 bg-accent-primary hover:bg-accent-primary/90 text-black font-bold text-xs rounded transition-colors shadow-[0_0_15px_rgba(255,255,255,0.1)] cursor-pointer">Send to Kitchen</button>
                             </div>
                         </div>
@@ -1722,3 +1761,24 @@ function PanelKitchenUI({ data, isProduct }: { data: any, isProduct: boolean }) 
     );
 }
 
+// Tooltip Component
+function Tooltip({ text, position = "bottom" }: { text: string, position?: "top" | "bottom" }) {
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: position === "top" ? 5 : -5, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            className={cn(
+                "absolute z-50 bg-zinc-900 text-zinc-200 text-[10px] px-2 py-1 rounded border border-zinc-700 shadow-xl whitespace-nowrap pointer-events-none",
+                position === "top" ? "bottom-full mb-1.5" : "top-full mt-1.5",
+                "left-1/2 -translate-x-1/2"
+            )}
+        >
+            {text}
+            <div className={cn(
+                "absolute w-2 h-2 bg-zinc-900 border-zinc-700 rotate-45 left-1/2 -translate-x-1/2",
+                position === "top" ? "bottom-[-5px] border-b border-r" : "top-[-5px] border-l border-t"
+            )} />
+        </motion.div>
+    );
+}
