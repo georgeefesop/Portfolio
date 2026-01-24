@@ -340,7 +340,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
 
             // Envelope: quick attack, gentle decay
             gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-            gainNode.gain.linearRampToValueAtTime(0.45, audioContext.currentTime + 0.01); // Further increased volume for cart feedback
+            gainNode.gain.linearRampToValueAtTime(0.20, audioContext.currentTime + 0.01); // Increased vol for cart
             gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.15);
 
             // Play
