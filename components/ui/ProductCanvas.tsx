@@ -162,37 +162,19 @@ const menuItems = [
         ]
     },
     {
-        name: 'Bagel', price: 3.50, category: 'Pastry',
-        modifiers: [
-            { name: "Preparation", type: "radio", options: ["Toasted", "Untoasted"], default: "Toasted" },
-            { name: "Add-ons", type: "checkbox", options: [{ label: "Cream Cheese", price: 0.50 }, "Butter", "Jam"] }
-        ]
+        name: 'Bagel', price: 3.50, category: 'Pastry'
     },
     {
-        name: 'Croissant', price: 4.00, category: 'Pastry',
-        modifiers: [
-            { name: "Preparation", type: "radio", options: ["Warmed", "Room Temp"], default: "Room Temp" },
-            { name: "Add-ons", type: "checkbox", options: ["Butter", "Jam", "Cheese"] }
-        ]
+        name: 'Croissant', price: 4.00, category: 'Pastry'
     },
     {
-        name: 'Pain au Choc', price: 4.50, category: 'Pastry',
-        modifiers: [
-            { name: "Preparation", type: "radio", options: ["Warmed", "Room Temp"], default: "Room Temp" }
-        ]
+        name: 'Pain au Choc', price: 4.50, category: 'Pastry'
     },
     {
-        name: 'Danish', price: 4.25, category: 'Pastry',
-        modifiers: [
-            { name: "Preparation", type: "radio", options: ["Warmed", "Room Temp"], default: "Room Temp" }
-        ]
+        name: 'Danish', price: 4.25, category: 'Pastry'
     },
     {
-        name: 'Muffin', price: 3.75, category: 'Pastry',
-        modifiers: [
-            { name: "Preparation", type: "radio", options: ["Warmed", "Room Temp"], default: "Room Temp" },
-            { name: "Add-ons", type: "checkbox", options: ["Butter"] }
-        ]
+        name: 'Muffin', price: 3.75, category: 'Pastry'
     }
 ];
 
@@ -225,7 +207,15 @@ const panelContent = {
 
 // --- Component ---
 
-export default function ProductCanvas({ step, setStep }: { step: StepId, setStep: React.Dispatch<React.SetStateAction<StepId>> }) {
+export default function ProductCanvas({
+    step,
+    setStep,
+    isModalMode = false // New: when true, skip carousel logic and show only POS
+}: {
+    step: StepId,
+    setStep: React.Dispatch<React.SetStateAction<StepId>>,
+    isModalMode?: boolean
+}) {
     const [isMobile, setIsMobile] = useState(false);
     const [isSmallMobile, setIsSmallMobile] = useState(false);
     const [isNarrowMobile, setIsNarrowMobile] = useState(false);
@@ -249,7 +239,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
     useEffect(() => {
         if (step === 2) {
             setShowSplash(true);
-            const timer = setTimeout(() => setShowSplash(false), 2400); // Reduced delay after complete matches animation end (1.8s + 0.5s delay = 2.3s)
+            const timer = setTimeout(() => setShowSplash(false), 3850); // 3350 (last key) + 500 = 3850
             return () => clearTimeout(timer);
         } else {
             setShowSplash(false);
@@ -265,6 +255,9 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
     const [toastItems, setToastItems] = useState<any[]>([]);
     const [menuAnimEnabled, setMenuAnimEnabled] = useState(false);
     const [posDimensions, setPosDimensions] = useState({ width: 900, height: 560 });
+    const aspectRatio = posDimensions.width / (posDimensions.height || 1);
+    const isEffectiveMobile = posDimensions.width < 900;
+    const isLandscapeLayout = aspectRatio > 1.0 || posDimensions.width > 700;
     const [posOffset, setPosOffset] = useState({ x: 0, y: 0 });
     const [isResizing, setIsResizing] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -462,6 +455,24 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
             const width = window.innerWidth;
             const height = window.innerHeight;
 
+            // --- MODAL MODE: Maximize POS sizing for fullscreen modal ---
+            if (isModalMode) {
+                // In modal, maximize available space - use large percentage of viewport
+                const modalW = Math.min(width * 0.92, 1200); // Max 1200px wide or 92% viewport
+                // Balanced height to ensure footer visibility while maximizing content
+                const heightFactor = isMobile ? 0.85 : 0.75;
+                const modalH = Math.min(height * heightFactor, 850); // Max 850px tall or 75-85% viewport height
+
+                setPosDimensions({
+                    width: modalW,
+                    height: modalH
+                });
+
+                // Center position in modal
+                setPosOffset({ x: 0, y: 0 });
+                return;
+            }
+
             // Re-evaluate viewport state locally for this update to ensure sync
             // (Note: we use the state vars isMobile etc for consistency, but for pure constraints we use window)
             const isLocalPortrait = height >= width;
@@ -525,7 +536,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
         // Run on resize
         window.addEventListener('resize', updateDimensions);
         return () => window.removeEventListener('resize', updateDimensions);
-    }, [step, isMobile, isSmallMobile, isTablet, isNarrowMobile, isTabletLandscape, isPortrait]);
+    }, [step, isMobile, isSmallMobile, isTablet, isNarrowMobile, isTabletLandscape, isPortrait, isModalMode]);
 
     const handleResize = (direction: string, delta: { x: number, y: number }) => {
         setPosDimensions(prevDim => {
@@ -603,25 +614,32 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
         // Calculate position relative to dashboardRef
         if (dashboardRef.current) {
             const dashboardRect = dashboardRef.current.getBoundingClientRect();
-            // Calculate relative coordinates
-            let x = e.clientX - dashboardRect.left;
-            let y = e.clientY - dashboardRect.top;
 
-            // Offset slightly to not cover the item completely (float to right/bottom usually)
-            x += 20;
-            y += 20;
-
-            // Clamp to bounds to prevent cutoff
             // Popup width approx 320px, Height approx 400px (max)
             const popupW = 320;
-            const popupH = 400;
+            const popupH = 450; // Increased max height to match actual component max height
 
-            if (x + popupW > dashboardRect.width) x = dashboardRect.width - popupW - 20;
-            if (y + popupH > dashboardRect.height) y = dashboardRect.height - popupH - 20;
+            let x, y;
+            const aspectRatio = posDimensions.width / posDimensions.height;
+            const currentIsLandscape = aspectRatio > 1.0 && posDimensions.width > 500;
+
+            if (posDimensions.width < 500 || !currentIsLandscape) {
+                // MOBILE / PORTRAIT: Center in visible dashboard area
+                x = (dashboardRect.width - popupW) / 2;
+                y = (dashboardRect.height - popupH) / 2;
+            } else {
+                // LANDSCAPE: Position relative to click
+                x = e.clientX - dashboardRect.left + 20;
+                y = e.clientY - dashboardRect.top + 20;
+
+                // Clamp to bounds to prevent cutoff
+                if (x + popupW > dashboardRect.width) x = dashboardRect.width - popupW - 20;
+                if (y + popupH > dashboardRect.height) y = dashboardRect.height - popupH - 20;
+            }
 
             // Ensure non-negative
-            if (x < 10) x = 10;
-            if (y < 10) y = 10;
+            x = Math.max(0, x);
+            y = Math.max(0, y);
 
             setModifierPopupPos({ x, y });
         }
@@ -1004,8 +1022,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                     // We can simplify: Just shift down by roughly 40-50px from center seem to resolve most alignment issues in past.
                     // Let's calculate a precise offset if possible, otherwise use a safe static offset.
                     // Update: For Tablet (>770), user requested raising it by ~30px.
-                    const portraitOffsetY = isTablet ? 10 : 40;
-
+                    const portraitOffsetY = 15;
                     layout = { x: 0, y: portraitOffsetY, opacity: 1, scale: 1, zIndex: 5 };
                 }
                 else if (id === 'panel-order-center') layout = { x: 0, y: 0, opacity: 0, scale: 0, zIndex: 0 };
@@ -1021,84 +1038,94 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
         <div
             ref={containerRef}
             onClick={handleCanvasClick}
-            className={cn("relative w-full flex items-center justify-center overflow-hidden bg-[#05050A] transition-opacity duration-500 h-full",
-                mounted ? "opacity-100" : "opacity-0"
+            className={cn(
+                "relative w-full flex items-center justify-center overflow-hidden transition-opacity duration-500 h-full",
+                mounted ? "opacity-100" : "opacity-0",
+                isModalMode ? "bg-transparent" : "bg-[#05050A]"
             )}
         >
-            {/* Background Grid - SVG approach for consistent rendering */}
-            < div className="absolute inset-0 opacity-[0.20] pointer-events-none"
-                style={{
-                    backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath d='M0 40L0 0H40' stroke='%23FFFFFF' stroke-width='1' stroke-opacity='1'/%3E%3C/g%3E%3C/svg%3E")`,
-                    backgroundSize: '40px 40px'
-                }}
-            />
+            {/* Grid Background - Only in carousel mode, not in modal */}
+            {!isModalMode && (
+                <div
+                    className="absolute inset-0 opacity-[0.15] pointer-events-none"
+                    style={{
+                        backgroundImage: `
+                        linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                        linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px)
+                    `,
+                        backgroundSize: '40px 40px'
+                    }}
+                />
+            )}
 
 
             {/* --- Navigation Controls --- */}
-            {/* Logic: Portrait Mobile/Tablet -> Bottom. Large Desktop (>1300) -> Bottom. Everything else -> Top */}
-            <div className={cn(
-                "absolute left-0 w-full flex flex-col items-center gap-3 z-50 pointer-events-none transition-all duration-500",
-                // Portrait modes: Bottom
-                (isMobile && isPortrait) ? "bottom-8 pb-safe" :
-                    (isTablet && isPortrait) ? "bottom-14 pb-safe" :
-                        // Large Desktop: Bottom
-                        (!isMobile && !isNarrowDesktop && !isTablet) ? "bottom-12" :
-                            // Default (includes 825px landscape, tablet landscape, mid-range desktop): Top (raised higher)
-                            "top-20"
-            )}>
-                {/* Tap to Continue */}
+            {/* Only show in carousel mode, hidden in modal */}
+            {!isModalMode && (
                 <div className={cn(
-                    "flex items-center gap-2 text-white text-xs uppercase tracking-widest pointer-events-auto cursor-pointer hover:text-zinc-200 transition-colors",
-                    isMobile ? "scale-90 -translate-y-[10px]" : "mb-[-10px]"
-                )} onClick={(e) => { e.stopPropagation(); handleNext(); }}>
-                    <ArrowRight size={12} />
-                    <span>Tap to continue</span>
-                </div>
-
-                {/* Progress & Nav */}
-                <div className="flex items-center gap-4 pointer-events-auto">
-                    <button
-                        onClick={handleBack}
-                        disabled={step === 0}
-                        className={cn("w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 hover:text-white transition-all", step === 0 ? "opacity-0" : "opacity-100", isMobile && "scale-90")}
-                    >
-                        <ChevronLeft size={16} />
-                    </button>
-
-                    <div className={cn("relative h-1.5 bg-zinc-800 rounded-full overflow-hidden group transition-all", isMobile ? "w-[200px]" : "w-[300px]")}>
-                        {/* Clickable Overlay Zones */}
-                        <div className="absolute inset-0 flex z-20">
-                            {[0, 1, 2].map(i => (
-                                <div
-                                    key={i}
-                                    className="flex-1 cursor-pointer hover:bg-white/10 transition-colors"
-                                    onClick={(e) => { e.stopPropagation(); setStep(i as StepId); setProgress(0); }}
-                                    title={stepsInfo[i].label}
-                                />
-                            ))}
-                        </div>
-
-                        {/* Indicators */}
-                        {[1, 2].map(i => (
-                            <div key={i} className="absolute top-0 bottom-0 w-[1px] bg-black/40 z-10" style={{ left: `${i * 33.33}%` }} />
-                        ))}
-
-                        {/* Progress bar - static, accent color */}
-                        <div
-                            className="absolute top-0 bottom-0 left-0 bg-accent-primary transition-all duration-300"
-                            style={{ width: `${(step + 1) * 33.33}%` }}
-                        />
+                    "absolute left-0 w-full flex flex-col items-center gap-3 z-50 pointer-events-none transition-all duration-500",
+                    // Portrait modes: Bottom
+                    (isMobile && isPortrait) ? "bottom-8 pb-safe" :
+                        (isTablet && isPortrait) ? "bottom-14 pb-safe" :
+                            // Large Desktop: Bottom
+                            (!isMobile && !isNarrowDesktop && !isTablet) ? "bottom-12" :
+                                // Default (includes 825px landscape, tablet landscape, mid-range desktop): Top (raised higher)
+                                "top-20"
+                )}>
+                    {/* Tap to Continue */}
+                    <div className={cn(
+                        "flex items-center gap-2 text-white text-xs uppercase tracking-widest pointer-events-auto cursor-pointer hover:text-zinc-200 transition-colors",
+                        isMobile ? "scale-90 -translate-y-[10px]" : "mb-[-10px]"
+                    )} onClick={(e) => { e.stopPropagation(); handleNext(); }}>
+                        <ArrowRight size={12} />
+                        <span>Tap to continue</span>
                     </div>
 
-                    <button
-                        onClick={handleNext}
-                        disabled={step === 2}
-                        className={cn("w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 hover:text-white transition-all", step === 2 ? "opacity-0" : "opacity-100")}
-                    >
-                        <ChevronRight size={16} />
-                    </button>
+                    {/* Progress & Nav */}
+                    <div className="flex items-center gap-4 pointer-events-auto">
+                        <button
+                            onClick={handleBack}
+                            disabled={step === 0}
+                            className={cn("w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 hover:text-white transition-all", step === 0 ? "opacity-0" : "opacity-100", isMobile && "scale-90")}
+                        >
+                            <ChevronLeft size={16} />
+                        </button>
+
+                        <div className={cn("relative h-1.5 bg-zinc-800 rounded-full overflow-hidden group transition-all", isMobile ? "w-[200px]" : "w-[300px]")}>
+                            {/* Clickable Overlay Zones */}
+                            <div className="absolute inset-0 flex z-20">
+                                {[0, 1, 2].map(i => (
+                                    <div
+                                        key={i}
+                                        className="flex-1 cursor-pointer hover:bg-white/10 transition-colors"
+                                        onClick={(e) => { e.stopPropagation(); setStep(i as StepId); setProgress(0); }}
+                                        title={stepsInfo[i].label}
+                                    />
+                                ))}
+                            </div>
+
+                            {/* Indicators */}
+                            {[1, 2].map(i => (
+                                <div key={i} className="absolute top-0 bottom-0 w-[1px] bg-black/40 z-10" style={{ left: `${i * 33.33}%` }} />
+                            ))}
+
+                            {/* Progress bar - static, accent color */}
+                            <div
+                                className="absolute top-0 bottom-0 left-0 bg-accent-primary transition-all duration-300"
+                                style={{ width: `${(step + 1) * 33.33}%` }}
+                            />
+                        </div>
+
+                        <button
+                            onClick={handleNext}
+                            disabled={step === 2}
+                            className={cn("w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 hover:text-white transition-all", step === 2 ? "opacity-0" : "opacity-100")}
+                        >
+                            <ChevronRight size={16} />
+                        </button>
+                    </div>
                 </div>
-            </div>
+            )}
 
             {/* SCENE CONTENT - removed old tap to continue */}
             <div className="relative w-full h-full max-w-7xl mx-auto flex items-center justify-center perspective-1000">
@@ -1280,7 +1307,10 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
 
                                     {/* Menu Grid */}
                                     <div className="flex-1 p-4 overflow-hidden">
-                                        <div className={cn("grid gap-3 h-full content-start", isNarrowMobile ? "grid-cols-2" : (isMobile ? "grid-cols-3" : "grid-cols-4"))}>
+                                        <div className={cn("grid gap-3 h-full content-start",
+                                            isNarrowMobile ? "grid-cols-3" :
+                                                (isLandscapeLayout ? "grid-cols-3 xl:grid-cols-4" : (isMobile ? "grid-cols-3" : "grid-cols-4 sm:grid-cols-5"))
+                                        )}>
                                             {[1, 2, 3, 4, 5, 6, 7, 8].slice(0, isMobile ? 6 : 8).map(i => (
                                                 <motion.div
                                                     key={i}
@@ -1390,15 +1420,9 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                         // Sync: Portrait Device -> Portrait (Stacked) MVP. Landscape Device -> Landscape (Side-by-side) MVP.
                         // isMobile captures width < 1024.
                         // We now use posDimensionsWidth to drive "Mobile Density" regardless of window size (e.g. resizing on desktop).
-                        // Lowered threshold to 900 so tax breakdown shows at 1030px window (930px container width)
-                        const isEffectiveMobile = posDimensions.width < 900;
-
-                        // Layout Direction (Row vs Col) driven by Aspect Ratio as requested.
-                        // "more than 1.0" (Landscape) -> Side-by-Side.
+                        // Final responsive layout decision:
                         // Square (1.0) or Portrait (<1.0) -> Stacked.
                         // Safety: If width is too small (<500), force Stacked even if landscape ratio (e.g. 300x200).
-                        const aspectRatio = posDimensions.width / posDimensions.height;
-                        const isLandscapeLayout = aspectRatio > 1.0 && posDimensions.width > 500;
 
                         return (
                             <motion.div
@@ -1412,7 +1436,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                     }
                                 }}
                                 className={cn(
-                                    "bg-gradient-to-br from-zinc-950 to-black border-2 border-white/15 rounded-xl shadow-2xl overflow-visible flex flex-col relative",
+                                    "pos-dashboard-container bg-gradient-to-br from-zinc-950 to-black border-2 border-white/15 rounded-xl shadow-2xl overflow-hidden flex flex-col relative",
                                     !isResizing && "transition-all duration-500",
                                     step !== 2 && "pointer-events-none"
                                 )}
@@ -1460,7 +1484,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                 </AnimatePresence>
 
                                 {/* Top Bar */}
-                                <motion.div variants={{ hidden: { opacity: 0, y: -10 }, show: { opacity: 1, y: 0 } }} className={cn("bg-zinc-900 border-b border-zinc-700 flex items-center justify-between px-4 rounded-t-[10px]", isEffectiveMobile ? "h-8" : "h-12")}>
+                                <motion.div variants={{ hidden: { opacity: 0, y: -10 }, show: { opacity: 1, y: 0 } }} className={cn("pos-top-nav bg-zinc-900 border-b border-zinc-700 flex items-center justify-between px-4 rounded-t-[10px] flex-shrink-0", isEffectiveMobile ? "h-8" : "h-12")}>
                                     <div className="flex items-center gap-2">
                                         {!isEffectiveMobile && <span className="font-bold text-zinc-100 tracking-tight text-sm">Aster Café</span>}
                                         <span className={cn("font-mono font-bold text-accent-primary bg-accent-primary/10 px-1.5 py-0.5 rounded border border-accent-primary/20", isEffectiveMobile ? "text-[9px]" : "text-[10px]")}>MVP PROTOTYPE</span>
@@ -1485,7 +1509,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                 {/* Main Content: 2-Column Layout (Landscape) / Stacked (Portrait) */}
                                 <div className={cn("flex-1 flex min-h-0", !isLandscapeLayout ? "flex-col" : "flex-row")}>
                                     {/* LEFT: Menu Grid */}
-                                    <div className={cn("flex flex-col min-h-0", !isLandscapeLayout ? "flex-[60] border-b border-zinc-700 bg-zinc-800/40" : "flex-[65] border-r border-zinc-700 bg-zinc-900/50")}>
+                                    <div className={cn("flex flex-col min-h-0", !isLandscapeLayout ? "flex-1 border-b border-zinc-700 bg-zinc-800/40" : "flex-[65] border-r border-zinc-700 bg-zinc-900/50")}>
                                         {/* Search + Categories */}
                                         {/* Search + Categories */}
                                         <motion.div variants={{ hidden: { opacity: 0, x: -10 }, show: { opacity: 1, x: 0 } }} className={cn("flex items-center gap-3", isEffectiveMobile ? "p-1" : "p-4 border-b border-zinc-800")}>
@@ -1528,12 +1552,11 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                             className={cn("flex-1 overflow-y-auto scrollbar-custom", isEffectiveMobile ? "p-2" : "p-4")}
                                         >
                                             <div className={cn("grid",
-                                                isNarrowMobile ? "grid-cols-2 gap-2" :
-                                                    // Tablet Portrait: 3 columns as requested
-                                                    isTablet ? "grid-cols-3 gap-2" :
-                                                        isEffectiveMobile ? "grid-cols-3 gap-2" :
-                                                            // Tablet Landscape & Desktop
-                                                            (isTabletLandscape ? "grid-cols-4 gap-4" : "grid-cols-3 xl:grid-cols-4 gap-4")
+                                                isNarrowMobile ? "grid-cols-3 gap-1.5" :
+                                                    isLandscapeLayout ? (posDimensions.width < 900 ? "grid-cols-3 gap-3" : "grid-cols-4 gap-4") :
+                                                        isTablet ? "grid-cols-4 md:grid-cols-5 gap-3" :
+                                                            isEffectiveMobile ? "grid-cols-3 gap-2" :
+                                                                (isTabletLandscape ? "grid-cols-4 xl:grid-cols-5 gap-4" : "grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4")
                                             )}>
                                                 {menuItems
                                                     .filter(item => (selectedCategory === 'All' || item.category === selectedCategory) && item.name.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -1545,9 +1568,18 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                                 : { hidden: { opacity: 1, y: 0 }, show: { opacity: 1, y: 0 } }
                                                             }
                                                             whileTap={{ scale: 0.98 }}
+                                                            onPointerDown={(e) => {
+                                                                e.preventDefault();
+                                                                e.stopPropagation();
+                                                                if (item.modifiers) {
+                                                                    openModifierPopup(item, e as any);
+                                                                } else {
+                                                                    playAddToCartSound();
+                                                                    addToCart(item);
+                                                                }
+                                                            }}
                                                             onClick={(e) => {
-                                                                if (item.modifiers) openModifierPopup(item, e);
-                                                                else { playAddToCartSound(); addToCart(item); }
+                                                                e.stopPropagation();
                                                             }}
                                                             onMouseEnter={playHoverSound}
                                                             className="bg-zinc-800 border border-zinc-600/40 rounded-xl overflow-hidden cursor-pointer hover:border-zinc-500/50 hover:bg-zinc-700 transition-colors group"
@@ -1579,8 +1611,8 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                     </div>
 
                                     {/* RIGHT: Cart & Actions */}
-                                    {/* Responsive Cart: On Portrait (Mobile/Tablet), use flex-none to let it shrink to content, max half height */}
-                                    <div className={cn("flex flex-col bg-zinc-900 border-l border-zinc-800 min-h-0", !isLandscapeLayout ? "flex-none max-h-[50%] border-t border-zinc-800" : "flex-[35]")}>
+                                    {/* Responsive Cart - flexbox auto-sizing */}
+                                    <div className={cn("flex flex-col bg-zinc-900 border-l border-zinc-800", !isLandscapeLayout ? "flex-none h-auto max-h-[40%] min-h-[160px] border-t border-zinc-800" : "flex-[35] min-h-0")}>
                                         {/* Cart Header */}
                                         {!isEffectiveMobile && (
                                             <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
@@ -1606,7 +1638,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                         )}
 
                                         {/* Order Items List */}
-                                        <div ref={cartContainerRef} className="flex-1 overflow-y-auto p-2 space-y-1 scrollbar-custom relative">
+                                        <div ref={cartContainerRef} className={cn("flex-1 overflow-y-auto p-2 pb-8 space-y-1 scrollbar-custom relative", !isLandscapeLayout && "max-h-[140px]")}>
                                             {isEffectiveMobile && orderItems.length === 0 && (
                                                 <div className="absolute inset-0 flex items-center justify-center p-6 text-center">
                                                     <span className="text-[10px] text-zinc-600 font-medium uppercase tracking-tight leading-relaxed">
@@ -1651,7 +1683,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
 
                                         {/* Quick Actions */}
                                         {!isEffectiveMobile && (
-                                            <motion.div variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }} className="px-3 py-2 border-t border-zinc-800 bg-zinc-800/20">
+                                            <motion.div variants={{ hidden: { opacity: 0 }, show: { opacity: 1 } }} className="px-3 py-2 border-t border-zinc-800 bg-zinc-900 relative z-10">
                                                 <div className="grid grid-cols-4 gap-1.5">
                                                     {['Discount', 'Loyalty', 'Split', 'Print'].map(action => (
                                                         <button
@@ -1668,7 +1700,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                         )}
 
                                         {/* Total + Actions */}
-                                        <motion.div variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }} className={cn("border-t border-zinc-800 bg-zinc-900", isEffectiveMobile ? "p-1.5" : "p-3")}>
+                                        <motion.div variants={{ hidden: { opacity: 0 }, show: { opacity: 1 } }} className={cn("border-t border-zinc-800 bg-zinc-900 flex-shrink-0 relative z-10", isEffectiveMobile ? "p-1.5" : "p-3")}>
                                             {!isEffectiveMobile && (
                                                 <div className="flex flex-col gap-1 mb-3">
                                                     <div className="flex justify-between items-center text-xs text-zinc-500">
@@ -1696,7 +1728,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                 ) : (
                                                     <button
                                                         onClick={(e) => { e.stopPropagation(); handleInactiveClick('Hold'); }}
-                                                        className="flex-1 py-2.5 text-xs bg-zinc-600 hover:bg-zinc-500 text-zinc-200 font-medium rounded transition-colors border border-zinc-500 cursor-pointer relative"
+                                                        className={cn("py-2.5 text-xs bg-zinc-600 hover:bg-zinc-500 text-zinc-200 font-medium rounded transition-colors border border-zinc-500 cursor-pointer relative", isEffectiveMobile && posDimensions.width < 700 ? "flex-1" : "flex-1 max-w-[100px]")}
                                                     >
                                                         Hold
                                                         {activeTooltip === 'Hold' && <Tooltip text="Not in scope for MVP" position="top" />}
@@ -1704,7 +1736,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                                 )}
                                                 <button
                                                     onClick={(e) => { e.stopPropagation(); playSendToKitchenSound(); sendToKitchen(); }}
-                                                    className={cn("bg-accent-primary hover:bg-accent-primary/90 text-black font-bold rounded transition-all shadow-lg relative overflow-hidden cursor-pointer", isEffectiveMobile ? "flex-1 py-2 text-xs" : "flex-[3] py-2.5 text-sm")}
+                                                    className={cn("bg-accent-primary hover:bg-accent-primary/90 text-black font-bold rounded transition-all shadow-lg relative overflow-hidden cursor-pointer", isEffectiveMobile && posDimensions.width < 700 ? "flex-1 py-2 text-xs" : "flex-[2] py-2.5 text-sm")}
                                                 >
                                                     <AnimatePresence mode="wait">
                                                         {showConfirmation ? (
@@ -1786,8 +1818,8 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                 </AnimatePresence>
 
                                 {/* Bottom Status Bar */}
-                                <motion.div variants={{ hidden: { opacity: 0 }, show: { opacity: 1 } }} className={cn("bg-zinc-950 border-t border-zinc-800 flex items-center justify-between px-4 rounded-b-[10px]", isEffectiveMobile ? "h-[14px]" : "h-6")}>
-                                    <div className="flex items-center gap-3 text-[9px] text-zinc-600">
+                                <motion.div variants={{ hidden: { opacity: 0 }, show: { opacity: 1 } }} className={cn("pos-system-footer bg-zinc-950 border-t border-zinc-800 flex items-center justify-between px-4 rounded-b-[10px] flex-shrink-0", isEffectiveMobile ? "h-6" : "h-6")}>
+                                    <div className={cn("flex items-center gap-3", isEffectiveMobile ? "text-[10px]" : "text-[9px]", "text-zinc-600")}>
                                         <span className="flex items-center gap-1">
                                             <span className="w-1 h-1 bg-green-500 rounded-full" />
                                             Online
@@ -1797,7 +1829,7 @@ export default function ProductCanvas({ step, setStep }: { step: StepId, setStep
                                         <span>•</span>
                                         <span>v2.4.1</span>
                                     </div>
-                                    <div className="text-[9px] text-zinc-600">
+                                    <div className={cn(isEffectiveMobile ? "text-[10px]" : "text-[9px]", "text-zinc-600")}>
                                         10:42 AM
                                     </div>
                                 </motion.div>
@@ -2143,7 +2175,7 @@ function DecisionsCardUI({ items }: { items: string[] }) {
             <h3 className="text-sm font-bold text-accent-primary mb-3 uppercase tracking-widest">Decisions Locked</h3>
             <div className="flex flex-col gap-2">
                 {items.map((item, i) => (
-                    <div key={i} className="flex items-center gap-2 text-[11px] font-medium text-white bg-zinc-900/80 px-3 py-1.5 rounded-md border border-white/5 shadow-sm text-left">
+                    <div key={item} className="flex items-center gap-2 text-[11px] font-medium text-white bg-zinc-900/80 px-3 py-1.5 rounded-md border border-white/5 shadow-sm text-left">
                         <Check size={10} className="text-accent-primary" />
                         {item}
                     </div>
@@ -2311,14 +2343,19 @@ function SplashScreen() {
     const [isSuccess, setIsSuccess] = useState(false);
     const [activeKey, setActiveKey] = useState<number | string | null>(null);
 
-    // Sound Effects
+    // Sound Effects - Optimizing for lower latency
+    const audioCtxRef = useRef<AudioContext | null>(null);
+
     const playKeySound = (isAction = false) => {
         try {
-            const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
-            if (!AudioContext) return;
-            const ctx = new AudioContext();
+            if (!audioCtxRef.current) {
+                const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+                if (!AudioContext) return;
+                audioCtxRef.current = new AudioContext();
+            }
+            const ctx = audioCtxRef.current;
 
-            // Resume context immediately to minimize latency
+            // Resume context immediately
             if (ctx.state === 'suspended') ctx.resume();
 
             const osc = ctx.createOscillator();
@@ -2329,17 +2366,16 @@ function SplashScreen() {
 
             const now = ctx.currentTime;
 
-            // Standard POS "beep" - exact and sharp
+            // Standard POS "beep"
             osc.frequency.setValueAtTime(isAction ? 1200 : 1000, now);
             osc.type = 'sine';
 
             gain.gain.setValueAtTime(0, now);
-            gain.gain.linearRampToValueAtTime(0.05, now + 0.005); // Rapid attack
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+            gain.gain.linearRampToValueAtTime(0.04, now + 0.002); // Faster attack
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08); // Sharper decay
 
             osc.start(now);
-            osc.stop(now + 0.1);
-            setTimeout(() => ctx.close(), 200);
+            osc.stop(now + 0.08);
         } catch (e) { }
     };
 
@@ -2397,85 +2433,73 @@ function SplashScreen() {
         };
 
         // Start entering PIN - 4 numbers only
-        typeKey(1, 800);
-        typeKey(5, 1250);
-        typeKey(9, 1600);
-        typeKey(3, 2000);
+        typeKey(1, 1600); // 800 + 800
+        typeKey(5, 2050); // 1250 + 800
+        typeKey(9, 2400); // 1600 + 800
+        typeKey(3, 2800); // 2000 + 800
 
         // Press Enter
-        typeKey('Enter', 2550, true);
+        typeKey('Enter', 3350, true); // 2550 + 800
 
         // Verification
         timeouts.push(setTimeout(() => {
             setStatus("Verifying...");
-        }, 2800));
+        }, 3600)); // 2800 + 800
 
         // Success
         timeouts.push(setTimeout(() => {
             setIsSuccess(true);
             setStatus("Welcome, George");
             playLoginSound();
-        }, 3400));
+        }, 4200)); // 3400 + 800
 
         return () => timeouts.forEach(clearTimeout);
     }, []);
 
     return (
         <motion.div
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.8, ease: "easeInOut", delay: 0.2 }} // Slightly faster fade
-            className="absolute inset-0 z-[200] flex pointer-events-none rounded-xl overflow-hidden"
+            exit={{ x: "100%", opacity: 0 }}
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute inset-0 z-[200] flex flex-col sm:flex-row pointer-events-none rounded-xl overflow-hidden"
         >
-            {/* Left Side: Semi-transparent backdrop with descriptive text */}
-            <div className="flex-1 bg-zinc-950/60 backdrop-blur-md transition-all duration-1000 flex flex-col items-center justify-center p-12 text-center">
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 1, delay: 0.3 }}
-                    className="max-w-md"
-                >
-                    <h1 className="text-4xl font-bold text-white tracking-tighter leading-tight">
+            {/* Top/Left Side: Semi-transparent backdrop with descriptive text */}
+            <div className="flex-1 h-auto sm:h-auto bg-zinc-950/80 backdrop-blur-md flex flex-col items-center justify-center p-6 sm:p-12 text-center relative z-20">
+                <div className="max-w-md">
+                    <h1 className="text-2xl sm:text-4xl font-bold text-white tracking-tighter leading-tight">
                         Interactive MVP<br />Prototype
                     </h1>
-                    <div className="h-px w-12 bg-accent-primary my-6 mx-auto opacity-50" />
-                    <p className="text-zinc-400 font-mono text-[10px] uppercase tracking-[0.2em] leading-relaxed">
+                    <div className="h-px w-8 sm:w-12 bg-accent-primary my-4 sm:my-6 mx-auto opacity-50" />
+                    <p className="text-zinc-400 font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.2em] leading-relaxed">
                         Coffee Shop POS Terminal v1.4<br />
                         <span className="text-zinc-500">George Efesopoulos • 2024</span>
                     </p>
-                </motion.div>
+                </div>
             </div>
 
-            {/* Right Side: Login Terminal */}
-            <motion.div
-                initial={{ x: "100%" }}
-                animate={{ x: 0 }}
-                exit={{ x: "100%", opacity: 0 }}
-                transition={{ type: "spring", damping: 30, stiffness: 200 }}
-                className="w-full sm:w-[320px] bg-zinc-900 border-l border-zinc-800 shadow-2xl flex flex-col justify-center p-8 relative z-10"
-            >
-                {/* User Profile */}
-                <div className="flex flex-col items-center gap-4 mb-10">
-                    <div className="w-24 h-24 rounded-full bg-zinc-800 border-2 border-zinc-700 p-1 shadow-inner relative">
+            {/* Bottom/Right Side: Login Terminal */}
+            <div className="w-full sm:w-[320px] h-auto max-h-[420px] sm:max-h-none sm:h-auto bg-zinc-900 border-t sm:border-t-0 sm:border-l border-zinc-800 shadow-2xl flex flex-col justify-start sm:justify-center pt-8 sm:pt-0 p-4 sm:p-8 relative z-10 overflow-y-auto sm:overflow-visible no-scrollbar">
+                {/* User Profile - Hidden on mobile */}
+                <div className="hidden sm:flex flex-col items-center gap-2 mb-10">
+                    <div className="w-12 h-12 sm:w-24 sm:h-24 rounded-full bg-zinc-800 border-2 border-zinc-700 p-1 shadow-inner relative flex-shrink-0">
                         {/* Avatar Placeholder */}
-                        <div className="w-full h-full rounded-full bg-gradient-to-br from-zinc-700 to-zinc-800 flex items-center justify-center text-zinc-500 font-bold text-3xl">
+                        <div className="w-full h-full rounded-full bg-gradient-to-br from-zinc-700 to-zinc-800 flex items-center justify-center text-zinc-500 font-bold text-base sm:text-3xl">
                             GE
                         </div>
                         {/* Status Dot */}
-                        <div className={cn("absolute bottom-1 right-1 w-5 h-5 rounded-full border-4 border-zinc-900 transition-colors duration-500",
+                        <div className={cn("absolute bottom-0 right-0 sm:bottom-1 sm:right-1 w-3 h-3 sm:w-5 sm:h-5 rounded-full border-2 sm:border-4 border-zinc-900 transition-colors duration-500",
                             isSuccess ? "bg-accent-primary" : "bg-zinc-500"
                         )} />
                     </div>
-                    <div className="text-center">
-                        <h2 className="text-white font-bold text-xl tracking-tight">George Efesopoulos</h2>
-                        <p className={cn("text-xs font-mono uppercase tracking-widest transition-colors duration-300 mt-1.5",
+                    <div className="text-left sm:text-center">
+                        <h2 className="text-white font-bold text-sm sm:text-xl tracking-tight">George Efesopoulos</h2>
+                        <p className={cn("text-[9px] sm:text-xs font-mono uppercase tracking-widest transition-colors duration-300 mt-0.5 sm:mt-1.5",
                             isSuccess ? "text-accent-primary" : "text-zinc-500"
                         )}>{status}</p>
                     </div>
                 </div>
 
                 {/* PIN Dots */}
-                <div className="flex justify-center gap-5 mb-10">
+                <div className="flex justify-center gap-3 sm:gap-5 mb-2 sm:mb-10">
                     {[1, 2, 3, 4].map(i => (
                         <motion.div
                             key={i}
@@ -2483,7 +2507,11 @@ function SplashScreen() {
                                 scale: i <= pinLength ? [1, 1.2, 1] : 1,
                                 backgroundColor: i <= pinLength ? (isSuccess ? "#AB7B62" : "#e4e4e7") : "#27272a"
                             }}
-                            className={cn("w-3 h-3 rounded-full ring-2 ring-offset-2 ring-offset-zinc-900 transition-colors",
+                            transition={{
+                                backgroundColor: { duration: 0 },
+                                scale: { duration: 0.2 }
+                            }}
+                            className={cn("w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full ring-2 ring-offset-2 ring-offset-zinc-900 transition-none",
                                 i <= pinLength ? (isSuccess ? "ring-accent-primary bg-accent-primary" : "ring-zinc-200 bg-zinc-200") : "ring-zinc-700 bg-zinc-800"
                             )}
                         />
@@ -2491,12 +2519,12 @@ function SplashScreen() {
                 </div>
 
                 {/* Keypad Visuals */}
-                <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-1.5 sm:gap-3">
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 'Del', 0, 'Enter'].map(key => (
                         <div
                             key={key}
-                            className={cn("h-12 rounded-xl flex items-center justify-center font-mono transition-all duration-150 border",
-                                typeof key === 'number' ? "text-lg" : "text-[10px] uppercase tracking-wider font-bold",
+                            className={cn("h-8 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center font-mono transition-all duration-150 border",
+                                typeof key === 'number' ? "text-sm sm:text-lg" : "text-[8px] sm:text-[10px] uppercase tracking-wider font-bold",
                                 activeKey === key
                                     ? "bg-zinc-700 text-white border-zinc-600 scale-95"
                                     : "bg-transparent text-zinc-600 border-transparent",
@@ -2509,7 +2537,7 @@ function SplashScreen() {
                 </div>
 
 
-            </motion.div>
+            </div>
         </motion.div>
     );
 }
@@ -2567,12 +2595,17 @@ function ModifierPopup({ item, onClose, onAdd, currentModifiers, onToggleModifie
             onClick={e => e.stopPropagation()}
         >
             {/* Transparent Backdrop to catch clicks outside - actually we handle this with ClickAwayListener style or just a fixed inset invisible div */}
-            {/* To allow clicking outside to close, we can use a fixed inset transparent div BEHIND this card but inside the popup component wrapper if we had one. 
+            {/* To allow clicking outside to close, we can use a fixed inset transparent div BEHIND this card but inside the popup component wrapper if we had one.
                 But here we are just returning the card. The parent container likely doesn't have a backdrop now.
                 Actually, let's add a fixed transparent inset to the parent render or just rely on the fact that clicking "dashboard" might not close it unless we handle it.
                 The simplest "click outside" is an invisible fixed overlay.
             */}
-            <div className="fixed inset-0 z-[-1]" onClick={onClose} />
+            {/* Transparent Backdrop to catch clicks outside */}
+            <div className="fixed inset-0 z-[-1]" onPointerDown={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onClose();
+            }} />
 
             {/* Header */}
             <div className="flex items-center gap-3 p-3 border-b border-zinc-800 bg-zinc-900 relative z-10 shrink-0">

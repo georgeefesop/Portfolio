@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, ChevronUp, ExternalLink, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, ExternalLink, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import ImageWithFallback from '@/components/ui/ImageWithFallback'; // Using new component
 
 interface CaseStudyData {
@@ -219,9 +219,11 @@ export default function CaseStudyDrawer({ project, isOpen, onToggle, priority = 
             <AnimatePresence>
                 {lightboxIndex !== null && (
                     <Lightbox
-                        src={project.images.gallery[lightboxIndex]}
-                        alt={`${project.title} detail view`}
+                        images={project.images.gallery}
+                        currentIndex={lightboxIndex}
                         onClose={() => setLightboxIndex(null)}
+                        onNext={() => setLightboxIndex((lightboxIndex + 1) % project.images.gallery.length)}
+                        onPrev={() => setLightboxIndex((lightboxIndex - 1 + project.images.gallery.length) % project.images.gallery.length)}
                     />
                 )}
             </AnimatePresence>
@@ -229,23 +231,30 @@ export default function CaseStudyDrawer({ project, isOpen, onToggle, priority = 
     );
 }
 
-// --- Lightbox Component with Zoom/Pan ---
+// --- Lightbox Component with Zoom/Pan/Swipe ---
 
-function Lightbox({ src, alt, onClose }: { src: string, alt: string, onClose: () => void }) {
+function Lightbox({
+    images,
+    currentIndex,
+    onClose,
+    onNext,
+    onPrev
+}: {
+    images: string[],
+    currentIndex: number,
+    onClose: () => void,
+    onNext: () => void,
+    onPrev: () => void
+}) {
     const [scale, setScale] = useState(1);
     const [isDragging, setIsDragging] = useState(false);
-
-    // Reset scale when image changes (if we were swiping, but here we just open/close)
-    // For single image view, state reset on mount is sufficient.
+    const src = images[currentIndex];
 
     const handleWheel = (e: React.WheelEvent) => {
         e.stopPropagation();
-        // Determine zoom direction
         const delta = -e.deltaY;
         const speed = 0.002;
         const newScale = scale + (delta * speed);
-
-        // Clamp scale between 1 and 4
         setScale(Math.min(Math.max(1, newScale), 4));
     };
 
@@ -254,12 +263,23 @@ function Lightbox({ src, alt, onClose }: { src: string, alt: string, onClose: ()
         setScale(prev => prev > 1 ? 1 : 2.5);
     };
 
+    // Swipe handling
+    const dragTransition: any = { type: "spring", damping: 30, stiffness: 200 };
+    const onDragEndList = (e: any, { offset, velocity }: any) => {
+        if (scale > 1) return; // Don't swipe when zoomed
+        const swipe = Math.abs(offset.x) > 50 && Math.abs(velocity.x) > 500;
+        if (swipe) {
+            if (offset.x > 0) onPrev();
+            else onNext();
+        }
+    };
+
     return (
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-center justify-center overflow-hidden touch-none"
+            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center overflow-hidden touch-none"
             onClick={onClose}
             onWheel={handleWheel}
         >
@@ -271,48 +291,66 @@ function Lightbox({ src, alt, onClose }: { src: string, alt: string, onClose: ()
                 <X size={32} />
             </button>
 
+            {/* Navigation Buttons Grouped Below */}
+            <div className="absolute bottom-8 z-[110] flex gap-4 pointer-events-none">
+                <button
+                    className="pointer-events-auto p-4 rounded-full bg-white/5 hover:bg-white/10 text-white/50 hover:text-white transition-all backdrop-blur-md border border-white/10 hover:border-white/20"
+                    onClick={(e) => { e.stopPropagation(); onPrev(); setScale(1); }}
+                >
+                    <ChevronLeft size={24} />
+                </button>
+                <button
+                    className="pointer-events-auto p-4 rounded-full bg-white/5 hover:bg-white/10 text-white/50 hover:text-white transition-all backdrop-blur-md border border-white/10 hover:border-white/20"
+                    onClick={(e) => { e.stopPropagation(); onNext(); setScale(1); }}
+                >
+                    <ChevronRight size={24} />
+                </button>
+            </div>
+
+            {/* Counter */}
+            <div className="absolute bottom-12 z-[110] bg-black/40 px-4 py-2 rounded-full backdrop-blur-md border border-white/10 text-white/70 text-sm font-mono tracking-widest">
+                {currentIndex + 1} / {images.length}
+            </div>
+
             {/* Hint Overlay (fades out) */}
             <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5, duration: 0.5 }}
-                className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[110] text-white/40 text-xs font-mono bg-black/40 px-3 py-1.5 rounded-full pointer-events-none select-none"
+                className="absolute bottom-32 left-1/2 -translate-x-1/2 z-[110] text-white/30 text-[10px] font-mono bg-black/40 px-3 py-1.5 rounded-xl pointer-events-none select-none uppercase tracking-widest text-center"
             >
-                Scroll to Zoom • Drag to Pan
+                Scroll to Zoom<br />Swipe to Nav
             </motion.div>
 
             {/* Draggable Image Container */}
             <motion.div
+                key={currentIndex} // Re-animate on image change
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
                 className="relative w-full h-full flex items-center justify-center"
+                drag={scale === 1 ? "x" : true}
+                dragConstraints={scale === 1 ? { left: 0, right: 0 } : {
+                    left: -1000 * scale,
+                    right: 1000 * scale,
+                    top: -800 * scale,
+                    bottom: 800 * scale
+                }}
+                dragElastic={scale === 1 ? 0.2 : 0.1}
+                onDragEnd={scale === 1 ? onDragEndList : undefined}
+                style={{ scale }}
+                transition={dragTransition}
+                onDoubleClick={handleDoubleClick}
             >
-                <motion.div
-                    className="relative w-full max-w-7xl h-full p-4 flex items-center justify-center cursor-move"
-                    drag={scale > 1}
-                    dragConstraints={{
-                        left: -1000 * scale,
-                        right: 1000 * scale,
-                        top: -800 * scale,
-                        bottom: 800 * scale
-                    }}
-                    dragElastic={0.1}
-                    onDragStart={() => setIsDragging(true)}
-                    onDragEnd={() => setTimeout(() => setIsDragging(false), 50)}
-                    style={{ scale }}
-                    animate={{ scale }}
-                    transition={{ type: "spring", damping: 30, stiffness: 200 }}
-                    onDoubleClick={handleDoubleClick}
-                >
-                    {/* Using standard img for direct control, wrapped in layout */}
-                    <div className="relative w-full h-full flex items-center justify-center">
-                        <img
-                            src={src}
-                            alt={alt}
-                            className="max-w-full max-h-full object-contain select-none shadow-2xl drop-shadow-2xl pointer-events-auto"
-                            draggable={false}
-                            onClick={(e) => e.stopPropagation()}
-                        />
-                    </div>
-                </motion.div>
+                <div className="relative w-full max-w-7xl h-full p-4 flex items-center justify-center pointer-events-none">
+                    <img
+                        src={src}
+                        alt="Project Gallery"
+                        className="max-w-full max-h-[80vh] object-contain select-none shadow-2xl drop-shadow-2xl pointer-events-auto"
+                        draggable={false}
+                        onClick={(e) => e.stopPropagation()}
+                    />
+                </div>
             </motion.div>
         </motion.div>
     );

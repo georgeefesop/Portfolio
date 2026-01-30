@@ -98,6 +98,16 @@ h6 {
   background: #52525b;
 }
 
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
 /* Global Scrollbar Styling */
 /* Global Scrollbar Styling */
 html::-webkit-scrollbar,

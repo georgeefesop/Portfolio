@@ -230,6 +230,7 @@ export default function Contact() {
                                             className="peer w-full px-4 pt-5 pb-2 bg-bg-secondary border border-border-medium rounded-lg text-text-primary focus:outline-none focus:border-accent-primary transition-colors appearance-none bg-transparent cursor-pointer"
                                         >
                                             <option value=""></option>
+                                            <option value="0-5k">€0 - €5k</option>
                                             <option value="5-10k">€5k - €10k</option>
                                             <option value="10-20k">€10k - €20k</option>
                                             <option value="20k+">€20k+</option>
