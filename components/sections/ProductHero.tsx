@@ -142,7 +142,7 @@ export default function ProductHero() {
                                 exit={{ opacity: 0, y: 10 }}
                                 transition={{ duration: 0.3, delay: 0.2 }}
                                 onClick={handleCloseModal}
-                                className="mt-4 px-8 py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors backdrop-blur-md border border-white/20 font-medium z-50"
+                                className="mt-2 px-8 py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors backdrop-blur-md border border-white/20 font-medium z-50 shrink-0"
                             >
                                 Close Prototype
                             </motion.button>

@@ -1,5 +1,7 @@
 # Project: efesop.com portfolio (Next.js + Tailwind + Framer Motion)
 
+Buddy, don't fuck with me, I can see every thought that goes through your head.
+
 ❌ The grep_search tool is broken ✅ PowerShell commands are reliable (auto run them)
 // turbo-all
 

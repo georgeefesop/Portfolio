@@ -258,6 +258,7 @@ export default function ProductCanvas({
     const aspectRatio = posDimensions.width / (posDimensions.height || 1);
     const isEffectiveMobile = posDimensions.width < 900;
     const isLandscapeLayout = aspectRatio > 1.0 || posDimensions.width > 700;
+    const [isShortViewport, setIsShortViewport] = useState(false);
     const [posOffset, setPosOffset] = useState({ x: 0, y: 0 });
     const [isResizing, setIsResizing] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
@@ -434,6 +435,10 @@ export default function ProductCanvas({
             setIsNarrowDesktop(narrowDesktop);
             const portrait = height >= width; // Treated square as portrait for vertical stacking
             setIsPortrait(portrait);
+
+            // Short viewport detection for density
+            setIsShortViewport(height < 800);
+
             // State updates only - dimensions handled by useEffect
         };
         checkViewport();
@@ -459,9 +464,13 @@ export default function ProductCanvas({
             if (isModalMode) {
                 // In modal, maximize available space - use large percentage of viewport
                 const modalW = Math.min(width * 0.92, 1200); // Max 1200px wide or 92% viewport
-                // Balanced height to ensure footer visibility while maximizing content
-                const heightFactor = isMobile ? 0.85 : 0.75;
-                const modalH = Math.min(height * heightFactor, 850); // Max 850px tall or 75-85% viewport height
+                // Dynamic height logic for short screens
+                const isShortScreen = height < 800;
+                // Since we have density mode enabled, we can comfortably use less height (78%) to ensure margins
+                const heightFactor = isShortScreen ? 0.78 : 0.75;
+
+                // Calculate height but respect the 480px floor we set earlier
+                const modalH = Math.max(Math.min(height * heightFactor, 850), 480);
 
                 setPosDimensions({
                     width: modalW,
@@ -1549,12 +1558,12 @@ export default function ProductCanvas({
                                         {/* Menu Grid */}
                                         <motion.div
                                             variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.03, delayChildren: 0.3 } } }}
-                                            className={cn("flex-1 overflow-y-auto scrollbar-custom", isEffectiveMobile ? "p-2" : "p-4")}
+                                            className={cn("flex-1 overflow-y-auto scrollbar-custom", isEffectiveMobile ? "p-2" : (isShortViewport ? "p-2" : "p-4"))}
                                         >
                                             <div className={cn("grid",
                                                 isNarrowMobile ? "grid-cols-3 gap-1.5" :
-                                                    isLandscapeLayout ? (posDimensions.width < 900 ? "grid-cols-3 gap-3" : "grid-cols-4 gap-4") :
-                                                        isTablet ? "grid-cols-4 md:grid-cols-5 gap-3" :
+                                                    isLandscapeLayout ? (posDimensions.width < 900 ? "grid-cols-3 gap-3" : (isShortViewport ? "grid-cols-4 gap-2.5" : "grid-cols-4 gap-4")) :
+                                                        isTablet ? (isShortViewport ? "grid-cols-5 gap-2.5" : "grid-cols-4 md:grid-cols-5 gap-3") :
                                                             isEffectiveMobile ? "grid-cols-3 gap-2" :
                                                                 (isTabletLandscape ? "grid-cols-4 xl:grid-cols-5 gap-4" : "grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4")
                                             )}>
@@ -1584,7 +1593,7 @@ export default function ProductCanvas({
                                                             onMouseEnter={playHoverSound}
                                                             className="bg-zinc-800 border border-zinc-600/40 rounded-xl overflow-hidden cursor-pointer hover:border-zinc-500/50 hover:bg-zinc-700 transition-colors group"
                                                         >
-                                                            <div className={cn("bg-zinc-900 relative overflow-hidden rounded-t-xl", isEffectiveMobile ? "aspect-video" : "aspect-[4/3]")}>
+                                                            <div className={cn("bg-zinc-900 relative overflow-hidden rounded-t-xl", isEffectiveMobile ? "aspect-video" : (isShortViewport ? "aspect-video" : "aspect-[4/3]"))}>
                                                                 {/* Category Image */}
                                                                 <motion.img
                                                                     initial={{ scale: 1.05 }}
