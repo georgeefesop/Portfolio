@@ -469,8 +469,8 @@ export default function ProductCanvas({
                 // Since we have density mode enabled, we can comfortably use less height (78%) to ensure margins
                 const heightFactor = isShortScreen ? 0.78 : 0.75;
 
-                // Calculate height but respect the 480px floor we set earlier
-                const modalH = Math.max(Math.min(height * heightFactor, 850), 480);
+                // Calculate height but respect the 380px floor we set earlier
+                const modalH = Math.max(Math.min(height * heightFactor, 850), 380);
 
                 setPosDimensions({
                     width: modalW,
@@ -1473,7 +1473,7 @@ export default function ProductCanvas({
 
                                 {/* SPLASH SCREEN OVERLAY */}
                                 <AnimatePresence>
-                                    {showSplash && <SplashScreen />}
+                                    {showSplash && <SplashScreen isShortViewport={isShortViewport} />}
                                 </AnimatePresence>
 
                                 {/* MODIFIER POPUP */}
@@ -1521,7 +1521,7 @@ export default function ProductCanvas({
                                     <div className={cn("flex flex-col min-h-0", !isLandscapeLayout ? "flex-1 border-b border-zinc-700 bg-zinc-800/40" : "flex-[65] border-r border-zinc-700 bg-zinc-900/50")}>
                                         {/* Search + Categories */}
                                         {/* Search + Categories */}
-                                        <motion.div variants={{ hidden: { opacity: 0, x: -10 }, show: { opacity: 1, x: 0 } }} className={cn("flex items-center gap-3", isEffectiveMobile ? "p-1" : "p-4 border-b border-zinc-800")}>
+                                        <motion.div variants={{ hidden: { opacity: 0, x: -10 }, show: { opacity: 1, x: 0 } }} className={cn("flex items-center gap-3", isEffectiveMobile ? "p-1" : (isShortViewport ? "p-2 border-b border-zinc-800" : "p-4 border-b border-zinc-800"))}>
                                             {/* Search Bar: Re-enabled for Tablet Portrait as requested */}
                                             {!isEffectiveMobile && (
                                                 <div className="relative flex-1">
@@ -1624,7 +1624,7 @@ export default function ProductCanvas({
                                     <div className={cn("flex flex-col bg-zinc-900 border-l border-zinc-800", !isLandscapeLayout ? "flex-none h-auto max-h-[40%] min-h-[160px] border-t border-zinc-800" : "flex-[35] min-h-0")}>
                                         {/* Cart Header */}
                                         {!isEffectiveMobile && (
-                                            <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
+                                            <div className={cn("border-b border-zinc-800 flex items-center justify-between", isShortViewport ? "p-2" : "p-4")}>
                                                 <div className="flex items-center gap-2">
                                                     <Receipt size={16} className="text-accent-primary" />
                                                     <span className="font-semibold text-zinc-200 text-sm">Order</span>
@@ -1647,7 +1647,7 @@ export default function ProductCanvas({
                                         )}
 
                                         {/* Order Items List */}
-                                        <div ref={cartContainerRef} className={cn("flex-1 overflow-y-auto p-2 pb-8 space-y-1 scrollbar-custom relative", !isLandscapeLayout && "max-h-[140px]")}>
+                                        <div ref={cartContainerRef} className={cn("flex-1 overflow-y-auto p-2 pb-8 space-y-1 scrollbar-custom relative", !isLandscapeLayout && "max-h-[140px] min-h-[100px]")}>
                                             {isEffectiveMobile && orderItems.length === 0 && (
                                                 <div className="absolute inset-0 flex items-center justify-center p-6 text-center">
                                                     <span className="text-[10px] text-zinc-600 font-medium uppercase tracking-tight leading-relaxed">
@@ -2346,7 +2346,7 @@ function Tooltip({ text, position = "bottom" }: { text: string, position?: "top"
 }
 
 // Splash Screen Component - Auto-Login Sequence
-function SplashScreen() {
+function SplashScreen({ isShortViewport }: { isShortViewport?: boolean }) {
     const [pinLength, setPinLength] = useState(0);
     const [status, setStatus] = useState("Locked");
     const [isSuccess, setIsSuccess] = useState(false);
@@ -2487,25 +2487,27 @@ function SplashScreen() {
 
             {/* Bottom/Right Side: Login Terminal */}
             <div className="w-full sm:w-[320px] h-auto max-h-[420px] sm:max-h-none sm:h-auto bg-zinc-900 border-t sm:border-t-0 sm:border-l border-zinc-800 shadow-2xl flex flex-col justify-start sm:justify-center pt-8 sm:pt-0 p-4 sm:p-8 relative z-10 overflow-y-auto sm:overflow-visible no-scrollbar">
-                {/* User Profile - Hidden on mobile */}
-                <div className="hidden sm:flex flex-col items-center gap-2 mb-10">
-                    <div className="w-12 h-12 sm:w-24 sm:h-24 rounded-full bg-zinc-800 border-2 border-zinc-700 p-1 shadow-inner relative flex-shrink-0">
-                        {/* Avatar Placeholder */}
-                        <div className="w-full h-full rounded-full bg-gradient-to-br from-zinc-700 to-zinc-800 flex items-center justify-center text-zinc-500 font-bold text-base sm:text-3xl">
-                            GE
+                {/* User Profile - Hidden on mobile & short viewports */}
+                {(!isShortViewport) && (
+                    <div className="hidden sm:flex flex-col items-center gap-2 mb-10">
+                        <div className="w-12 h-12 sm:w-24 sm:h-24 rounded-full bg-zinc-800 border-2 border-zinc-700 p-1 shadow-inner relative flex-shrink-0">
+                            {/* Avatar Placeholder */}
+                            <div className="w-full h-full rounded-full bg-gradient-to-br from-zinc-700 to-zinc-800 flex items-center justify-center text-zinc-500 font-bold text-base sm:text-3xl">
+                                GE
+                            </div>
+                            {/* Status Dot */}
+                            <div className={cn("absolute bottom-0 right-0 sm:bottom-1 sm:right-1 w-3 h-3 sm:w-5 sm:h-5 rounded-full border-2 sm:border-4 border-zinc-900 transition-colors duration-500",
+                                isSuccess ? "bg-accent-primary" : "bg-zinc-500"
+                            )} />
                         </div>
-                        {/* Status Dot */}
-                        <div className={cn("absolute bottom-0 right-0 sm:bottom-1 sm:right-1 w-3 h-3 sm:w-5 sm:h-5 rounded-full border-2 sm:border-4 border-zinc-900 transition-colors duration-500",
-                            isSuccess ? "bg-accent-primary" : "bg-zinc-500"
-                        )} />
+                        <div className="text-left sm:text-center">
+                            <h2 className="text-white font-bold text-sm sm:text-xl tracking-tight">George Efesopoulos</h2>
+                            <p className={cn("text-[9px] sm:text-xs font-mono uppercase tracking-widest transition-colors duration-300 mt-0.5 sm:mt-1.5",
+                                isSuccess ? "text-accent-primary" : "text-zinc-500"
+                            )}>{status}</p>
+                        </div>
                     </div>
-                    <div className="text-left sm:text-center">
-                        <h2 className="text-white font-bold text-sm sm:text-xl tracking-tight">George Efesopoulos</h2>
-                        <p className={cn("text-[9px] sm:text-xs font-mono uppercase tracking-widest transition-colors duration-300 mt-0.5 sm:mt-1.5",
-                            isSuccess ? "text-accent-primary" : "text-zinc-500"
-                        )}>{status}</p>
-                    </div>
-                </div>
+                )}
 
                 {/* PIN Dots */}
                 <div className="flex justify-center gap-3 sm:gap-5 mb-2 sm:mb-10">
