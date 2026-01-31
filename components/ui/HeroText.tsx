@@ -162,7 +162,6 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
                                     push: { scale: 0.985 }
                                 }}
                                 transition={{ type: "spring", stiffness: 800, damping: 35 }}
-                                transition={{ type: "spring", stiffness: 800, damping: 35 }}
                                 initial="initial"
                                 className={`pointer-events-auto relative group overflow-hidden px-6 py-3 font-bold text-sm md:text-base rounded-lg shadow-lg transition-all duration-500 whitespace-nowrap ${isVibrantMode ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.4)]' : 'bg-accent-primary text-black'
                                     }`}
