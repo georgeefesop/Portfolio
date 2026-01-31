@@ -83,6 +83,21 @@ const decisionContent = [
 // Menu items with realistic prices
 const menuItems = [
     {
+        name: 'Bagel', price: 3.50, category: 'Pastry'
+    },
+    {
+        name: 'Croissant', price: 4.00, category: 'Pastry'
+    },
+    {
+        name: 'Pain au Choc', price: 4.50, category: 'Pastry'
+    },
+    {
+        name: 'Danish', price: 4.25, category: 'Pastry'
+    },
+    {
+        name: 'Muffin', price: 3.75, category: 'Pastry'
+    },
+    {
         name: 'Latte', price: 5.50, category: 'Coffee',
         modifiers: [
             { name: "Size", type: "radio", options: ["Sm", "Med", { label: "Lg", price: 0.75 }], default: "Med" },
@@ -160,21 +175,6 @@ const menuItems = [
             { name: "Size", type: "radio", options: ["Sm", "Med", { label: "Lg", price: 0.50 }], default: "Med" },
             { name: "Extras", type: "checkbox", options: ["Milk", "Honey"] }
         ]
-    },
-    {
-        name: 'Bagel', price: 3.50, category: 'Pastry'
-    },
-    {
-        name: 'Croissant', price: 4.00, category: 'Pastry'
-    },
-    {
-        name: 'Pain au Choc', price: 4.50, category: 'Pastry'
-    },
-    {
-        name: 'Danish', price: 4.25, category: 'Pastry'
-    },
-    {
-        name: 'Muffin', price: 3.75, category: 'Pastry'
     }
 ];
 
@@ -1577,21 +1577,17 @@ export default function ProductCanvas({
                                                                 : { hidden: { opacity: 1, y: 0 }, show: { opacity: 1, y: 0 } }
                                                             }
                                                             whileTap={{ scale: 0.98 }}
-                                                            onPointerDown={(e) => {
-                                                                e.preventDefault();
+                                                            onClick={(e) => {
                                                                 e.stopPropagation();
                                                                 if (item.modifiers) {
-                                                                    openModifierPopup(item, e as any);
+                                                                    openModifierPopup(item, e);
                                                                 } else {
                                                                     playAddToCartSound();
                                                                     addToCart(item);
                                                                 }
                                                             }}
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                            }}
                                                             onMouseEnter={playHoverSound}
-                                                            className="bg-zinc-800 border border-zinc-600/40 rounded-xl overflow-hidden cursor-pointer hover:border-zinc-500/50 hover:bg-zinc-700 transition-colors group"
+                                                            className="bg-zinc-800 border border-zinc-600/40 rounded-xl overflow-hidden cursor-pointer hover:border-zinc-500/50 hover:bg-zinc-700 transition-colors group select-none"
                                                         >
                                                             <div className={cn("bg-zinc-900 relative overflow-hidden rounded-t-xl", isEffectiveMobile ? "aspect-video" : (isShortViewport ? "aspect-video" : "aspect-[4/3]"))}>
                                                                 {/* Category Image */}
@@ -1600,6 +1596,7 @@ export default function ProductCanvas({
                                                                     transition={{ duration: 0.3, ease: "easeOut" }}
                                                                     src={getItemImageSrc(item.name, item.category)}
                                                                     alt={item.name}
+                                                                    draggable={false}
                                                                     className="w-full h-full object-cover opacity-100"
                                                                 />
 
@@ -2612,8 +2609,7 @@ function ModifierPopup({ item, onClose, onAdd, currentModifiers, onToggleModifie
                 The simplest "click outside" is an invisible fixed overlay.
             */}
             {/* Transparent Backdrop to catch clicks outside */}
-            <div className="fixed inset-0 z-[-1]" onPointerDown={(e) => {
-                e.preventDefault();
+            <div className="fixed inset-0 z-[-1]" onClick={(e) => {
                 e.stopPropagation();
                 onClose();
             }} />

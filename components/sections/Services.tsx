@@ -90,10 +90,10 @@ export default function Services() {
 
                                 <div className="mt-auto space-y-3">
                                     <div className="flex flex-wrap gap-2 items-center">
-                                        <span className="inline-block text-base font-bold text-accent-primary font-mono bg-accent-primary/10 px-2 py-1 rounded">
+                                        {/* <span className="inline-block text-xs font-medium text-text-muted bg-white/5 border border-white/5 px-2 py-1.5 rounded">
                                             {service.price}
-                                        </span>
-                                        <span className="inline-block text-xs font-medium text-text-muted bg-white/5 border border-white/5 px-2 py-1.5 rounded">
+                                        </span> */}
+                                        <span className="inline-block text-base font-bold text-accent-primary font-mono bg-accent-primary/10 px-2 py-1 rounded">
                                             {service.timeline}
                                         </span>
                                     </div>
