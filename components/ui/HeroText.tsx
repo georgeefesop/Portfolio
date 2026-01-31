@@ -122,7 +122,7 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
                 {/* Left Side: Main Title */}
                 <motion.div
                     variants={itemVariants}
-                    className="max-w-[min(60%,600px)] text-left transition-all duration-500"
+                    className="w-full md:max-w-[60%] lg:max-w-[600px] text-left transition-all duration-500"
                 >
                     <div className="mb-2 md:mb-4">
                         <Image
@@ -132,7 +132,7 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
                             height={0}
                             sizes="100vw"
                             style={{ width: 'auto', height: 'auto' }}
-                            className="h-8 md:h-16 w-auto max-w-full object-contain translate-y-[-10px] translate-x-[15px] md:translate-y-[10px] md:-translate-x-[15px]"
+                            className="h-10 md:h-16 w-auto max-w-full object-contain md:translate-y-[10px] md:-translate-x-[15px]"
                             priority
                         />
                     </div>
@@ -162,8 +162,9 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
                                     push: { scale: 0.985 }
                                 }}
                                 transition={{ type: "spring", stiffness: 800, damping: 35 }}
+                                transition={{ type: "spring", stiffness: 800, damping: 35 }}
                                 initial="initial"
-                                className={`pointer-events-auto relative group overflow-hidden px-6 py-3 font-bold text-sm md:text-base rounded-lg shadow-lg transition-all duration-500 ${isVibrantMode ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.4)]' : 'bg-accent-primary text-black'
+                                className={`pointer-events-auto relative group overflow-hidden px-6 py-3 font-bold text-sm md:text-base rounded-lg shadow-lg transition-all duration-500 whitespace-nowrap ${isVibrantMode ? 'bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.4)]' : 'bg-accent-primary text-black'
                                     }`}
                                 aria-label="Play with a Prototype"
                             >
