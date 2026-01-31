@@ -78,7 +78,7 @@ export default function BackgroundToggle({ onToggle }: BackgroundToggleProps) {
     return (
         <motion.button
             onClick={handleToggle}
-            className="fixed right-8 top-1/2 -translate-y-1/2 z-50 group scale-[0.8] origin-right"
+            className="fixed right-8 top-1/2 -translate-y-1/2 z-50 group scale-[0.6] md:scale-[0.8] origin-right"
             whileTap={{ scale: 0.95 }}
             transition={{ type: 'spring', stiffness: 400, damping: 25 }}
             aria-label={isVibrant ? 'Switch to dark mode' : 'Switch to vibrant mode'}

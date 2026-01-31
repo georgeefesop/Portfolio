@@ -132,7 +132,7 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
                             height={0}
                             sizes="100vw"
                             style={{ width: 'auto', height: 'auto' }}
-                            className="h-8 md:h-16 w-auto max-w-full object-contain translate-y-[10px] -translate-x-[15px]"
+                            className="h-8 md:h-16 w-auto max-w-full object-contain md:translate-y-[10px] md:-translate-x-[15px]"
                             priority
                         />
                     </div>
