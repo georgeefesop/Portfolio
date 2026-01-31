@@ -88,7 +88,7 @@ export default function Navigation() {
                         <a
                             href="#contact"
                             onClick={(e) => scrollToSection(e, '#contact')}
-                            className="bg-accent-primary text-black px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-accent-primary/90 transition-all hover:scale-105 whitespace-nowrap"
+                            className="bg-accent-primary text-black px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-accent-primary/90 transition-all hover:scale-105 whitespace-nowrap [.vibrant-mode_&]:bg-white [.vibrant-mode_&]:text-black [.vibrant-mode_&]:shadow-[0_0_20px_rgba(255,255,255,0.4)] [.vibrant-mode_&]:hover:bg-white/90 duration-500"
                         >
                             Start Project
                         </a>

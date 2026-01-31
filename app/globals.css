@@ -104,8 +104,10 @@ h6 {
 }
 
 .no-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 /* Global Scrollbar Styling */
@@ -143,10 +145,21 @@ body::-webkit-scrollbar-thumb:hover,
 /* Firefox */
 html,
 body {
-  scrollbar-width: auto;
   /* Allow wider scrollbar */
   scrollbar-color: #3F3F46 transparent;
 }
+
+/* Vibrant Mode Scrollbar Override */
+body.vibrant-mode::-webkit-scrollbar-thumb {
+  background-color: #FFFFFF;
+  border: 3px solid transparent;
+}
+
+body.vibrant-mode::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
 
 /* Autofill Override */
 input:-webkit-autofill,
@@ -157,4 +170,60 @@ input:-webkit-autofill:active {
   -webkit-text-fill-color: var(--text-primary) !important;
   caret-color: var(--text-primary) !important;
   transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Vibrant Background Animations - Fluid Swirls */
+@keyframes blob-swirl-1 {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+
+  33% {
+    transform: translate(30px, -50px) rotate(120deg) scale(1.1);
+  }
+
+  66% {
+    transform: translate(-20px, 20px) rotate(240deg) scale(0.9);
+  }
+
+  100% {
+    transform: translate(0, 0) rotate(360deg) scale(1);
+  }
+}
+
+@keyframes blob-swirl-2 {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+
+  33% {
+    transform: translate(-30px, 50px) rotate(-120deg) scale(0.8);
+  }
+
+  66% {
+    transform: translate(20px, -20px) rotate(-240deg) scale(1.1);
+  }
+
+  100% {
+    transform: translate(0, 0) rotate(-360deg) scale(1);
+  }
+}
+
+@keyframes blob-swirl-3 {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate(50px, 50px) scale(1.2);
+  }
+
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+/* Base fade for entrance/exit */
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
 }

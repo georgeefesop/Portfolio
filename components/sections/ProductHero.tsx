@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useScrollProgress } from '@/hooks/useScrollProgress';
 import ProductCanvas from '@/components/ui/ProductCanvas';
 import HeroText from '@/components/ui/HeroText';
+import BackgroundToggle from '@/components/ui/BackgroundToggle';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -14,10 +15,71 @@ const ENABLE_CAROUSEL = false;
 
 export type StepId = 0 | 1 | 2;
 
+// Shared audio context for background transition sound
+let sharedContext: AudioContext | null = null;
+const getSharedContext = () => {
+    if (typeof window === 'undefined') return null;
+    if (!sharedContext) {
+        sharedContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    }
+    return sharedContext;
+};
+
 export default function ProductHero() {
     const scrollProgress = useScrollProgress();
     const [step, setStep] = useState<StepId>(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isVibrantMode, setIsVibrantMode] = useState(false);
+    const [isVibrantDelayed, setIsVibrantDelayed] = useState(false);
+    // Deterministic initial order for hydration match
+    const [colorOrder, setColorOrder] = useState([...Array(12)].keys().toArray());
+
+    // Deterministic initial positions for hydration match
+    const initialPositions = [...Array(12)].map((_, i) => ({
+        left: (i * 13 + 7) % 100,
+        top: (i * 29 + 11) % 100
+    }));
+    const [blobPositions, setBlobPositions] = useState(initialPositions);
+
+    // Shuffle colors and randomize positions when vibrant mode is toggled on
+    useEffect(() => {
+        if (isVibrantMode) {
+            // Shuffle colors
+            setColorOrder(prev => {
+                const newOrder = [...prev];
+                for (let i = newOrder.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [newOrder[i], newOrder[j]] = [newOrder[j], newOrder[i]];
+                }
+                return newOrder;
+            });
+
+            // Randomize positions
+            setBlobPositions([...Array(12)].map(() => ({
+                left: Math.random() * 100,
+                top: Math.random() * 100
+            })));
+        }
+    }, [isVibrantMode]);
+
+    // Unified delay for UI elements (300ms lag)
+    useEffect(() => {
+        if (isVibrantMode) {
+            const timer = setTimeout(() => setIsVibrantDelayed(true), 300);
+            return () => clearTimeout(timer);
+        } else {
+            setIsVibrantDelayed(false);
+        }
+    }, [isVibrantMode]);
+
+    // Toggle body class for global effects (scrollbar, nav button)
+    useEffect(() => {
+        if (isVibrantDelayed) {
+            document.body.classList.add('vibrant-mode');
+        } else {
+            document.body.classList.remove('vibrant-mode');
+        }
+    }, [isVibrantDelayed]);
 
     // Lock body scroll when modal is open
     useEffect(() => {
@@ -53,8 +115,153 @@ export default function ProductHero() {
         setIsModalOpen(false);
     };
 
+    // Play lightsaber-style "VRRM" sound when background transitions
+    const playBackgroundTransitionSound = (isVibrant: boolean) => {
+        try {
+            const ctx = getSharedContext();
+            if (!ctx) return;
+            const now = ctx.currentTime;
+
+            if (isVibrant) {
+                // Soft, glowy ignition: gentle frequency sweep with sine waves
+                const osc1 = ctx.createOscillator();
+                const osc2 = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc1.type = 'sine';
+                osc2.type = 'sine';
+
+                // Gentle frequency sweep: low to mid
+                osc1.frequency.setValueAtTime(120, now);
+                osc1.frequency.exponentialRampToValueAtTime(240, now + 0.5);
+
+                osc2.frequency.setValueAtTime(240, now);
+                osc2.frequency.exponentialRampToValueAtTime(480, now + 0.5);
+
+                // Soft volume envelope
+                gain.gain.setValueAtTime(0, now);
+                gain.gain.linearRampToValueAtTime(0.03, now + 0.1);
+                gain.gain.linearRampToValueAtTime(0.025, now + 0.5);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
+
+                osc1.connect(gain);
+                osc2.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc1.start(now);
+                osc2.start(now);
+                osc1.stop(now + 0.7);
+                osc2.stop(now + 0.7);
+            } else {
+                // Soft power down: gentle fade
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(240, now);
+                osc.frequency.exponentialRampToValueAtTime(120, now + 0.3);
+
+                gain.gain.setValueAtTime(0.025, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + 0.3);
+            }
+        } catch (e) { }
+    };
+
+    // Trigger sound when vibrant mode changes
+    useEffect(() => {
+        if (isVibrantMode) {
+            // Delay ignition sound by 300ms to sync with visual bloom
+            const timer = setTimeout(() => {
+                playBackgroundTransitionSound(true);
+            }, 300);
+            return () => clearTimeout(timer);
+        } else {
+            // Play power-down sound immediately
+            playBackgroundTransitionSound(false);
+        }
+    }, [isVibrantMode]);
+
     return (
         <section className="relative h-[100svh] w-full overflow-hidden bg-[#05050A]">
+            {/* Animated Background Layers */}
+            <AnimatePresence mode="wait">
+                {isVibrantMode ? (
+                    <motion.div
+                        key="vibrant"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="absolute inset-0 z-0"
+                    >
+                        {/* Fluid Blob System */}
+                        {[...Array(12)].map((_, i) => (
+                            <div
+                                key={i}
+                                className="absolute rounded-full mix-blend-hard-light"
+                                style={{
+                                    backgroundColor: [
+                                        // Mixed Palette for Contrast (Warm/Cool Alternating)
+                                        '#FF006E', // Hot Magenta
+                                        '#00E5FF', // Cyan
+                                        '#FF1744', // Vibrant Red
+                                        '#304FFE', // Royal Blue
+                                        '#FF9100', // Golden Orange
+                                        '#AA00FF', // Vivid Violet
+                                        '#FFB74D', // Light Orange
+                                        '#6200EA', // Deep Purple
+                                        '#F50057', // Deep Pink
+                                        '#00B0FF', // Sky Blue
+                                        '#FF6D00', // Bright Orange
+                                        '#E040FB', // Bright Purple
+                                        '#C51162', // Magenta-Red
+                                        '#1DE9B6', // Turquoise
+                                        '#FF4081', // Hot Pink
+                                        '#2979FF', // Bright Blue
+                                        '#FF3D00', // Red-Orange
+                                        '#651FFF', // Blue-Purple
+                                        '#FF6090', // Coral Pink
+                                        '#D500F9', // Purple-Magenta
+                                    ][colorOrder[i] % 20],
+                                    left: `${blobPositions[i].left}%`,
+                                    top: `${blobPositions[i].top}%`,
+                                    width: `${(i % 5) * 50 + 400}px`, // Huge blobs: 400-600px
+                                    height: `${(i % 5) * 50 + 400}px`,
+                                    filter: 'blur(110px)',
+                                    opacity: 0.9,
+                                    animation: `blob-swirl-${(i % 3) + 1} ${25 + (i % 5) * 5}s linear infinite`,
+                                    animationDelay: `-${i * 3}s`, // Staggered start times
+                                    transform: 'translate(-50%, -50%)',
+                                }}
+                            />
+                        ))}
+
+                        {/* Base - Pure Dark */}
+                        <div
+                            className="absolute inset-0 -z-10"
+                            style={{
+                                background: '#05050A'
+                            }}
+                        />
+                    </motion.div>
+                ) : (
+                    <motion.div
+                        key="dark"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.5 }}
+                        className="absolute inset-0 z-0 bg-[#05050A]"
+                    />
+                )}
+            </AnimatePresence>
+
             {/* Background Grid - Using original SVG approach matching ProductCanvas */}
             <div className="absolute inset-0 z-0">
                 {/* Grid pattern background - SVG for crisp rendering */}
@@ -76,11 +283,15 @@ export default function ProductHero() {
                 </div>
             )}
 
+            {/* Background Toggle */}
+            <BackgroundToggle onToggle={setIsVibrantMode} />
+
             {/* Hero Text Overlay */}
             <HeroText
                 scrollProgress={scrollProgress}
                 step={ENABLE_CAROUSEL ? step : undefined}
                 onOpenDemo={ENABLE_CAROUSEL ? undefined : handleOpenModal}
+                isVibrantMode={isVibrantDelayed}
             />
 
             {/* Scroll Indicator - Only visible when modal is closed */}
@@ -94,7 +305,7 @@ export default function ProductHero() {
                     <motion.div
                         animate={{ y: [0, 8, 0] }}
                         transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                        className="text-zinc-400"
+                        className={`transition-colors duration-500 ${isVibrantDelayed ? 'text-white' : 'text-zinc-400'}`}
                     >
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <path d="M12 5v14M19 12l-7 7-7-7" />

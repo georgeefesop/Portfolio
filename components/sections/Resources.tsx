@@ -7,13 +7,13 @@ import ImageWithFallback from '@/components/ui/ImageWithFallback';
 
 const videos = [
     {
-        title: 'How to Generate Flawless AI Images Using the FLUX Model',
+        title: 'Figma Microinteractions Tutorial',
         duration: '7:49',
         url: 'https://www.youtube.com/watch?v=bK-EKarIC80',
-        thumbnail: 'https://img.youtube.com/vi/bK-EKarIC80/maxresdefault.jpg'
+        thumbnail: '/images/thumbnails/figma-microinteractions-v3.png'
     },
     {
-        title: 'How to Find Winning Dropshipping Products (2025)',
+        title: 'Dark Mode NFT Marketplace Design in Figma',
         duration: '8:53',
         url: 'https://www.youtube.com/watch?v=wbGv7MalJ7Q',
         thumbnail: 'https://img.youtube.com/vi/wbGv7MalJ7Q/maxresdefault.jpg'
