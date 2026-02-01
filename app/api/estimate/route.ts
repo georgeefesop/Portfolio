@@ -1,10 +1,6 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-});
-
 const SYSTEM_PROMPT = `You are a project estimation assistant for George Efesopoulos, a freelance product designer based in Cyprus. You help potential clients understand the approximate scope and cost of working with George.
 
 George works ~25 hours per week on a single project. His effective package rate is approximately €90/hr. Timeline and price are derived from the same logic: more hours = more weeks = higher cost. They must always be consistent with each other.
@@ -230,11 +226,21 @@ const RESPONSE_SCHEMA = {
 
 export async function POST(req: Request) {
     try {
+        const apiKey = process.env.OPENAI_API_KEY;
+        if (!apiKey) {
+            return NextResponse.json(
+                { error: true, message: "OpenAI API Key is missing. Set OPENAI_API_KEY in your environment." },
+                { status: 401 }
+            );
+        }
+
         const { userInput, previousInput, deliverableType } = await req.json();
 
         if (!userInput || userInput.length < 15) {
             return NextResponse.json({ error: "Input too short" }, { status: 400 });
         }
+
+        const openai = new OpenAI({ apiKey });
 
         const messages: any[] = [
             { role: "system", content: SYSTEM_PROMPT },
