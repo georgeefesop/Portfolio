@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useScrollProgress } from '@/hooks/useScrollProgress';
 import ProductCanvas from '@/components/ui/ProductCanvas';
 import HeroText from '@/components/ui/HeroText';
@@ -31,6 +31,11 @@ export default function ProductHero() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isVibrantMode, setIsVibrantMode] = useState(false);
     const [isVibrantDelayed, setIsVibrantDelayed] = useState(false);
+
+    // Responsive state
+    const [isMobile, setIsMobile] = useState(false);
+    const [isTablet, setIsTablet] = useState(false);
+
     // Deterministic initial order for hydration match
     const [colorOrder, setColorOrder] = useState([...Array(12)].keys().toArray());
 
@@ -40,6 +45,18 @@ export default function ProductHero() {
         top: (i * 29 + 11) % 100
     }));
     const [blobPositions, setBlobPositions] = useState(initialPositions);
+
+    // Handle resize for responsive detection
+    useEffect(() => {
+        const checkResponsive = () => {
+            const width = window.innerWidth;
+            setIsMobile(width < 768);
+            setIsTablet(width >= 768 && width < 1024);
+        };
+        checkResponsive();
+        window.addEventListener('resize', checkResponsive);
+        return () => window.removeEventListener('resize', checkResponsive);
+    }, []);
 
     // Shuffle colors and randomize positions when vibrant mode is toggled on
     useEffect(() => {
@@ -62,6 +79,8 @@ export default function ProductHero() {
         }
     }, [isVibrantMode]);
 
+    const blobCount = isMobile ? 6 : (isTablet ? 8 : 10);
+
     // Unified delay for UI elements (300ms lag)
     useEffect(() => {
         if (isVibrantMode) {
@@ -72,12 +91,14 @@ export default function ProductHero() {
         }
     }, [isVibrantMode]);
 
-    // Toggle body class for global effects (scrollbar, nav button)
+    // Toggle body/html class for global effects (scrollbar, nav button)
     useEffect(() => {
         if (isVibrantDelayed) {
             document.body.classList.add('vibrant-mode');
+            document.documentElement.classList.add('vibrant-mode');
         } else {
             document.body.classList.remove('vibrant-mode');
+            document.documentElement.classList.remove('vibrant-mode');
         }
     }, [isVibrantDelayed]);
 
@@ -199,9 +220,10 @@ export default function ProductHero() {
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.5 }}
                         className="absolute inset-0 z-0"
+                        style={{ filter: 'blur(110px)', transform: 'translateZ(0)' }}
                     >
                         {/* Fluid Blob System */}
-                        {[...Array(12)].map((_, i) => (
+                        {[...Array(blobCount)].map((_, i) => (
                             <div
                                 key={i}
                                 className="absolute rounded-full mix-blend-hard-light"
@@ -231,9 +253,13 @@ export default function ProductHero() {
                                     ][colorOrder[i] % 20],
                                     left: `${blobPositions[i].left}%`,
                                     top: `${blobPositions[i].top}%`,
-                                    width: `${(i % 5) * 50 + 400}px`, // Huge blobs: 400-600px
-                                    height: `${(i % 5) * 50 + 400}px`,
-                                    filter: 'blur(110px)',
+                                    width: isMobile
+                                        ? `${(i % 5) * 35 + 350}px` // Reduced to 50% of previous mobile size (350-525px)
+                                        : `${(i % 5) * 70 + 560}px`, // Desktop maintained (560-910px)
+                                    height: isMobile
+                                        ? `${(i % 5) * 35 + 350}px`
+                                        : `${(i % 5) * 70 + 560}px`,
+                                    // filter: 'blur(110px)', // REMOVED: Optimization A - Handled by container
                                     opacity: 0.9,
                                     animation: `blob-swirl-${(i % 3) + 1} ${25 + (i % 5) * 5}s linear infinite`,
                                     animationDelay: `-${i * 3}s`, // Staggered start times
@@ -292,6 +318,7 @@ export default function ProductHero() {
                 step={ENABLE_CAROUSEL ? step : undefined}
                 onOpenDemo={ENABLE_CAROUSEL ? undefined : handleOpenModal}
                 isVibrantMode={isVibrantDelayed}
+                isMobile={isMobile}
             />
 
             {/* Scroll Indicator - Only visible when modal is closed */}

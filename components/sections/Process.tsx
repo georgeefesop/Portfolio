@@ -10,26 +10,26 @@ const processSteps = [
     {
         id: 'discovery',
         icon: Search,
-        title: "Logic & Strategy",
-        desc: "I start by mapping the business logic and market requirements. No pixels until the problem is strictly defined.",
+        title: "Listen & Map",
+        desc: "Send me everything. The brief, the constraints, the half-formed ideas, the stakeholder noise. We map it out together until the real problem surfaces.",
     },
     {
         id: 'definition',
         icon: Users,
-        title: "User Simulation",
-        desc: "I simulate specific user personas to predict behavioral patterns and identify the most valuable interactions.",
+        title: "Figure It Out",
+        desc: "I go quiet for a bit. Mind maps, user flows, whiteboarding until something clicks. Then we align before anything gets built.",
     },
     {
         id: 'build',
         icon: Rocket,
-        title: "MVP Build",
-        desc: "I build the core value quickly using a scalable stack, focusing on shipping a functional product over perfection.",
+        title: "Build & Test",
+        desc: "A working prototype your team can put in front of real users and actually learn from. You're in the loop the whole time.",
     },
     {
         id: 'iteration',
         icon: Repeat,
-        title: "Data Iteration",
-        desc: "I use early analytics and feedback to refine the product, removing friction and optimizing for retention.",
+        title: "Iterate or Ship",
+        desc: "We refine based on what users say, or it's ready to hand off to dev. Sometimes both happen at once.",
     },
 ];
 
@@ -49,8 +49,8 @@ export default function Process() {
                     <div className="text-center mb-20">
                         <h2 className="text-3xl md:text-5xl font-bold text-text-primary mb-6">How I Work</h2>
                         <p className="text-text-secondary text-lg max-w-2xl mx-auto">
-                            My process balances speed with scalability.<br />
-                            <span className="text-sm opacity-50 text-mono mt-2 block">(Interactive — Drag to break things)</span>
+                            From messy brief to working product.<br />
+                            <span className="text-sm opacity-50 text-mono mt-2 block">(Drag to explore)</span>
                         </p>
                     </div>
                 </FadeIn>
@@ -66,6 +66,7 @@ function InteractiveCanvas({ steps }: { steps: typeof processSteps }) {
     const [size, setSize] = useState({ w: 0, h: 0 });
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
     const isTablet = typeof window !== 'undefined' && window.innerWidth >= 768 && window.innerWidth < 1024;
+    const isSmallDesktop = typeof window !== 'undefined' && window.innerWidth >= 1024 && window.innerWidth < 1280;
 
     useEffect(() => {
         if (!containerRef.current) return;
@@ -84,25 +85,29 @@ function InteractiveCanvas({ steps }: { steps: typeof processSteps }) {
 
     return (
         <div ref={containerRef} className="relative w-full" style={{ height: size.h }}>
-            <CanvasNodes steps={steps} size={size} containerRef={containerRef} isMobile={isMobile} isTablet={isTablet} />
+            <CanvasNodes steps={steps} size={size} containerRef={containerRef} isMobile={isMobile} isTablet={isTablet} isSmallDesktop={isSmallDesktop} />
         </div>
     );
 }
 
-function CanvasNodes({ steps, size, containerRef, isMobile, isTablet }: { steps: any[], size: any, containerRef: any, isMobile: boolean, isTablet: boolean }) {
+function CanvasNodes({ steps, size, containerRef, isMobile, isTablet, isSmallDesktop }: { steps: any[], size: any, containerRef: any, isMobile: boolean, isTablet: boolean, isSmallDesktop: boolean }) {
     // FIX: Don't call useMotionValue in loop. Instantiate directly in useRef to maintain stable number of hooks.
     const motionValues = useRef(steps.map(() => ({
         x: new MotionValue(0),
         y: new MotionValue(0)
     }))).current;
 
+    const { w, h } = size;
+    // Consolidate into a stable string to prevent HMR dependency size mismatches
+    const layoutKey = `${w}-${h}-${isMobile}-${isTablet}-${isSmallDesktop}`;
+
     React.useLayoutEffect(() => {
         steps.forEach((_, i) => {
-            const pos = getInitialPosition(i, size.w, size.h, isMobile, isTablet);
+            const pos = getInitialPosition(i, w, h, isMobile, isTablet, isSmallDesktop);
             motionValues[i].x.set(pos.x);
             motionValues[i].y.set(pos.y);
         });
-    }, [size, isMobile, isTablet, steps, motionValues]); // motionValues stable ref
+    }, [layoutKey]); // Single stable string dependency
 
     // Jiggle fix for line attachment
     useEffect(() => {
@@ -113,7 +118,7 @@ function CanvasNodes({ steps, size, containerRef, isMobile, isTablet }: { steps:
             });
         }, 100);
         return () => clearTimeout(timer);
-    }, [steps, motionValues]);
+    }, [layoutKey]); // Same stable key
 
     return (
         <>
@@ -244,7 +249,7 @@ function ProcessNode({ step, index, x, y, containerRef, isMobile }: any) {
     )
 }
 
-function getInitialPosition(index: number, w: number, h: number, isMobile: boolean, isTablet: boolean) {
+function getInitialPosition(index: number, w: number, h: number, isMobile: boolean, isTablet: boolean, isSmallDesktop: boolean) {
     if (isMobile) {
         // Simple Vertical Stack
         return { x: (w - 260) / 2, y: index * 240 + 20 };
@@ -268,6 +273,23 @@ function getInitialPosition(index: number, w: number, h: number, isMobile: boole
         return {
             x: startX + col * (cardW + gapX),
             y: startY + row * gapY
+        };
+    }
+
+    if (isSmallDesktop) {
+        // Small Desktop (1024-1280): Staggered Zigzag
+        const cols = 4;
+        const cardW = 260;
+        const gapX = 20; // Tighter gap
+        const totalW = cols * cardW + (cols - 1) * gapX;
+        const startX = (w - totalW) / 2;
+
+        // Zigzag heights
+        const yOffset = index % 2 === 0 ? 40 : 180;
+
+        return {
+            x: startX + index * (cardW + gapX),
+            y: yOffset
         };
     }
 

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import InstrumentButton from './InstrumentButton';
 
 const navLinks = [
     { name: 'Work', href: '#work' },
@@ -60,11 +61,11 @@ export default function Navigation() {
 
     return (
         <nav
-            className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-black/80 backdrop-blur-md border-b border-border-subtle' : 'bg-transparent'
+            className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${scrolled ? 'bg-black/40 backdrop-blur-sm border-b border-white/5' : 'bg-transparent'
                 }`}
         >
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center h-16 md:h-24">
+                <div className="flex justify-between items-center h-14 md:h-20">
                     {/* Logo */}
                     <Link href="/" className="text-2xl font-bold tracking-tight text-white hover:text-accent-primary transition-colors">
                         efesop
@@ -85,13 +86,21 @@ export default function Navigation() {
                                 {link.name}
                             </a>
                         ))}
-                        <a
-                            href="#contact"
-                            onClick={(e) => scrollToSection(e, '#contact')}
-                            className="bg-accent-primary text-black px-6 py-2.5 rounded-lg text-sm font-semibold hover:bg-accent-primary/90 transition-all hover:scale-105 whitespace-nowrap [.vibrant-mode_&]:bg-white [.vibrant-mode_&]:text-black [.vibrant-mode_&]:shadow-[0_0_20px_rgba(255,255,255,0.4)] [.vibrant-mode_&]:hover:bg-white/90 duration-500"
+                        <InstrumentButton
+                            onClick={(e) => {
+                                const element = document.querySelector('#contact');
+                                if (element) {
+                                    const offsetTop = element.getBoundingClientRect().top + window.scrollY - 100;
+                                    window.scrollTo({
+                                        top: offsetTop,
+                                        behavior: 'smooth'
+                                    });
+                                }
+                            }}
+                            className="px-6 py-2 text-sm font-semibold whitespace-nowrap"
                         >
                             Start Project
-                        </a>
+                        </InstrumentButton>
                     </div>
 
                     {/* Mobile Menu Button */}
@@ -144,10 +153,30 @@ export default function Navigation() {
                                     {link.name}
                                 </a>
                             ))}
+                            <div className="pt-4 px-3">
+                                <InstrumentButton
+                                    onClick={() => {
+                                        setIsOpen(false);
+                                        setTimeout(() => {
+                                            const element = document.querySelector('#contact');
+                                            if (element) {
+                                                const offsetTop = element.getBoundingClientRect().top + window.scrollY - 80;
+                                                window.scrollTo({
+                                                    top: offsetTop,
+                                                    behavior: 'smooth'
+                                                });
+                                            }
+                                        }, 300);
+                                    }}
+                                    className="w-full py-3 text-base font-semibold"
+                                >
+                                    Start Project
+                                </InstrumentButton>
+                            </div>
                         </div>
                     </motion.div>
                 )}
             </AnimatePresence>
-        </nav>
+        </nav >
     );
 }

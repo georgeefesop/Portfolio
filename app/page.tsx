@@ -22,7 +22,7 @@ export default function Home() {
             <CredibilityBar />
             <Intro />
             <CaseStudies />
-            <Testimonials />
+            {/* <Testimonials /> */}
             <Gallery />
             <Services />
             <Process />
