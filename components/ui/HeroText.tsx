@@ -220,26 +220,7 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
                             <p className={`text-xs md:text-sm transition-colors duration-500 ${isVibrantMode ? 'text-white' : 'text-zinc-400'}`}>Previously: <span className="text-white">Input Output (Cardano)</span></p>
                         </div>
                         <div className="transition-all">
-                            <motion.a
-                                href="#contact"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    const element = document.querySelector('#contact');
-                                    if (element) {
-                                        const offsetTop = element.getBoundingClientRect().top + window.scrollY - 100;
-                                        window.scrollTo({
-                                            top: offsetTop,
-                                            behavior: 'smooth'
-                                        });
-                                    }
-                                }}
-                                className={`group flex items-center gap-2 font-medium transition-colors duration-500 pointer-events-auto ${isVibrantMode ? 'text-white hover:text-white/80' : 'text-white hover:text-accent-primary'
-                                    }`}
-                                aria-label="Start a project"
-                            >
-                                <span className="text-base md:text-lg">Start a project</span>
-                                <span className="group-hover:translate-y-1 transition-transform duration-300">↓</span>
-                            </motion.a>
+                            <p className="text-base md:text-lg font-medium text-white">Start a project</p>
                         </div>
                         <div className="flex items-start justify-end gap-1.5 transition-all mt-1 md:mt-2 ml-auto w-fit">
                             <span className={`font-mono tracking-widest uppercase text-[10px] md:text-sm transition-colors duration-500 text-right ${isVibrantMode ? 'text-white' : 'text-zinc-400'}`}>

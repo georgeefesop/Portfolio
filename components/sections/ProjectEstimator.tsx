@@ -463,8 +463,8 @@ function InitialState({
                         onKeyDown={onKeyDown}
                         onFocus={handleFocus}
                         onBlur={handleBlur}
-                        placeholder='e.g. A dashboard for tracking crypto portfolio performance...'
-                        className={`w-full bg-transparent px-4 text-white text-sm focus:outline-none transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] resize-none flex items-center ${isExpanded ? 'min-h-[140px] pt-4 pb-12' : 'min-h-[48px] py-3.5'}`}
+                        placeholder='e.g. A dashboard for…'
+                        className={`w-full bg-transparent px-4 text-white text-sm focus:outline-none transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] resize-none flex items-center leading-relaxed ${isExpanded ? 'min-h-[140px] pt-4 pb-12' : 'min-h-[52px] py-3 sm:min-h-[48px] sm:py-3.5'}`}
                         rows={isExpanded ? 4 : 1}
                     />
 
@@ -478,11 +478,11 @@ function InitialState({
                                 transition={{ duration: 0.4, delay: 0.2 }}
                                 className="pointer-events-none"
                             >
-                                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-[10px] text-zinc-500 font-mono tracking-tight uppercase whitespace-nowrap opacity-60">
+                                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-[10px] text-zinc-400 font-mono tracking-tight uppercase whitespace-nowrap">
                                     Ballpark estimate. No email required.
                                 </div>
 
-                                <div className={`absolute bottom-4 right-4 text-[10px] font-mono transition-colors ${isUnderMin ? 'text-red-500/80' : 'text-zinc-500'}`}>
+                                <div className={`absolute bottom-4 right-4 text-[10px] font-mono transition-colors ${isUnderMin ? 'text-red-500/80' : 'text-zinc-400'}`}>
                                     {input.length}/{minChars}+
                                 </div>
                             </motion.div>
@@ -517,8 +517,8 @@ function InitialState({
                                                 );
                                             }}
                                             className={`px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider transition-all border min-h-[38px] md:min-h-0 ${isSelected
-                                                ? 'border-accent-primary bg-accent-primary/10 text-white'
-                                                : 'border-white/10 text-zinc-500 hover:border-white/20'
+                                                ? 'border-accent-primary bg-accent-primary/25 text-white'
+                                                : 'border-white/15 bg-white/5 text-zinc-500 hover:border-white/25 hover:bg-white/10'
                                                 }`}
                                         >
                                             {pill.label}
@@ -551,6 +551,22 @@ function InitialState({
                         </motion.div>
                     )}
                 </AnimatePresence>
+                <a
+                    href="#contact"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        const el = document.querySelector('#contact');
+                        if (el) {
+                            const top = el.getBoundingClientRect().top + window.scrollY - 100;
+                            window.scrollTo({ top, behavior: 'smooth' });
+                        }
+                    }}
+                    className="mt-20 md:mt-24 text-zinc-500 hover:text-white transition-colors font-mono text-[10px] uppercase tracking-widest flex items-center gap-1.5 pointer-events-auto z-0"
+                    aria-label="Scroll to contact"
+                >
+                    <span className="group-hover:translate-y-0.5 transition-transform inline-block">↓</span>
+                    <span>Scroll down</span>
+                </a>
             </div>
         </motion.div>
     );
@@ -563,7 +579,7 @@ function LoadingState() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex flex-col items-center justify-center p-12 space-y-6"
+            className="flex flex-col items-center justify-center p-12 space-y-6 text-center"
         >
             <div className="relative">
                 <div className="w-12 h-12 rounded-full border-2 border-accent-primary/20 animate-ping" />
@@ -572,7 +588,7 @@ function LoadingState() {
                 </div>
             </div>
             <p className="text-zinc-400 text-sm font-mono tracking-widest uppercase animate-pulse">
-                Analyzing your project...
+                Analysing your idea
             </p>
         </motion.div>
     );
@@ -612,13 +628,13 @@ function ResultCard({ result, input, onRefine, onEdit, onStartOver, onStartProje
                         <button
                             type="button"
                             onClick={onSuccessDone}
-                            className="flex-1 h-11 text-[11px] font-mono uppercase tracking-widest text-zinc-400 hover:text-white border border-white/10 hover:border-white/20 rounded-lg transition-all"
+                            className="flex-1 min-h-[44px] h-12 sm:h-11 text-[11px] font-mono uppercase tracking-widest text-zinc-400 hover:text-white border border-white/10 hover:border-white/20 rounded-lg transition-all"
                         >
                             Close
                         </button>
                         <InstrumentButton
                             onClick={onSuccessSendAnother}
-                            className="flex-1 h-11 text-xs font-mono uppercase tracking-widest whitespace-nowrap"
+                            className="flex-1 min-h-[44px] h-12 sm:h-11 text-xs font-mono uppercase tracking-widest whitespace-nowrap"
                         >
                             New estimate
                         </InstrumentButton>

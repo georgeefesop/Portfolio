@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import InstrumentButton from './InstrumentButton';
 
 const navLinks = [
     { name: 'Work', href: '#work' },
@@ -86,21 +85,6 @@ export default function Navigation() {
                                 {link.name}
                             </a>
                         ))}
-                        <InstrumentButton
-                            onClick={(e) => {
-                                const element = document.querySelector('#contact');
-                                if (element) {
-                                    const offsetTop = element.getBoundingClientRect().top + window.scrollY - 100;
-                                    window.scrollTo({
-                                        top: offsetTop,
-                                        behavior: 'smooth'
-                                    });
-                                }
-                            }}
-                            className="px-6 py-2 text-sm font-semibold whitespace-nowrap"
-                        >
-                            Start Project
-                        </InstrumentButton>
                     </div>
 
                     {/* Mobile Menu Button */}
@@ -153,26 +137,6 @@ export default function Navigation() {
                                     {link.name}
                                 </a>
                             ))}
-                            <div className="pt-4 px-3">
-                                <InstrumentButton
-                                    onClick={() => {
-                                        setIsOpen(false);
-                                        setTimeout(() => {
-                                            const element = document.querySelector('#contact');
-                                            if (element) {
-                                                const offsetTop = element.getBoundingClientRect().top + window.scrollY - 80;
-                                                window.scrollTo({
-                                                    top: offsetTop,
-                                                    behavior: 'smooth'
-                                                });
-                                            }
-                                        }, 300);
-                                    }}
-                                    className="w-full py-3 text-base font-semibold"
-                                >
-                                    Start Project
-                                </InstrumentButton>
-                            </div>
                         </div>
                     </motion.div>
                 )}
