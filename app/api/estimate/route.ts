@@ -245,16 +245,19 @@ export async function POST(req: Request) {
             messages.push({ role: "assistant", content: "I understand the original scope. What has changed?" });
         }
 
-        // Build the user message with deliverable context
+        // Build the user message with deliverable context (supports single or multiple)
         let userMessage = userInput;
-        if (deliverableType && deliverableType !== "not_sure") {
-            const deliverableLabels: Record<string, string> = {
-                design_only: "Design Only (no build, just design files for handoff)",
-                design_prototype: "Design + Interactive Prototype (no backend)",
-                full_build: "Full Build (design and code the product)",
-                ai_integration: "AI Integration (includes AI/LLM feature development)"
-            };
-            userMessage = `[Deliverable type selected: ${deliverableLabels[deliverableType]}]\n\n${userInput}`;
+        const deliverableLabels: Record<string, string> = {
+            design_only: "Design Only (no build, just design files for handoff)",
+            design_prototype: "Design + Interactive Prototype (no backend)",
+            full_build: "Full Build (design and code the product)",
+            ai_integration: "AI Integration (includes AI/LLM feature development)",
+            not_sure: "Not Sure"
+        };
+        const types = Array.isArray(deliverableType) ? deliverableType : (deliverableType ? [deliverableType] : []);
+        const selected = types.filter((t: string) => t && t !== "not_sure").map((t: string) => deliverableLabels[t] || t);
+        if (selected.length > 0) {
+            userMessage = `[Deliverable types selected: ${selected.join(", ")}]\n\n${userInput}`;
         }
 
         messages.push({ role: "user", content: userMessage });

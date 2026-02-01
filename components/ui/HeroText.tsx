@@ -250,8 +250,8 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
                     </motion.div>
                 </div>
 
-                {/* Centered Project Estimator - Top-Pinned for smooth expansion */}
-                <div className="absolute inset-0 z-30 flex items-start justify-center pt-[32vh] pb-48 px-4 md:px-0 pointer-events-none">
+                {/* Project Estimator - about 1/3 down the screen */}
+                <div className="absolute inset-0 z-30 flex items-start justify-center pt-[33vh] px-4 md:px-0 pointer-events-none">
                     <ProjectEstimator />
                 </div>
             </motion.div>

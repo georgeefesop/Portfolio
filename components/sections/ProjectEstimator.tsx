@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, Edit3, Send, CheckCircle2, ChevronRight, AlertCircle, RotateCcw, ChevronDown, ChevronUp } from 'lucide-react';
+import { Sparkles, Edit3, Send, CheckCircle2, AlertCircle, RotateCcw, ChevronDown, ChevronUp, FileText } from 'lucide-react';
 import InstrumentButton from '../ui/InstrumentButton';
 
 interface CalculationStep {
@@ -30,20 +30,30 @@ export default function ProjectEstimator() {
     const [isLoading, setIsLoading] = useState(false);
     const [result, setResult] = useState<EstimateResult | null>(null);
     const [previousInput, setPreviousInput] = useState<string | null>(null);
-    const [selectedDeliverable, setSelectedDeliverable] = useState<string | null>('design_prototype');
+    const [selectedDeliverables, setSelectedDeliverables] = useState<string[]>(['design_prototype']);
     const [isRefining, setIsRefining] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [isQuoteMinimized, setIsQuoteMinimized] = useState(false);
+    const [isFormExpanded, setIsFormExpanded] = useState(false);
+    const [contactName, setContactName] = useState('');
+    const [contactEmail, setContactEmail] = useState('');
+    const [contactCompany, setContactCompany] = useState('');
 
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const collapseFormRef = useRef<(() => void) | null>(null);
 
-    // Auto-expand textarea & Focus on refinement
+    // Auto-expand textarea & Focus on refinement (skip when empty so single-line classes control size)
     useEffect(() => {
-        if (textareaRef.current) {
+        if (!textareaRef.current) return;
+        if (input.trim().length === 0) {
+            textareaRef.current.style.height = '';
+            textareaRef.current.style.minHeight = '';
+        } else {
             textareaRef.current.style.height = 'auto';
             textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
-            if (isRefining || !result) {
-                textareaRef.current.focus();
-            }
+        }
+        if (isRefining || !result) {
+            textareaRef.current.focus();
         }
     }, [input, isRefining, result]);
 
@@ -62,7 +72,7 @@ export default function ProjectEstimator() {
                 body: JSON.stringify({
                     userInput: input,
                     previousInput: previousInput,
-                    deliverableType: selectedDeliverable
+                    deliverableType: selectedDeliverables.length ? selectedDeliverables : ['design_prototype']
                 }),
             });
 
@@ -78,8 +88,8 @@ export default function ProjectEstimator() {
                 setError(data.message || "An unexpected error occurred.");
             } else {
                 setResult(data);
-                // Store in history
                 setPreviousInput(input);
+                setIsQuoteMinimized(false);
             }
         } catch (err) {
             setError("Something went wrong. Try again or contact me directly.");
@@ -102,39 +112,199 @@ export default function ProjectEstimator() {
         setResult(null);
         setInput('');
         setPreviousInput(null);
-        setSelectedDeliverable('design_prototype');
+        setSelectedDeliverables(['design_prototype']);
+        setIsQuoteMinimized(false);
     };
 
-    const handleStartProject = () => {
-        // Handle smooth scroll and pre-fill logic
-        const contactSection = document.querySelector('#contact');
-        if (contactSection) {
-            // Store current estimate in localStorage for Contact Form to read
-            if (result && result.status === 'estimate') {
-                localStorage.setItem('ge_portfolio_estimate', JSON.stringify({
+    const handleSuccessDone = () => {
+        setIsQuoteMinimized(true);
+    };
+
+    const handleSuccessSendAnother = () => {
+        setResult(null);
+        setInput('');
+        setPreviousInput(null);
+        setSelectedDeliverables(['design_prototype']);
+        setContactName('');
+        setContactEmail('');
+        setContactCompany('');
+        setSendStatus('idle');
+        setSendError(null);
+        setIsQuoteMinimized(true);
+    };
+
+    const [sendStatus, setSendStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+    const [sendError, setSendError] = useState<string | null>(null);
+
+    const handleStartProject = async () => {
+        const name = contactName.trim();
+        const email = contactEmail.trim().toLowerCase();
+        const company = contactCompany.trim() || undefined;
+
+        if (!name) {
+            setSendError('Please enter your name.');
+            return;
+        }
+        if (!email) {
+            setSendError('Please enter your email.');
+            return;
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            setSendError('Please enter a valid email address.');
+            return;
+        }
+
+        setSendError(null);
+        setSendStatus('sending');
+
+        try {
+            const res = await fetch('/api/estimate/send', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name,
+                    email,
+                    company,
                     input,
-                    result
-                }));
+                    result: result && result.status === 'estimate' ? result : null
+                })
+            });
+            const data = await res.json();
+
+            if (data.error) {
+                setSendError(data.message || 'Something went wrong. Please try again.');
+                setSendStatus('error');
+                return;
             }
-            contactSection.scrollIntoView({ behavior: 'smooth' });
+            setSendStatus('success');
+        } catch {
+            setSendError('Something went wrong. Please try again.');
+            setSendStatus('error');
         }
     };
 
     const isButtonActive = input.length >= 15;
 
-    return (
-        <div className={`w-full transition-all duration-500 mx-auto pointer-events-auto z-30 relative px-4 ${isRefining && result ? 'max-w-[1000px]' : 'max-w-[500px]'}`}>
-            <div className={`flex flex-col md:flex-row gap-8 ${isRefining && result ? 'items-start' : 'items-center justify-center'}`}>
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const canSendBrief =
+        contactName.trim().length > 0 &&
+        contactEmail.trim().length > 0 &&
+        emailRegex.test(contactEmail.trim());
 
-                {/* Main Content Area */}
-                <div className={`w-full transition-all duration-500 ${isRefining && result ? 'md:w-1/2' : 'w-full'}`}>
+    // Clear send error when user edits contact fields so they can retry
+    useEffect(() => {
+        if (sendError) setSendError(null);
+    }, [contactName, contactEmail]);
+
+    const quoteExpanded = result && !isQuoteMinimized && !isLoading && !isRefining;
+    const quoteMinimized = result && isQuoteMinimized && !isLoading && !isRefining;
+
+    const showInputForm = (!result || isRefining || isQuoteMinimized) && !isLoading;
+
+    return (
+        <>
+            {/* Subtle blur behind expanded form / during calculation; click to collapse and unfocus */}
+            <AnimatePresence>
+                {((showInputForm && isFormExpanded) || isLoading) && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className={`fixed inset-0 z-20 backdrop-blur-sm bg-black/15 ${isLoading ? 'pointer-events-none' : 'pointer-events-auto cursor-default'}`}
+                        onClick={() => {
+                            if (!isLoading && showInputForm && isFormExpanded) {
+                                collapseFormRef.current?.();
+                                textareaRef.current?.blur();
+                            }
+                        }}
+                        aria-hidden
+                    />
+                )}
+            </AnimatePresence>
+
+            {/* Blur overlay + modal when quote is open */}
+            <AnimatePresence>
+                {quoteExpanded && (
+                    <>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="fixed inset-0 z-50 backdrop-blur-md bg-black/30 pointer-events-auto"
+                            onClick={() => setIsQuoteMinimized(true)}
+                            aria-hidden
+                        />
+                        <div className="fixed inset-0 z-50 flex items-center justify-center px-4 pointer-events-none">
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.98 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.98 }}
+                                transition={{ duration: 0.2 }}
+                                className="pointer-events-auto max-w-[560px] w-full max-h-[85vh] overflow-hidden"
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <ResultCard
+                                    result={result!}
+                                    input={input}
+                                    onRefine={handleRefine}
+                                    onEdit={handleEdit}
+                                    onClose={() => setIsQuoteMinimized(true)}
+                                    onStartOver={handleStartOver}
+                                    onStartProject={handleStartProject}
+                                    onSuccessDone={handleSuccessDone}
+                                    onSuccessSendAnother={handleSuccessSendAnother}
+                                    sendStatus={sendStatus}
+                                    sendError={sendError}
+                                    canSendBrief={canSendBrief}
+                                    contactName={contactName}
+                                    setContactName={setContactName}
+                                    contactEmail={contactEmail}
+                                    setContactEmail={setContactEmail}
+                                    contactCompany={contactCompany}
+                                    setContactCompany={setContactCompany}
+                                />
+                            </motion.div>
+                        </div>
+                    </>
+                )}
+            </AnimatePresence>
+
+            {/* Floating dot to open/close quote - under toggle, matches toggle vibe */}
+            <AnimatePresence>
+                {result && !isLoading && !isRefining && (
+                    <motion.button
+                        type="button"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setIsQuoteMinimized((prev) => !prev);
+                        }}
+                        className="fixed right-8 z-[70] top-[calc(23.33%+9rem)] w-14 h-14 rounded-full backdrop-blur-sm border border-white/10 bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center shadow-lg pointer-events-auto"
+                        aria-label={isQuoteMinimized ? 'Open quote' : 'Close quote'}
+                    >
+                        <FileText className="w-6 h-6 text-white pointer-events-none" strokeWidth={1.5} />
+                    </motion.button>
+                )}
+            </AnimatePresence>
+
+            <div className={`w-full transition-all duration-500 pointer-events-auto z-30 relative px-4 ${isRefining && result ? 'max-w-[1000px]' : 'max-w-[500px]'} mx-auto`}>
+            <div className={`flex flex-col md:flex-row gap-8 w-full ${isRefining && result ? 'items-start' : 'items-center justify-center'}`}>
+
+                {/* Main Content Area - show input when no result, refining, or quote minimized */}
+                <div className={`w-full transition-all duration-500 ${isRefining && result ? 'md:w-1/2' : ''}`}>
                     <AnimatePresence mode="wait">
-                        {(!result || isRefining) && !isLoading && (
+                        {(!result || isRefining || isQuoteMinimized) && !isLoading && (
                             <InitialState
                                 input={input}
                                 setInput={setInput}
-                                selectedDeliverable={selectedDeliverable}
-                                setSelectedDeliverable={setSelectedDeliverable}
+                                selectedDeliverables={selectedDeliverables}
+                                setSelectedDeliverables={setSelectedDeliverables}
                                 textareaRef={textareaRef}
                                 isButtonActive={isButtonActive}
                                 onSubmit={handleGetEstimate}
@@ -152,22 +322,13 @@ export default function ProjectEstimator() {
                                         // We'll handle this inside InitialState for cleaner state management
                                     }
                                 }}
+                                onFormExpandedChange={setIsFormExpanded}
+                                onRegisterCollapse={(fn: (() => void) | null) => { collapseFormRef.current = fn; }}
                             />
                         )}
 
                         {isLoading && (
                             <LoadingState />
-                        )}
-
-                        {result && !isLoading && !isRefining && (
-                            <ResultCard
-                                result={result}
-                                input={input}
-                                onRefine={handleRefine}
-                                onEdit={handleEdit}
-                                onStartOver={handleStartOver}
-                                onStartProject={handleStartProject}
-                            />
                         )}
                     </AnimatePresence>
                 </div>
@@ -203,30 +364,31 @@ export default function ProjectEstimator() {
                     {error}
                 </motion.div>
             )}
-        </div>
+            </div>
+        </>
     );
 }
 
 function InitialState({
     input,
     setInput,
-    selectedDeliverable,
-    setSelectedDeliverable,
+    selectedDeliverables,
+    setSelectedDeliverables,
     textareaRef,
     isButtonActive,
     onSubmit,
     onKeyDown,
     previousInput,
     isRefining,
-    onCancel
+    onCancel,
+    onFormExpandedChange,
+    onRegisterCollapse
 }: any) {
     const minChars = 15;
     const isUnderMin = input.length < minChars;
     const hasInput = input.length > 0;
-    const [isExpanded, setIsExpanded] = useState(false);
+    const [allowExpanded, setAllowExpanded] = useState(false);
     const [showButton, setShowButton] = useState(false);
-    const inputLengthRef = useRef(input.length);
-    inputLengthRef.current = input.length;
 
     const pills = [
         { id: 'design_only', label: 'Design Only' },
@@ -236,39 +398,38 @@ function InitialState({
         { id: 'not_sure', label: 'Not Sure' }
     ];
 
+    // Empty => always single line (derived). With content => expand after 1200ms.
     useEffect(() => {
         if (!hasInput) {
-            // Don't shrink immediately, wait for blur
+            setAllowExpanded(false);
             return;
         }
-
-        if (isExpanded) return;
-
-        const timer = setTimeout(() => {
-            setIsExpanded(true);
-        }, 1200);
-
+        const timer = setTimeout(() => setAllowExpanded(true), 1200);
         return () => clearTimeout(timer);
-    }, [input, hasInput, isExpanded]);
+    }, [input, hasInput]);
+
+    const isExpanded = hasInput && allowExpanded;
+
+    useEffect(() => {
+        onFormExpandedChange?.(isExpanded);
+    }, [isExpanded, onFormExpandedChange]);
+
+    useEffect(() => {
+        onRegisterCollapse?.(() => setAllowExpanded(false));
+        return () => { onRegisterCollapse?.(null); };
+    }, [onRegisterCollapse]);
 
     useEffect(() => {
         if (isUnderMin) {
-            setShowButton(false);
-            return;
+            const timer = setTimeout(() => setShowButton(false), 600);
+            return () => clearTimeout(timer);
         }
-
-        const timer = setTimeout(() => {
-            setShowButton(true);
-        }, 800);
-
+        const timer = setTimeout(() => setShowButton(true), 1300);
         return () => clearTimeout(timer);
     }, [input, isUnderMin]);
 
-    const handleBlur = () => {
-        if (inputLengthRef.current === 0) {
-            setIsExpanded(false);
-        }
-    };
+    const handleFocus = () => {};
+    const handleBlur = () => {};
 
     return (
         <motion.div
@@ -276,7 +437,7 @@ function InitialState({
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
-            className="flex flex-col items-center"
+            className={`flex flex-col items-center ${isRefining ? 'opacity-100' : ''}`}
         >
             <div className="w-full px-2 mb-4">
                 <h2 className="text-xl md:text-2xl font-bold text-white">
@@ -289,13 +450,18 @@ function InitialState({
                 )}
             </div>
 
-            <div className="w-full rounded-xl border border-white/10 bg-black/40 overflow-hidden backdrop-blur-sm group focus-within:border-accent-primary/50 transition-all duration-500">
+            <div className={`w-full rounded-xl border border-white/10 overflow-hidden backdrop-blur-sm group focus-within:border-accent-primary/50 transition-all duration-500 ${isRefining ? 'bg-black/80' : 'bg-black/40'}`}>
                 <div className="relative">
                     <textarea
                         ref={textareaRef}
                         value={input}
-                        onChange={(e) => setInput(e.target.value)}
+                        onChange={(e) => {
+                            const v = e.target.value;
+                            setInput(v);
+                            if (v.trim() === '') setAllowExpanded(false);
+                        }}
                         onKeyDown={onKeyDown}
+                        onFocus={handleFocus}
                         onBlur={handleBlur}
                         placeholder='e.g. A dashboard for tracking crypto portfolio performance...'
                         className={`w-full bg-transparent px-4 text-white text-sm focus:outline-none transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)] resize-none flex items-center ${isExpanded ? 'min-h-[140px] pt-4 pb-12' : 'min-h-[48px] py-3.5'}`}
@@ -337,40 +503,50 @@ function InitialState({
                             }}
                             className="bg-white/[0.03] border-t border-white/5 overflow-hidden"
                         >
-                            <div className="p-3 flex flex-wrap justify-center gap-2">
-                                {pills.map((pill: any) => (
-                                    <button
-                                        key={pill.id}
-                                        onClick={() => setSelectedDeliverable(selectedDeliverable === pill.id ? null : pill.id)}
-                                        className={`px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider transition-all border min-h-[38px] md:min-h-0 ${selectedDeliverable === pill.id
-                                            ? 'border-accent-primary bg-accent-primary/10 text-white'
-                                            : 'border-white/10 text-zinc-500 hover:border-white/20'
-                                            }`}
-                                    >
-                                        {pill.label}
-                                    </button>
-                                ))}
+                            <div className="p-3 space-y-3">
+                                <div className="flex flex-wrap justify-center gap-2">
+                                {pills.map((pill: any) => {
+                                    const isSelected = selectedDeliverables.includes(pill.id);
+                                    return (
+                                        <button
+                                            key={pill.id}
+                                            type="button"
+                                            onClick={() => {
+                                                setSelectedDeliverables(prev =>
+                                                    isSelected ? prev.filter((id) => id !== pill.id) : [...prev, pill.id]
+                                                );
+                                            }}
+                                            className={`px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider transition-all border min-h-[38px] md:min-h-0 ${isSelected
+                                                ? 'border-accent-primary bg-accent-primary/10 text-white'
+                                                : 'border-white/10 text-zinc-500 hover:border-white/20'
+                                                }`}
+                                        >
+                                            {pill.label}
+                                        </button>
+                                    );
+                                })}
+                                </div>
                             </div>
                         </motion.div>
                     )}
                 </AnimatePresence>
             </div>
 
-            <div className="w-full flex flex-col items-center">
+            <div className="w-full flex flex-col items-center relative">
                 <AnimatePresence>
                     {showButton && (
                         <motion.div
-                            initial={{ opacity: 0, height: 0, marginTop: 0 }}
-                            animate={{ opacity: 1, height: 'auto', marginTop: 16 }}
-                            exit={{ opacity: 0, height: 0, marginTop: 0 }}
-                            transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
-                            className="w-full md:w-auto overflow-hidden"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-full md:w-auto flex justify-center pt-1"
                         >
                             <InstrumentButton
                                 onClick={onSubmit}
-                                className="w-full md:w-auto h-12 px-12"
+                                className="w-full md:w-auto h-12 px-12 whitespace-nowrap"
                             >
-                                {isRefining ? "Get Updated Estimate →" : (previousInput ? "Update Estimate →" : "Get Estimate →")}
+                                {isRefining ? "Update ballpark" : (previousInput ? "Recalculate" : "Calculate Estimate")}
                             </InstrumentButton>
                         </motion.div>
                     )}
@@ -402,10 +578,55 @@ function LoadingState() {
     );
 }
 
-function ResultCard({ result, input, onRefine, onEdit, onStartOver, onStartProject, hideActions = false }: any) {
+function ResultCard({ result, input, onRefine, onEdit, onStartOver, onStartProject, onSuccessDone, onSuccessSendAnother, hideActions = false, sendStatus = 'idle', sendError = null, canSendBrief = false, contactName = '', setContactName, contactEmail = '', setContactEmail, contactCompany = '', setContactCompany }: any) {
     const [isExpanded, setIsExpanded] = useState(false);
 
     if (!result) return null;
+
+    // Success state: only after brief was sent (not after Calculate Estimate)
+    if (!hideActions && sendStatus === 'success' && contactEmail) {
+        return (
+            <motion.div
+                key="success"
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
+                className="bg-[#121216]/90 border border-white/10 rounded-xl overflow-hidden backdrop-blur-md shadow-2xl"
+            >
+                <div className="p-8 md:p-10 flex flex-col items-center text-center space-y-6">
+                    <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.1 }}
+                        className="w-14 h-14 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center"
+                    >
+                        <CheckCircle2 className="w-8 h-8 text-emerald-400" strokeWidth={2} />
+                    </motion.div>
+                    <div className="space-y-2">
+                        <h3 className="text-xl md:text-2xl font-bold text-white">Thank you.</h3>
+                        <p className="text-sm text-zinc-400 max-w-[300px] mx-auto leading-relaxed">
+                            A copy of your estimate has been sent to <span className="text-zinc-300">{contactEmail}</span>. I&apos;ll be in touch shortly.
+                        </p>
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-3 w-full max-w-[300px] pt-2">
+                        <button
+                            type="button"
+                            onClick={onSuccessDone}
+                            className="flex-1 h-11 text-[11px] font-mono uppercase tracking-widest text-zinc-400 hover:text-white border border-white/10 hover:border-white/20 rounded-lg transition-all"
+                        >
+                            Close
+                        </button>
+                        <InstrumentButton
+                            onClick={onSuccessSendAnother}
+                            className="flex-1 h-11 text-xs font-mono uppercase tracking-widest whitespace-nowrap"
+                        >
+                            New estimate
+                        </InstrumentButton>
+                    </div>
+                </div>
+            </motion.div>
+        );
+    }
 
     if (result.status === 'out_of_scope') {
         return (
@@ -449,7 +670,7 @@ function ResultCard({ result, input, onRefine, onEdit, onStartOver, onStartProje
                 </div>
             )}
 
-            <div className="p-5 md:p-6 space-y-6 max-h-[70vh] overflow-y-auto scrollbar-hide">
+            <div className="p-5 md:p-6 space-y-6 max-h-[85vh] overflow-y-auto scrollbar-hide">
                 {/* a) YOUR IDEA */}
                 <section className="space-y-1.5">
                     <div className="flex justify-between items-center">
@@ -582,24 +803,57 @@ function ResultCard({ result, input, onRefine, onEdit, onStartOver, onStartProje
 
                 {/* g) DISCLAIMER */}
                 <p className="text-[9px] text-center text-zinc-600 font-mono pt-2 border-t border-white/5 tracking-tight uppercase">
-                    Ballpark estimate. Actual scope and pricing will be discussed when we talk.
+                    AI-powered estimate. Actual scope and pricing will be discussed when we talk.
                 </p>
 
-                {/* h) TWO BUTTONS */}
+                {/* h) CONTACT FIELDS + TWO BUTTONS */}
                 {!hideActions && (
-                    <div className="flex gap-3 pt-2">
-                        <button
-                            onClick={onRefine}
-                            className="flex-1 h-10 text-[11px] font-mono uppercase tracking-widest text-zinc-400 hover:text-white border border-white/10 hover:border-white/20 rounded-lg transition-all"
-                        >
-                            Refine Estimate
-                        </button>
-                        <InstrumentButton
-                            onClick={onStartProject}
-                            className="flex-1 h-10 text-[11px]"
-                        >
-                            Start Project <ChevronRight size={14} className="inline ml-1" />
-                        </InstrumentButton>
+                    <div className="flex flex-col gap-3 pt-2">
+                        {!canSendBrief && (contactName.trim() || contactEmail.trim()) && (
+                            <p className="text-[10px] text-red-400 font-mono -mt-1 mb-0.5">Name and a valid email are required.</p>
+                        )}
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            <input
+                                type="text"
+                                placeholder="Name"
+                                value={contactName}
+                                onChange={(e) => setContactName?.(e.target.value)}
+                                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-zinc-500 focus:outline-none focus:border-accent-primary/50"
+                            />
+                            <input
+                                type="email"
+                                placeholder="Email"
+                                value={contactEmail}
+                                onChange={(e) => setContactEmail?.(e.target.value)}
+                                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-zinc-500 focus:outline-none focus:border-accent-primary/50"
+                            />
+                            <input
+                                type="text"
+                                placeholder="Company (optional)"
+                                value={contactCompany}
+                                onChange={(e) => setContactCompany?.(e.target.value)}
+                                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white text-sm placeholder:text-zinc-500 focus:outline-none focus:border-accent-primary/50"
+                            />
+                        </div>
+                        {sendError && (
+                            <p className="text-[11px] text-red-400 font-mono">{sendError}</p>
+                        )}
+                        <div className="flex flex-col sm:flex-row gap-3">
+                            <button
+                                onClick={onRefine}
+                                disabled={sendStatus === 'sending'}
+                                className="sm:w-[40%] h-10 text-[11px] font-mono uppercase tracking-widest text-zinc-400 hover:text-white border border-white/10 hover:border-white/20 rounded-lg transition-all disabled:opacity-50"
+                            >
+                                Refine Estimate
+                            </button>
+                            <InstrumentButton
+                                onClick={onStartProject}
+                                disabled={sendStatus === 'sending' || !canSendBrief}
+                                className="sm:w-[60%] h-10 text-xs font-mono uppercase tracking-widest"
+                            >
+                                {sendStatus === 'sending' ? 'Sending…' : sendStatus === 'success' ? 'Sent' : 'Send brief & get in touch'}
+                            </InstrumentButton>
+                        </div>
                     </div>
                 )}
             </div>
