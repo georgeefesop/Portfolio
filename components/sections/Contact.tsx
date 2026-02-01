@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import FadeIn from '../motion/FadeIn';
-import { Mail, MessageCircle, ChevronDown, ChevronUp, AlertCircle, Loader2, CheckCircle2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Mail, MessageCircle, ChevronDown, ChevronUp, AlertCircle, Loader2, CheckCircle2, Sparkles } from 'lucide-react';
 
 function cn(...classes: (string | undefined | null | false)[]) {
     return classes.filter(Boolean).join(' ');
@@ -23,8 +24,55 @@ export default function Contact() {
     const [showDetails, setShowDetails] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [hasEstimate, setHasEstimate] = useState(false);
 
-    const { register, trigger, getValues, handleSubmit, reset, formState: { errors } } = useForm<ContactFormData>();
+    const { register, trigger, getValues, setValue, handleSubmit, reset, formState: { errors } } = useForm<ContactFormData>();
+
+    // Pre-fill logic for Estimator
+    useEffect(() => {
+        const savedEstimate = localStorage.getItem('ge_portfolio_estimate');
+        if (savedEstimate) {
+            try {
+                const { input, result } = JSON.parse(savedEstimate);
+                if (result && result.status === 'estimate') {
+                    // Set basic info
+                    setValue('description', input);
+
+                    // Map Project Type
+                    const typeMap: any = {
+                        'Landing Page': 'Landing',
+                        'SaaS Dashboard Design': 'SaaS',
+                        'MVP Design + Development': 'MVP',
+                        'Design System': 'System',
+                        'AI & Brand Assets': 'Other',
+                        'Growth & Ad Creatives': 'Other'
+                    };
+                    if (typeMap[result.projectType]) {
+                        setValue('projectType', typeMap[result.projectType]);
+                    }
+
+                    // Map Budget
+                    // result.cost.low is a number. Contact form expects "0-5k", "5-10k", etc.
+                    const low = result.cost.low;
+                    if (low < 5000) setValue('budget', '0-5k');
+                    else if (low < 10000) setValue('budget', '5-10k');
+                    else if (low < 20000) setValue('budget', '10-20k');
+                    else setValue('budget', '20k+');
+
+                    setHasEstimate(true);
+                    setShowDetails(true); // Ensure optional fields are visible
+                }
+            } catch (e) {
+                console.error("Failed to parse estimate", e);
+            }
+        }
+    }, [setValue]);
+
+    const clearEstimate = () => {
+        localStorage.removeItem('ge_portfolio_estimate');
+        setHasEstimate(false);
+        reset();
+    };
 
     const getFormattedMessage = (data: ContactFormData) => {
         const parts = [
@@ -98,6 +146,18 @@ export default function Contact() {
                         <p className="text-text-secondary text-lg">
                             Selective availability — I reply within 24–48 hours.
                         </p>
+                        {hasEstimate && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="mt-4 inline-flex items-center gap-2 bg-accent-primary/10 border border-accent-primary/20 px-3 py-1.5 rounded-full text-[10px] font-mono uppercase tracking-wider text-accent-primary"
+                            >
+                                <Sparkles size={12} /> Pre-filled from estimate
+                                <button onClick={clearEstimate} className="ml-2 hover:text-white transition-colors">
+                                    [Clear]
+                                </button>
+                            </motion.div>
+                        )}
                     </div>
 
                     {isSuccess ? (
@@ -108,7 +168,11 @@ export default function Contact() {
                             <h3 className="text-2xl font-bold text-white mb-2">Message Sent!</h3>
                             <p className="text-text-secondary mb-8">Thanks for reaching out {getValues().name}. I&apos;ll get back to you shortly.</p>
                             <button
-                                onClick={() => setIsSuccess(false)}
+                                onClick={() => {
+                                    setIsSuccess(false);
+                                    setHasEstimate(false);
+                                    localStorage.removeItem('ge_portfolio_estimate');
+                                }}
                                 className="text-accent-primary hover:text-white transition-colors font-medium underline underline-offset-4"
                             >
                                 Send another message

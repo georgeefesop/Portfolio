@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion, AnimatePresence, useTransform, useScroll, useSpring, useDragControls, MotionValue, Variants } from 'framer-motion';
 import InstrumentButton from './InstrumentButton';
 import { StepId } from '../sections/ProductHero';
+import ProjectEstimator from '../sections/ProjectEstimator';
 
 function cn(...classes: (string | undefined | null | false)[]) {
     return classes.filter(Boolean).join(' ');
@@ -191,6 +192,22 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
                                 FOR COMPLEX SYSTEMS
                             </span>
                         </div>
+
+                        {/* Start Prototype Button - Back to semantic position */}
+                        {isSimpleMode && (
+                            <div className="mt-6 md:mt-8 flex justify-start pointer-events-auto">
+                                <InstrumentButton
+                                    onClick={() => {
+                                        playPrototypeSound();
+                                        onOpenDemo();
+                                    }}
+                                    isVibrantMode={isVibrantMode}
+                                    className="px-8 md:px-10 py-3 md:py-4 text-base md:text-[18px]"
+                                >
+                                    Test a Prototype
+                                </InstrumentButton>
+                            </div>
+                        )}
                     </motion.div>
 
                     {/* Right Side: Details + CTA */}
@@ -233,21 +250,10 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
                     </motion.div>
                 </div>
 
-                {/* Centered Prototype Button Overlay */}
-                {isSimpleMode && (
-                    <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
-                        <InstrumentButton
-                            onClick={() => {
-                                playPrototypeSound();
-                                onOpenDemo();
-                            }}
-                            isVibrantMode={isVibrantMode}
-                            className="mt-8 px-12 py-4 text-[20px]"
-                        >
-                            Start Prototype
-                        </InstrumentButton>
-                    </div>
-                )}
+                {/* Centered Project Estimator - Top-Pinned for smooth expansion */}
+                <div className="absolute inset-0 z-30 flex items-start justify-center pt-[32vh] pb-48 px-4 md:px-0 pointer-events-none">
+                    <ProjectEstimator />
+                </div>
             </motion.div>
 
 

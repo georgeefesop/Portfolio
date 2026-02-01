@@ -9,6 +9,7 @@ interface InstrumentButtonProps {
     isVibrantMode?: boolean;
     style?: React.CSSProperties;
     type?: 'button' | 'submit' | 'reset';
+    disabled?: boolean;
 }
 
 export default function InstrumentButton({
@@ -17,7 +18,8 @@ export default function InstrumentButton({
     className = '',
     isVibrantMode = false,
     style = {},
-    type = 'button'
+    type = 'button',
+    disabled = false
 }: InstrumentButtonProps) {
     return (
         <button
@@ -35,8 +37,10 @@ export default function InstrumentButton({
                     ? 'bg-white'
                     : 'bg-[var(--color-accent-primary)] [.vibrant-mode_&]:bg-white'
                 }
+                ${disabled ? 'opacity-40 cursor-not-allowed pointer-events-none shadow-none' : ''}
                 ${className}
             `}
+            disabled={disabled}
             style={{
                 fontFamily: '"Instrument Sans", sans-serif',
                 fontWeight: 700,
