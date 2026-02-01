@@ -512,8 +512,8 @@ function InitialState({
                                             key={pill.id}
                                             type="button"
                                             onClick={() => {
-                                                setSelectedDeliverables(prev =>
-                                                    isSelected ? prev.filter((id) => id !== pill.id) : [...prev, pill.id]
+                                                setSelectedDeliverables((prev: string[]) =>
+                                                    isSelected ? prev.filter((id: string) => id !== pill.id) : [...prev, pill.id]
                                                 );
                                             }}
                                             className={`px-3 py-1 rounded-full text-[10px] font-mono uppercase tracking-wider transition-all border min-h-[38px] md:min-h-0 ${isSelected
