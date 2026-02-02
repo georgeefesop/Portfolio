@@ -102,6 +102,9 @@ export async function POST(request: Request) {
                 source: currentLead?.source,
                 leadScore: currentLead?.leadScore || '',
                 gapAnalysis: currentLead?.gapAnalysis || '',
+                timeline: currentLead?.timeline || '',
+                costLow: currentLead?.estimateCostLow || '',
+                costHigh: currentLead?.estimateCostHigh || '',
             };
             if (webhookSecret) row._secret = webhookSecret;
 

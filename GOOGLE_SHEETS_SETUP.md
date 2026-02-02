@@ -7,7 +7,7 @@ This guide will turn a Google Sheet into a live database for your portfolio lead
 1. Go to [sheets.new](https://sheets.new).
 2. Name it `Portfolio Leads DB`.
 3. In the first row, add these **exact headers**:
-   `id`, `timestamp`, `name`, `email`, `company`, `brief`, `projectType`, `budgetRange`, `source`, `leadScore`, `gapAnalysis`
+   `id`, `timestamp`, `name`, `email`, `company`, `brief`, `projectType`, `budgetRange`, `source`, `leadScore`, `gapAnalysis`, `timeline`, `costLow`, `costHigh`
 
 ### 2. Add the Script
 
@@ -34,7 +34,10 @@ function doPost(e) {
     params.budgetRange || '',
     params.source || '',
     params.leadScore || '',
-    params.gapAnalysis || ''
+    params.gapAnalysis || '',
+    params.timeline || '',
+    params.costLow || '',
+    params.costHigh || ''
   ];
   
   sheet.appendRow(row);

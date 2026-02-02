@@ -75,6 +75,9 @@ export async function GET(request: Request) {
                 source: row.source || 'google_sheet', // distinct source
                 leadScore: row.leadScore ? parseFloat(row.leadScore) : 0,
                 gapAnalysis: row.gapAnalysis,
+                timeline: row.timeline,
+                estimateCostLow: row.costLow ? parseFloat(row.costLow) : undefined,
+                estimateCostHigh: row.costHigh ? parseFloat(row.costHigh) : undefined,
                 leadScoreReasoning: 'From Live Database'
             }));
 

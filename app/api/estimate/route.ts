@@ -220,6 +220,7 @@ export async function POST(req: Request) {
       initialBrief: userInput,
       estimateCostLow: result.cost?.low,
       estimateCostHigh: result.cost?.high,
+      timeline: result.timeline ? `${result.timeline.low}–${result.timeline.high}` : undefined,
       projectType: result.projectType
     };
 

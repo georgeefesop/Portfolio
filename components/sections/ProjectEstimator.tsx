@@ -407,9 +407,13 @@ function InitialState({
             setAllowExpanded(false);
             return;
         }
-        const timer = setTimeout(() => setAllowExpanded(true), 1200);
+        const timer = setTimeout(() => {
+            if (document.activeElement === textareaRef.current) {
+                setAllowExpanded(true);
+            }
+        }, 1200);
         return () => clearTimeout(timer);
-    }, [input, hasInput]);
+    }, [input, hasInput, textareaRef]);
 
     const isExpanded = hasInput && allowExpanded;
 
@@ -432,7 +436,7 @@ function InitialState({
     }, [input, isUnderMin, isExpanded]);
 
     const handleFocus = () => {
-        // Just focus, don't expand immediately to prevent jumping/glitches on first click
+        if (hasInput) setAllowExpanded(true);
     };
 
     const handleBlur = () => {

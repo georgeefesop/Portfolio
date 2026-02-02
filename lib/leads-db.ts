@@ -21,6 +21,7 @@ export interface Lead {
     initialBrief?: string;
     estimateCostLow?: number;
     estimateCostHigh?: number;
+    timeline?: string;
     projectType?: string;
 
     // Contact Info (Added later or plain contact)
