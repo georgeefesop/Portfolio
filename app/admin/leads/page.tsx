@@ -170,7 +170,7 @@ export default function LeadsDashboard() {
                                                 {lead.name || <span className="text-zinc-500 italic">Anonymous Visitor</span>}
                                             </div>
                                             <div className="text-zinc-400 text-xs mt-1">
-                                                {lead.projectType ? lead.projectType : lead.source}
+                                                {lead.projectType ? formatLabel(lead.projectType) : lead.source}
                                             </div>
                                             {lead.initialBrief && (
                                                 <p className="text-zinc-500 text-xs mt-2 line-clamp-1 max-w-md group-hover:text-zinc-300">
@@ -236,7 +236,7 @@ export default function LeadsDashboard() {
                                                                     />
                                                                     <EditableField
                                                                         label="Project Type"
-                                                                        value={lead.projectType || ''}
+                                                                        value={lead.projectType ? formatLabel(lead.projectType) : ''}
                                                                         onSave={(val: any) => handleUpdate(lead.id, { projectType: val })}
                                                                     />
                                                                     <EditableField

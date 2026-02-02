@@ -57,29 +57,46 @@ export async function GET(request: Request) {
             const res = await fetch(sheetUrl, { redirect: 'follow' });
             if (!res.ok) throw new Error('Failed to fetch from sheets');
 
-            const data = await res.json();
+            const rawData = await res.json();
 
-            // Transform Sheet Data (which is usually strings) to Lead Interface
-            // Note: Keys match the headers we set in GOOGLE_SHEETS_SETUP.md
-            const leads = data.map((row: any) => ({
-                id: row.id || 'sheet-' + Math.random().toString(36).substr(2, 9), // Fallback ID
-                createdAt: row.timestamp || new Date().toISOString(),
-                name: row.name,
-                email: row.email,
-                company: row.company,
-                status: row.email ? 'contacted' : 'anonymous', // Simple status inference
-                projectType: row.projectType,
-                initialBrief: row.brief, // Sheets stores it as 'brief'
-                finalBrief: row.brief,
-                budgetRange: row.budgetRange,
-                source: row.source || 'google_sheet', // distinct source
-                leadScore: row.leadScore ? parseFloat(row.leadScore) : 0,
-                gapAnalysis: row.gapAnalysis,
-                timeline: row.timeline,
-                estimateCostLow: row.costLow ? parseFloat(row.costLow) : undefined,
-                estimateCostHigh: row.costHigh ? parseFloat(row.costHigh) : undefined,
-                leadScoreReasoning: 'From Live Database'
-            }));
+            // Transform Sheet Data with robust key mapping
+            const leads = rawData.map((row: any) => {
+                // Normalize all keys to lowercase and trim spaces for comparison
+                const normalized: Record<string, any> = {};
+                Object.keys(row).forEach(k => {
+                    normalized[k.toLowerCase().trim()] = row[k];
+                });
+
+                // Helper to try multiple possible keys
+                const getVal = (keys: string[]) => {
+                    for (const k of keys) {
+                        if (normalized[k] !== undefined && normalized[k] !== null && normalized[k] !== '') {
+                            return normalized[k];
+                        }
+                    }
+                    return undefined;
+                };
+
+                return {
+                    id: getVal(['id', 'uuid', 'leadid']) || 'sheet-' + Math.random().toString(36).substr(2, 9),
+                    createdAt: getVal(['timestamp', 'createdat', 'date']) || new Date().toISOString(),
+                    name: getVal(['name', 'customer', 'client']),
+                    email: getVal(['email', 'email address', 'contact']),
+                    company: getVal(['company', 'organization', 'business']),
+                    status: (getVal(['email']) ? 'contacted' : 'anonymous'),
+                    projectType: getVal(['projecttype', 'type', 'service']),
+                    initialBrief: getVal(['brief', 'message', 'description', 'project brief']),
+                    finalBrief: getVal(['brief', 'message', 'description', 'project brief']),
+                    budgetRange: getVal(['budgetrange', 'budget', 'price range']),
+                    source: getVal(['source', 'origin']) || 'google_sheet',
+                    leadScore: parseFloat(getVal(['leadscore', 'score']) || '0'),
+                    gapAnalysis: getVal(['gapanalysis', 'gap', 'risks']),
+                    timeline: getVal(['timeline', 'duration', 'estimate duration']),
+                    estimateCostLow: parseFloat(getVal(['costlow', 'mincost', 'lowprice']) || '0') || undefined,
+                    estimateCostHigh: parseFloat(getVal(['costhigh', 'maxcost', 'highprice']) || '0') || undefined,
+                    leadScoreReasoning: 'From Live Database'
+                };
+            });
 
             return NextResponse.json(leads);
 
