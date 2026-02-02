@@ -7,7 +7,7 @@ This guide will turn a Google Sheet into a live database for your portfolio lead
 1. Go to [sheets.new](https://sheets.new).
 2. Name it `Portfolio Leads DB`.
 3. In the first row, add these **exact headers**:
-   `id`, `timestamp`, `name`, `email`, `company`, `brief`, `projectType`, `budgetRange`, `source`, `leadScore`, `gapAnalysis`, `timeline`, `costLow`, `costHigh`
+   `id`, `timestamp`, `name`, `email`, `company`, `brief`, `estimateStatus`, `projectType`, `budgetRange`, `timeline`, `costLow`, `costHigh`, `currency`, `whatsIncluded`, `considerations`, `source`, `leadScore`, `gapAnalysis`
 
 ### 2. Add the Script
 
@@ -19,25 +19,25 @@ function doPost(e) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var params = JSON.parse(e.postData.contents);
   
-  // Security Check (Optional but recommended)
-  // var secret = "MY_SECRET_KEY";
-  // if (params._secret !== secret) return ContentService.createTextOutput("Unauthorized");
-
   var row = [
-    params.id || Utilities.getUuid(), // Use provided ID or generate one
+    params.id || Utilities.getUuid(),
     new Date(),
     params.name || '',
     params.email || '',
     params.company || '',
     params.brief || '',
+    params.estimateStatus || '',  // Added
     params.projectType || '',
     params.budgetRange || '',
+    params.timeline || '',
+    params.costLow || '',         // Number
+    params.costHigh || '',        // Number
+    params.currency || '',        // Added
+    params.whatsIncluded || '',   // Added
+    params.considerations || '',  // Added
     params.source || '',
     params.leadScore || '',
-    params.gapAnalysis || '',
-    params.timeline || '',
-    params.costLow || '',
-    params.costHigh || ''
+    params.gapAnalysis || ''
   ];
   
   sheet.appendRow(row);

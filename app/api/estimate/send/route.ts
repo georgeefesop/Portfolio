@@ -103,7 +103,51 @@ export async function POST(request: Request) {
             }, { status: 500 });
         }
 
-        // 2) Email to them: polite confirmation + copy of estimate
+        // 2) Google Sheets Sync (Prioritize this over secondary email)
+        // We do this BEFORE the lead email so data is safe even if Resend blocks the second email.
+        const webhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
+        const webhookSecret = process.env.GOOGLE_SHEETS_WEBHOOK_SECRET;
+
+        // Fire and forget - but log errors
+        if (webhookUrl) {
+            const row: Record<string, unknown> = {
+                timestamp: new Date().toISOString(),
+                name: name.trim(),
+                email: email.trim().toLowerCase(),
+                company: (company || '').trim() || '',
+                brief: (input || '').trim(),
+                estimateStatus: result?.status ?? '',
+                projectType: result?.projectType ?? '',
+                // Fallback to cost range string if budget undefined
+                budgetRange: result?.cost ? `${result.cost.currency}${result.cost.low} - ${result.cost.high}` : '',
+                timeline: result?.timeline ? `${result.timeline.low} – ${result.timeline.high}` : '',
+                costLow: result?.cost?.low ?? '',
+                costHigh: result?.cost?.high ?? '',
+                currency: result?.cost?.currency ?? '',
+                whatsIncluded: (result?.whatsIncluded ?? []).join(' | '),
+                considerations: (result?.considerations ?? '').trim(),
+                source: 'estimator',
+                // CRM Fields
+                leadScore: leadData.leadScore || '',
+                leadScoreReasoning: leadData.leadScoreReasoning || '',
+                gapAnalysis: leadData.gapAnalysis || '',
+                id: leadData.id || undefined // Send ID if we have it
+            };
+
+            if (webhookSecret) row._secret = webhookSecret;
+
+            // Non-blocking fetch
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(row)
+            }).then(async (res) => {
+                if (!res.ok) console.warn('Sheets webhook failed:', res.status, await res.text());
+                else console.log('Sheets synced successfully (Server)');
+            }).catch(e => console.warn('Sheets webhook error:', e));
+        }
+
+        // 3) Email to them: polite confirmation + copy of estimate
         const estimateBlock = result && result.status === 'estimate'
             ? formatEstimateForEmail(result)
             : "<p>We'll follow up with next steps shortly.</p>";
@@ -125,50 +169,8 @@ export async function POST(request: Request) {
 
         if (err2) {
             console.error('Resend error (to lead):', err2);
-            return NextResponse.json({
-                error: true,
-                message: 'Confirmation email could not be sent. Your brief was received—we\'ll be in touch.'
-            }, { status: 500 });
-        }
-
-        // 3) Optional: append row to Google Sheet via Apps Script webhook (no API key)
-        const webhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
-        const webhookSecret = process.env.GOOGLE_SHEETS_WEBHOOK_SECRET;
-        if (webhookUrl) {
-            const row: Record<string, unknown> = {
-                timestamp: new Date().toISOString(),
-                name: name.trim(),
-                email: email.trim().toLowerCase(),
-                company: (company || '').trim() || '',
-                brief: (input || '').trim(),
-                estimateStatus: result?.status ?? '',
-                projectType: result?.projectType ?? '',
-                timeline: result?.timeline ? `${result.timeline.low} – ${result.timeline.high}` : '',
-                costLow: result?.cost?.low ?? '',
-                costHigh: result?.cost?.high ?? '',
-                currency: result?.cost?.currency ?? '',
-                whatsIncluded: (result?.whatsIncluded ?? []).join(' | '),
-                considerations: (result?.considerations ?? '').trim(),
-
-                // NEW CRM FIELDS
-                leadScore: leadData.leadScore || '',
-                leadScoreReasoning: leadData.leadScoreReasoning || '',
-                gapAnalysis: leadData.gapAnalysis || '',
-                source: 'estimator'
-            };
-            if (webhookSecret) row._secret = webhookSecret;
-            try {
-                const res = await fetch(webhookUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(row)
-                });
-                if (!res.ok) {
-                    console.warn('Sheets webhook failed:', res.status, await res.text());
-                }
-            } catch (e) {
-                console.warn('Sheets webhook error:', e);
-            }
+            // We do NOT return error here, just log it. 
+            // The success:true below confirms we captured the lead.
         }
 
         return NextResponse.json({ success: true });
