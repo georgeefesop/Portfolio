@@ -41,14 +41,29 @@ export default function Contact() {
                     // Map Project Type
                     const typeMap: any = {
                         'Landing Page': 'Landing',
+                        'landing_page': 'Landing',
                         'SaaS Dashboard Design': 'SaaS',
+                        'saas_dashboard': 'SaaS',
                         'MVP Design + Development': 'MVP',
+                        'mvp_design': 'MVP',
+                        'design_prototype': 'MVP',
                         'Design System': 'System',
+                        'design_system': 'System',
                         'AI & Brand Assets': 'Other',
-                        'Growth & Ad Creatives': 'Other'
+                        'ai_integration': 'Other',
+                        'Growth & Ad Creatives': 'Other',
+                        'full_build': 'MVP' // Full build usually starts with MVP or similar
                     };
                     if (typeMap[result.projectType]) {
                         setValue('projectType', typeMap[result.projectType]);
+                    } else if (result.projectType) {
+                        // Fallback: try to match by partial string or capitalize
+                        const normalized = result.projectType.toLowerCase();
+                        if (normalized.includes('landing')) setValue('projectType', 'Landing');
+                        else if (normalized.includes('saas')) setValue('projectType', 'SaaS');
+                        else if (normalized.includes('mvp')) setValue('projectType', 'MVP');
+                        else if (normalized.includes('system')) setValue('projectType', 'System');
+                        else setValue('projectType', 'Other');
                     }
 
                     // Map Budget

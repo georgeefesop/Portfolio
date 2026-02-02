@@ -816,7 +816,7 @@ function ResultCard({ result, input, onRefine, onEdit, onStartOver, onStartProje
                     {/* b) PROJECT TYPE */}
                     <section className="space-y-1">
                         <h4 className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest font-bold">Project Type</h4>
-                        <p className="text-sm text-white font-medium">{projectType}</p>
+                        <p className="text-sm text-white font-medium capitalize">{projectType?.replace(/_/g, ' ')}</p>
                     </section>
 
                     {/* c) ESTIMATED TIMELINE */}

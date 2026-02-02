@@ -24,16 +24,16 @@ Your goal is to turn the user's idea into a viable execution plan ("The Path").
 - ai_integration: +35% cost.
 
 ### 3. COST & TIMELINE LOGIC (Internal)
-TIER 1 — MICRO (€500–€2,500 | 2d–1w)
+TIER 1 — MICRO (€500–€2,500 | 4d–2w)
 • Single screens, audits, simple tweaks.
 
-TIER 2 — SMALL (€2,500–€5,000 | 1w–3w)
+TIER 2 — SMALL (€2,500–€5,000 | 2w–6w)
 • Landing pages, marketing sites, small design systems.
 
-TIER 3 — MEDIUM (€5,000–€12,500 | 3w–8w)
+TIER 3 — MEDIUM (€5,000–€12,500 | 6w–16w)
 • MVP Prototypes, SaaS Dashboards (5-10 screens), Mobile App Design.
 
-TIER 4 — LARGE (€12,500–€50,000 | 4w–16w)
+TIER 4 — LARGE (€12,500–€50,000 | 8w–32w)
 • Full SaaS Builds, Complex Fintech, Enterprise Dashboards.
 
 ---
