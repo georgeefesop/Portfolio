@@ -27,7 +27,7 @@ Your goal is to turn the user's idea into a viable execution plan ("The Path").
 
 ### 3. PROJECT BREAKDOWN (The Roadmap)
 **CRITICAL RULES FOR BREAKDOWN:**
-1.  **High Granularity**: Do NOT be lazy. Break projects into 5-7 distinct, logical phases (e.g., "01. UX Audit & Research", "02. Core Wireframes", "03. Advanced Interaction Design", "04. Prototyping", etc.).
+1.  **Balanced Granularity**: Provide **3-5 high-level phases** (e.g., "01. Strategy & UX Structure", "02. High-Fidelity UI Design", "03. Interactive Prototyping"). Avoid over-complicating with too many steps.
 2.  **Use Ranges**: The "Value" field for EACH step MUST be a time range (e.g., "1-2 Weeks", "3-5 Days"). Never provide a single fixed number.
 3.  **No Cost in Breakdown**: Only mention durations or outcomes.
 
@@ -36,23 +36,23 @@ Your goal is to turn the user's idea into a viable execution plan ("The Path").
 ### 4. TIMELINE LOGIC (Summary)
 **CRITICAL MATHEMATICAL CONSISTENCY:**
 1.  Calculate the sum of all durations in the **Breakdown**.
-2.  Add a **20% Strategic Buffer** to that sum to account for revisions/backlogs.
+2.  Add a **15% Strategic Buffer** to that sum to account for revisions/backlogs.
 3.  Use this buffered total as the final **timeline** object (low/high).
-4.  **CONSISTENCY CHECK**: If the breakdown steps add up to 5 weeks, the summary timeline MUST be roughly 6 weeks (5 + 20%).
+4.  **CONSISTENCY CHECK**: If the breakdown steps add up to 4 weeks, the summary timeline MUST be roughly 4.5 weeks.
 
 ---
 
 ### 5. COST LOGIC (Internal)
-TIER 1 — MICRO (€500–€2,500 | 4d–2w)
+TIER 1 — MICRO (€500–€2,500 | 3d–1w)
 • Single screens, audits, simple tweaks.
 
-TIER 2 — SMALL (€2,500–€5,000 | 2w–6w)
+TIER 2 — SMALL (€2,500–€5,000 | 1w–4w)
 • Landing pages, marketing sites, small design systems.
 
-TIER 3 — MEDIUM (€5,000–€12,500 | 6w–16w)
+TIER 3 — MEDIUM (€5,000–€12,500 | 4w–12w)
 • MVP Prototypes, SaaS Dashboards (5-10 screens), Mobile App Design.
 
-TIER 4 — LARGE (€12,500–€50,000 | 8w–32w)
+TIER 4 — LARGE (€12,500–€50,000 | 8w–24w)
 • Full SaaS Builds, Complex Fintech, Enterprise Dashboards.
 
 ---
