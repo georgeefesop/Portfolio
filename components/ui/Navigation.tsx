@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -18,6 +18,23 @@ export default function Navigation() {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [activeSection, setActiveSection] = useState('');
+    const navRef = useRef<HTMLElement>(null);
+
+    // Close menu when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (isOpen && navRef.current && !navRef.current.contains(event.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+
+        if (isOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isOpen]);
 
     // Handle scroll for background and active section
     useEffect(() => {
@@ -60,7 +77,8 @@ export default function Navigation() {
 
     return (
         <nav
-            className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${scrolled ? 'bg-black/40 backdrop-blur-sm border-b border-white/5' : 'bg-transparent'
+            ref={navRef}
+            className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${(scrolled || isOpen) ? 'bg-bg-primary/95 backdrop-blur-sm border-b border-white/5' : 'bg-transparent'
                 }`}
         >
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -85,6 +103,15 @@ export default function Navigation() {
                                 {link.name}
                             </a>
                         ))}
+                        {/* Admin Link (Dev Only) */}
+                        {process.env.NODE_ENV === 'development' && (
+                            <Link
+                                href="/admin/leads"
+                                className="text-xs font-mono text-emerald-500 hover:text-emerald-400 border border-emerald-500/20 bg-emerald-500/10 px-2 py-1 rounded"
+                            >
+                                [ADMIN]
+                            </Link>
+                        )}
                     </div>
 
                     {/* Mobile Menu Button */}
@@ -137,6 +164,16 @@ export default function Navigation() {
                                     {link.name}
                                 </a>
                             ))}
+                            {/* Mobile Admin Link */}
+                            {process.env.NODE_ENV === 'development' && (
+                                <Link
+                                    href="/admin/leads"
+                                    onClick={() => setIsOpen(false)}
+                                    className="block px-3 py-3 rounded-md text-sm font-mono text-emerald-500 bg-emerald-500/5 border border-emerald-500/20 mt-4 text-center"
+                                >
+                                    [ACCESS CRM]
+                                </Link>
+                            )}
                         </div>
                     </motion.div>
                 )}

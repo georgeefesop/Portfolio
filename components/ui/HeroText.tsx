@@ -29,7 +29,18 @@ const getSharedContext = () => {
     return sharedContext;
 };
 
-export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMode = false, isMobile = false }: HeroTextProps) {
+export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMode = false, isMobile: isMobileProp = false }: HeroTextProps) {
+    const [isMobile, setIsMobile] = useState(true); // Default to true for instant mobile appearance
+
+    useEffect(() => {
+        const checkMobile = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
     const y = useTransform(scrollProgress, [0, 1], [0, -20]);
     const opacity = useTransform(scrollProgress, [0, 0.5], [1, 0]);
 
@@ -135,16 +146,22 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
-            transition: { staggerChildren: 0.1, delayChildren: 0.3 }
+            transition: {
+                staggerChildren: isMobile ? 0 : 0.1,
+                delayChildren: isMobile ? 0 : 0.3
+            }
         }
     };
 
     const itemVariants: Variants = {
-        hidden: { opacity: 0, y: 20 },
+        hidden: { opacity: isMobile ? 1 : 0, y: isMobile ? 0 : 20 },
         visible: {
             opacity: 1,
             y: 0,
-            transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
+            transition: {
+                duration: isMobile ? 0.1 : 0.8,
+                ease: [0.16, 1, 0.3, 1]
+            }
         }
     };
 
@@ -153,7 +170,7 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
             <motion.div
                 className="absolute inset-0 z-20 w-full h-full p-6 pb-24 md:p-12 lg:p-16 flex flex-col justify-end pointer-events-none select-none"
                 style={{ y, opacity }}
-                initial="hidden"
+                initial={isMobile ? false : "hidden"}
                 animate="visible"
                 variants={containerVariants}
             >
@@ -168,7 +185,7 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
                     {/* Left Side: Main Title */}
                     <motion.div
                         variants={itemVariants}
-                        className="w-full md:max-w-[60%] lg:max-w-[600px] text-left transition-all duration-500"
+                        className="w-full md:max-w-[60%] lg:max-w-[600px] text-left"
                     >
                         <div className="mb-2 md:mb-4">
                             <Image
@@ -213,7 +230,7 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
                     {/* Right Side: Details + CTA */}
                     <motion.div
                         variants={itemVariants}
-                        className="hidden md:flex text-right flex-col items-end gap-3 transition-all duration-500 mt-4 md:mt-0"
+                        className="hidden md:flex text-right flex-col items-end gap-3 mt-4 md:mt-0"
                     >
                         <div className="space-y-1 transition-all">
                             <p className="text-base md:text-xl font-medium text-white">Web3 · Fintech · SaaS</p>
@@ -231,11 +248,12 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
                     </motion.div>
                 </div>
 
-                {/* Project Estimator - about 1/3 down the screen */}
-                <div className="absolute inset-0 z-30 flex items-start justify-center pt-[33vh] px-4 md:px-0 pointer-events-none">
-                    <ProjectEstimator />
-                </div>
             </motion.div>
+
+            {/* Project Estimator - Positioned independently of the hero text's fade/y transform */}
+            <div className="absolute inset-0 z-30 flex items-start justify-center pt-[20vh] md:pt-[33vh] px-4 md:px-0 pointer-events-none">
+                <ProjectEstimator />
+            </div>
 
 
 

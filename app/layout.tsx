@@ -12,6 +12,10 @@ const caveat = Caveat({ subsets: ["latin"], variable: "--font-caveat" });
 export const metadata: Metadata = {
   title: "efesop | Product Designer for Complex Systems",
   description: "Portfolio of George Efesop, a Product Designer specializing in Web3, Fintech, and AI systems.",
+  icons: {
+    icon: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 export default function RootLayout({

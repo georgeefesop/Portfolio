@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { updateLead, getLead } from '@/lib/leads-db';
 
 function formatEstimateForEmail(result: {
     projectType?: string;
@@ -23,6 +24,8 @@ export async function POST(request: Request) {
         const body = await request.json();
         const { name, email, company, input, result } = body;
 
+        const leadId = result?.leadId;
+
         if (!name || typeof name !== 'string' || !name.trim()) {
             return NextResponse.json({ error: true, message: 'Name is required.' }, { status: 400 });
         }
@@ -34,6 +37,23 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: true, message: 'Please enter a valid email address.' }, { status: 400 });
         }
 
+        // --- CRM: UPGRADE TO HARD LEAD ---
+        let leadData: any = {};
+        if (leadId) {
+            try {
+                await updateLead(leadId, {
+                    status: 'contacted',
+                    name,
+                    email,
+                    company,
+                    finalBrief: input
+                });
+                leadData = await getLead(leadId) || {};
+            } catch (e) {
+                console.error("Failed to update lead DB:", e);
+            }
+        }
+
         const resendApiKey = process.env.RESEND_API_KEY;
         if (!resendApiKey) {
             console.log('Estimate send (no API key):', { name, email, company, input: input?.slice(0, 100), result: result?.status });
@@ -43,9 +63,19 @@ export async function POST(request: Request) {
         const resend = new Resend(resendApiKey);
         const from = 'Portfolio <onboarding@resend.dev>';
 
+        // Lead Score and Gap Analysis for Admin Email
+        const scoreHeader = leadData.leadScore ? `
+            <div style="background: #f0fdf4; border: 1px solid #16a34a; padding: 12px; border-radius: 6px; margin-bottom: 20px; color: #166534;">
+                <h3 style="margin:0">🎯 Lead Score: ${leadData.leadScore}/10</h3>
+                <p style="margin:5px 0 0 0; font-size:14px;"><em>Reasoning: ${leadData.leadScoreReasoning}</em></p>
+                <p style="margin:10px 0 0 0; font-size:14px; color: #991b1b;"><strong>⚠️ Missing Scope (Gap):</strong> ${leadData.gapAnalysis}</p>
+            </div>
+        ` : '';
+
         // 1) Email to you: brief + estimate + contact
         const yourHtml = `
             <h2>New brief & estimate</h2>
+            ${scoreHeader}
             <p><strong>Name:</strong> ${name}</p>
             <p><strong>Email:</strong> ${email}</p>
             ${company ? `<p><strong>Company:</strong> ${company}</p>` : ''}
@@ -61,7 +91,7 @@ export async function POST(request: Request) {
             from,
             to: ['george.efesop@gmail.com'],
             replyTo: email,
-            subject: `Brief & estimate from ${name}`,
+            subject: `Brief & estimate from ${name} ${leadData.leadScore ? `(Score: ${leadData.leadScore}/10)` : ''}`,
             html: yourHtml
         });
 
@@ -118,7 +148,13 @@ export async function POST(request: Request) {
                 costHigh: result?.cost?.high ?? '',
                 currency: result?.cost?.currency ?? '',
                 whatsIncluded: (result?.whatsIncluded ?? []).join(' | '),
-                considerations: (result?.considerations ?? '').trim()
+                considerations: (result?.considerations ?? '').trim(),
+
+                // NEW CRM FIELDS
+                leadScore: leadData.leadScore || '',
+                leadScoreReasoning: leadData.leadScoreReasoning || '',
+                gapAnalysis: leadData.gapAnalysis || '',
+                source: 'estimator'
             };
             if (webhookSecret) row._secret = webhookSecret;
             try {

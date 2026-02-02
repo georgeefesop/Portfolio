@@ -310,7 +310,11 @@ export default function ProductHero() {
             )}
 
             {/* Background Toggle */}
-            <BackgroundToggle onToggle={setIsVibrantMode} />
+            <div className="z-10 absolute inset-0 pointer-events-none">
+                <div className="pointer-events-auto contents">
+                    <BackgroundToggle onToggle={setIsVibrantMode} />
+                </div>
+            </div>
 
             {/* Hero Text Overlay */}
             <HeroText
@@ -327,7 +331,7 @@ export default function ProductHero() {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 1, duration: 0.8 }}
-                    className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none z-20"
+                    className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none z-10"
                 >
                     <motion.div
                         animate={{ y: [0, 8, 0] }}

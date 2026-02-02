@@ -37,8 +37,14 @@ yarn-error.log*
 # vercel
 .vercel
 
+# private (never push to GitHub)
+/private/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 
 .vercel
+
+# Local Database
+data/leads.json

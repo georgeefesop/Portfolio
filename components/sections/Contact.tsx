@@ -96,7 +96,19 @@ export default function Contact() {
         const data = getValues();
 
         try {
-            const response = await fetch('https://formsubmit.co/ajax/george.efesop@gmail.com', {
+            // Check for existing leadId
+            let leadId = null;
+            const savedEstimate = localStorage.getItem('ge_portfolio_estimate');
+            if (savedEstimate) {
+                try {
+                    const parsed = JSON.parse(savedEstimate);
+                    if (parsed.result?.leadId) leadId = parsed.result.leadId;
+                } catch (e) { }
+            }
+
+            // Parallel Execution: 1. Send Email (Vital), 2. Log to CRM (Background)
+
+            const emailPromise = fetch('https://formsubmit.co/ajax/george.efesop@gmail.com', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -105,17 +117,37 @@ export default function Contact() {
                 body: JSON.stringify({
                     ...data,
                     _subject: `New Project Inquiry from ${data.name}`,
-                    _template: 'table'
+                    _template: 'table',
+                    _company: data.company,
+                    _projectType: data.projectType,
+                    _budget: data.budget
                 })
             });
 
-            if (!response.ok) throw new Error('Failed to send');
+            const loggingPromise = fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    ...data,
+                    leadId,
+                    projectType: data.projectType,
+                    budget: data.budget
+                })
+            });
+
+            // Await email success (Primary), log logging error but don't block
+            const [emailRes] = await Promise.all([
+                emailPromise,
+                loggingPromise.catch(err => console.error("CRM Log failed", err))
+            ]);
+
+            if (!emailRes || !emailRes.ok) throw new Error('Failed to send email');
 
             setIsSuccess(true);
             reset();
             const contactSection = document.getElementById('contact');
             if (contactSection) {
-                const navbarHeight = 80; // Approximate navbar height
+                const navbarHeight = 80;
                 const position = contactSection.getBoundingClientRect().top + window.pageYOffset - navbarHeight;
                 window.scrollTo({ top: position, behavior: 'smooth' });
             }
