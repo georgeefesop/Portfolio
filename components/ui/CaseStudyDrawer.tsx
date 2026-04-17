@@ -13,6 +13,7 @@ interface CaseStudyData {
     period: string;
     tags: string[];
     description: {
+        overview?: string;
         challenge: string;
         work: string[];
         outcome: string;
@@ -131,12 +132,22 @@ export default function CaseStudyDrawer({ project, isOpen, onToggle, priority = 
                                     </div>
                                 </div>
 
+                                {/* Overview Section (New) */}
+                                {project.description.overview && (
+                                    <div className="mb-12 border-b border-white/5 pb-8">
+                                        <h4 className="text-sm font-bold text-accent-primary uppercase tracking-widest mb-4">Overview</h4>
+                                        <div className="text-text-secondary leading-relaxed whitespace-pre-line max-w-4xl">
+                                            {project.description.overview}
+                                        </div>
+                                    </div>
+                                )}
+
                                 {/* Content Grid */}
                                 <div className="grid md:grid-cols-3 gap-12 mb-12">
                                     {/* Challenge */}
                                     <div className="md:col-span-3 lg:col-span-1">
                                         <h4 className="text-sm font-bold text-accent-primary uppercase tracking-widest mb-4">The Challenge</h4>
-                                        <p className="text-text-secondary leading-relaxed">
+                                        <p className="text-text-secondary leading-relaxed whitespace-pre-line">
                                             {project.description.challenge}
                                         </p>
                                     </div>
@@ -176,7 +187,7 @@ export default function CaseStudyDrawer({ project, isOpen, onToggle, priority = 
                                 </div>
 
                                 {/* Gallery Grid which triggers Lightbox */}
-                                <div className={`grid gap-4 ${project.id === 'ai-tools' ? 'grid-cols-2 md:grid-cols-4' : project.id === 'stellar' ? 'grid-cols-1 lg:grid-cols-3' : 'grid-cols-1 md:grid-cols-2'}`}>
+                                <div className={`grid gap-4 ${project.id === 'ai-tools' ? 'grid-cols-2 md:grid-cols-4' : (project.id === 'stellar' || project.id === 'uk-vehicles') ? 'grid-cols-1 lg:grid-cols-3' : 'grid-cols-1 md:grid-cols-2'}`}>
                                     {project.images.gallery.map((img, idx) => (
                                         <button
                                             key={idx}

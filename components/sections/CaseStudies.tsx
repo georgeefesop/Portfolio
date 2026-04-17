@@ -16,21 +16,26 @@ const cases = [
         period: '2023-2024 (Input Output)',
         tags: ['Web3', 'Fintech', 'Product Design'],
         description: {
-            challenge: 'Design a financial platform enabling 3 billion underbanked people to access credit, insurance, and identity services through blockchain infrastructure.',
+            overview: 'RealFi is Input Output\'s blockchain-based initiative connecting underserved businesses in emerging markets with global capital. I designed the platform\'s core user experience, focusing on simplifying complex financial processes—KYC verification, credit assessment, and impact measurement—while remaining accessible for users in markets with limited digital infrastructure.\n\nThe platform serves two distinct user groups: businesses seeking capital and investors seeking impact-driven opportunities. Each required tailored workflows balancing regulatory compliance with ease of use.',
+            challenge: 'Design a financial platform enabling 3 billion underbanked people to access credit, insurance, and identity services through blockchain infrastructure while addressing:\n\n• Digital literacy variance across global user base\n• Low-bandwidth and offline-first requirements\n• Complex regulatory compliance across jurisdictions\n• Cross-cultural UX for emerging and developed markets',
             work: [
-                'User research with target markets in emerging economies',
+                'Dual user journey design: capital seekers (businesses) and capital providers (investors)',
                 'Complex lending workflows simplified for low-connectivity environments',
-                'Design system built for scale across multiple financial products',
-                'Daily collaboration with product, engineering, and blockchain teams'
+                'Impact measurement dashboard with real-time ESG metrics',
+                'KYC/onboarding systems tailored to each user type with progressive disclosure',
+                'Daily collaboration with product, engineering, and blockchain teams',
+                'Portfolio dashboards with impact and financial performance metrics',
+                'Risk assessment interfaces with regulatory compliance',
+                'Multi-stage application and approval workflows'
             ],
-            outcome: 'Platform launched 2024. Active lending to SMEs in East Africa. Part of Cardano\'s $80bn blockchain ecosystem.'
+            outcome: 'Platform launched 2024. Active lending to SMEs in East Africa. Part of Cardano\'s $80bn blockchain ecosystem.\n\nRealFi has been publicly identified by Cardano founder Charles Hoskinson as a cornerstone initiative for bringing real-world financial utility to blockchain technology, targeting billions in total value locked by 2026.'
         },
         links: {
             live: 'https://realfi.co'
         },
         images: {
-            thumbnail: "/images/realfi/realfi-thumbnail.png", // Local image
-            hero: "/images/realfi/financial-analysis.webp", // Local image
+            thumbnail: "/images/realfi/realfi-thumbnail.png",
+            hero: "/images/realfi/financial-analysis.webp",
             gallery: [
                 "/images/realfi/impact-analysis.webp",
                 "/images/realfi/credit-analysis.webp"
@@ -102,21 +107,54 @@ const cases = [
         }
     },
     {
+        id: 'uk-vehicles',
+        title: 'UK Vehicles Cyprus',
+        subtitle: 'Vehicle import platform saving Cyprus businesses thousands per purchase',
+        role: 'Full-Stack Developer',
+        period: '2025',
+        tags: ['Next.js', 'Web Development', 'E-Commerce'],
+        description: {
+            challenge: 'Build a professional web platform for a UK-to-Cyprus vehicle import business that communicates complex processes—customs, VAT reclaim, shipping logistics—clearly enough that tradespeople and small businesses could confidently make €20,000+ purchasing decisions without a single phone call.',
+            work: [
+                'Designed and built a full multi-language site (English, Greek, Russian, German) using Next.js',
+                'Built an interactive import savings calculator showing real-time cost breakdowns vs. Cyprus dealers',
+                'Developed a live vehicle stock system with filtering, detailed listings, and pricing transparency',
+                'Implemented WhatsApp inquiry integration and lead capture flows for high-intent buyers',
+                'Structured content architecture to address every stage of buyer hesitation across FAQ and process pages',
+                'Optimised for Core Web Vitals and SEO to drive organic traffic from local business searches'
+            ],
+            outcome: 'Platform live at ukvehiclescyprus.com. Business has delivered hundreds of vehicles, generating €150k+ in cumulative client savings. The site\'s transparent pricing model and calculator convert hesitant buyers into high-ticket customers with minimal sales overhead.'
+        },
+        links: {
+            live: 'https://ukvehiclescyprus.com/en'
+        },
+        images: {
+            thumbnail: "/images/uk-vehicles/hero.png",
+            hero: "/images/uk-vehicles/hero.png",
+            gallery: [
+                "/images/uk-vehicles/hero.png",
+                "/images/uk-vehicles/calc.png",
+                "/images/uk-vehicles/info.png"
+            ]
+        }
+    },
+    {
         id: 'sidechains',
         title: 'Sidechain Interoperability',
         subtitle: 'Developer infrastructure for blockchain crosschain protocols',
         role: 'Product Designer',
-        period: '2023-2024 (Input Output)',
+        period: '2022-2024 (Input Output)',
         tags: ['Blockchain', 'Dev Tools', 'Infrastructure'],
         description: {
-            challenge: 'Design developer tooling for Cardano\'s sidechain ecosystem — enabling seamless interoperability between Cardano, Ethereum, Bitcoin, and other blockchains.',
+            overview: 'Input Output\'s sidechain toolkit enables developers to build custom sidechains connected to the Cardano mainnet, expanding the ecosystem\'s capabilities without compromising the main chain\'s security. I helped to design the developer experience for the EVM sidechain. (Ethereum Virtual Machine) \n\nThe challenge was creating infrastructure that bridged two fundamentally different blockchain architectures: Cardano\'s UTXO model using Plutus/Haskell versus Ethereum\'s account-based model using Solidity. The solution needed to be technically robust while remaining accessible to developers from both ecosystems.',
+            challenge: 'Design developer infrastructure enabling interoperability between Cardano and Ethereum ecosystems while addressing:\n\n• Incompatible smart contract environments (Plutus vs Solidity)\n• Different transaction models (UTXO vs account-based)\n• Asset transfer security between chains\n• Developer tooling compatibility across ecosystems',
             work: [
-                'Technical abstraction for developer audiences',
-                'Dashboard design for crosschain transactions',
-                'Documentation and onboarding flows for blockchain developers',
-                'Simplified complex concepts without losing technical depth'
+                'Cross-chain bridge interface design for secure asset transfers',
+                'Developer documentation and onboarding flows for Solidity developers',
+                'Testnet environment UX for validating sidechain functionality',
+                'Stake pool operator dashboard for sidechain validation'
             ],
-            outcome: 'Enabled Cardano\'s crosschain infrastructure. Live technology supporting ecosystem growth. Contributed to Wanchain integration launch.'
+            outcome: 'EVM sidechain alpha launched 2022, mainnet deployment 2023.\nEnables Solidity developers to build on Cardano using familiar Ethereum tools.\nOpens Cardano ecosystem to billions in Ethereum development investment.\nBecomes framework for future specialized sidechains (privacy, gaming, DeFi).\nTransitions Cardano into multi-chain architecture with enhanced scalability.\nPublicly identified by CPO as expanding Cardano\'s feature set for niche applications.'
         },
         links: {},
         images: {
