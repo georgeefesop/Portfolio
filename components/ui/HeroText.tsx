@@ -17,6 +17,7 @@ interface HeroTextProps {
     onOpenDemo?: () => void;
     isVibrantMode?: boolean;
     isMobile?: boolean;
+    headerActions?: React.ReactNode;
 }
 
 // Shared audio context singleton to avoid browser autoplay restrictions
@@ -29,7 +30,7 @@ const getSharedContext = () => {
     return sharedContext;
 };
 
-export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMode = false, isMobile: isMobileProp = false }: HeroTextProps) {
+export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMode = false, isMobile: isMobileProp = false, headerActions }: HeroTextProps) {
     const [isMobile, setIsMobile] = useState(true); // Default to true for instant mobile appearance
 
     useEffect(() => {
@@ -210,21 +211,6 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
                             </span>
                         </div>
 
-                        {/* Start Prototype Button - Back to semantic position */}
-                        {isSimpleMode && (
-                            <div className="mt-6 md:mt-8 flex justify-start pointer-events-auto">
-                                <InstrumentButton
-                                    onClick={() => {
-                                        playPrototypeSound();
-                                        onOpenDemo();
-                                    }}
-                                    isVibrantMode={isVibrantMode}
-                                    className="px-8 md:px-10 py-3 md:py-4 text-base md:text-[18px]"
-                                >
-                                    Test a Prototype
-                                </InstrumentButton>
-                            </div>
-                        )}
                     </motion.div>
 
                     {/* Right Side: Details + CTA */}
@@ -250,10 +236,32 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
 
             </motion.div>
 
-            {/* Project Estimator - Positioned independently of the hero text's fade/y transform */}
-            <div className="absolute inset-0 z-30 flex items-start justify-center pt-[20vh] md:pt-[33vh] px-4 md:px-0 pointer-events-none">
-                <ProjectEstimator />
-            </div>
+            {/* FEATURE FLAG: Set to true to re-enable project estimator */}
+            {false && (
+                <div className="absolute inset-0 z-30 flex items-start justify-center pt-[20vh] md:pt-[22vh] px-4 md:px-0 pointer-events-none">
+                    <ProjectEstimator
+                        headerActions={headerActions}
+                    />
+                </div>
+            )}
+
+            {/* Test a Prototype button - centered where estimator was */}
+            {isSimpleMode && (
+                <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none">
+                    <div className="pointer-events-auto">
+                        <InstrumentButton
+                            onClick={() => {
+                                playPrototypeSound();
+                                onOpenDemo();
+                            }}
+                            isVibrantMode={isVibrantMode}
+                            className="px-8 md:px-10 py-3 md:py-4 text-base md:text-[18px]"
+                        >
+                            Test a Prototype
+                        </InstrumentButton>
+                    </div>
+                </div>
+            )}
 
 
 
