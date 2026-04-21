@@ -239,9 +239,7 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
             {/* FEATURE FLAG: Set to true to re-enable project estimator */}
             {false && (
                 <div className="absolute inset-0 z-30 flex items-start justify-center pt-[20vh] md:pt-[22vh] px-4 md:px-0 pointer-events-none">
-                    <ProjectEstimator
-                        headerActions={headerActions}
-                    />
+                    <ProjectEstimator />
                 </div>
             )}
 
