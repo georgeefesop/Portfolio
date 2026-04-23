@@ -4,6 +4,7 @@ import "./globals.css";
 import Navigation from "@/components/ui/Navigation";
 import CustomScrollbar from "@/components/ui/CustomScrollbar";
 import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono" });
@@ -35,6 +36,7 @@ export default function RootLayout({
         {children}
         <CustomScrollbar />
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
