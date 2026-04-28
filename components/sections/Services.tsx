@@ -1,62 +1,50 @@
 'use client';
 
 import FadeIn from '../motion/FadeIn';
-import { Zap, Layout, BarChart3, Sparkles, Megaphone, Clock } from 'lucide-react';
+import { Zap, Layout, Globe, Sparkles, Search, Compass } from 'lucide-react';
 
 const services = [
     {
-        title: 'MVP Design + Development',
-        description: 'Research → Prototype → Launch in 4-6 weeks. Full-stack execution with Next.js & Design Systems. Ideal for funded startups.',
-        price: 'From €12.5k',
-        timeline: '4–6 weeks',
-        range: 'Typical €12.5–25k',
-        scope: 'Includes: discovery, design, build, handoff',
-        icon: Zap
-    },
-    {
-        title: 'Landing Pages & Hero Sections',
-        description: 'High-converting pages and killer hero sections. Custom animations and performance optimized.',
-        price: 'From €2.5k',
-        timeline: '1–2 weeks',
-        range: 'Typical €2.5–6k',
-        scope: 'Includes: design, build, animation, performance',
+        title: 'Product & UX Design',
+        description: 'Apps, dashboards, and SaaS interfaces. Research, prototyping, and design systems your engineers can build.',
+        timeline: '2–8 weeks',
+        scope: 'Includes: discovery, design, prototypes, handover',
         icon: Layout
     },
     {
-        title: 'SaaS Dashboard Design',
-        description: 'Turning complex data into intuitive interfaces. Specialized in Fintech, HealthTech, and Web3 platforms.',
-        price: 'From €5k',
-        timeline: '4–8 weeks',
-        range: 'Typical €5–15k',
-        scope: 'Includes: core flows, states, UI system',
-        icon: BarChart3
+        title: 'WordPress + Elementor',
+        description: 'Brand-led WordPress builds for small businesses. Schema-marked, performance-tuned, editable by a non-technical team.',
+        timeline: '1–3 weeks',
+        scope: 'Includes: build, content, schema, handover',
+        icon: Globe
     },
     {
-        title: 'AI & Brand Assets',
-        description: 'Custom AI pipelines + GenAI image/video production for unique brand assets.',
-        price: 'From €5k',
-        timeline: '2–6 weeks',
-        range: 'Typical €5–12k',
-        scope: 'Includes: automation, image/video generation, pipelines',
+        title: 'Custom Next.js Builds',
+        description: 'Bespoke marketing sites, conversion pages, and lightweight web apps on Next.js, Tailwind, and Vercel — fast cold-starts and clean Core Web Vitals.',
+        timeline: '1–4 weeks',
+        scope: 'Includes: design, build, deploy, performance',
+        icon: Zap
+    },
+    {
+        title: 'AI Image & Video Direction',
+        description: 'Directed AI imagery for brand and marketing — image libraries, social content, and product visuals. Briefed, not slot-machined.',
+        timeline: '1–3 weeks',
+        scope: 'Includes: art direction, generation, retouch, library',
         icon: Sparkles
     },
     {
-        title: 'Growth & Ad Creatives',
-        description: 'High-performance ad creatives and technical growth setup. From strategy to asset production.',
-        price: 'From €2.5k',
-        timeline: '2–4 weeks',
-        range: 'Typical €2.5–6k',
-        scope: 'Includes: ad variants, technical SEO, campaign setup',
-        icon: Megaphone
+        title: 'SEO, AEO & Schema',
+        description: 'Schema.org markup, local SEO, and AEO so Google understands the page and serves it up. Plus Google Ads management.',
+        timeline: '1–2 weeks',
+        scope: 'Includes: audit, schema, copy, ads setup',
+        icon: Search
     },
     {
-        title: 'Hourly Consulting',
-        description: 'Design audits, prototyping, and technical advisory. Flexible engagement for specific problem solving.',
-        price: '€120/hour',
-        timeline: 'Async-first • Min. 3h',
-        range: 'Min. 3 hours',
-        scope: 'Audits, prototypes, technical guidance',
-        icon: Clock
+        title: 'Brand, Strategy & Audits',
+        description: 'Positioning, copy, palette, and brand-first direction. Plus async audits and design advisory.',
+        timeline: 'Async / hourly',
+        scope: 'Includes: audit, advisory, brand work',
+        icon: Compass
     }
 ];
 
@@ -67,7 +55,7 @@ export default function Services() {
                 <FadeIn>
                     <div className="mb-10">
                         <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-2">Services</h2>
-                        <p className="text-text-secondary text-sm md:text-base">Typical timeline: 6-8 weeks for full projects. Currently available: 1-2 projects per quarter.</p>
+                        <p className="text-text-secondary text-sm md:text-base">Fixed-price or hourly — from one-page builds to full products.</p>
                     </div>
                 </FadeIn>
 
@@ -89,9 +77,6 @@ export default function Services() {
                                 </p>
 
                                 <div className="mt-auto space-y-3">
-                                    <span className="hidden text-xs font-medium text-text-muted bg-white/5 border border-white/5 px-2 py-1.5 rounded">
-                                        {service.price}
-                                    </span>
                                     <span className="inline-block text-base font-bold text-accent-primary font-mono bg-accent-primary/10 px-2 py-1 rounded">
                                         {service.timeline}
                                     </span>

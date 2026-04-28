@@ -16,8 +16,8 @@ export default function CredibilityBar() {
                         <div className="hidden md:block w-px h-12 bg-border-medium/50"></div>
 
                         <div className="flex flex-col items-center text-center">
-                            <span className="text-xl font-medium text-text-secondary mb-1">Product Designer @ <span className="text-white">Input Output</span></span>
-                            <span className="text-text-muted text-sm font-mono">Cardano Blockchain Infrastructure</span>
+                            <span className="text-xl font-medium text-text-secondary mb-1">Previously @ <span className="text-white">Input Output</span></span>
+                            <span className="text-text-muted text-sm font-mono">Cardano Blockchain ($80bn ecosystem)</span>
                         </div>
 
                         <div className="hidden md:block w-px h-12 bg-border-medium/50"></div>

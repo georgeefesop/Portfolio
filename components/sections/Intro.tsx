@@ -18,7 +18,7 @@ export default function Intro() {
 
                         <div className="flex-1 max-w-lg pt-2">
                             <p className="text-xl text-text-muted leading-relaxed mb-8 text-balance">
-                                Great engineering deserves great design. I partner with technical founders to help bridge the gap between heavy-duty backend logic and the human on the other side of the screen.
+                                Great products deserve great design — and so does the corner-shop website. I partner with founders, agencies, and small businesses to design and build the web, end to end.
                             </p>
                             <div className="h-px w-24 bg-accent-primary mb-8" />
                             <p className="text-sm font-mono text-text-dim uppercase tracking-widest">
@@ -39,7 +39,7 @@ export default function Intro() {
                             },
                             {
                                 title: "Technical Fluency",
-                                desc: "I speak your language. From git commits to CSS architecture, I bridge the divide between Figma and production."
+                                desc: "I speak your language. Git commits, component architecture, deployment pipelines. I bridge the divide between Figma and production."
                             }
                         ].map((item) => (
                             <div key={item.title} className="group">

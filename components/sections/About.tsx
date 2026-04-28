@@ -30,13 +30,13 @@ export default function About() {
                                 <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-8">About</h2>
                                 <div className="space-y-6 text-base md:text-lg text-text-secondary leading-relaxed max-w-2xl">
                                     <p>
-                                        I&apos;m George, a product designer based in Cyprus.
+                                        I&apos;m George, a product designer and builder based in Cyprus.
                                     </p>
                                     <p>
-                                        Previously at <span className="text-white font-medium">Input Output</span>, I designed Cardano blockchain infrastructure, focusing on RealFi platforms and sidechain interoperability.
+                                        I spent 2 years at <span className="text-white font-medium">Input Output</span> designing blockchain infrastructure for Cardano&apos;s $80bn ecosystem—RealFi platforms and cross-chain protocols. Now I work with startups and businesses building Web3, fintech, and SaaS products that need to work, not just look good.
                                     </p>
                                     <p>
-                                        I specialize in simplifying complex technical products, partnering with funded startups in Web3, fintech, and SaaS.
+                                        I specialize in taking complex technical products and making them intuitive. Fast prototyping, full-stack execution, and shipping things that solve real problems.
                                     </p>
                                 </div>
                             </div>
@@ -61,7 +61,7 @@ export default function About() {
 
                             <div className="space-y-4">
                                 <p className="text-text-secondary">
-                                    Currently taking on 1-2 projects per quarter to ensure quality and focus. If you&apos;re building something ambitious, let&apos;s talk.
+                                    Currently open for new work — small builds to full products. If you&apos;ve got something to ship, let&apos;s talk.
                                 </p>
 
                                 <div className="flex flex-wrap gap-6 pt-4">

@@ -177,7 +177,12 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
             >
                 {/* Top Row - Adaptive Logo/Hamburger Space */}
                 <div className="flex justify-between items-start w-full text-xs md:text-sm font-mono tracking-widest uppercase text-zinc-400 mb-auto">
-                    {/* Space reserved for top nav */}
+                    <div />
+                    {headerActions && (
+                        <div className="pointer-events-auto">
+                            {headerActions}
+                        </div>
+                    )}
                 </div>
 
                 {/* Main Content Area - Always at bottom */}
@@ -218,8 +223,22 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
                         variants={itemVariants}
                         className="hidden md:flex text-right flex-col items-end gap-3 mt-4 md:mt-0"
                     >
+                        {isSimpleMode && (
+                            <div className="pointer-events-auto mb-1">
+                                <InstrumentButton
+                                    onClick={() => {
+                                        playPrototypeSound();
+                                        onOpenDemo!();
+                                    }}
+                                    isVibrantMode={isVibrantMode}
+                                    className="px-8 md:px-10 py-3 md:py-4 text-base md:text-[18px]"
+                                >
+                                    Test a Prototype
+                                </InstrumentButton>
+                            </div>
+                        )}
                         <div className="space-y-1 transition-all">
-                            <p className="text-base md:text-xl font-medium text-white">Web3 · Fintech · SaaS</p>
+                            <p className="text-base md:text-xl font-medium text-white">Product · Web · Brand · AI</p>
                             <p className={`text-xs md:text-sm transition-colors duration-500 ${isVibrantMode ? 'text-white' : 'text-zinc-400'}`}>Previously: <span className="text-white">Input Output (Cardano)</span></p>
                         </div>
                         <div className="transition-all">
@@ -227,7 +246,7 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
                         </div>
                         <div className="flex items-start justify-end gap-1.5 transition-all mt-1 md:mt-2 ml-auto w-fit">
                             <span className={`font-mono tracking-widest uppercase text-[10px] md:text-sm transition-colors duration-500 text-right ${isVibrantMode ? 'text-white' : 'text-zinc-400'}`}>
-                                Available for select projects
+                                Open for new projects
                             </span>
                             <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-green-500 animate-pulse mt-1 md:mt-1.5 shrink-0" />
                         </div>
@@ -243,9 +262,9 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
                 </div>
             )}
 
-            {/* Test a Prototype button - centered where estimator was */}
+            {/* Mobile-only: centered Test a Prototype button. On md+ the button lives in the right-side stack above the role-tagline. */}
             {isSimpleMode && (
-                <div className="absolute inset-0 z-30 flex items-center justify-center pointer-events-none">
+                <div className="md:hidden absolute inset-0 z-30 flex items-center justify-center pointer-events-none">
                     <div className="pointer-events-auto">
                         <InstrumentButton
                             onClick={() => {

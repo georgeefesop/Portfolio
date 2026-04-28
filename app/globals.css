@@ -226,3 +226,26 @@ input:-webkit-autofill:active {
     background-position: 0% 50%;
   }
 }
+
+/* Featured work strip — continuous right-to-left marquee. The track contains
+   two copies of the items, so translating by -50% loops seamlessly.
+   Class names avoid the `animate-*` prefix because Tailwind v4 claims that
+   namespace as a utility and would override our animation. */
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee-scroll 90s linear infinite;
+  will-change: transform;
+}
+
+.marquee-wrapper:hover .marquee-track {
+  animation-play-state: paused;
+}

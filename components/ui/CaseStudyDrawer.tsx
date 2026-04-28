@@ -45,6 +45,7 @@ export default function CaseStudyDrawer({ project, isOpen, onToggle, priority = 
     return (
         <>
             <div
+                id={`case-${project.id}`}
                 className={`group border transition-all duration-500 rounded-xl overflow-hidden ${isOpen
                     ? 'bg-zinc-900 border-white/20 cursor-pointer shadow-2xl'
                     : 'bg-white/[0.03] border-white/10 hover:bg-white/[0.06] hover:border-accent-primary/30'
@@ -67,7 +68,7 @@ export default function CaseStudyDrawer({ project, isOpen, onToggle, priority = 
                     aria-expanded={isOpen}
                 >
                     {/* Thumbnail - Compact & Horizontal */}
-                    <div className="relative w-full md:w-64 aspect-video rounded-lg overflow-hidden flex-shrink-0 bg-white/5">
+                    <div className="relative w-full md:w-64 aspect-[4/3] rounded-lg overflow-hidden flex-shrink-0 bg-white/5">
                         <ImageWithFallback
                             src={project.images.thumbnail}
                             alt={project.title}
@@ -195,7 +196,7 @@ export default function CaseStudyDrawer({ project, isOpen, onToggle, priority = 
                                                 e.stopPropagation();
                                                 setLightboxIndex(idx);
                                             }}
-                                            className={`relative rounded-lg overflow-hidden bg-bg-tertiary cursor-zoom-in hover:brightness-110 transition-all aspect-video`}
+                                            className={`relative rounded-lg overflow-hidden bg-bg-tertiary cursor-zoom-in hover:brightness-110 transition-all aspect-[4/3]`}
                                         >
                                             <ImageWithFallback
                                                 src={img}

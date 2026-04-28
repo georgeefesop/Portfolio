@@ -5,6 +5,7 @@ import { useScrollProgress } from '@/hooks/useScrollProgress';
 import ProductCanvas from '@/components/ui/ProductCanvas';
 import HeroText from '@/components/ui/HeroText';
 import BackgroundToggle from '@/components/ui/BackgroundToggle';
+import FeaturedWorkStrip from '@/components/ui/FeaturedWorkStrip';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -309,12 +310,13 @@ export default function ProductHero() {
                 </div>
             )}
 
-            {/* Background Toggle */}
-            <div className="z-10 absolute inset-0 pointer-events-none">
-                <div className="pointer-events-auto contents">
-                    <BackgroundToggle onToggle={setIsVibrantMode} />
+            {/* Featured work strip — sits in the upper-middle of the hero, behind
+                HeroText (which only occupies the bottom). md+ only. */}
+            {!ENABLE_CAROUSEL && (
+                <div className="hidden md:block absolute left-0 right-0 z-[18] pointer-events-none" style={{ top: '26%' }}>
+                    <FeaturedWorkStrip />
                 </div>
-            </div>
+            )}
 
             {/* Hero Text Overlay */}
             <HeroText
@@ -323,6 +325,7 @@ export default function ProductHero() {
                 onOpenDemo={ENABLE_CAROUSEL ? undefined : handleOpenModal}
                 isVibrantMode={isVibrantDelayed}
                 isMobile={isMobile}
+                headerActions={<BackgroundToggle onToggle={setIsVibrantMode} />}
             />
 
             {/* Scroll Indicator - Only visible when modal is closed */}
@@ -389,9 +392,10 @@ export default function ProductHero() {
                                 Close Prototype
                             </motion.button>
                         </motion.div>
-                    )}
-                </AnimatePresence>
+                    )
+                    }
+                </AnimatePresence >
             )}
-        </section>
+        </section >
     );
 }
