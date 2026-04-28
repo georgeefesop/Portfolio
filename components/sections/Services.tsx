@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import FadeIn from '../motion/FadeIn';
 import { Zap, Layout, Globe, Sparkles, Search, Compass } from 'lucide-react';
@@ -6,44 +6,32 @@ import { Zap, Layout, Globe, Sparkles, Search, Compass } from 'lucide-react';
 const services = [
     {
         title: 'Product & UX Design',
-        description: 'Apps, dashboards, and SaaS interfaces. Research, prototyping, and design systems your engineers can build.',
-        timeline: '2–8 weeks',
-        scope: 'Includes: discovery, design, prototypes, handover',
+        description: 'SaaS interfaces, dashboards, and mobile apps. Research, wireframes, hi-fi UI, and design systems your engineers can build from. Same person designs and ships — no handoff meetings.',
         icon: Layout
     },
     {
-        title: 'WordPress + Elementor',
-        description: 'Brand-led WordPress builds for small businesses. Schema-marked, performance-tuned, editable by a non-technical team.',
-        timeline: '1–3 weeks',
-        scope: 'Includes: build, content, schema, handover',
+        title: 'WordPress, AI-supercharged',
+        description: 'Bring a Figma file, a brief, or a rough idea. I build custom themes from scratch — no template bloat, schema-marked, performance-tuned. AI-assisted dev means bespoke sites in days, not weeks. Local-first workflow, staged, merged clean. Loom walkthrough on handover.',
         icon: Globe
     },
     {
         title: 'Custom Next.js Builds',
-        description: 'Bespoke marketing sites, conversion pages, and lightweight web apps on Next.js, Tailwind, and Vercel - fast cold-starts and clean Core Web Vitals.',
-        timeline: '1–4 weeks',
-        scope: 'Includes: design, build, deploy, performance',
+        description: 'Bespoke marketing sites, conversion pages, and lightweight web apps on Next.js + Tailwind. Green Core Web Vitals out of the box.',
         icon: Zap
     },
     {
         title: 'AI Image & Video Direction',
-        description: 'Directed AI imagery for brand and marketing - image libraries, social content, and product visuals. Briefed, not slot-machined.',
-        timeline: '1–3 weeks',
-        scope: 'Includes: art direction, generation, retouch, library',
+        description: 'Directed AI imagery for brand and marketing — image libraries, social content, product visuals. Briefed and art-directed, not slot-machined.',
         icon: Sparkles
     },
     {
         title: 'SEO, AEO & Schema',
-        description: 'Schema.org markup, local SEO, and AEO so Google understands the page and serves it up. Plus Google Ads management.',
-        timeline: '1–2 weeks',
-        scope: 'Includes: audit, schema, copy, ads setup',
+        description: 'Schema.org markup, local SEO, and AEO so Google (and AI assistants) understand the page. Plus Google Ads when you need traffic this week.',
         icon: Search
     },
     {
         title: 'Brand, Strategy & Audits',
-        description: 'Positioning, copy, palette, and brand-first direction. Plus async audits and design advisory.',
-        timeline: 'Async / hourly',
-        scope: 'Includes: audit, advisory, brand work',
+        description: 'Positioning, copy direction, palette, and async audits. Useful when the build is fine but the message isn\'t landing.',
         icon: Compass
     }
 ];
@@ -55,7 +43,7 @@ export default function Services() {
                 <FadeIn>
                     <div className="mb-10">
                         <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-2">Services</h2>
-                        <p className="text-text-secondary text-sm md:text-base">Fixed-price or hourly - from one-page builds to full products.</p>
+                        <p className="text-text-secondary text-sm md:text-base">Designed and built by one person. Choose your shape.</p>
                     </div>
                 </FadeIn>
 
@@ -72,20 +60,9 @@ export default function Services() {
                                     </div>
                                 </div>
 
-                                <p className="text-text-secondary mb-4 text-sm leading-relaxed">
+                                <p className="text-text-secondary text-sm leading-relaxed">
                                     {service.description}
                                 </p>
-
-                                <div className="mt-auto space-y-3">
-                                    <span className="inline-block text-base font-bold text-accent-primary font-mono bg-accent-primary/10 px-2 py-1 rounded">
-                                        {service.timeline}
-                                    </span>
-                                    <div className="flex flex-col gap-0.5">
-                                        <span className="text-xs text-text-muted block">
-                                            {service.scope}
-                                        </span>
-                                    </div>
-                                </div>
                             </div>
                         </FadeIn>
                     ))}

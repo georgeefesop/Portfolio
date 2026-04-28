@@ -36,13 +36,19 @@ export default function Footer() {
                             Explore
                         </h3>
                         <ul className="space-y-3">
-                            {['Work', 'Services', 'Resources', 'About', 'Contact'].map((item) => (
-                                <li key={item}>
+                            {[
+                                { label: 'Work', href: '#work' },
+                                { label: 'Services', href: '#services' },
+                                { label: 'Resources', href: '#resources' },
+                                { label: 'About', href: '#about' },
+                                { label: 'Hire on Upwork', href: '#contact' },
+                            ].map((item) => (
+                                <li key={item.label}>
                                     <a
-                                        href={`#${item.toLowerCase()}`}
+                                        href={item.href}
                                         className="text-text-secondary hover:text-accent-primary transition-colors text-sm"
                                     >
-                                        {item}
+                                        {item.label}
                                     </a>
                                 </li>
                             ))}
@@ -73,9 +79,6 @@ export default function Footer() {
                 </div>
 
                 <div className="pt-8 border-t border-border-subtle flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p className="text-text-dim text-xs">
-                        Built with Next.js 14, Tailwind CSS & Framer Motion
-                    </p>
                     <div className="flex gap-4">
                         {/* Optional extra legal links could go here */}
                     </div>

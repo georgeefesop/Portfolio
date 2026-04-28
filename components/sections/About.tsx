@@ -1,9 +1,14 @@
-﻿'use client';
+'use client';
 
 import FadeIn from '../motion/FadeIn';
-import Image from 'next/image';
 import ImageWithFallback from '@/components/ui/ImageWithFallback';
-import { Linkedin, ExternalLink, Mail, Youtube, Phone } from 'lucide-react';
+
+const bringList = [
+    'Experience designing at scale — Cardano\'s $80bn ecosystem',
+    'AI-native workflows — Cursor, generative tools, modern automation',
+    'Full-stack capability — design and Next.js/React development',
+    'Teaching mindset — 15K designers follow my content on TikTok',
+];
 
 export default function About() {
     return (
@@ -30,13 +35,13 @@ export default function About() {
                                 <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-8">About</h2>
                                 <div className="space-y-6 text-base md:text-lg text-text-secondary leading-relaxed max-w-2xl">
                                     <p>
-                                        I&apos;m George, a product designer and builder based in Cyprus.
+                                        I&apos;m George — a product designer and developer based in Cyprus. I&apos;ve been freelancing for 12 years and spent two of those leading design at <span className="text-white font-medium">Input Output</span>, the engineering company behind Cardano.
                                     </p>
                                     <p>
-                                        I spent 2 years at <span className="text-white font-medium">Input Output</span> designing blockchain infrastructure for Cardano&apos;s $80bn ecosystem-RealFi platforms and cross-chain protocols. Now I work with startups and businesses building Web3, fintech, and SaaS products that need to work, not just look good.
+                                        I designed and shipped <span className="text-white font-medium">RealFi</span> — a financial inclusion platform now serving SMEs in East Africa, part of Cardano&apos;s $80bn ecosystem. Before that, design work for Nike Training Club, Bournemouth University, and startups across fintech, hospitality, ecommerce, and healthtech.
                                     </p>
                                     <p>
-                                        I specialize in taking complex technical products and making them intuitive. Fast prototyping, full-stack execution, and shipping things that solve real problems.
+                                        What I do now is rare on Upwork: I design <em>and</em> build. Next.js front-end, WordPress, AI image direction, SEO, marketing automation. One person, one workflow, one person responsible.
                                     </p>
                                 </div>
                             </div>
@@ -45,12 +50,7 @@ export default function About() {
                             <div className="py-8 border-t border-b border-white/10 block md:hidden lg:block">
                                 <h3 className="text-lg font-bold text-text-primary mb-6 uppercase tracking-widest text-sm">What I bring</h3>
                                 <ul className="space-y-4">
-                                    {[
-                                        'Experience designing at scale (Cardano\'s $80bn ecosystem)',
-                                        'AI-native workflows (Cursor, generative tools, modern automation)',
-                                        'Full-stack capability (design + Next.js/React development)',
-                                        'Teaching mindset (16k designers follow my content on TikTok)'
-                                    ].map((item, i) => (
+                                    {bringList.map((item, i) => (
                                         <li key={i} className="flex items-start gap-4 text-text-secondary text-base">
                                             <span className="text-accent-primary mt-1.5 h-1.5 w-1.5 rounded-full bg-accent-primary shrink-0 block"></span>
                                             {item}
@@ -59,45 +59,13 @@ export default function About() {
                                 </ul>
                             </div>
 
-                            <div className="space-y-4">
-                                <p className="text-text-secondary">
-                                    Currently open for new work - small builds to full products. If you&apos;ve got something to ship, let&apos;s talk.
-                                </p>
-
-                                <div className="flex flex-wrap gap-6 pt-4">
-                                    {[
-                                        { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/in/giorgoe' },
-                                        { name: 'TikTok', icon: ExternalLink, href: 'https://www.tiktok.com/@georgeefesop' },
-                                        { name: 'YouTube', icon: Youtube, href: 'https://www.youtube.com/@georgeefesop' },
-                                        { name: 'Email', icon: Mail, href: 'mailto:george.efesop@gmail.com' },
-                                        { name: 'Phone', icon: Phone, href: 'tel:+35797907137' },
-                                    ].map((social) => (
-                                        <a
-                                            key={social.name}
-                                            href={social.href}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="flex items-center gap-2 text-text-primary hover:text-accent-primary transition-colors font-medium group"
-                                        >
-                                            <social.icon size={20} className="group-hover:-translate-y-1 transition-transform" />
-                                            {social.name}
-                                        </a>
-                                    ))}
-                                </div>
-                            </div>
-
                         </div>
 
                         {/* What I Bring - Tablet Only (Full Width) */}
                         <div className="hidden md:block lg:hidden col-span-12 mt-12 py-8 border-t border-b border-white/10">
                             <h3 className="text-lg font-bold text-text-primary mb-6 uppercase tracking-widest text-sm">What I bring</h3>
                             <ul className="space-y-4">
-                                {[
-                                    'Experience designing at scale (Cardano\'s $80bn ecosystem)',
-                                    'AI-native workflows (Cursor, generative tools, modern automation)',
-                                    'Full-stack capability (design + Next.js/React development)',
-                                    'Teaching mindset (16k designers follow my content on TikTok)'
-                                ].map((item, i) => (
+                                {bringList.map((item, i) => (
                                     <li key={i} className="flex items-start gap-4 text-text-secondary text-base">
                                         <span className="text-accent-primary mt-1.5 h-1.5 w-1.5 rounded-full bg-accent-primary shrink-0 block"></span>
                                         {item}

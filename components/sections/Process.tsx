@@ -49,8 +49,7 @@ export default function Process() {
                     <div className="text-center mb-12 md:mb-20">
                         <h2 className="text-3xl md:text-5xl font-bold text-text-primary mb-4 md:mb-6">How I Work</h2>
                         <p className="text-text-secondary text-base md:text-lg max-w-2xl mx-auto">
-                            From messy brief to working product.<br />
-                            <span className="hidden md:block text-sm opacity-50 text-mono mt-2">(Drag to explore)</span>
+                            From messy brief to working product.
                         </p>
                     </div>
                 </FadeIn>
@@ -171,8 +170,6 @@ function CanvasNodes({ steps, size, containerRef, isMobile, isTablet, isSmallDes
                     index={i}
                     x={motionValues[i].x}
                     y={motionValues[i].y}
-                    containerRef={containerRef}
-                    isMobile={isMobile}
                 />
             ))}
         </>
@@ -237,18 +234,14 @@ function SmartConnection({ from, to }: { from: { x: any, y: any }, to: { x: any,
     );
 }
 
-function ProcessNode({ step, index, x, y, containerRef, isMobile }: any) {
+function ProcessNode({ step, index, x, y }: any) {
     return (
         <motion.div
-            drag={!isMobile}
-            dragElastic={0.1}
-            dragMomentum={false}
             style={{ x, y }}
-            className="absolute top-0 left-0 w-[260px] cursor-grab active:cursor-grabbing z-10"
+            className="absolute top-0 left-0 w-[260px] z-10"
         >
             <motion.div
                 whileHover={{ scale: 1.05, borderColor: 'rgba(255,255,255,0.4)', backgroundColor: 'rgba(20,20,20,0.95)' }}
-                whileDrag={{ scale: 1.1, zIndex: 100, boxShadow: "0 20px 40px rgba(0,0,0,0.5)" }}
                 className="bg-bg-secondary/90 backdrop-blur-md p-5 rounded-xl border border-border-subtle shadow-lg flex flex-col gap-3 group transition-colors select-none relative"
             >
                 <div className="flex justify-between items-start">

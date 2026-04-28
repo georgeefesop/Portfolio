@@ -129,9 +129,12 @@ export default function ProductHero() {
         }
     }, [isModalOpen]);
 
-    const handleOpenModal = () => {
-        setIsModalOpen(true);
-    };
+    // Listen for prototype:open from PrototypeShowcase section
+    useEffect(() => {
+        const handleOpen = () => setIsModalOpen(true);
+        window.addEventListener('prototype:open', handleOpen);
+        return () => window.removeEventListener('prototype:open', handleOpen);
+    }, []);
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
@@ -330,7 +333,6 @@ export default function ProductHero() {
             <HeroText
                 scrollProgress={scrollProgress}
                 step={ENABLE_CAROUSEL ? step : undefined}
-                onOpenDemo={ENABLE_CAROUSEL ? undefined : handleOpenModal}
                 isVibrantMode={isVibrantDelayed}
                 isMobile={isMobile}
                 headerActions={<BackgroundToggle onToggle={setIsVibrantMode} />}
