@@ -35,7 +35,7 @@ const processSteps = [
 
 export default function Process() {
     return (
-        <section id="how-i-work" className="bg-bg-primary py-32 overflow-hidden relative border-b border-border-subtle select-none scroll-mt-20">
+        <section id="how-i-work" className="bg-bg-primary py-16 md:py-32 overflow-hidden relative border-b border-border-subtle select-none scroll-mt-20">
             {/* Background Grid */}
             <div className="absolute inset-0 opacity-[0.03]"
                 style={{
@@ -46,18 +46,47 @@ export default function Process() {
 
             <div className="max-w-7xl mx-auto px-4 relative z-10">
                 <FadeIn>
-                    <div className="text-center mb-20">
-                        <h2 className="text-3xl md:text-5xl font-bold text-text-primary mb-6">How I Work</h2>
-                        <p className="text-text-secondary text-lg max-w-2xl mx-auto">
+                    <div className="text-center mb-12 md:mb-20">
+                        <h2 className="text-3xl md:text-5xl font-bold text-text-primary mb-4 md:mb-6">How I Work</h2>
+                        <p className="text-text-secondary text-base md:text-lg max-w-2xl mx-auto">
                             From messy brief to working product.<br />
-                            <span className="text-sm opacity-50 text-mono mt-2 block">(Drag to explore)</span>
+                            <span className="hidden md:block text-sm opacity-50 text-mono mt-2">(Drag to explore)</span>
                         </p>
                     </div>
                 </FadeIn>
 
-                <InteractiveCanvas steps={processSteps} />
+                {/* Mobile: simple stacked column with consistent spacing */}
+                <div className="md:hidden flex flex-col gap-4 max-w-md mx-auto">
+                    {processSteps.map((step, i) => (
+                        <MobileProcessCard key={step.id} step={step} index={i} />
+                    ))}
+                </div>
+
+                {/* Desktop / tablet: interactive draggable canvas */}
+                <div className="hidden md:block">
+                    <InteractiveCanvas steps={processSteps} />
+                </div>
             </div>
         </section>
+    );
+}
+
+function MobileProcessCard({ step, index }: { step: typeof processSteps[number]; index: number }) {
+    return (
+        <div className="bg-bg-secondary/90 backdrop-blur-md p-5 rounded-xl border border-border-subtle shadow-lg flex flex-col gap-3 relative">
+            <div className="flex justify-between items-start">
+                <div className="w-8 h-8 rounded-lg bg-bg-tertiary flex items-center justify-center text-text-secondary">
+                    <step.icon size={16} />
+                </div>
+            </div>
+            <div>
+                <h3 className="font-bold text-text-primary text-base mb-2">{step.title}</h3>
+                <p className="text-sm text-text-secondary leading-relaxed">{step.desc}</p>
+            </div>
+            <div className="absolute top-2 right-4 text-4xl font-bold opacity-[0.07] font-mono pointer-events-none">
+                0{index + 1}
+            </div>
+        </div>
     );
 }
 

@@ -1,9 +1,9 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useMemo } from 'react';
 import { ExternalLink } from 'lucide-react';
 import FadeIn from '../motion/FadeIn';
-import CaseStudyDrawer from '../ui/CaseStudyDrawer';
+import CaseStudyModal from '../ui/CaseStudyModal';
 import ImageWithFallback from '@/components/ui/ImageWithFallback';
 
 // Mock data assets (placeholders)
@@ -29,7 +29,7 @@ const cases = [
         tags: ['Web3', 'Fintech', 'Product Design'],
         categories: ['design'] as CategoryId[],
         description: {
-            overview: 'RealFi is Input Output\'s blockchain-based initiative connecting underserved businesses in emerging markets with global capital. I designed the platform\'s core user experience, focusing on simplifying complex financial processes—KYC verification, credit assessment, and impact measurement—while remaining accessible for users in markets with limited digital infrastructure.\n\nThe platform serves two distinct user groups: businesses seeking capital and investors seeking impact-driven opportunities. Each required tailored workflows balancing regulatory compliance with ease of use.',
+            overview: 'RealFi is Input Output\'s blockchain-based initiative connecting underserved businesses in emerging markets with global capital. I designed the platform\'s core user experience, focusing on simplifying complex financial processes-KYC verification, credit assessment, and impact measurement-while remaining accessible for users in markets with limited digital infrastructure.\n\nThe platform serves two distinct user groups: businesses seeking capital and investors seeking impact-driven opportunities. Each required tailored workflows balancing regulatory compliance with ease of use.',
             challenge: 'Design a financial platform enabling 3 billion underbanked people to access credit, insurance, and identity services through blockchain infrastructure while addressing:\n\n• Digital literacy variance across global user base\n• Low-bandwidth and offline-first requirements\n• Complex regulatory compliance across jurisdictions\n• Cross-cultural UX for emerging and developed markets',
             work: [
                 'Dual user journey design: capital seekers (businesses) and capital providers (investors)',
@@ -99,6 +99,7 @@ const cases = [
         period: '2025',
         tags: ['Generative Art', 'React', 'Canvas', 'UI Design'],
         categories: ['design', 'nextjs'] as CategoryId[],
+        aiBuilt: true,
         description: {
             challenge: 'Design a futuristic, immersive interface for manipulating generative cosmic visualizations in real-time, blending diegetic UI elements with performant web graphics.',
             work: [
@@ -130,8 +131,9 @@ const cases = [
         period: '2025',
         tags: ['Next.js', 'Web Development', 'E-Commerce'],
         categories: ['nextjs', 'design'] as CategoryId[],
+        aiBuilt: true,
         description: {
-            challenge: 'Build a professional web platform for a UK-to-Cyprus vehicle import business that communicates complex processes—customs, VAT reclaim, shipping logistics—clearly enough that tradespeople and small businesses could confidently make €20,000+ purchasing decisions without a single phone call.',
+            challenge: 'Build a professional web platform for a UK-to-Cyprus vehicle import business that communicates complex processes-customs, VAT reclaim, shipping logistics-clearly enough that tradespeople and small businesses could confidently make €20,000+ purchasing decisions without a single phone call.',
             work: [
                 'Designed and built a full multi-language site (English, Greek, Russian, German) using Next.js',
                 'Built an interactive import savings calculator showing real-time cost breakdowns vs. Cyprus dealers',
@@ -164,18 +166,18 @@ const cases = [
         tags: ['WordPress', 'Elementor', 'Brand', 'Schema / AEO', 'Financial services'],
         categories: ['wordpress', 'design'] as CategoryId[],
         description: {
-            overview: 'Kingfisher is an established independent UK mortgage broker who\'d outgrown a templated site that read like every other mortgage broker\'s. I led the full rebuild — brand work, content architecture, and a WordPress/Elementor site engineered to feel premium and trust-led without the price tag of a bespoke agency engagement.\n\nThe remit ran end to end: positioning and palette, sitemap and copy hierarchy, page templates, schema markup, and a handover the client team can run themselves.',
-            challenge: 'Reposition an established mortgage broker as premium and trust-led while addressing:\n\n• A category aesthetic that defaults to comparison-site cliché\n• A small team that needed to edit copy and add new product pages without me\n• AEO/GEO visibility — answers about UK mortgage products coming from this site, not a competitor\'s\n• Core Web Vitals targets that mortgage-broker stock-photo templates routinely fail',
+            overview: 'Kingfisher is an established independent UK mortgage broker who\'d outgrown a templated site that read like every other mortgage broker\'s. I led the full rebuild - brand work, content architecture, and a WordPress/Elementor site engineered to feel premium and trust-led without the price tag of a bespoke agency engagement.\n\nThe remit ran end to end: positioning and palette, sitemap and copy hierarchy, page templates, schema markup, and a handover the client team can run themselves.',
+            challenge: 'Reposition an established mortgage broker as premium and trust-led while addressing:\n\n• A category aesthetic that defaults to comparison-site cliché\n• A small team that needed to edit copy and add new product pages without me\n• AEO/GEO visibility - answers about UK mortgage products coming from this site, not a competitor\'s\n• Core Web Vitals targets that mortgage-broker stock-photo templates routinely fail',
             work: [
                 'Brand-first design: a calm, paper-and-ink palette with serif headlines and an editorial hierarchy closer to wealth management than comparison',
                 'WordPress + Elementor on a stripped-back theme so the client can edit copy and add product pages without me',
-                'One mortgage-product page template with conditional fields rather than 14 hand-built pages — new products are a 5-minute job',
+                'One mortgage-product page template with conditional fields rather than 14 hand-built pages - new products are a 5-minute job',
                 'Schema.org markup wired across the site (FinancialProduct, FAQPage, BreadcrumbList) so AEO/GEO answers come from their site',
                 'Sitemap and copy hierarchy rebuilt to match how UK borrowers actually research',
                 'Core Web Vitals pass before launch: lazy-load below-the-fold, hand-cropped photography in place of stock, cookie-banner script dropped',
                 'Documented handover (BRAND, SETUP, SITEMAP-COPY) so the client team owns the site post-launch'
             ],
-            outcome: 'Live and replacing the previous templated build. A site that reads as premium and trust-led, ranks for the schema-friendly product queries, and stays maintainable in the client\'s hands. Schema work pays off disproportionately on financial-services briefs — clients almost never ask for it but it\'s the difference between Google understanding the page and not.'
+            outcome: 'Live and replacing the previous templated build. A site that reads as premium and trust-led, ranks for the schema-friendly product queries, and stays maintainable in the client\'s hands. Schema work pays off disproportionately on financial-services briefs - clients almost never ask for it but it\'s the difference between Google understanding the page and not.'
         },
         links: {},
         images: {
@@ -192,13 +194,13 @@ const cases = [
     {
         id: 'olympus-sports',
         title: 'Olympus Sports',
-        subtitle: 'B2B gym equipment distributor — WordPress rebuild',
+        subtitle: 'B2B gym equipment distributor - WordPress rebuild',
         role: 'WordPress build + design',
         period: '2024',
         tags: ['WordPress', 'Elementor', 'B2B', 'E-commerce'],
         categories: ['wordpress'] as CategoryId[],
         description: {
-            overview: 'Olympus Sports is a UK distributor of commercial gym equipment selling into facility managers, independent gyms, and small chains. I rebuilt their public site from scratch as a catalogue-first WordPress build, replacing a tired template that was slow on mobile and buried products under marketing pages.\n\nThe work cuts straight at the trade buyer\'s mental model: see the catalogue, qualify the spec, request a quote — without three forms of friction in between.',
+            overview: 'Olympus Sports is a UK distributor of commercial gym equipment selling into facility managers, independent gyms, and small chains. I rebuilt their public site from scratch as a catalogue-first WordPress build, replacing a tired template that was slow on mobile and buried products under marketing pages.\n\nThe work cuts straight at the trade buyer\'s mental model: see the catalogue, qualify the spec, request a quote - without three forms of friction in between.',
             challenge: 'Replace a slow, mobile-broken site with one that communicates a deep equipment catalogue and converts trade enquiries while addressing:\n\n• Buyers who arrive knowing what they want, not browsing for inspiration\n• Existing brand assets that mixed consumer fitness aesthetics with B2B copy\n• A long product taxonomy collapsed into one giant menu\n• Mobile parity for on-site facility manager research',
             work: [
                 'Catalogue-first information architecture: hero links direct into equipment categories, not marketing pages',
@@ -209,7 +211,7 @@ const cases = [
                 'Mobile speed budget: stripped Elementor heavies, hand-tuned CSS for above-the-fold blocks',
                 'Handover-friendly build so the client team can add new products without revisiting me'
             ],
-            outcome: 'Live and replacing the previous build. Faster on mobile, cleaner taxonomy, quote-request flows that respect how trade buyers actually browse — credibility over cleverness, throughout.'
+            outcome: 'Live and replacing the previous build. Faster on mobile, cleaner taxonomy, quote-request flows that respect how trade buyers actually browse - credibility over cleverness, throughout.'
         },
         links: {
             live: 'https://olympus-sports.com'
@@ -226,21 +228,22 @@ const cases = [
     {
         id: 'instant-access-locksmiths',
         title: 'Instant Access Locksmiths',
-        subtitle: 'UK locksmith conversion site — Next.js rebuild',
+        subtitle: 'UK locksmith conversion site - Next.js rebuild',
         role: 'Design + build (Next.js)',
         period: '2025',
         tags: ['Next.js', 'Tailwind', 'Local SEO', 'Conversion'],
         categories: ['nextjs', 'design'] as CategoryId[],
+        aiBuilt: true,
         description: {
             overview: 'Instant Access Locksmiths is a Solihull-based UK locksmith service. I replaced a generic locksmith template with a fast, trust-led Next.js site built around three jobs: convert a panicked late-night visitor into a phone call, win local SEO across multiple service areas, and let the team talk pricing transparently without lengthy form back-and-forth.\n\nThe site has to feel calm at 2am. Everything else is downstream of that.',
             challenge: 'Design and build a locksmith site that converts under stress while addressing:\n\n• The panicked-visitor moment: phone-first design, never a hidden CTA\n• Long-tail local search: \'<service> in <town>\' for dozens of villages around Solihull and Birmingham\n• A trust gap that templated locksmith sites widen rather than close\n• A pricing transparency expectation the trade industry has historically dodged',
             work: [
                 'Next.js + Tailwind on Vercel for fast cold-starts and clean Core Web Vitals',
                 'Phone-first design: persistent, prominent call CTA above the fold throughout',
-                'Live cost estimator wired to a small backend that emails a quote and posts to a Google Sheet — fits the team\'s existing workflow',
+                'Live cost estimator wired to a small backend that emails a quote and posts to a Google Sheet - fits the team\'s existing workflow',
                 'Programmatic service-area landing pages from a single content source for the long tail',
                 'Full schema.org markup: LocalBusiness, Service, FAQPage, Review',
-                'Honest estimator UX: shows ranges, not magic-number quotes — clients don\'t trust precision they didn\'t ask for',
+                'Honest estimator UX: shows ranges, not magic-number quotes - clients don\'t trust precision they didn\'t ask for',
                 'Review and trust signals embedded into the booking flow, not buried on a separate page'
             ],
             outcome: 'Live and ranking. The estimator now intercepts a meaningful share of phone-only enquiries and reduces clarifying calls before a job is booked. Service-area pages have started to win the long-tail queries the previous template never touched.'
@@ -267,18 +270,19 @@ const cases = [
         period: '2026',
         tags: ['Next.js', 'Container Queries', 'Design Systems', 'Product Design'],
         categories: ['nextjs', 'design'] as CategoryId[],
+        aiBuilt: true,
         description: {
-            overview: 'Forecast is a modern aggregator for events on the island of Cyprus, built solo end to end. It replaces a fragmented landscape — Facebook event pages, poster walls in Limassol, three competing sites with cluttered UIs — with a calm, fast surface that just shows you what\'s on this weekend.\n\nThe hard problem was less the data and more the discipline: keep the surface dead simple while the aggregation pipeline does the messy work in the background.',
-            challenge: 'Design and build an events aggregator for an island whose existing options look like 2009 while addressing:\n\n• Fragmented sources: Facebook events, venue sites, posters, and PDFs\n• Mobile-first audience that opens the site at a café table to decide a Saturday\n• A small, opinionated brief from a single user (me) that should generalise\n• A codebase a future contributor — or future-me in six months — won\'t drift away from',
+            overview: 'Forecast is a modern aggregator for events on the island of Cyprus, built solo end to end. It replaces a fragmented landscape - Facebook event pages, poster walls in Limassol, three competing sites with cluttered UIs - with a calm, fast surface that just shows you what\'s on this weekend.\n\nThe hard problem was less the data and more the discipline: keep the surface dead simple while the aggregation pipeline does the messy work in the background.',
+            challenge: 'Design and build an events aggregator for an island whose existing options look like 2009 while addressing:\n\n• Fragmented sources: Facebook events, venue sites, posters, and PDFs\n• Mobile-first audience that opens the site at a café table to decide a Saturday\n• A small, opinionated brief from a single user (me) that should generalise\n• A codebase a future contributor - or future-me in six months - won\'t drift away from',
             work: [
-                'Next.js app router with container queries and fluid typography — zero traditional media queries, all responsive behaviour driven by CSS clamps and container queries',
+                'Next.js app router with container queries and fluid typography - zero traditional media queries, all responsive behaviour driven by CSS clamps and container queries',
                 'Single source of truth in globals.css for design tokens, with DESIGN_SYSTEM.md and RESPONSIVE.md to anchor future work',
-                'Calm UI: no carousels, no auto-play, no algorithmic recommendations — just dates, venues, clean cards',
-                'Aggregation pipeline kept deliberately boring: scheduled fetch, normalize, dedupe — the interesting work is in the surface, not the plumbing',
+                'Calm UI: no carousels, no auto-play, no algorithmic recommendations - just dates, venues, clean cards',
+                'Aggregation pipeline kept deliberately boring: scheduled fetch, normalize, dedupe - the interesting work is in the surface, not the plumbing',
                 'Container-query-based components that compose cleanly when reused across pages',
                 'Self-imposed performance budget: instant-feel filtering, near-zero CLS, image-perfect on slow Limassol 4G'
             ],
-            outcome: 'Functional event aggregator covering the actual scene on the island. Calm interface, maintainable codebase, design system that survives contact with new pages — the kind of side project that actually gets used after the launch week.'
+            outcome: 'Functional event aggregator covering the actual scene on the island. Calm interface, maintainable codebase, design system that survives contact with new pages - the kind of side project that actually gets used after the launch week.'
         },
         links: {},
         images: {
@@ -298,18 +302,18 @@ const cases = [
         tags: ['WordPress', 'Elementor', 'Google Ads', 'Hospitality', 'Conversion'],
         categories: ['wordpress'] as CategoryId[],
         description: {
-            overview: 'La Hacienda is an independent boutique hotel in Agios Athanasios, Limassol — sun-warmed stone, a leafy courtyard, and suites with kitchenettes and private spa baths. I rebuilt their public site on WordPress and ran the Google Ads spend that drives traffic into it. End-to-end ownership rather than design-only.\n\nThe brief was simple: replace a host-built page that wasn\'t converting, capture search traffic the hotel was missing, and make the booking path obvious to a holidaymaker who lands cold from a Google ad.',
+            overview: 'La Hacienda is an independent boutique hotel in Agios Athanasios, Limassol - sun-warmed stone, a leafy courtyard, and suites with kitchenettes and private spa baths. I rebuilt their public site on WordPress and ran the Google Ads spend that drives traffic into it. End-to-end ownership rather than design-only.\n\nThe brief was simple: replace a host-built page that wasn\'t converting, capture search traffic the hotel was missing, and make the booking path obvious to a holidaymaker who lands cold from a Google ad.',
             challenge: 'Convert search traffic into bookings for a small boutique hotel competing in a crowded Limassol market while addressing:\n\n• A host-managed WordPress stack with theme limitations and a tight asset pool\n• A generic prior page that buried the booking widget and the differentiators\n• Cold-traffic visitors arriving from Google Ads with no brand familiarity\n• Ad budget that couldn\'t survive a generic \'cyprus hotel\' bidding war',
             work: [
-                'WordPress + Elementor on the host\'s existing stack — no fight worth picking there',
+                'WordPress + Elementor on the host\'s existing stack - no fight worth picking there',
                 'Restructured the IA around the rooms users actually book and the differentiators that matter (spa suite, pet-friendly, sunset views, courtyard)',
-                'Pinned the booking widget visible from every page — single highest-impact change',
-                'Google Ads campaigns built around long-tail intent — \'boutique hotel agios athanasios\', \'pet friendly hotel limassol\' — rather than the generic \'cyprus hotel\' that costs four times the click',
+                'Pinned the booking widget visible from every page - single highest-impact change',
+                'Google Ads campaigns built around long-tail intent - \'boutique hotel agios athanasios\', \'pet friendly hotel limassol\' - rather than the generic \'cyprus hotel\' that costs four times the click',
                 'Ad campaigns segmented by traveller intent (couples, business, pet-owners) with tailored landing pages, not a generic homepage',
                 'Conversion-focused copy direction throughout: room names lead with what makes them different, not the room number',
-                'End-to-end ownership: build, ads, copy, conversion path — one operator, one accountability line'
+                'End-to-end ownership: build, ads, copy, conversion path - one operator, one accountability line'
             ],
-            outcome: 'Live site running real ad spend through pages that convert. The WP/Ads pairing is the value here — a real hotel\'s booking funnel running end to end on tailored campaigns rather than the agency-default \'set up the campaign and hope\'. Honest note: not the prettiest site I\'ve built — the host stack and asset pool constrained the visual ceiling. For the next hotel I\'d start with brand and photography before touching the build.'
+            outcome: 'Live site running real ad spend through pages that convert. The WP/Ads pairing is the value here - a real hotel\'s booking funnel running end to end on tailored campaigns rather than the agency-default \'set up the campaign and hope\'. Honest note: not the prettiest site I\'ve built - the host stack and asset pool constrained the visual ceiling. For the next hotel I\'d start with brand and photography before touching the build.'
         },
         links: {
             live: 'https://lahacienda-cyprus.com/'
@@ -331,19 +335,20 @@ const cases = [
         period: '2025',
         tags: ['AI', 'Art Direction', 'Photography', 'Brand', 'B2B'],
         categories: ['ai-image'] as CategoryId[],
+        aiBuilt: true,
         description: {
-            overview: 'Allsop & Francis distribute commercial laundry equipment into UK care homes, healthcare, schools, vet, equestrian, housing, and charity sectors. Real product imagery in this niche either doesn\'t exist or looks like a stock catalogue from 2008. I art-directed and generated a custom on-brand image library covering every sector × service-line combination they sell into.\n\nThe work treats AI as a directable medium, not a slot machine. Each scene is prompted with location, lighting, framing, and brand artefacts — never \'a laundry room\'.',
-            challenge: 'Build a complete on-brand image library for a niche B2B distributor without commissioning a photography shoot in every NHS laundry in the country, while addressing:\n\n• Seven target sectors × nine service lines — a matrix of scenes, not a single shoot\n• Brand consistency across every generated frame: van livery, uniform, machine make/model\n• AI drift toward generic \'commercial laundry\' visuals when prompts are loose\n• Final-mile finish: AI mishandling of equipment detail that needed manual retouching',
+            overview: 'Allsop & Francis distribute commercial laundry equipment into UK care homes, healthcare, schools, vet, equestrian, housing, and charity sectors. Real product imagery in this niche either doesn\'t exist or looks like a stock catalogue from 2008. I art-directed and generated a custom on-brand image library covering every sector × service-line combination they sell into.\n\nThe work treats AI as a directable medium, not a slot machine. Each scene is prompted with location, lighting, framing, and brand artefacts - never \'a laundry room\'.',
+            challenge: 'Build a complete on-brand image library for a niche B2B distributor without commissioning a photography shoot in every NHS laundry in the country, while addressing:\n\n• Seven target sectors × nine service lines - a matrix of scenes, not a single shoot\n• Brand consistency across every generated frame: van livery, uniform, machine make/model\n• AI drift toward generic \'commercial laundry\' visuals when prompts are loose\n• Final-mile finish: AI mishandling of equipment detail that needed manual retouching',
             work: [
                 'Built a sectors × services matrix and worked through it cell by cell',
-                'Reference plates from the client\'s real installations anchored each prompt — colour, livery, machine make and model — so the AI didn\'t drift into generic territory',
+                'Reference plates from the client\'s real installations anchored each prompt - colour, livery, machine make and model - so the AI didn\'t drift into generic territory',
                 'Reference PDFs for van livery and uniform set the brand boundary so even \'staff in a van\' shots stayed on-brand',
-                'Variant pruning: generated heavy, kept light — Sectors and Services folders show only takes that survived selection',
+                'Variant pruning: generated heavy, kept light - Sectors and Services folders show only takes that survived selection',
                 'Final images cleaned in Photoshop where the AI mishandled equipment detail',
-                'Treated each prompt as a brief: location, lighting, framing, brand artefacts — never \'a laundry room\'',
+                'Treated each prompt as a brief: location, lighting, framing, brand artefacts - never \'a laundry room\'',
                 'Delivered a usable image library mapped to the client\'s actual marketing content structure'
             ],
-            outcome: 'Custom image library delivered, mapped to every sector and service line the client sells into. Imagery reads as Allsop & Francis — not as generic AI stock — and replaces a niche where real photography would have meant booking shoots across a dozen industries the client doesn\'t control access to.'
+            outcome: 'Custom image library delivered, mapped to every sector and service line the client sells into. Imagery reads as Allsop & Francis - not as generic AI stock - and replaces a niche where real photography would have meant booking shoots across a dozen industries the client doesn\'t control access to.'
         },
         links: {
             live: 'https://www.allsopandfrancis.com/'
@@ -371,8 +376,8 @@ const cases = [
         tags: ['Web Design', 'UX Strategy', 'E-commerce', 'Usability Testing'],
         categories: ['design'] as CategoryId[],
         description: {
-            overview: 'SaxSeat is a Kickstarter-launched startup with a single, niche product: a seat that supports both saxophone player and instrument while practising — the first of its kind. As the sole UX/UI designer on a limited startup budget, I owned the direction of the launch site and the responsibility for whether it converted.\n\nThe brief wasn\'t \'design a beautiful page\'. It was \'turn a curious sax player into a paying customer on a single page\' — and prove every decision in front of management and shareholders.',
-            challenge: 'Design and validate a high-converting product page for a niche startup with a single SKU while addressing:\n\n• A novel product category — buyers had never seen anything like it before\n• A small startup budget that left no room for second attempts\n• Stakeholder review of every design decision in regular meetings\n• Soft-launch validation pressure: prove the page works on real users before scaling spend',
+            overview: 'SaxSeat is a Kickstarter-launched startup with a single, niche product: a seat that supports both saxophone player and instrument while practising - the first of its kind. As the sole UX/UI designer on a limited startup budget, I owned the direction of the launch site and the responsibility for whether it converted.\n\nThe brief wasn\'t \'design a beautiful page\'. It was \'turn a curious sax player into a paying customer on a single page\' - and prove every decision in front of management and shareholders.',
+            challenge: 'Design and validate a high-converting product page for a niche startup with a single SKU while addressing:\n\n• A novel product category - buyers had never seen anything like it before\n• A small startup budget that left no room for second attempts\n• Stakeholder review of every design decision in regular meetings\n• Soft-launch validation pressure: prove the page works on real users before scaling spend',
             work: [
                 'End-to-end ownership: research, information architecture, copy direction, visual design, prototyping',
                 'Persona and journey mapping for the saxophone-player buyer',
@@ -381,7 +386,7 @@ const cases = [
                 'High-fidelity Figma comps with responsive breakpoints and interactive prototypes',
                 'UX writing for product copy that anticipated common objections about a category-creating product',
                 'Soft-launched the page in February 2021 with HotJar session recording to capture qualitative user behaviour',
-                'Iterated based on heatmaps and session replays — surfaced and fixed the friction points causing pre-purchase exits'
+                'Iterated based on heatmaps and session replays - surfaced and fixed the friction points causing pre-purchase exits'
             ],
             outcome: 'Page launched following the soft-launch test phase. HotJar recordings surfaced specific drop-off moments that were addressed before scaling marketing spend. The page anchored SaxSeat\'s direct-to-consumer launch beyond Kickstarter, converting curious-but-skeptical visitors into buyers for a category-creating product.'
         },
@@ -478,10 +483,9 @@ const PINNED_IDS = ['realfi', 'kingfisher-mortgages'];
 const ALL_VIEW_INITIAL_COUNT = 4;
 
 export default function CaseStudies() {
-    const [activeDrawer, setActiveDrawer] = useState<string | null>(null);
+    const [activeId, setActiveId] = useState<string | null>(null);
     const [activeCategory, setActiveCategory] = useState<CategoryId | 'all'>('all');
     const [showAllInAllView, setShowAllInAllView] = useState(false);
-    const [pendingScrollId, setPendingScrollId] = useState<string | null>(null);
     // null on SSR / first client render → deterministic source order.
     // Set once on mount → shuffled order persists across category changes.
     const [shuffledAllOrderIds, setShuffledAllOrderIds] = useState<string[] | null>(null);
@@ -495,42 +499,27 @@ export default function CaseStudies() {
         setShuffledAllOrderIds([...PINNED_IDS, ...restIds]);
     }, []);
 
-    // Open a specific drawer when the featured-work strip in the hero is clicked.
-    // Reset filter to All and reveal the full list so the target is reachable.
+    // Open a specific project modal when the featured-work strip in the hero is clicked.
     useEffect(() => {
         const handler = (e: Event) => {
             const id = (e as CustomEvent<{ id?: string }>).detail?.id;
             if (!id) return;
             setActiveCategory('all');
             setShowAllInAllView(true);
-            setActiveDrawer(id);
-            setPendingScrollId(id);
+            setActiveId(id);
         };
         window.addEventListener('featured:open', handler);
         return () => window.removeEventListener('featured:open', handler);
     }, []);
 
-    // Run after React commits the state changes from the featured:open handler,
-    // by which point the target drawer is mounted and at its final layout
-    // position. Scroll to its top with a small offset for breathing room.
-    useEffect(() => {
-        if (!pendingScrollId) return;
-        const target = document.getElementById(`case-${pendingScrollId}`);
-        if (target) {
-            const top = target.getBoundingClientRect().top + window.scrollY - 24;
-            window.scrollTo({ top, behavior: 'smooth' });
-        }
-        setPendingScrollId(null);
-    }, [pendingScrollId, activeDrawer, activeCategory, showAllInAllView]);
-
-    const handleToggle = (id: string) => {
-        setActiveDrawer((prev) => (prev === id ? null : id));
-    };
-
     const handlePillClick = (id: CategoryId | 'all') => {
         setActiveCategory(id);
         setShowAllInAllView(false);
     };
+
+    const activeProject = activeId
+        ? cases.find((c) => c.id === activeId) ?? null
+        : null;
 
     const ordered = useMemo<Item[]>(() => {
         if (activeCategory === 'all') {
@@ -557,17 +546,15 @@ export default function CaseStudies() {
     const getCount = (id: CategoryId | 'all') =>
         id === 'all' ? allItems.length : allItems.filter((i) => i.categories.includes(id as CategoryId)).length;
 
-    const useTwoColGrid = !activeDrawer;
-
     return (
-        <section id="work" className="bg-bg-primary py-24 md:py-32 scroll-mt-20">
+        <section id="work" className="bg-bg-primary py-12 md:py-32 scroll-mt-20">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <FadeIn>
                     <div className="flex flex-col md:flex-row justify-between items-end mb-8 gap-8">
                         <div>
                             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">Selected Projects</h2>
                             <p className="text-text-muted text-lg max-w-xl">
-                                Product, web, AI, and brand work — across fintech, hospitality, trades, and Web3.
+                                Product, web, AI, and brand work - across fintech, hospitality, trades, and Web3.
                             </p>
                         </div>
                     </div>
@@ -592,16 +579,51 @@ export default function CaseStudies() {
                         })}
                     </div>
 
-                    <div className={`grid grid-cols-1 gap-4 ${useTwoColGrid ? 'lg:grid-cols-2' : ''}`}>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         {visible.map((item, idx) =>
                             item.kind === 'drawer' ? (
-                                <CaseStudyDrawer
+                                <button
                                     key={item.id}
-                                    project={item}
-                                    isOpen={activeDrawer === item.id}
-                                    onToggle={() => handleToggle(item.id)}
-                                    priority={idx < 2}
-                                />
+                                    type="button"
+                                    onClick={() => setActiveId(item.id)}
+                                    className="group block w-full text-left border border-white/10 rounded-xl overflow-hidden bg-white/[0.03] hover:bg-white/[0.06] hover:border-accent-primary/30 transition-all duration-300 focus:outline-none focus-visible:border-accent-primary/60"
+                                    aria-haspopup="dialog"
+                                >
+                                    <div className="p-6 flex flex-col md:flex-row gap-6 md:items-center">
+                                        <div className="relative w-full md:w-64 aspect-[4/3] rounded-lg overflow-hidden flex-shrink-0 bg-white/5">
+                                            <ImageWithFallback
+                                                src={item.images.thumbnail}
+                                                alt={item.title}
+                                                fill
+                                                quality={100}
+                                                priority={idx < 2}
+                                                sizes="(max-width: 768px) 100vw, 300px"
+                                                className={`object-cover transition-transform duration-700 group-hover:scale-105 ${item.id === 'realfi' ? 'scale-[1.03]' : ''} ${item.id === 'instant-access-locksmiths' ? 'scale-[1.12]' : ['kingfisher-mortgages', 'olympus-sports', 'la-hacienda', 'saxseat'].includes(item.id) ? 'scale-[1.10]' : ''}`}
+                                            />
+                                        </div>
+                                        <div className="flex-1 flex flex-col justify-center min-w-0">
+                                            <div className="flex items-center gap-2 mb-2">
+                                                <span className="w-1 h-1 rounded-full bg-accent-primary" />
+                                                <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-accent-primary">
+                                                    {item.role}
+                                                </span>
+                                            </div>
+                                            <h3 className="text-xl md:text-2xl font-bold text-white mb-1.5 group-hover:text-accent-primary transition-colors tracking-tight leading-tight">
+                                                {item.title}
+                                            </h3>
+                                            <p className="text-text-muted text-sm md:text-base mb-3 max-w-xl font-light leading-snug">
+                                                {item.subtitle}
+                                            </p>
+                                            <div className="flex flex-wrap items-center gap-2">
+                                                {item.tags.slice(0, 3).map((tag) => (
+                                                    <span key={tag} className="bg-white/5 px-2 py-1 rounded text-xs font-mono text-text-dim border border-white/5">
+                                                        {tag}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </button>
                             ) : (
                                 <a
                                     key={item.id}
@@ -664,6 +686,8 @@ export default function CaseStudies() {
                     )}
                 </FadeIn>
             </div>
+
+            <CaseStudyModal project={activeProject} onClose={() => setActiveId(null)} />
         </section>
     );
 }

@@ -8,13 +8,13 @@ function formatEstimateForEmail(result: {
     cost: { low: number; high: number; currency: string };
     whatsIncluded: string[];
     considerations: string;
-}) {
+}, options: { includeCost: boolean } = { includeCost: true }) {
     const lines = [
         result.projectType && `<p><strong>Project type:</strong> ${result.projectType}</p>`,
         result.timeline && `<p><strong>Timeline:</strong> ${result.timeline.low} – ${result.timeline.high}</p>`,
-        result.cost && `<p><strong>Estimated cost:</strong> ${result.cost.currency}${result.cost.low.toLocaleString()} – ${result.cost.high.toLocaleString()}</p>`,
-        result.whatsIncluded?.length && `<p><strong>What's included:</strong></p><ul>${result.whatsIncluded.map((i: string) => `<li>${i}</li>`).join('')}</ul>`,
-        result.considerations && `<p><strong>Considerations:</strong></p><p>${result.considerations}</p>`
+        options.includeCost && result.cost && `<p><strong>Estimated cost:</strong> ${result.cost.currency}${result.cost.low.toLocaleString()} – ${result.cost.high.toLocaleString()}</p>`,
+        result.whatsIncluded?.length && `<p><strong>Possible Scope:</strong></p><ul>${result.whatsIncluded.map((i: string) => `<li>${i}</li>`).join('')}</ul>`,
+        result.considerations && `<p><strong>Considerations:</strong></p><p>${result.considerations.replace(/\n/g, '<br>')}</p>`
     ].filter(Boolean);
     return lines.join('');
 }
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
         const from = 'Portfolio <onboarding@resend.dev>';
 
         // Lead Score and Gap Analysis for Admin Email
-        const scoreHeader = leadData.leadScore ? `
+        const scoreHeader = (leadData.leadScore !== undefined && leadData.leadScore !== null) ? `
             <div style="background: #f0fdf4; border: 1px solid #16a34a; padding: 12px; border-radius: 6px; margin-bottom: 20px; color: #166534;">
                 <h3 style="margin:0">🎯 Lead Score: ${leadData.leadScore}/10</h3>
                 <p style="margin:5px 0 0 0; font-size:14px;"><em>Reasoning: ${leadData.leadScoreReasoning}</em></p>
@@ -83,7 +83,7 @@ export async function POST(request: Request) {
             <p>${(input || '').replace(/\n/g, '<br>')}</p>
             ${result && result.status === 'estimate' ? `
             <h3>Estimate summary</h3>
-            ${formatEstimateForEmail(result)}
+            ${formatEstimateForEmail(result, { includeCost: true })}
             ` : '<p>(No estimate attached)</p>'}
         `;
 
@@ -149,12 +149,19 @@ export async function POST(request: Request) {
 
         // 3) Email to them: polite confirmation + copy of estimate
         const estimateBlock = result && result.status === 'estimate'
-            ? formatEstimateForEmail(result)
+            ? formatEstimateForEmail(result, { includeCost: false })
             : "<p>We'll follow up with next steps shortly.</p>";
 
         const theirHtml = `
             <p>Hi ${name},</p>
-            <p>Thanks for sharing your idea and for your interest in working together. Here's a copy of your estimate for your records.</p>
+            <p>Thanks for sharing your idea and for your interest in working together.</p>
+            
+            <div style="background: #f4f4f5; padding: 15px; border-radius: 8px; margin: 20px 0; color: #333; font-size: 14px;">
+                <strong>Your Idea:</strong><br>
+                ${(input || '').replace(/\n/g, '<br>')}
+            </div>
+
+            <p>Here's a copy of the initial scope estimate for your records:</p>
             ${estimateBlock}
             <p>If you'd like to move forward or adjust the scope, just reply to this email or reach out directly.</p>
             <p>Best,<br>George</p>

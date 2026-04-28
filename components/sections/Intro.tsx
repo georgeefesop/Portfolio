@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import FadeIn from '../motion/FadeIn';
 
@@ -18,7 +18,7 @@ export default function Intro() {
 
                         <div className="flex-1 max-w-lg pt-2">
                             <p className="text-xl text-text-muted leading-relaxed mb-8 text-balance">
-                                Great products deserve great design — and so does the corner-shop website. I partner with founders, agencies, and small businesses to design and build the web, end to end.
+                                Great products deserve great design - and so does the corner-shop website. I partner with founders, agencies, and small businesses to design and build the web, end to end.
                             </p>
                             <div className="h-px w-24 bg-accent-primary mb-8" />
                             <p className="text-sm font-mono text-text-dim uppercase tracking-widest">
@@ -31,7 +31,7 @@ export default function Intro() {
                         {[
                             {
                                 title: "Systems Thinking",
-                                desc: "I turn complex workflows into clear, shippable product structure — flows, states, edge cases, and component logic that engineers can build."
+                                desc: "I turn complex workflows into clear, shippable product structure - flows, states, edge cases, and component logic that engineers can build."
                             },
                             {
                                 title: "Zero-to-One",

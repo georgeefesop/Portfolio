@@ -94,7 +94,9 @@ export async function GET(request: Request) {
                     timeline: getVal(['timeline', 'duration', 'estimate duration']),
                     estimateCostLow: parseFloat(getVal(['costlow', 'mincost', 'lowprice']) || '0') || undefined,
                     estimateCostHigh: parseFloat(getVal(['costhigh', 'maxcost', 'highprice']) || '0') || undefined,
-                    leadScoreReasoning: 'From Live Database'
+                    leadScoreReasoning: getVal(['leadscorereasoning', 'reasoning', 'rationale']),
+                    whatsIncluded: getVal(['whatsincluded', 'included', 'scope']),
+                    considerations: getVal(['considerations', 'notes', 'strategy'])
                 };
             });
 

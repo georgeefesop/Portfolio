@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useMemo } from 'react';
 import { useScrollProgress } from '@/hooks/useScrollProgress';
@@ -310,11 +310,19 @@ export default function ProductHero() {
                 </div>
             )}
 
-            {/* Featured work strip — sits in the upper-middle of the hero, behind
+            {/* Featured work strip - sits in the upper-middle of the hero, behind
                 HeroText (which only occupies the bottom). md+ only. */}
             {!ENABLE_CAROUSEL && (
                 <div className="hidden md:block absolute left-0 right-0 z-[18] pointer-events-none" style={{ top: '26%' }}>
                     <FeaturedWorkStrip />
+                </div>
+            )}
+
+            {/* Vertical featured strip - mobile only. Cards scroll up off-screen,
+                running from the top of the hero down to just above the signature. */}
+            {!ENABLE_CAROUSEL && (
+                <div className="md:hidden absolute left-0 right-0 z-[18] pointer-events-auto" style={{ top: '6%', bottom: '24%' }}>
+                    <FeaturedWorkStrip orientation="vertical" />
                 </div>
             )}
 

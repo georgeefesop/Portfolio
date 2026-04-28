@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import FadeIn from '../motion/FadeIn';
 import { Zap, Layout, Globe, Sparkles, Search, Compass } from 'lucide-react';
@@ -20,14 +20,14 @@ const services = [
     },
     {
         title: 'Custom Next.js Builds',
-        description: 'Bespoke marketing sites, conversion pages, and lightweight web apps on Next.js, Tailwind, and Vercel — fast cold-starts and clean Core Web Vitals.',
+        description: 'Bespoke marketing sites, conversion pages, and lightweight web apps on Next.js, Tailwind, and Vercel - fast cold-starts and clean Core Web Vitals.',
         timeline: '1–4 weeks',
         scope: 'Includes: design, build, deploy, performance',
         icon: Zap
     },
     {
         title: 'AI Image & Video Direction',
-        description: 'Directed AI imagery for brand and marketing — image libraries, social content, and product visuals. Briefed, not slot-machined.',
+        description: 'Directed AI imagery for brand and marketing - image libraries, social content, and product visuals. Briefed, not slot-machined.',
         timeline: '1–3 weeks',
         scope: 'Includes: art direction, generation, retouch, library',
         icon: Sparkles
@@ -50,12 +50,12 @@ const services = [
 
 export default function Services() {
     return (
-        <section id="services" className="bg-bg-primary py-16 scroll-mt-20">
+        <section id="services" className="bg-bg-primary py-10 md:py-16 scroll-mt-20">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <FadeIn>
                     <div className="mb-10">
                         <h2 className="text-2xl md:text-3xl font-bold text-text-primary mb-2">Services</h2>
-                        <p className="text-text-secondary text-sm md:text-base">Fixed-price or hourly — from one-page builds to full products.</p>
+                        <p className="text-text-secondary text-sm md:text-base">Fixed-price or hourly - from one-page builds to full products.</p>
                     </div>
                 </FadeIn>
 

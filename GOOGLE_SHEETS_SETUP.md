@@ -15,33 +15,50 @@ This guide will turn a Google Sheet into a live database for your portfolio lead
 2. Delete any code there and paste the following:
 
 ```javascript
+var WEBHOOK_SECRET = ''; // OPTIONAL: Set this to match your .env GOOGLE_SHEETS_WEBHOOK_SECRET if you want security
+
 function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var params = JSON.parse(e.postData.contents);
-  
-  var row = [
-    params.id || Utilities.getUuid(),
-    new Date(),
-    params.name || '',
-    params.email || '',
-    params.company || '',
-    params.brief || '',
-    params.estimateStatus || '',  // Added
-    params.projectType || '',
-    params.budgetRange || '',
-    params.timeline || '',
-    params.costLow || '',         // Number
-    params.costHigh || '',        // Number
-    params.currency || '',        // Added
-    params.whatsIncluded || '',   // Added
-    params.considerations || '',  // Added
-    params.source || '',
-    params.leadScore || '',
-    params.gapAnalysis || ''
-  ];
-  
-  sheet.appendRow(row);
-  return ContentService.createTextOutput("Success");
+  try {
+    var raw = e.postData && e.postData.contents ? JSON.parse(e.postData.contents) : {};
+
+    // Security Check
+    if (WEBHOOK_SECRET && raw._secret !== WEBHOOK_SECRET) {
+      return ContentService.createTextOutput(JSON.stringify({ error: 'Unauthorized' }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    delete raw._secret; // Don't save the secret to the sheet
+
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    
+    // Append the row with ALL fields
+    sheet.appendRow([
+      raw.id || Utilities.getUuid(),
+      raw.timestamp || new Date().toISOString(),
+      raw.name || '',
+      raw.email || '',
+      raw.company || '',
+      (raw.brief || '').toString().slice(0, 50000),
+      raw.estimateStatus || '',
+      raw.projectType || '',
+      raw.budgetRange || '',
+      raw.timeline || '',
+      raw.costLow !== undefined && raw.costLow !== '' ? raw.costLow : '',
+      raw.costHigh !== undefined && raw.costHigh !== '' ? raw.costHigh : '',
+      raw.currency || '',
+      (raw.whatsIncluded || '').toString().slice(0, 50000),
+      (raw.considerations || '').toString().slice(0, 50000),
+      raw.source || 'website',
+      raw.leadScore || '',
+      raw.gapAnalysis || ''
+    ]);
+
+    return ContentService.createTextOutput(JSON.stringify({ ok: true, rows: sheet.getLastRow() }))
+      .setMimeType(ContentService.MimeType.JSON);
+
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ error: String(err) }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
 }
 
 function doGet(e) {

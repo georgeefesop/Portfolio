@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import FadeIn from '../motion/FadeIn';
 import { Star, Quote } from 'lucide-react';
@@ -24,14 +24,14 @@ const testimonials = [
         name: "Alex Vasser",
         role: "CTO",
         company: "NexaFlow Protocol",
-        quote: "The best design partner we've worked with. He speaks our language and doesn't just 'make things pretty' — he solves the core interaction problems.",
+        quote: "The best design partner we've worked with. He speaks our language and doesn't just 'make things pretty' - he solves the core interaction problems.",
         source: "LinkedIn"
     }
 ];
 
 export default function Testimonials() {
     return (
-        <section className="bg-bg-primary py-24 pb-32">
+        <section className="bg-bg-primary py-12 pb-16 md:py-24 md:pb-32">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <FadeIn>
                     <div className="mb-16 md:text-center max-w-2xl md:mx-auto">

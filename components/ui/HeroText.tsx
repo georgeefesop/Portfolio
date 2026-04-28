@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
@@ -169,7 +169,7 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
     return (
         <>
             <motion.div
-                className="absolute inset-0 z-20 w-full h-full p-6 pb-24 md:p-12 lg:p-16 flex flex-col justify-end pointer-events-none select-none"
+                className="absolute inset-0 z-20 w-full h-full p-6 pb-12 md:p-12 md:pb-24 lg:p-16 flex flex-col justify-end pointer-events-none select-none"
                 style={{ y, opacity }}
                 initial={isMobile ? false : "hidden"}
                 animate="visible"
@@ -179,7 +179,7 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
                 <div className="flex justify-between items-start w-full text-xs md:text-sm font-mono tracking-widest uppercase text-zinc-400 mb-auto">
                     <div />
                     {headerActions && (
-                        <div className="pointer-events-auto">
+                        <div className="hidden md:block pointer-events-auto">
                             {headerActions}
                         </div>
                     )}
@@ -262,23 +262,8 @@ export default function HeroText({ scrollProgress, step, onOpenDemo, isVibrantMo
                 </div>
             )}
 
-            {/* Mobile-only: centered Test a Prototype button. On md+ the button lives in the right-side stack above the role-tagline. */}
-            {isSimpleMode && (
-                <div className="md:hidden absolute inset-0 z-30 flex items-center justify-center pointer-events-none">
-                    <div className="pointer-events-auto">
-                        <InstrumentButton
-                            onClick={() => {
-                                playPrototypeSound();
-                                onOpenDemo();
-                            }}
-                            isVibrantMode={isVibrantMode}
-                            className="px-8 md:px-10 py-3 md:py-4 text-base md:text-[18px]"
-                        >
-                            Test a Prototype
-                        </InstrumentButton>
-                    </div>
-                </div>
-            )}
+            {/* Mobile note: the Test a Prototype button is desktop-only - on mobile
+                the vertical featured strip is the primary content above the title. */}
 
 
 

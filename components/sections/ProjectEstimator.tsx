@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -29,7 +29,13 @@ interface EstimateResult {
     gapAnalysis?: string;
 }
 
-export default function ProjectEstimator() {
+interface ProjectEstimatorProps {
+    externalIsMinimized?: boolean;
+    externalSetMinimized?: (val: boolean) => void;
+    headerActions?: React.ReactNode;
+}
+
+export default function ProjectEstimator({ externalIsMinimized, externalSetMinimized, headerActions }: ProjectEstimatorProps) {
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [result, setResult] = useState<EstimateResult | null>(null);
@@ -37,11 +43,14 @@ export default function ProjectEstimator() {
     const [selectedDeliverables, setSelectedDeliverables] = useState<string[]>(['design_prototype']);
     const [isRefining, setIsRefining] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [isQuoteMinimized, setIsQuoteMinimized] = useState(false);
+    const [internalIsMinimized, setInternalIsMinimized] = useState(false);
     const [isFormExpanded, setIsFormExpanded] = useState(false);
     const [contactName, setContactName] = useState('');
     const [contactEmail, setContactEmail] = useState('');
     const [contactCompany, setContactCompany] = useState('');
+
+    const isQuoteMinimized = externalIsMinimized ?? internalIsMinimized;
+    const setIsQuoteMinimized = externalSetMinimized ?? setInternalIsMinimized;
 
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const collapseFormRef = useRef<(() => void) | null>(null);
@@ -227,6 +236,53 @@ export default function ProjectEstimator() {
                 )}
             </AnimatePresence>
 
+            {/* UI Control Group: Background Toggle + Quote Button */}
+            {/* Position: Bottom Right on Mobile, Right Center on Desktop */}
+            {/* UI Control Group: Background Toggle + Quote Button */}
+            {/* Position: Bottom Right on Mobile, Right Center on Desktop */}
+            {/* UI Control Group: Background Toggle + Quote Button */}
+            {/* Position: Bottom Right on Mobile, Right Center on Desktop */}
+            <div className="absolute right-4 bottom-8 md:bottom-auto md:right-8 md:top-1/2 md:-translate-y-1/2 z-[70] flex flex-col items-end pointer-events-none">
+                <div className="pointer-events-auto flex flex-col items-end">
+                    {/* External Actions (Background Toggle) */}
+                    <AnimatePresence mode="wait">
+                        {headerActions && !isFormExpanded && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.8 }}
+                                transition={{ duration: 0.2 }}
+                            >
+                                {headerActions}
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    {/* Floating dot to open/close quote - matches toggle vibe */}
+                    <AnimatePresence>
+                        {result && !isLoading && !isRefining && (
+                            <div className="relative z-30 -mt-4 md:-mt-2"> {/* Negative margin to offset Toggle's scale dead-space */}
+                                <motion.button
+                                    type="button"
+                                    initial={{ opacity: 0, scale: 0.6 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    exit={{ opacity: 0, scale: 0.6 }}
+                                    transition={{ type: 'spring', stiffness: 400, damping: 25 }}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setIsQuoteMinimized(!isQuoteMinimized);
+                                    }}
+                                    className="w-[46px] h-[46px] md:w-[51px] md:h-[51px] rounded-full backdrop-blur-sm border border-white/10 bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center shadow-lg pointer-events-auto"
+                                    aria-label={isQuoteMinimized ? 'Open quote' : 'Close quote'}
+                                >
+                                    <FileText className="w-5 h-5 md:w-6 md:h-6 text-white pointer-events-none" strokeWidth={1.5} />
+                                </motion.button>
+                            </div>
+                        )}
+                    </AnimatePresence>
+                </div>
+            </div>
+
             {/* Blur overlay + modal when quote is open */}
             <AnimatePresence>
                 {quoteExpanded && (
@@ -275,26 +331,7 @@ export default function ProjectEstimator() {
                 )}
             </AnimatePresence>
 
-            {/* Floating dot to open/close quote - under toggle, matches toggle vibe */}
-            <AnimatePresence>
-                {result && !isLoading && !isRefining && (
-                    <motion.button
-                        type="button"
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        transition={{ type: 'spring', stiffness: 400, damping: 25 }}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            setIsQuoteMinimized((prev) => !prev);
-                        }}
-                        className="absolute right-8 z-[70] top-[calc(33.33%+48px)] -translate-y-1/2 w-14 h-14 rounded-full backdrop-blur-sm border border-white/10 bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center shadow-lg pointer-events-auto"
-                        aria-label={isQuoteMinimized ? 'Open quote' : 'Close quote'}
-                    >
-                        <FileText className="w-6 h-6 text-white pointer-events-none" strokeWidth={1.5} />
-                    </motion.button>
-                )}
-            </AnimatePresence>
+
 
             <div className={`w-full transition-all duration-500 pointer-events-none z-[70] relative px-4 ${isRefining && result ? 'max-w-[1000px]' : 'max-w-[500px]'} mx-auto`}>
                 <div className={`flex flex-col md:flex-row gap-8 w-full ${isRefining && result ? 'items-start' : 'items-center justify-center'}`}>
@@ -792,7 +829,7 @@ function ResultCard({ result, input, onRefine, onEdit, onStartOver, onStartProje
                     <div className="bg-orange-500/10 border-b border-orange-500/20 p-4 flex gap-3 items-start">
                         <AlertCircle className="text-orange-500 w-5 h-5 shrink-0 mt-0.5" />
                         <p className="text-[11px] md:text-xs text-orange-200/80 leading-relaxed">
-                            ⚠ This sounds like a larger project that would benefit from a direct conversation. I can help with product strategy and UX architecture — let's talk.
+                            ⚠ This sounds like a larger project that would benefit from a direct conversation. I can help with product strategy and UX architecture - let's talk.
                         </p>
                     </div>
                 )}
@@ -869,7 +906,7 @@ function ResultCard({ result, input, onRefine, onEdit, onStartOver, onStartProje
 
                     {/* e) WHAT'S INCLUDED */}
                     <section className="space-y-2">
-                        <h4 className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest font-bold">What's Included</h4>
+                        <h4 className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest font-bold">Possible Scope</h4>
                         <ul className="grid grid-cols-1 gap-1.5">
                             {whatsIncluded.map((item: string, i: number) => (
                                 <li key={i} className="flex items-center gap-2 text-xs text-zinc-300">
@@ -883,7 +920,7 @@ function ResultCard({ result, input, onRefine, onEdit, onStartOver, onStartProje
                     {/* f) CONSIDERATIONS */}
                     <section className="space-y-1.5">
                         <h4 className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest font-bold">Considerations</h4>
-                        <p className="text-xs text-zinc-400 leading-relaxed">
+                        <p className="text-xs text-zinc-400 leading-relaxed whitespace-pre-line">
                             {considerations}
                         </p>
                     </section>

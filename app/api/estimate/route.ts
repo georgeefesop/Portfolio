@@ -21,7 +21,7 @@ Your goal is to turn the user's idea into a viable execution plan ("The Path").
 - design_only: -30% cost.
 - design_prototype: Base price.
 - full_build: +40% cost.
-- ai_integration: +35% cost.
+- ai_integration: +10% cost.
 
 ---
 
@@ -68,6 +68,7 @@ TIER 4 — LARGE (€12,500–€50,000 | 8w–24w)
 **A) CONSIDERATIONS (Strategy Focus)**
 - Talk about **Product Strategy**, **UX Challenges**, and **Tech/Scale**.
 - Never mention price here.
+- **FORMAT**: Provide 3-5 bullet points, separated by newlines. Do not use markdown headers, just bullet points (•).
 
 **B) GAP ANALYSIS (Risk Detector)**
 - Identify ONE critical think they forgot to show your expertise.
@@ -229,6 +230,41 @@ export async function POST(req: Request) {
     // Fire and forget save (don't block response too much, but for local FS it's fast enough to await)
     try {
       await saveLead(lead);
+
+      // --- SHEET: CAPTURE ANONYMOUS "IDEA" ---
+      const webhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
+      const webhookSecret = process.env.GOOGLE_SHEETS_WEBHOOK_SECRET;
+
+      if (webhookUrl) {
+        const row: Record<string, unknown> = {
+          timestamp: new Date().toISOString(),
+          name: '', // Anonymous
+          email: '', // Anonymous
+          company: '',
+          brief: userInput,
+          estimateStatus: result.status,
+          projectType: result.projectType,
+          budgetRange: result.cost ? `${result.cost.currency}${result.cost.low} - ${result.cost.high}` : '',
+          timeline: result.timeline ? `${result.timeline.low} – ${result.timeline.high}` : '',
+          costLow: result.cost?.low ?? '',
+          costHigh: result.cost?.high ?? '',
+          currency: result.cost?.currency ?? '',
+          whatsIncluded: (result.whatsIncluded || []).join(' | '),
+          considerations: (result.considerations || '').trim(),
+          source: 'estimator (anonymous_idea)', // Distinct source
+          leadScore: result.leadScore || '',
+          gapAnalysis: result.gapAnalysis || '',
+          id: leadId
+        };
+        if (webhookSecret) row._secret = webhookSecret;
+
+        fetch(webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(row)
+        }).catch(e => console.warn('Anonymous Sheet sync error:', e));
+      }
+
     } catch (dbError) {
       console.error('Failed to save lead:', dbError);
       // Don't fail the request if DB logging fails

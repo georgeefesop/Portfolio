@@ -24,7 +24,9 @@ export default function LeadsDashboard() {
             const res = await fetch(endpoint);
             const data = await res.json();
             if (Array.isArray(data)) {
-                setLeads(data.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
+                // Deduplicate by ID
+                const uniqueLeads = Array.from(new Map(data.map((item: Lead) => [item.id, item])).values());
+                setLeads(uniqueLeads.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
             }
         } catch (e) {
             console.error(e);
@@ -93,6 +95,11 @@ export default function LeadsDashboard() {
         return <div className="h-screen flex items-center justify-center bg-[#0E0E11] text-accent-primary"><Loader2 className="animate-spin" /></div>;
     }
 
+    // Metrics
+    const totalGenerated = leads.length;
+    const totalSubmitted = leads.filter(l => l.status !== 'anonymous').length;
+    const highValue = leads.filter(l => (l.leadScore || 0) >= 7).length;
+
     return (
         <div className="min-h-screen bg-[#0E0E11] text-zinc-200 p-8 pt-24 font-sans">
             <div className="max-w-7xl mx-auto space-y-8">
@@ -126,9 +133,9 @@ export default function LeadsDashboard() {
 
                 {/* KPI Cards */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <KpiCard title="Avg Score" value={(leads.reduce((a, b) => a + (b.leadScore || 0), 0) / (leads.length || 1)).toFixed(1)} />
-                    <KpiCard title="Conversion" value={`${((leads.filter(l => l.status !== 'anonymous').length / (leads.length || 1)) * 100).toFixed(0)}%`} />
-                    <KpiCard title="High Value (Score >= 7)" value={leads.filter(l => (l.leadScore || 0) >= 7 && l.email).length} />
+                    <KpiCard title="Generated" value={totalGenerated} />
+                    <KpiCard title="Submitted" value={totalSubmitted} />
+                    <KpiCard title="High Value (Score >= 7)" value={highValue} />
                 </div>
 
                 {/* Table */}
@@ -161,8 +168,10 @@ export default function LeadsDashboard() {
                                         </td>
                                         <td className="px-6 py-4 align-top w-40">
                                             <StatusBadge status={lead.status} />
-                                            <div className="text-[10px] text-zinc-600 mt-2 font-mono">
-                                                {new Date(lead.createdAt).toLocaleDateString()}
+                                            <div className="text-[10px] text-zinc-500 mt-2 font-mono">
+                                                {new Date(lead.createdAt).toLocaleString(undefined, {
+                                                    month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
+                                                })}
                                             </div>
                                         </td>
                                         <td className="px-6 py-4 align-top">
@@ -265,7 +274,7 @@ export default function LeadsDashboard() {
                                                             </div>
 
                                                             {/* Analysis Block */}
-                                                            <div className="bg-[#141419] p-5 rounded-lg border border-white/5 space-y-4">
+                                                            <div className="bg-[#141419] p-5 rounded-lg border border-white/5 space-y-6">
                                                                 <div className="grid md:grid-cols-2 gap-6">
                                                                     <div>
                                                                         <h3 className="text-xs font-mono uppercase text-zinc-500 mb-2">Lead Reasoning</h3>
@@ -280,6 +289,39 @@ export default function LeadsDashboard() {
                                                                         </div>
                                                                     )}
                                                                 </div>
+
+                                                                {/* NEW: Project Estimate Details */}
+                                                                {(lead.timeline || lead.estimateCostLow || (lead as any).whatsIncluded || (lead as any).considerations) && (
+                                                                    <div className="border-t border-white/5 pt-4">
+                                                                        <h3 className="text-xs font-mono uppercase text-zinc-500 mb-4">Initial Estimate Details</h3>
+                                                                        <div className="grid md:grid-cols-2 gap-6 text-sm">
+                                                                            {lead.timeline && (
+                                                                                <div>
+                                                                                    <span className="text-zinc-500 block text-xs mb-1">Timeline</span>
+                                                                                    <span className="text-white">{lead.timeline}</span>
+                                                                                </div>
+                                                                            )}
+                                                                            {lead.estimateCostLow && (
+                                                                                <div>
+                                                                                    <span className="text-zinc-500 block text-xs mb-1">Estimated Cost</span>
+                                                                                    <span className="text-white">€{lead.estimateCostLow?.toLocaleString()} – €{lead.estimateCostHigh?.toLocaleString()}</span>
+                                                                                </div>
+                                                                            )}
+                                                                            {(lead as any).whatsIncluded && (
+                                                                                <div className="col-span-2">
+                                                                                    <span className="text-zinc-500 block text-xs mb-1">Possible Scope</span>
+                                                                                    <p className="text-zinc-300 leading-relaxed text-xs">{(lead as any).whatsIncluded}</p>
+                                                                                </div>
+                                                                            )}
+                                                                            {(lead as any).considerations && (
+                                                                                <div className="col-span-2">
+                                                                                    <span className="text-zinc-500 block text-xs mb-1">Considerations</span>
+                                                                                    <p className="text-zinc-300 leading-relaxed text-xs whitespace-pre-line">{(lead as any).considerations}</p>
+                                                                                </div>
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                )}
 
                                                                 <hr className="border-white/5" />
 

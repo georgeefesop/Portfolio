@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import FadeIn from '../motion/FadeIn';
 import Image from 'next/image';
@@ -7,7 +7,7 @@ import { Linkedin, ExternalLink, Mail, Youtube, Phone } from 'lucide-react';
 
 export default function About() {
     return (
-        <section id="about" className="bg-bg-primary py-24 scroll-mt-20">
+        <section id="about" className="bg-bg-primary py-12 md:py-24 scroll-mt-20">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <FadeIn>
                     <div className="block md:grid md:grid-cols-12 md:gap-16 items-start clearfix">
@@ -33,7 +33,7 @@ export default function About() {
                                         I&apos;m George, a product designer and builder based in Cyprus.
                                     </p>
                                     <p>
-                                        I spent 2 years at <span className="text-white font-medium">Input Output</span> designing blockchain infrastructure for Cardano&apos;s $80bn ecosystem—RealFi platforms and cross-chain protocols. Now I work with startups and businesses building Web3, fintech, and SaaS products that need to work, not just look good.
+                                        I spent 2 years at <span className="text-white font-medium">Input Output</span> designing blockchain infrastructure for Cardano&apos;s $80bn ecosystem-RealFi platforms and cross-chain protocols. Now I work with startups and businesses building Web3, fintech, and SaaS products that need to work, not just look good.
                                     </p>
                                     <p>
                                         I specialize in taking complex technical products and making them intuitive. Fast prototyping, full-stack execution, and shipping things that solve real problems.
@@ -61,7 +61,7 @@ export default function About() {
 
                             <div className="space-y-4">
                                 <p className="text-text-secondary">
-                                    Currently open for new work — small builds to full products. If you&apos;ve got something to ship, let&apos;s talk.
+                                    Currently open for new work - small builds to full products. If you&apos;ve got something to ship, let&apos;s talk.
                                 </p>
 
                                 <div className="flex flex-wrap gap-6 pt-4">

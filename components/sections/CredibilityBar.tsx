@@ -4,13 +4,13 @@ import FadeIn from '../motion/FadeIn';
 
 export default function CredibilityBar() {
     return (
-        <section className="bg-bg-primary py-16">
+        <section className="hidden md:block bg-bg-primary py-16">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <FadeIn>
                     <div className="flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 p-8 rounded-2xl bg-bg-secondary border border-border-subtle/50 backdrop-blur-sm">
                         <div className="flex flex-col items-center md:items-start text-center md:text-left">
                             <span className="text-4xl font-bold text-white mb-1">12+ Years</span>
-                            <span className="text-text-muted text-sm uppercase tracking-widest font-mono">Multidisciplinary Craft</span>
+                            <span className="text-text-muted text-sm uppercase tracking-widest font-mono">Design &amp; Engineering</span>
                         </div>
 
                         <div className="hidden md:block w-px h-12 bg-border-medium/50"></div>
@@ -23,8 +23,8 @@ export default function CredibilityBar() {
                         <div className="hidden md:block w-px h-12 bg-border-medium/50"></div>
 
                         <div className="flex flex-col items-center md:items-end text-center md:text-right">
-                            <span className="text-4xl font-bold text-white mb-1">16K+ Followers</span>
-                            <span className="text-text-muted text-sm uppercase tracking-widest font-mono">across socials</span>
+                            <span className="text-4xl font-bold text-white mb-1">Solo, end-to-end</span>
+                            <span className="text-text-muted text-sm uppercase tracking-widest font-mono">Brand · Product · Web · AI</span>
                         </div>
                     </div>
                 </FadeIn>

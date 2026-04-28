@@ -33,7 +33,7 @@ const projects = [
 
 export default function Gallery() {
     return (
-        <section className="bg-bg-primary py-24">
+        <section className="bg-bg-primary py-12 md:py-24">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <FadeIn>
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12">
