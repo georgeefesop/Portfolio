@@ -27,9 +27,7 @@ const items: FeaturedItem[] = [
     { id: 'kingfisher-mortgages', title: 'Kingfisher Mortgages', tag: 'WordPress · Brand', thumbnail: '/images/kingfisher/hero.png' },
     { id: 'allsop-francis', title: 'Allsop & Francis', tag: 'AI Image Direction', thumbnail: '/images/allsop-francis/2.png' },
     { id: 'uk-vehicles', title: 'UK Vehicles Cyprus', tag: 'Next.js · Commerce', thumbnail: '/images/uk-vehicles/hero.png' },
-    { id: 'ai-tools', title: 'AI User Tools', tag: 'SaaS · AI', thumbnail: '/images/ai-tools/AIUT-2.png' },
-    { id: 'stellar', title: 'Stellar Observatory', tag: 'Creative Code', thumbnail: '/images/stellar/so-1.png' },
-    { id: 'forecast', title: 'Forecast', tag: 'Next.js · Latest', thumbnail: '/images/forecast/hero.png' },
+    { id: 'ai-tools', title: 'AI User Tools', tag: 'UX · AI', thumbnail: '/images/ai-tools/AIUT-2.png' },
     { id: 'instant-access-locksmiths', title: 'Instant Access Locksmiths', tag: 'Local SEO · Conversion', thumbnail: '/images/instant-access-locksmiths/hero.png' },
 ];
 

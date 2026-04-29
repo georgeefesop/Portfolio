@@ -59,20 +59,19 @@ const cases = [
     {
         id: 'ai-tools',
         title: 'AI User Tools',
-        subtitle: 'SaaS Platform for Generative AI Workflows',
+        subtitle: 'UI/UX product exploration + landing page',
         role: 'Product Designer',
         period: '2024',
-        tags: ['SaaS', 'AI', 'Product Design'],
+        tags: ['UI/UX', 'AI', 'Miro', 'Landing Page'],
         categories: ['design'] as CategoryId[],
         description: {
-            challenge: 'Design a unified SaaS platform that aggregates scattered generative AI tools into a seamless, user-friendly workflow for non-technical professionals.',
+            challenge: 'Open brief: figure out what a SaaS that aggregates scattered generative AI tools could actually feel like. Less "ship the product", more "find the shape before anything gets built".',
             work: [
-                'Developed a modular interface to house diverse AI models (Text, Image, Audio)',
-                'Created a unified design system to normalize controls across different tools',
-                'Designed comprehensive usage analytics and credit management dashboards',
-                'Streamlined the prompt engineering experience with visual helpers'
+                'Worked the problem in Miro across a series of mind maps and thinking boards - audience, jobs-to-be-done, flows, information architecture',
+                'Iterated on product concepts on the canvas before pushing pixels, narrowing a wide exploratory space down to a defendable direction',
+                'Designed a visually distinctive landing page in a bold style to give the concept a face and a tone'
             ],
-            outcome: 'Empowered professional users to leverage varying AI models without technical overhead. Reduced workflow time by 60% compared to using fragmented tools.'
+            outcome: 'A clear product direction grounded in structured thinking, plus a landing page that communicates the positioning. The deliverable was the design vocabulary and product shape, not a shipped app.'
         },
         links: {},
         images: {
