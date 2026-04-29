@@ -43,17 +43,14 @@ export default function Contact() {
                     <div className="bg-bg-secondary p-6 md:p-8 rounded-2xl border border-border-subtle shadow-sm">
 
                         {/* Identity strip */}
-                        <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-border-subtle/50">
-                            <div className="flex items-center gap-3">
-                                <UpworkWordmark className="h-7 w-auto" style={{ color: UPWORK_GREEN }} />
-                                <span
-                                    className="px-2 py-0.5 text-[10px] font-bold tracking-wider text-white rounded-full"
-                                    style={{ backgroundColor: UPWORK_GREEN }}
-                                >
-                                    PRO
-                                </span>
-                            </div>
-                            <div className="text-text-primary font-bold">$50<span className="text-text-muted font-normal">/hr</span></div>
+                        <div className="flex flex-wrap items-center gap-3 pb-6 border-b border-border-subtle/50">
+                            <UpworkWordmark className="h-7 w-auto" style={{ color: UPWORK_GREEN }} />
+                            <span
+                                className="px-2 py-0.5 text-[10px] font-bold tracking-wider text-white rounded-full"
+                                style={{ backgroundColor: UPWORK_GREEN }}
+                            >
+                                PRO
+                            </span>
                         </div>
 
                         <div className="pt-5 pb-6">
@@ -84,16 +81,13 @@ export default function Contact() {
                         {/* Why-Upwork value props */}
                         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-5">
                             {[
-                                { icon: Shield, title: 'Escrow-protected', body: 'Funded before I start.' },
-                                { icon: Star, title: 'Verified reviews', body: 'Real clients, every contract.' },
-                                { icon: Zap, title: 'Zero admin', body: 'Upwork handles billing.' },
+                                { icon: Shield, title: 'Escrow-protected' },
+                                { icon: Star, title: 'Verified reviews' },
+                                { icon: Zap, title: 'Zero admin' },
                             ].map((v) => (
-                                <div key={v.title} className="flex items-start gap-3">
-                                    <v.icon className="text-accent-primary shrink-0 mt-0.5" size={18} />
-                                    <div>
-                                        <p className="text-text-primary font-semibold text-sm">{v.title}</p>
-                                        <p className="text-text-secondary text-sm">{v.body}</p>
-                                    </div>
+                                <div key={v.title} className="flex items-center gap-3">
+                                    <v.icon className="text-accent-primary shrink-0" size={18} />
+                                    <p className="text-text-primary font-semibold text-sm">{v.title}</p>
                                 </div>
                             ))}
                         </div>

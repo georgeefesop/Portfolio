@@ -77,7 +77,7 @@ export default function HeroText({ scrollProgress, isVibrantMode = false, header
                     {/* Left Side: Main Title */}
                     <motion.div
                         variants={itemVariants}
-                        className="w-full md:max-w-[60%] lg:max-w-[600px] text-left"
+                        className="w-full md:max-w-[65%] lg:max-w-[720px] text-left"
                     >
                         <div className="mb-2 md:mb-4">
                             <Image
@@ -91,14 +91,20 @@ export default function HeroText({ scrollProgress, isVibrantMode = false, header
                                 priority
                             />
                         </div>
-                        <h1 className="font-black tracking-tighter text-white leading-[0.85] transition-all duration-500 text-3xl sm:text-4xl md:text-5xl lg:text-7xl uppercase">
-                            <span className="md:hidden block">Product Designer<br />&amp; Developer</span>
-                            <span className="hidden md:block">PRODUCT DESIGNER<br />&amp; DEVELOPER</span>
+                        <h1 className="font-black tracking-tighter text-white leading-[0.85] transition-all duration-500 uppercase">
+                            <span className="md:hidden block">
+                                <span className="block text-3xl sm:text-4xl">Product</span>
+                                <span className="block text-xl sm:text-2xl mt-1">Designer &amp; Developer</span>
+                            </span>
+                            <span className="hidden md:block">
+                                <span className="block text-5xl lg:text-7xl">PRODUCT</span>
+                                <span className="block text-3xl lg:text-5xl mt-1">DESIGNER &amp; DEVELOPER</span>
+                            </span>
                         </h1>
 
-                        <div className="mt-1 md:mt-2">
-                            <span className="text-white/50 font-medium tracking-tight block text-lg sm:text-xl md:text-3xl">
-                                End to end. By one person.
+                        <div className="mt-2 md:mt-3">
+                            <span className="text-white/50 font-medium tracking-widest uppercase block text-sm sm:text-base md:text-lg">
+                                End to end · By one person
                             </span>
                         </div>
 

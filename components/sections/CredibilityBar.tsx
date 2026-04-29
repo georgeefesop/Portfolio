@@ -1,13 +1,36 @@
 'use client';
 
-import Image from 'next/image';
 import FadeIn from '../motion/FadeIn';
 
+// height: optical size; aspect: SVG viewBox aspect ratio (w / h)
 const logos = [
-    { name: 'Input Output (IOG)', src: '/logos/iog.svg', height: 22 },
-    { name: 'Cardano', src: '/logos/cardano.svg', height: 18 },
-    { name: 'Nike', src: '/logos/nike.svg', height: 18 },
+    { name: 'Input Output (IOG)', src: '/logos/iog.svg', height: 22, aspect: 240 / 31 },
+    { name: 'Cardano', src: '/logos/cardano.svg', height: 28, aspect: 1250 / 251.17 },
+    { name: 'Nike', src: '/logos/nike.svg', height: 26, aspect: 1000 / 356.39 },
 ];
+
+function Logo({ logo }: { logo: typeof logos[number] }) {
+    return (
+        <span
+            role="img"
+            aria-label={logo.name}
+            className="block shrink-0"
+            style={{
+                width: `${logo.height * logo.aspect}px`,
+                height: `${logo.height}px`,
+                backgroundColor: 'currentColor',
+                WebkitMaskImage: `url(${logo.src})`,
+                maskImage: `url(${logo.src})`,
+                WebkitMaskSize: 'contain',
+                maskSize: 'contain',
+                WebkitMaskRepeat: 'no-repeat',
+                maskRepeat: 'no-repeat',
+                WebkitMaskPosition: 'center',
+                maskPosition: 'center',
+            }}
+        />
+    );
+}
 
 export default function CredibilityBar() {
     return (
@@ -20,31 +43,10 @@ export default function CredibilityBar() {
                         </span>
 
                         <div className="w-full overflow-x-auto no-scrollbar">
-                            <div className="flex items-center gap-8 md:gap-14 text-text-muted hover:text-white transition-colors duration-500 min-w-max">
+                            <div className="flex items-center gap-10 md:gap-16 text-text-muted hover:text-text-primary transition-colors duration-500 min-w-max">
                                 {logos.map((logo) => (
-                                    <div
-                                        key={logo.name}
-                                        className="flex items-center shrink-0"
-                                        style={{ height: logo.height }}
-                                        aria-label={logo.name}
-                                    >
-                                        <Image
-                                            src={logo.src}
-                                            alt={logo.name}
-                                            width={0}
-                                            height={logo.height}
-                                            sizes="200px"
-                                            style={{ width: 'auto', height: `${logo.height}px` }}
-                                            className="object-contain"
-                                        />
-                                    </div>
+                                    <Logo key={logo.name} logo={logo} />
                                 ))}
-                                <a
-                                    href="#work"
-                                    className="text-sm text-text-muted hover:text-accent-primary transition-colors whitespace-nowrap shrink-0 font-mono"
-                                >
-                                    View case studies →
-                                </a>
                             </div>
                         </div>
 
