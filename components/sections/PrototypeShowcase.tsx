@@ -12,7 +12,7 @@ export default function PrototypeShowcase() {
         <section className="bg-bg-primary py-16 md:py-28 scroll-mt-20 overflow-hidden">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-                    {/* Info card — left on lg+, on top on smaller screens */}
+                    {/* Info card - left on lg+, on top on smaller screens */}
                     <FadeIn className="lg:col-span-5">
                         <div className="bg-bg-secondary p-7 md:p-10 rounded-2xl border border-border-subtle">
                             <span className="text-xs uppercase tracking-wider text-text-muted font-mono">
@@ -23,7 +23,7 @@ export default function PrototypeShowcase() {
                             </h2>
                             <div className="mt-6 space-y-4 text-text-secondary text-base leading-relaxed">
                                 <p>
-                                    Prototypes let us test usability before we ship — click flows, swap variants, iterate in days instead of weeks. Decisions get made on real product, not static frames.
+                                    Prototypes let us test usability before we ship - click flows, swap variants, iterate in days instead of weeks. Decisions get made on real product, not static frames.
                                 </p>
                                 <p>
                                     Start from a Figma file, a brief, or a rough idea. We end up with something you can actually use.
@@ -39,7 +39,7 @@ export default function PrototypeShowcase() {
                         </div>
                     </FadeIn>
 
-                    {/* Prototype frame — right on lg+, below on smaller screens */}
+                    {/* Prototype frame - right on lg+, below on smaller screens */}
                     <FadeIn delay={0.15} className="lg:col-span-7">
                         <button
                             type="button"

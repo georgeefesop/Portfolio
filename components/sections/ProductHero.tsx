@@ -129,7 +129,7 @@ export default function ProductHero() {
         }
     }, [isModalOpen]);
 
-    // "Carbon click" — short percussive transient on prototype open.
+    // "Carbon click" - short percussive transient on prototype open.
     // Restored from the old hero button; lives here now so any caller of
     // the prototype:open event gets the same haptic feedback.
     const playPrototypeSound = () => {

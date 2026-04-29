@@ -6,12 +6,12 @@ import { Zap, Layout, Globe, Sparkles, Search, Compass } from 'lucide-react';
 const services = [
     {
         title: 'Product & UX Design',
-        description: 'SaaS interfaces, dashboards, and mobile apps. Research, wireframes, hi-fi UI, and design systems your engineers can build from. Same person designs and ships — no handoff meetings.',
+        description: 'SaaS interfaces, dashboards, and mobile apps. Research, wireframes, hi-fi UI, and design systems your engineers can build from. Same person designs and ships - no handoff meetings.',
         icon: Layout
     },
     {
         title: 'WordPress, AI-supercharged',
-        description: 'Bring a Figma file, a brief, or a rough idea. I build custom themes from scratch — no template bloat, schema-marked, performance-tuned. AI-assisted dev means bespoke sites in days, not weeks. Local-first workflow, staged, merged clean. Loom walkthrough on handover.',
+        description: 'Bring a Figma file, a brief, or a rough idea. I build custom themes from scratch - no template bloat, schema-marked, performance-tuned. AI-assisted dev means bespoke sites in days, not weeks. Local-first workflow, staged, merged clean. Loom walkthrough on handover.',
         icon: Globe
     },
     {
@@ -21,7 +21,7 @@ const services = [
     },
     {
         title: 'AI Image & Video Direction',
-        description: 'Directed AI imagery for brand and marketing — image libraries, social content, product visuals. Briefed and art-directed, not slot-machined.',
+        description: 'Directed AI imagery for brand and marketing - image libraries, social content, product visuals. Briefed and art-directed, not slot-machined.',
         icon: Sparkles
     },
     {

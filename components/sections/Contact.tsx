@@ -36,7 +36,7 @@ export default function Contact() {
                             Hire me on Upwork
                         </h2>
                         <p className="text-text-secondary text-lg max-w-2xl mx-auto">
-                            Escrow protection, verified reviews, no invoices to chase. I work mostly through Upwork — it&apos;s the cleanest path for both of us.
+                            Escrow protection, verified reviews, no invoices to chase. I work mostly through Upwork - it&apos;s the cleanest path for both of us.
                         </p>
                     </div>
 
@@ -75,7 +75,7 @@ export default function Contact() {
                         {/* Testimonial */}
                         <blockquote className="mt-6 pl-4 border-l-2 border-accent-primary text-text-secondary italic">
                             <p>&ldquo;George impressed me a lot. With a two-day turnaround and a challenging brief, he brought the goods and put together a design that nailed the tone.&rdquo;</p>
-                            <footer className="mt-2 text-xs not-italic text-text-muted">— Upwork client, UI/UX project</footer>
+                            <footer className="mt-2 text-xs not-italic text-text-muted">- Upwork client, UI/UX project</footer>
                         </blockquote>
 
                         {/* Why-Upwork value props */}

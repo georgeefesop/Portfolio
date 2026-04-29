@@ -4,10 +4,10 @@ import FadeIn from '../motion/FadeIn';
 import ImageWithFallback from '@/components/ui/ImageWithFallback';
 
 const bringList = [
-    'Experience designing at scale — Cardano\'s $80bn ecosystem',
-    'AI-native workflows — Cursor, generative tools, modern automation',
-    'Full-stack capability — design and Next.js/React development',
-    'Teaching mindset — 15K designers follow my content on TikTok',
+    'Experience designing at scale - Cardano\'s $80bn ecosystem',
+    'AI-native workflows - Cursor, generative tools, modern automation',
+    'Full-stack capability - design and Next.js/React development',
+    'Teaching mindset - 15K designers follow my content on TikTok',
 ];
 
 export default function About() {
@@ -35,10 +35,10 @@ export default function About() {
                                 <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-8">About</h2>
                                 <div className="space-y-6 text-base md:text-lg text-text-secondary leading-relaxed max-w-2xl">
                                     <p>
-                                        I&apos;m George — a product designer and developer based in Cyprus. I&apos;ve been freelancing for 12 years and spent two of those leading design at <span className="text-white font-medium">Input Output</span>, the engineering company behind Cardano.
+                                        I&apos;m George - a product designer and developer based in Cyprus. I&apos;ve been freelancing for 12 years and spent two of those leading design at <span className="text-white font-medium">Input Output</span>, the engineering company behind Cardano.
                                     </p>
                                     <p>
-                                        I designed and shipped <span className="text-white font-medium">RealFi</span> — a financial inclusion platform now serving SMEs in East Africa, part of Cardano&apos;s $80bn ecosystem. Before that, design work for Nike Training Club, Bournemouth University, and startups across fintech, hospitality, ecommerce, and healthtech.
+                                        I designed and shipped <span className="text-white font-medium">RealFi</span> - a financial inclusion platform now serving SMEs in East Africa, part of Cardano&apos;s $80bn ecosystem. Before that, design work for Nike Training Club, Bournemouth University, and startups across fintech, hospitality, ecommerce, and healthtech.
                                     </p>
                                     <p>
                                         What I do now is rare on Upwork: I design <em>and</em> build. Next.js front-end, WordPress, AI image direction, SEO, marketing automation. One person, one workflow, one person responsible.

@@ -103,15 +103,6 @@ export default function Navigation() {
                                 {link.name}
                             </a>
                         ))}
-                        {/* Admin Link (Dev Only) */}
-                        {process.env.NODE_ENV === 'development' && (
-                            <Link
-                                href="/admin/leads"
-                                className="text-xs font-mono text-emerald-500 hover:text-emerald-400 border border-emerald-500/20 bg-emerald-500/10 px-2 py-1 rounded"
-                            >
-                                [ADMIN]
-                            </Link>
-                        )}
                     </div>
 
                     {/* Mobile Menu Button */}
@@ -164,16 +155,6 @@ export default function Navigation() {
                                     {link.name}
                                 </a>
                             ))}
-                            {/* Mobile Admin Link */}
-                            {process.env.NODE_ENV === 'development' && (
-                                <Link
-                                    href="/admin/leads"
-                                    onClick={() => setIsOpen(false)}
-                                    className="block px-3 py-3 rounded-md text-sm font-mono text-emerald-500 bg-emerald-500/5 border border-emerald-500/20 mt-4 text-center"
-                                >
-                                    [ACCESS CRM]
-                                </Link>
-                            )}
                         </div>
                     </motion.div>
                 )}

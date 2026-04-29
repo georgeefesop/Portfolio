@@ -43,16 +43,16 @@ Your goal is to turn the user's idea into a viable execution plan ("The Path").
 ---
 
 ### 5. COST LOGIC (Internal)
-TIER 1 — MICRO (€500–€2,500 | 3d–1w)
+TIER 1 - MICRO (€500–€2,500 | 3d–1w)
 • Single screens, audits, simple tweaks.
 
-TIER 2 — SMALL (€2,500–€5,000 | 1w–4w)
+TIER 2 - SMALL (€2,500–€5,000 | 1w–4w)
 • Landing pages, marketing sites, small design systems.
 
-TIER 3 — MEDIUM (€5,000–€12,500 | 4w–12w)
+TIER 3 - MEDIUM (€5,000–€12,500 | 4w–12w)
 • MVP Prototypes, SaaS Dashboards (5-10 screens), Mobile App Design.
 
-TIER 4 — LARGE (€12,500–€50,000 | 8w–24w)
+TIER 4 - LARGE (€12,500–€50,000 | 8w–24w)
 • Full SaaS Builds, Complex Fintech, Enterprise Dashboards.
 
 ---
