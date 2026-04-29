@@ -55,11 +55,11 @@ function HorizontalCard({ item }: { item: FeaturedItem }) {
                 />
             </div>
             <div className="mt-3">
-                <div className="text-base font-medium text-white truncate group-hover:text-accent-primary transition-colors">
+                <div className="text-base font-medium text-text-primary truncate group-hover:text-accent-primary transition-colors">
                     {item.title}
                 </div>
                 <div className="mt-1.5">
-                    <span className="inline-block text-xs font-mono uppercase tracking-wider text-text-muted bg-zinc-800 border border-zinc-700 px-2.5 py-1 rounded">
+                    <span className="inline-block text-xs font-mono uppercase tracking-wider text-text-secondary bg-bg-tertiary/40 border border-border-medium/60 px-2.5 py-1 rounded">
                         {item.tag}
                     </span>
                 </div>
@@ -74,7 +74,7 @@ function VerticalCard({ item }: { item: FeaturedItem }) {
     const zoomClass = isInstantAccess ? 'scale-[1.12]' : isZoomed ? 'scale-110' : '';
     return (
         <div className="w-full group">
-            <div className="relative aspect-[16/10] rounded-lg overflow-hidden bg-white/5 border-2 border-white/10">
+            <div className="relative aspect-[16/10] rounded-lg overflow-hidden bg-bg-tertiary border-2 border-border-subtle">
                 <ImageWithFallback
                     src={item.thumbnail}
                     alt={item.title}
@@ -82,10 +82,15 @@ function VerticalCard({ item }: { item: FeaturedItem }) {
                     sizes="(max-width: 768px) 80vw, 312px"
                     className={`object-cover opacity-95 transition-transform duration-500 ${zoomClass}`}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-                <div className="absolute bottom-2.5 left-3 right-3">
-                    <div className="text-sm font-medium text-white truncate">{item.title}</div>
-                    <div className="text-[10px] font-mono uppercase tracking-wider text-white/70 mt-0.5">{item.tag}</div>
+            </div>
+            <div className="mt-3">
+                <div className="text-base font-medium text-text-primary truncate">
+                    {item.title}
+                </div>
+                <div className="mt-1.5">
+                    <span className="inline-block text-xs font-mono uppercase tracking-wider text-text-secondary bg-bg-tertiary/40 border border-border-medium/60 px-2.5 py-1 rounded">
+                        {item.tag}
+                    </span>
                 </div>
             </div>
         </div>
@@ -210,7 +215,7 @@ function VerticalStrip() {
                 maskImage: 'linear-gradient(to bottom, transparent 0, black 14%, black 86%, transparent 100%)',
             }}
         >
-            <motion.div ref={trackRef} style={{ y }} className="flex flex-col gap-5 h-max will-change-transform px-6">
+            <motion.div ref={trackRef} style={{ y }} className="flex flex-col gap-5 h-max will-change-transform px-12">
                 {items.map((item, idx) => renderClickable(item, `va-${idx}`, 'block w-full', VerticalCard))}
                 {items.map((item, idx) => renderClickable(item, `vb-${idx}`, 'block w-full', VerticalCard))}
             </motion.div>

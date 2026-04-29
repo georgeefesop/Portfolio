@@ -27,6 +27,26 @@
   --color-border-medium: var(--border-medium);
   --color-border-strong: var(--border-strong);
 
+  /* Prototype POS colours - independent scale so the simulated app surface keeps
+     its own visual language separate from the editorial portfolio palette. */
+  --color-pos-bg-1: var(--pos-bg-1);
+  --color-pos-bg-2: var(--pos-bg-2);
+  --color-pos-bg-3: var(--pos-bg-3);
+  --color-pos-bg-4: var(--pos-bg-4);
+  --color-pos-bg-5: var(--pos-bg-5);
+  --color-pos-text-1: var(--pos-text-1);
+  --color-pos-text-2: var(--pos-text-2);
+  --color-pos-text-3: var(--pos-text-3);
+  --color-pos-text-4: var(--pos-text-4);
+  --color-pos-text-5: var(--pos-text-5);
+  --color-pos-text-6: var(--pos-text-6);
+  --color-pos-border-subtle: var(--pos-border-subtle);
+  --color-pos-border-medium: var(--pos-border-medium);
+  --color-pos-border-strong: var(--pos-border-strong);
+  --color-pos-accent: var(--pos-accent);
+  --color-pos-accent-hover: var(--pos-accent-hover);
+  --color-pos-accent-text: var(--pos-accent-text);
+
   /* Fonts */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -35,7 +55,7 @@
 
 :root {
   /* Backgrounds */
-  --bg-hero: #000000;
+  --bg-hero: #05050A;
   --bg-primary: #0F0F0F;
   --bg-secondary: #1A1A1A;
   --bg-tertiary: #242424;
@@ -56,7 +76,182 @@
   --border-medium: #3A3A3A;
   --border-strong: #4A4A4A;
 
+  /* Prototype POS - dark mode (mirrors the original literal zinc values).
+     Scale: 1 = outermost/darkest chassis, 5 = innermost/brightest interactive. */
+  --pos-bg-1: #09090B;             /* zinc-950, outer chassis */
+  --pos-bg-2: #18181B;             /* zinc-900, main panels */
+  --pos-bg-3: #27272A;             /* zinc-800, raised cards / inputs */
+  --pos-bg-4: #3F3F46;             /* zinc-700, buttons / qty controls */
+  --pos-bg-5: #52525B;             /* zinc-600, lightest interactive */
+
+  --pos-text-1: #FFFFFF;           /* boldest - totals, item titles, primary */
+  --pos-text-2: #F4F4F5;           /* zinc-100 - brand name */
+  --pos-text-3: #D4D4D8;           /* zinc-300 - body */
+  --pos-text-4: #A1A1AA;           /* zinc-400 - secondary */
+  --pos-text-5: #71717A;           /* zinc-500 - muted */
+  --pos-text-6: #52525B;           /* zinc-600 - faintest */
+
+  --pos-border-subtle: #27272A;    /* zinc-800 */
+  --pos-border-medium: #3F3F46;    /* zinc-700 */
+  --pos-border-strong: #52525B;    /* zinc-600 */
+
+  --pos-accent: #AB7B62;           /* warm terracotta, matches site dark accent */
+  --pos-accent-hover: #9A6B52;
+  --pos-accent-text: #000000;      /* black ink reads on terracotta */
+
   color-scheme: dark;
+}
+
+/* === Light theme previews (temporary, picker-driven). Touched to force Turbopack CSS recompile. === */
+
+[data-theme="light-sand"] {
+  --bg-hero: #EFE6D6;
+  --bg-primary: #EFE6D6;
+  --bg-secondary: #E5DAC4;
+  --bg-tertiary: #DCD0B6;
+
+  --text-primary: #2A241D;
+  --text-secondary: #3D362C;
+  --text-muted: #6B5F50;
+  --text-dim: #8A7E6E;
+
+  --border-subtle: #D4C8AE;
+  --border-medium: #C9BBA1;
+  --border-strong: #B8A98C;
+
+  color-scheme: light;
+}
+
+[data-theme="light-linen"] {
+  --bg-hero: #F1EDE3;
+  --bg-primary: #F1EDE3;
+  --bg-secondary: #E8E2D2;
+  --bg-tertiary: #DDD5C2;
+
+  --text-primary: #3A332A;
+  --text-secondary: #4A4338;
+  --text-muted: #7A6F60;
+  --text-dim: #9A8E7E;
+
+  --border-subtle: #DDD5C2;
+  --border-medium: #CDC4B0;
+  --border-strong: #BBB09A;
+
+  color-scheme: light;
+}
+
+[data-theme="light-olive"] {
+  --bg-hero: #E8E0CA;
+  --bg-primary: #E8E0CA;
+  --bg-secondary: #DDD3B9;     /* subtle card surface */
+  --bg-tertiary: #C5B894;       /* darker - pills + clear card hover */
+
+  /* Browner deep coffee. Reads as "rich dark brown" on cream rather than neutral grey. */
+  --text-primary: #3A2D18;
+  --text-secondary: #4A3826;
+  --text-muted: #6F6852;
+  --text-dim: #8E876F;
+
+  /* Deep espresso. Must be DARKER than --text-primary so hover transitions
+     (text-primary -> accent-primary) deepen rather than lighten on cream. */
+  --accent-primary: #2A1B08;
+  --accent-secondary: #6E7C66;
+  --accent-highlight: #8C5520;
+
+  --border-subtle: #CDC4A8;
+  --border-medium: #BFB596;
+  --border-strong: #A89B78;
+
+  /* Prototype POS - light mode. Warm cream palette so the POS feels like a sibling
+     to the rest of the light theme rather than a sterile cool-gray dropdown. */
+  --pos-bg-1: #F0EADA;             /* outer chassis - warm cream */
+  --pos-bg-2: #FBF7EC;             /* main panels - softer warm off-white */
+  --pos-bg-3: #F5EFE0;             /* raised cards / inputs */
+  --pos-bg-4: #EBE3D0;             /* buttons / qty controls */
+  --pos-bg-5: #DDD2B9;             /* hover / lightest interactive */
+
+  --pos-text-1: #2D241A;           /* boldest - totals, item titles */
+  --pos-text-2: #3D2F20;           /* brand name */
+  --pos-text-3: #4F3F2C;           /* body */
+  --pos-text-4: #6B5C46;           /* secondary */
+  --pos-text-5: #8A7C66;           /* muted */
+  --pos-text-6: #A89A85;           /* faintest */
+
+  --pos-border-subtle: #E5DCC6;
+  --pos-border-medium: #D2C7AA;
+  --pos-border-strong: #B5A687;
+
+  --pos-accent: #92400E;           /* warm rust - reads well on cream, brand-adjacent */
+  --pos-accent-hover: #7C2D12;
+  --pos-accent-text: #FBF7EC;      /* warm off-white ink on rust accent */
+
+  color-scheme: light;
+}
+
+/* === Theme-aware signature (CSS mask, exact colour) ===
+   PNG alpha becomes the shape, background-color becomes the ink. */
+.theme-signature {
+  -webkit-mask-image: url('/signature.png');
+  mask-image: url('/signature.png');
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: left center;
+  mask-position: left center;
+  background-color: #FFFFFF;
+  transition: background-color 500ms ease;
+}
+
+[data-theme^="light-"] .theme-signature {
+  /* Deep reddish-brown. Slightly darker than --text-secondary (#4A3826) so the
+     signature reads as the strongest weight in this stack.
+     Alpha 0.9 to soften the ink one notch in light mode. */
+  background-color: rgba(74, 36, 16, 0.9);
+}
+
+/* Show one element per theme. Apply .theme-only-dark to elements that should
+   only render in the default (dark) theme, .theme-only-light for light themes. */
+.theme-only-light { display: none; }
+[data-theme^="light-"] .theme-only-dark { display: none; }
+[data-theme^="light-"] .theme-only-light { display: block; }
+
+/* Prototype POS background grid - light/dark stroke swap, mirrors hero-grid pattern. */
+.pos-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+[data-theme^="light-"] .pos-grid {
+  background-image:
+    linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+}
+
+/* Hero subtitle - drops opacity in light mode AND tints toward the signature's
+   reddish-brown hue, so the line sits visually below both the H1 and the signature. */
+.theme-hero-subtitle {
+  color: var(--text-primary);
+  opacity: 0.4;
+  transition: opacity 500ms ease, color 500ms ease;
+}
+[data-theme^="light-"] .theme-hero-subtitle {
+  /* Reddish-brown to share the signature's hue, kept lighter via low opacity. */
+  color: rgb(74, 36, 16);
+  opacity: 0.45;
+}
+
+/* === Hero grid that swaps stroke colour between dark and light themes ===
+   The SVG is inlined in CSS (data-URI variables don't resolve), so we override
+   the whole background-image for light themes. */
+.hero-grid {
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath d='M0 40L0 0H40' stroke='%23FFFFFF' stroke-width='1' stroke-opacity='1'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 40px 40px;
+  opacity: 0.20;
+}
+[data-theme^="light-"] .hero-grid {
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath d='M0 40L0 0H40' stroke='%232A241D' stroke-width='1' stroke-opacity='1'/%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.18;
 }
 
 /* Fix for Select Options in Dark Mode */
@@ -86,7 +281,9 @@ h5,
 h6 {
   font-weight: 700;
   letter-spacing: -0.025em;
-  color: var(--text-primary);
+  /* Inherit color from body (text-primary) by default. Removed explicit
+     color: var(--text-primary) so Tailwind utility classes like
+     text-text-secondary on a heading actually take effect. */
 }
 
 @utility text-balance {
@@ -247,7 +444,7 @@ input:-webkit-autofill:active {
   }
 }
 
-/* Featured work strip — continuous right-to-left marquee. The track contains
+/* Featured work strip - continuous right-to-left marquee. The track contains
    two copies of the items, so translating by -50% loops seamlessly.
    Class names avoid the `animate-*` prefix because Tailwind v4 claims that
    namespace as a utility and would override our animation. */

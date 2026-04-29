@@ -62,13 +62,20 @@ export default function PrototypeShowcase() {
                                 <span className="text-text-muted text-[11px] font-mono opacity-50">⌘</span>
                             </div>
 
-                            {/* Screenshot */}
+                            {/* Screenshot - swaps per theme via .theme-only-{dark,light} */}
                             <div className="relative aspect-[1504/926] bg-bg-primary">
                                 <ImageWithFallback
                                     src="/images/prototype-showcase.png"
                                     alt="POS prototype demo screenshot"
                                     fill
-                                    className="object-cover transition-transform duration-700 group-hover:scale-[1.015]"
+                                    className="theme-only-dark object-cover transition-transform duration-700 group-hover:scale-[1.015]"
+                                    sizes="(max-width: 1024px) 100vw, 700px"
+                                />
+                                <ImageWithFallback
+                                    src="/images/light-mode-mvp.png"
+                                    alt="POS prototype demo screenshot (light mode)"
+                                    fill
+                                    className="theme-only-light object-cover transition-transform duration-700 group-hover:scale-[1.015]"
                                     sizes="(max-width: 1024px) 100vw, 700px"
                                 />
 

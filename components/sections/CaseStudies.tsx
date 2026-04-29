@@ -23,7 +23,7 @@ const cases = [
     {
         id: 'realfi',
         title: 'RealFi',
-        subtitle: 'Financial inclusion platform for emerging markets',
+        subtitle: 'Blockchain-backed lending platform serving underbanked SMEs across emerging markets, part of Cardano\'s $80bn ecosystem.',
         role: 'Product Designer',
         period: '2023-2024 (Input Output)',
         tags: ['Web3', 'Fintech', 'Product Design'],
@@ -59,7 +59,7 @@ const cases = [
     {
         id: 'ai-tools',
         title: 'AI User Tools',
-        subtitle: 'UI/UX product exploration + landing page',
+        subtitle: 'Product exploration and landing-page work for a SaaS aggregator of generative AI tools, defining its shape and tone before build.',
         role: 'Product Designer',
         period: '2024',
         tags: ['UI/UX', 'AI', 'Miro', 'Landing Page'],
@@ -93,7 +93,7 @@ const cases = [
     {
         id: 'stellar',
         title: 'Stellar Observatory',
-        subtitle: 'Interactive Generative Art Console',
+        subtitle: 'Real-time generative art console blending sci-fi UI with Canvas-API performance, including a vault for cataloguing cosmic outputs.',
         role: 'Design Engineer',
         period: '2025',
         tags: ['Generative Art', 'React', 'Canvas', 'UI Design'],
@@ -125,7 +125,7 @@ const cases = [
     {
         id: 'uk-vehicles',
         title: 'UK Vehicles Cyprus',
-        subtitle: 'Vehicle import platform saving Cyprus businesses thousands per purchase',
+        subtitle: 'Multi-language Next.js platform for UK-to-Cyprus vehicle imports, with a savings calculator that closes high-ticket purchases without sales calls.',
         role: 'Full-Stack Developer',
         period: '2025',
         tags: ['Next.js', 'Web Development', 'E-Commerce'],
@@ -159,7 +159,7 @@ const cases = [
     {
         id: 'kingfisher-mortgages',
         title: 'Kingfisher Mortgages',
-        subtitle: 'Independent UK mortgage broker rebuild',
+        subtitle: 'WordPress rebuild and brand refresh for an independent UK mortgage broker, repositioned as premium and trust-led with full schema markup.',
         role: 'Brand, design & WordPress build',
         period: '2025',
         tags: ['WordPress', 'Elementor', 'Brand', 'Schema / AEO', 'Financial services'],
@@ -193,7 +193,7 @@ const cases = [
     {
         id: 'olympus-sports',
         title: 'Olympus Sports',
-        subtitle: 'B2B gym equipment distributor - WordPress rebuild',
+        subtitle: 'Catalogue-first WordPress rebuild for a UK B2B distributor of commercial gym equipment, designed for trade buyers who arrive ready to buy.',
         role: 'WordPress build + design',
         period: '2024',
         tags: ['WordPress', 'Elementor', 'B2B', 'E-commerce'],
@@ -227,7 +227,7 @@ const cases = [
     {
         id: 'instant-access-locksmiths',
         title: 'Instant Access Locksmiths',
-        subtitle: 'UK locksmith conversion site - Next.js rebuild',
+        subtitle: 'Next.js rebuild for a Solihull locksmith service, built phone-first for late-night visitors with programmatic local-SEO landing pages.',
         role: 'Design + build (Next.js)',
         period: '2025',
         tags: ['Next.js', 'Tailwind', 'Local SEO', 'Conversion'],
@@ -264,7 +264,7 @@ const cases = [
     {
         id: 'forecast',
         title: 'Forecast',
-        subtitle: 'Events aggregator for Cyprus',
+        subtitle: 'Solo-built events aggregator for Cyprus, replacing scattered Facebook pages and cluttered listing sites with a calm, fast Saturday-deciding surface.',
         role: 'Founder + sole designer/builder',
         period: '2026',
         tags: ['Next.js', 'Container Queries', 'Design Systems', 'Product Design'],
@@ -295,7 +295,7 @@ const cases = [
     {
         id: 'la-hacienda',
         title: 'La Hacienda Cyprus',
-        subtitle: 'WordPress build + Google Ads for a boutique hotel in Agios Athanasios',
+        subtitle: 'WordPress build and Google Ads campaigns for an independent boutique hotel in Limassol, owning the booking funnel end to end.',
         role: 'WordPress build + Google Ads',
         period: '2025',
         tags: ['WordPress', 'Elementor', 'Google Ads', 'Hospitality', 'Conversion'],
@@ -329,7 +329,7 @@ const cases = [
     {
         id: 'allsop-francis',
         title: 'Allsop & Francis',
-        subtitle: 'AI art direction & image generation for a B2B laundry distributor',
+        subtitle: 'AI art direction and a custom on-brand image library for a B2B commercial-laundry distributor, across seven sectors and nine service lines.',
         role: 'AI art director',
         period: '2025',
         tags: ['AI', 'Art Direction', 'Photography', 'Brand', 'B2B'],
@@ -369,7 +369,7 @@ const cases = [
     {
         id: 'saxseat',
         title: 'SaxSeat',
-        subtitle: 'E-commerce product page for a Kickstarter-launched startup',
+        subtitle: 'End-to-end product-page design for a Kickstarter-launched saxophone-seat startup, validated with HotJar recordings before scaling marketing spend.',
         role: 'UX & UI designer (sole)',
         period: '2020–2021',
         tags: ['Web Design', 'UX Strategy', 'E-commerce', 'Usability Testing'],
@@ -403,7 +403,7 @@ const cases = [
     {
         id: 'sidechains',
         title: 'Sidechain Interoperability',
-        subtitle: 'Developer infrastructure for blockchain crosschain protocols',
+        subtitle: 'Developer experience for Input Output\'s EVM sidechain toolkit, bridging Cardano and Ethereum so Solidity developers can build on Cardano.',
         role: 'Product Designer',
         period: '2022-2024 (Input Output)',
         tags: ['Blockchain', 'Dev Tools', 'Infrastructure'],
@@ -443,7 +443,7 @@ const externalCases: {
     {
         id: 'shackle',
         title: 'Shackle App',
-        subtitle: 'Mobile · Hospitality',
+        subtitle: 'Mobile app concept for a hospitality booking experience, available to view in detail on Behance.',
         tags: ['Mobile', 'Hospitality', 'Product Design'],
         categories: ['design'],
         thumbnail: '/images/gallery/shackle.jpg',
@@ -452,7 +452,7 @@ const externalCases: {
     {
         id: 'smartjobs',
         title: 'SmartJobs Platform',
-        subtitle: 'SaaS · Job Board',
+        subtitle: 'SaaS-style job-board UX/UI design for an enterprise hiring platform - full case study available on Behance.',
         tags: ['SaaS', 'Job Board', 'UX/UI'],
         categories: ['design'],
         thumbnail: '/images/gallery/smartjobs.png',
@@ -461,7 +461,7 @@ const externalCases: {
     {
         id: 'bank-of-cyprus',
         title: 'Bank of Cyprus',
-        subtitle: 'Web · Fintech · Page redesign',
+        subtitle: 'Page redesign for Bank of Cyprus, refreshing key flows and presentation - viewable on my Upwork profile.',
         tags: ['Web', 'Fintech', 'Page Redesign'],
         categories: ['design'],
         thumbnail: '/images/gallery/bank-of-cyprus.jpg',
@@ -551,7 +551,7 @@ export default function CaseStudies() {
                 <FadeIn>
                     <div className="flex flex-col md:flex-row justify-between items-end mb-8 gap-8">
                         <div>
-                            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">Selected Projects</h2>
+                            <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4 tracking-tight">Selected Projects</h2>
                             <p className="text-text-muted text-lg max-w-xl">
                                 Product, web, AI, and brand work - across fintech, hospitality, trades, and Web3.
                             </p>
@@ -567,8 +567,8 @@ export default function CaseStudies() {
                                     key={pill.id}
                                     onClick={() => handlePillClick(pill.id)}
                                     className={`px-4 py-2 rounded-full text-sm font-medium border transition-colors ${isActive
-                                        ? 'bg-accent-primary/20 text-accent-primary border-accent-primary/50'
-                                        : 'bg-white/[0.03] text-text-muted border-white/10 hover:bg-white/[0.06] hover:text-white hover:border-white/20'
+                                        ? 'bg-accent-primary/15 text-accent-primary border-accent-primary/40'
+                                        : 'bg-bg-tertiary/45 text-text-secondary border-border-medium/70 hover:bg-bg-secondary/70 hover:text-text-primary hover:border-border-strong'
                                         }`}
                                     aria-pressed={isActive}
                                 >
@@ -585,11 +585,11 @@ export default function CaseStudies() {
                                     key={item.id}
                                     type="button"
                                     onClick={() => setActiveId(item.id)}
-                                    className="group block w-full text-left border border-white/10 rounded-xl overflow-hidden bg-white/[0.03] hover:bg-white/[0.06] hover:border-accent-primary/30 transition-all duration-300 focus:outline-none focus-visible:border-accent-primary/60"
+                                    className="group block w-full text-left border border-border-subtle rounded-xl overflow-hidden bg-bg-secondary hover:border-accent-primary/50 hover:shadow-lg hover:shadow-accent-primary/10 transition-all duration-300 focus:outline-none focus-visible:border-accent-primary/60"
                                     aria-haspopup="dialog"
                                 >
                                     <div className="p-6 flex flex-col md:flex-row gap-6 md:items-center">
-                                        <div className="relative w-full md:w-64 aspect-[4/3] rounded-lg overflow-hidden flex-shrink-0 bg-white/5">
+                                        <div className="relative w-full md:w-64 aspect-[4/3] rounded-lg overflow-hidden flex-shrink-0 bg-bg-tertiary">
                                             <ImageWithFallback
                                                 src={item.images.thumbnail}
                                                 alt={item.title}
@@ -607,7 +607,7 @@ export default function CaseStudies() {
                                                     {item.role}
                                                 </span>
                                             </div>
-                                            <h3 className="text-xl md:text-2xl font-bold text-white mb-1.5 group-hover:text-accent-primary transition-colors tracking-tight leading-tight">
+                                            <h3 className="text-xl md:text-2xl font-bold text-text-primary mb-1.5 group-hover:text-accent-primary transition-colors tracking-tight leading-tight">
                                                 {item.title}
                                             </h3>
                                             <p className="text-text-muted text-sm md:text-base mb-3 max-w-xl font-light leading-snug">
@@ -615,7 +615,7 @@ export default function CaseStudies() {
                                             </p>
                                             <div className="flex flex-wrap items-center gap-2">
                                                 {item.tags.slice(0, 3).map((tag) => (
-                                                    <span key={tag} className="bg-white/5 px-2 py-1 rounded text-xs font-mono text-text-dim border border-white/5">
+                                                    <span key={tag} className="bg-bg-tertiary/35 px-2 py-1 rounded text-xs font-mono text-text-muted border border-border-subtle/70">
                                                         {tag}
                                                     </span>
                                                 ))}
@@ -629,10 +629,10 @@ export default function CaseStudies() {
                                     href={item.externalLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="group block border border-white/10 rounded-xl overflow-hidden bg-white/[0.03] hover:bg-white/[0.06] hover:border-accent-primary/30 transition-all duration-300"
+                                    className="group block border border-border-subtle rounded-xl overflow-hidden bg-bg-secondary hover:border-accent-primary/50 hover:shadow-lg hover:shadow-accent-primary/10 transition-all duration-300"
                                 >
                                     <div className="w-full text-left p-6 flex flex-col md:flex-row gap-6 md:items-center">
-                                        <div className="relative w-full md:w-64 aspect-[4/3] rounded-lg overflow-hidden flex-shrink-0 bg-white/5">
+                                        <div className="relative w-full md:w-64 aspect-[4/3] rounded-lg overflow-hidden flex-shrink-0 bg-bg-tertiary">
                                             <ImageWithFallback
                                                 src={item.thumbnail}
                                                 alt={item.title}
@@ -645,20 +645,20 @@ export default function CaseStudies() {
                                         <div className="flex-1 flex flex-col justify-center">
                                             <div className="flex justify-between items-center">
                                                 <div>
-                                                    <h3 className="text-xl md:text-2xl font-bold text-white mb-1 group-hover:text-accent-primary transition-colors tracking-tight">
+                                                    <h3 className="text-xl md:text-2xl font-bold text-text-primary mb-1 group-hover:text-accent-primary transition-colors tracking-tight">
                                                         {item.title}
                                                     </h3>
                                                     <p className="text-text-muted text-sm md:text-base mb-3 max-w-xl font-light">
                                                         {item.subtitle}
                                                     </p>
                                                 </div>
-                                                <div className="hidden md:flex items-center justify-center p-2 rounded-full border border-white/10 text-text-muted group-hover:text-white group-hover:border-white/30 transition-all duration-300">
+                                                <div className="hidden md:flex items-center justify-center p-2 rounded-full border border-border-subtle text-text-muted group-hover:text-text-primary group-hover:border-border-medium transition-all duration-300">
                                                     <ExternalLink size={18} />
                                                 </div>
                                             </div>
                                             <div className="flex flex-wrap items-center gap-2">
                                                 {item.tags.slice(0, 3).map((tag) => (
-                                                    <span key={tag} className="bg-white/5 px-2 py-1 rounded text-xs font-mono text-text-dim border border-white/5">
+                                                    <span key={tag} className="bg-bg-tertiary/35 px-2 py-1 rounded text-xs font-mono text-text-muted border border-border-subtle/70">
                                                         {tag}
                                                     </span>
                                                 ))}
@@ -677,7 +677,7 @@ export default function CaseStudies() {
                         <div className="flex justify-center mt-8">
                             <button
                                 onClick={() => setShowAllInAllView(true)}
-                                className="px-6 py-3 rounded-full text-sm font-medium border bg-white/[0.03] text-text-muted border-white/10 hover:bg-white/[0.06] hover:text-white hover:border-white/20 transition-colors"
+                                className="px-6 py-3 rounded-full text-sm font-medium border bg-bg-tertiary/45 text-text-secondary border-border-medium/70 hover:bg-bg-secondary/70 hover:text-text-primary hover:border-border-strong transition-colors"
                             >
                                 Show {ordered.length - ALL_VIEW_INITIAL_COUNT} more
                             </button>

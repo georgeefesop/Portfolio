@@ -125,12 +125,12 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.97 }}
                         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                        className="md:hidden relative z-[10] w-full max-h-[92vh] flex flex-col bg-zinc-950 border border-white/10 rounded-md overflow-hidden shadow-[0_24px_60px_-15px_rgba(0,0,0,0.7),0_0_40px_-15px_rgba(171,123,98,0.4)]"
+                        className="md:hidden relative z-[10] w-full max-h-[92vh] flex flex-col bg-bg-secondary border border-border-subtle rounded-md overflow-hidden shadow-[0_24px_60px_-15px_rgba(0,0,0,0.7),0_0_40px_-15px_rgba(171,123,98,0.4)]"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <button
                             onClick={onClose}
-                            className="absolute top-3 right-3 z-30 p-2 rounded-sm text-text-muted bg-black/60 backdrop-blur-md border border-white/10"
+                            className="absolute top-3 right-3 z-30 p-2 rounded-sm text-text-muted bg-bg-tertiary/60 backdrop-blur-md border border-border-subtle"
                             aria-label="Close"
                         >
                             <X size={16} />
@@ -138,7 +138,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
 
                         <div className="overflow-y-auto hud-scroll flex-1">
                             {/* Hero image */}
-                            <div className="relative aspect-[16/10] w-full bg-zinc-900">
+                            <div className="relative aspect-[16/10] w-full bg-bg-secondary">
                                 <ImageWithFallback
                                     src={project.images.hero}
                                     alt={project.title}
@@ -146,7 +146,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                     sizes="100vw"
                                     className="object-cover"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent" />
+                                <div className="absolute inset-0 bg-gradient-to-t from-bg-secondary via-bg-secondary/40 to-transparent" />
                             </div>
 
                             {/* Title block */}
@@ -160,7 +160,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                         Case File · {project.id.toUpperCase().replace(/-/g, '_').slice(0, 14)}
                                     </span>
                                 </div>
-                                <h3 className="text-2xl font-bold text-white tracking-tight mb-2 leading-tight">
+                                <h3 className="text-2xl font-bold text-text-primary tracking-tight mb-2 leading-tight">
                                     {project.title}
                                 </h3>
                                 <p className="text-text-muted text-base font-light leading-snug mb-4">
@@ -168,12 +168,12 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                 </p>
                                 <div className="flex flex-wrap items-center gap-1.5 mb-4">
                                     {project.tags.map((tag) => (
-                                        <span key={tag} className="bg-white/5 px-2 py-0.5 rounded text-[10px] font-mono text-text-dim border border-white/5">
+                                        <span key={tag} className="bg-bg-tertiary/40 px-2 py-0.5 rounded text-[10px] font-mono text-text-muted border border-border-subtle">
                                             {tag}
                                         </span>
                                     ))}
                                 </div>
-                                <div className="grid grid-cols-2 gap-3 font-mono text-xs text-text-muted pb-4 border-b border-white/5">
+                                <div className="grid grid-cols-2 gap-3 font-mono text-xs text-text-muted pb-4 border-b border-border-subtle">
                                     <div>
                                         <span className="block text-text-dim text-[10px] uppercase tracking-widest mb-1">Role</span>
                                         <span className="text-text-secondary">{project.role}</span>
@@ -223,7 +223,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                 </div>
                             )}
 
-                            <div className="border-t border-white/5 bg-black/30">
+                            <div className="border-t border-border-subtle bg-bg-tertiary/30">
                                 <div className="px-10 py-3 flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-text-muted">
                                     <span className="w-1.5 h-1.5 rounded-full bg-accent-primary" />
                                     <span>Gallery</span>
@@ -234,7 +234,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                         <button
                                             key={idx}
                                             onClick={() => setLightboxIndex(idx)}
-                                            className="relative w-full aspect-[16/10] rounded-md overflow-hidden bg-bg-tertiary border border-white/5"
+                                            className="relative w-full aspect-[16/10] rounded-md overflow-hidden bg-bg-tertiary border border-border-subtle"
                                         >
                                             <ImageWithFallback
                                                 src={img}
@@ -252,7 +252,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
 
                     {/* DESKTOP: floating identity card (sibling, outside the modal) + main modal */}
                     <div
-                        className="hidden md:flex relative z-[10] w-full max-w-[1500px] md:h-[88vh] md:flex-row md:gap-5 md:items-stretch"
+                        className="hidden md:flex relative z-[10] w-full max-w-[1500px] md:flex-col md:max-h-[92vh] md:gap-4 md:overflow-y-auto lg:flex-row lg:h-[88vh] lg:max-h-none lg:gap-5 lg:overflow-visible md:items-stretch hud-scroll"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Floating identity panel - distinct card outside the modal */}
@@ -261,10 +261,10 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                             animate={{ opacity: 1, x: 0, scale: 1 }}
                             exit={{ opacity: 0, x: -20, scale: 0.97 }}
                             transition={{ duration: 0.55, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
-                            className="md:w-[360px] md:flex-shrink-0 bg-zinc-900/95 backdrop-blur-md border border-white/10 rounded-md flex flex-col overflow-hidden shadow-[0_24px_70px_-15px_rgba(0,0,0,0.7),0_0_50px_-15px_rgba(171,123,98,0.45)]"
+                            className="md:w-full lg:w-[360px] lg:flex-shrink-0 bg-bg-secondary/95 backdrop-blur-md border border-border-subtle rounded-md flex flex-col overflow-hidden shadow-[0_24px_70px_-15px_rgba(0,0,0,0.7),0_0_50px_-15px_rgba(171,123,98,0.45)]"
                         >
                             {/* Identity HUD strip */}
-                            <div className="flex-shrink-0 px-7 pt-5 pb-3.5 border-b border-white/5 flex items-center gap-2 bg-black/40">
+                            <div className="flex-shrink-0 px-7 pt-5 pb-3.5 border-b border-border-subtle flex items-center gap-2 bg-bg-tertiary/40">
                                 <span className="relative inline-flex w-1.5 h-1.5 flex-shrink-0">
                                     <span className="absolute inset-0 rounded-full bg-accent-primary animate-ping opacity-60" />
                                     <span className="relative inline-block w-1.5 h-1.5 rounded-full bg-accent-primary" />
@@ -276,7 +276,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
 
                             {/* Title block */}
                             <div className="flex-shrink-0 px-7 pt-5 pb-5">
-                                <h3 className="text-2xl font-bold text-white tracking-tight mb-1.5 leading-tight">
+                                <h3 className="text-2xl font-bold text-text-primary tracking-tight mb-1.5 leading-tight">
                                     {project.title}
                                 </h3>
                                 <p className="text-text-muted text-sm font-light leading-snug mb-4">
@@ -284,12 +284,12 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                 </p>
                                 <div className="flex flex-wrap items-center gap-1.5 mb-5">
                                     {project.tags.map((tag) => (
-                                        <span key={tag} className="bg-white/5 px-2 py-0.5 rounded text-[10px] font-mono text-text-dim border border-white/5">
+                                        <span key={tag} className="bg-bg-tertiary/40 px-2 py-0.5 rounded text-[10px] font-mono text-text-muted border border-border-subtle">
                                             {tag}
                                         </span>
                                     ))}
                                 </div>
-                                <div className="grid grid-cols-2 gap-3 font-mono text-xs text-text-muted pb-4 border-b border-white/5">
+                                <div className="grid grid-cols-2 gap-3 font-mono text-xs text-text-muted pb-4 border-b border-border-subtle">
                                     <div>
                                         <span className="block text-text-dim text-[10px] uppercase tracking-widest mb-1">Role</span>
                                         <span className="text-text-secondary">{project.role}</span>
@@ -312,7 +312,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                             )}
 
                             {project.links.live && (
-                                <div className="flex-shrink-0 px-7 py-4 border-t border-white/5 bg-black/30">
+                                <div className="flex-shrink-0 px-7 py-4 border-t border-border-subtle bg-bg-tertiary/30">
                                     <a
                                         href={project.links.live}
                                         target="_blank"
@@ -331,13 +331,11 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                             animate={{ clipPath: 'inset(0% 0% 0% 0% round 6px)', opacity: 1, scale: 1 }}
                             exit={{ clipPath: 'inset(48% 2% 48% 2% round 6px)', opacity: 0, scale: 0.98 }}
                             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                            className="relative flex-1 min-w-0 flex flex-col bg-zinc-950 border border-white/10 rounded-md overflow-hidden shadow-[0_24px_70px_-15px_rgba(0,0,0,0.7),0_0_50px_-15px_rgba(171,123,98,0.4)]"
+                            className="relative flex-1 min-w-0 flex flex-col bg-bg-secondary border border-border-subtle rounded-md overflow-hidden shadow-[0_24px_70px_-15px_rgba(0,0,0,0.7),0_0_50px_-15px_rgba(171,123,98,0.4)]"
                         >
-                            <CornerBrackets />
-
                             <button
                                 onClick={onClose}
-                                className="absolute top-3 right-3 z-30 p-2 rounded-sm text-text-muted hover:text-white bg-black/50 hover:bg-black/70 backdrop-blur-md border border-white/10 transition-colors"
+                                className="absolute top-3 right-3 z-30 p-2 rounded-sm text-text-muted hover:text-text-primary bg-bg-tertiary/50 hover:bg-bg-tertiary/70 backdrop-blur-md border border-border-subtle transition-colors"
                                 aria-label="Close"
                             >
                                 <X size={16} />
@@ -351,7 +349,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                 className="flex-1 min-h-0 flex flex-col"
                             >
                                 {/* 3-col grid: Challenge / Work / Outcome */}
-                                <div className="flex-1 min-h-0 grid md:grid-cols-3 grid-rows-[auto] divide-y md:divide-y-0 md:divide-x divide-white/5">
+                                <div className="flex-1 min-h-0 grid md:grid-cols-3 grid-rows-[auto] divide-y md:divide-y-0 md:divide-x divide-border-subtle">
                                     <ConsolePanel label="The Challenge">
                                         <p className="text-text-secondary text-sm leading-relaxed whitespace-pre-line">
                                             {project.description.challenge}
@@ -375,7 +373,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                 </div>
 
                                 {/* Gallery - full width across the bottom of the modal panel */}
-                                <div className="flex-shrink-0 border-t border-white/5 bg-black/30">
+                                <div className="flex-shrink-0 border-t border-border-subtle bg-bg-tertiary/30">
                                     <div className="px-7 py-2.5 flex items-center gap-3 text-xs font-mono uppercase tracking-[0.2em] text-text-muted">
                                         <span className="w-1.5 h-1.5 rounded-full bg-accent-primary" />
                                         <span>Gallery</span>
@@ -392,7 +390,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                             <button
                                                 key={idx}
                                                 onClick={() => setLightboxIndex(idx)}
-                                                className="relative flex-shrink-0 w-[232px] aspect-[4/3] rounded-sm overflow-hidden bg-bg-tertiary cursor-zoom-in hover:brightness-110 transition-all border border-white/5 hover:border-accent-primary/40"
+                                                className="relative flex-shrink-0 w-[232px] aspect-[4/3] rounded-sm overflow-hidden bg-bg-tertiary cursor-zoom-in hover:brightness-110 transition-all border border-border-subtle hover:border-accent-primary/40"
                                             >
                                                 <ImageWithFallback
                                                     src={img}
@@ -433,8 +431,8 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
 
 function ConsolePanel({ label, children }: { label: string; children: React.ReactNode }) {
     return (
-        <div className="flex flex-col md:min-h-0 bg-zinc-950/40">
-            <div className="flex-shrink-0 px-7 py-3.5 border-b border-white/5 flex items-center gap-2">
+        <div className="flex flex-col md:min-h-0 bg-bg-secondary/40">
+            <div className="flex-shrink-0 px-7 py-3.5 border-b border-border-subtle flex items-center gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-accent-primary" />
                 <span className="text-sm font-mono uppercase tracking-[0.18em] text-accent-primary">
                     {label}
@@ -449,7 +447,7 @@ function ConsolePanel({ label, children }: { label: string; children: React.Reac
 
 function MobileSection({ label, children }: { label: string; children: React.ReactNode }) {
     return (
-        <div className="px-10 py-5 border-t border-white/5">
+        <div className="px-10 py-5 border-t border-border-subtle">
             <div className="flex items-center gap-2 mb-3">
                 <span className="w-1.5 h-1.5 rounded-full bg-accent-primary" />
                 <span className="text-sm font-mono uppercase tracking-[0.18em] text-accent-primary">
@@ -471,31 +469,6 @@ function PanelLabel({ children }: { children: React.ReactNode }) {
         </div>
     );
 }
-
-// --- HUD corner brackets that draw in after the panel reveals ---
-
-function CornerBrackets() {
-    const corners = [
-        { pos: 'top-0 left-0', edges: 'border-t border-l', origin: 'origin-top-left' },
-        { pos: 'top-0 right-0', edges: 'border-t border-r', origin: 'origin-top-right' },
-        { pos: 'bottom-0 left-0', edges: 'border-b border-l', origin: 'origin-bottom-left' },
-        { pos: 'bottom-0 right-0', edges: 'border-b border-r', origin: 'origin-bottom-right' },
-    ];
-    return (
-        <>
-            {corners.map((c, i) => (
-                <motion.span
-                    key={i}
-                    initial={{ opacity: 0, scale: 0.4 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.45 + i * 0.05, duration: 0.3, ease: 'easeOut' }}
-                    className={`pointer-events-none absolute ${c.pos} ${c.edges} ${c.origin} w-5 h-5 border-accent-primary z-10`}
-                />
-            ))}
-        </>
-    );
-}
-
 
 // --- Lightbox (lifted from previous drawer, unchanged behaviour) ---
 

@@ -10,10 +10,10 @@ export default function Intro() {
                     <div className="flex flex-col lg:flex-row gap-16 items-start justify-between mb-24">
                         <h2 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight flex-1">
                             <span className="text-text-dim">Your technology is </span>
-                            <span className="text-white">complex.</span>
+                            <span className="text-text-primary">complex.</span>
                             <br />
                             <span className="text-text-dim">Your product should be </span>
-                            <span className="text-white">simple.</span>
+                            <span className="text-text-primary">simple.</span>
                         </h2>
 
                         <div className="flex-1 max-w-lg pt-2">
@@ -43,7 +43,7 @@ export default function Intro() {
                             }
                         ].map((item) => (
                             <div key={item.title} className="group">
-                                <h3 className="text-lg font-bold text-white mb-3 group-hover:text-accent-primary transition-colors">
+                                <h3 className="text-lg font-bold text-text-primary mb-3 group-hover:text-accent-primary transition-colors">
                                     {item.title}
                                 </h3>
                                 <p className="text-text-secondary leading-relaxed text-sm">

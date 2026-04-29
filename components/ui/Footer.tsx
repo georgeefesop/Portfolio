@@ -14,7 +14,7 @@ const socialLinks = [
 
 export default function Footer() {
     return (
-        <footer className="bg-bg-hero text-white py-16 border-t border-border-subtle">
+        <footer className="bg-bg-hero text-text-primary py-16 border-t border-border-subtle">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
                     {/* Brand Column */}
@@ -25,9 +25,15 @@ export default function Footer() {
                         <p className="text-text-muted text-sm max-w-xs">
                             Product Designer specializing in complex systems, Web3, and AI integrations. Based in Cyprus.
                         </p>
-                        <p className="text-text-dim text-xs mt-8">
+                        <p className="text-text-dim text-xs">
                             © 2026 George Efesopoulos - Efesop. All rights reserved.
                         </p>
+                        <div
+                            role="img"
+                            aria-label="George Efesopoulos"
+                            className="theme-signature h-[52px] w-full max-w-[320px] mt-2"
+                            style={{ aspectRatio: '375 / 73' }}
+                        />
                     </div>
 
                     {/* Links Column */}

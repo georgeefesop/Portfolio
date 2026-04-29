@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import ThemePreviewToggle from './ThemePreviewToggle';
 
 const navLinks = [
     { name: 'Work', href: '#work' },
@@ -84,7 +85,7 @@ export default function Navigation() {
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-14 md:h-20">
                     {/* Logo */}
-                    <Link href="/" className="text-2xl font-bold tracking-tight text-white hover:text-accent-primary transition-colors">
+                    <Link href="/" className="text-2xl font-bold tracking-tight text-text-primary hover:text-accent-primary transition-colors">
                         efesop
                     </Link>
 
@@ -97,19 +98,21 @@ export default function Navigation() {
                                 onClick={(e) => scrollToSection(e, link.href)}
                                 className={`text-sm font-medium transition-colors duration-200 ${activeSection === link.href.substring(1)
                                     ? 'text-accent-primary'
-                                    : 'text-text-secondary hover:text-white'
+                                    : 'text-text-secondary hover:text-text-primary'
                                     }`}
                             >
                                 {link.name}
                             </a>
                         ))}
+                        <ThemePreviewToggle />
                     </div>
 
-                    {/* Mobile Menu Button */}
-                    <div className="md:hidden">
+                    {/* Mobile right cluster */}
+                    <div className="md:hidden flex items-center gap-3">
+                        <ThemePreviewToggle />
                         <button
                             onClick={() => setIsOpen(!isOpen)}
-                            className="text-text-secondary hover:text-white p-2"
+                            className="text-text-secondary hover:text-text-primary p-2"
                             aria-label="Toggle menu"
                         >
                             {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -149,7 +152,7 @@ export default function Navigation() {
                                     }}
                                     className={`block px-3 py-3 rounded-md text-base font-medium ${activeSection === link.href.substring(1)
                                         ? 'text-accent-primary bg-bg-secondary'
-                                        : 'text-text-secondary hover:text-white hover:bg-bg-secondary'
+                                        : 'text-text-secondary hover:text-text-primary hover:bg-bg-secondary'
                                         }`}
                                 >
                                     {link.name}

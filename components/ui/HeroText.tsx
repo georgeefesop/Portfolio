@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
 import { motion, useTransform, MotionValue, Variants } from 'framer-motion';
 import { StepId } from '../sections/ProductHero';
 import ProjectEstimator from '../sections/ProjectEstimator';
@@ -9,12 +8,11 @@ import ProjectEstimator from '../sections/ProjectEstimator';
 interface HeroTextProps {
     scrollProgress: MotionValue<number>;
     step?: StepId;
-    isVibrantMode?: boolean;
     isMobile?: boolean;
     headerActions?: React.ReactNode;
 }
 
-export default function HeroText({ scrollProgress, isVibrantMode = false, headerActions }: HeroTextProps) {
+export default function HeroText({ scrollProgress, headerActions }: HeroTextProps) {
     const [isMobile, setIsMobile] = useState(true);
 
     useEffect(() => {
@@ -62,7 +60,7 @@ export default function HeroText({ scrollProgress, isVibrantMode = false, header
                 variants={containerVariants}
             >
                 {/* Top Row - Adaptive Logo/Hamburger Space */}
-                <div className="flex justify-between items-start w-full text-xs md:text-sm font-mono tracking-widest uppercase text-zinc-400 mb-auto">
+                <div className="flex justify-between items-start w-full text-xs md:text-sm font-mono tracking-widest uppercase text-text-muted mb-auto">
                     <div />
                     {headerActions && (
                         <div className="hidden md:block pointer-events-auto">
@@ -80,18 +78,14 @@ export default function HeroText({ scrollProgress, isVibrantMode = false, header
                         className="w-full md:max-w-[65%] lg:max-w-[720px] text-left"
                     >
                         <div className="mb-2 md:mb-4">
-                            <Image
-                                src="/signature.png"
-                                alt="George Efesopoulos"
-                                width={0}
-                                height={0}
-                                sizes="100vw"
-                                style={{ width: 'auto', height: 'auto' }}
-                                className="h-10 md:h-16 w-auto max-w-full object-contain md:translate-y-[10px] md:-translate-x-[15px]"
-                                priority
+                            <div
+                                role="img"
+                                aria-label="George Efesopoulos"
+                                className="theme-signature h-[69px] md:h-[110px] max-w-full md:translate-y-[10px] md:-translate-x-[15px]"
+                                style={{ aspectRatio: '375 / 73' }}
                             />
                         </div>
-                        <h1 className="font-black tracking-tighter text-white leading-[0.85] transition-all duration-500 uppercase">
+                        <h1 className="font-black tracking-tighter text-text-secondary leading-[0.85] transition-all duration-500 uppercase">
                             <span className="md:hidden block">
                                 <span className="block text-3xl sm:text-4xl">UX / UI Product</span>
                                 <span className="block text-xl sm:text-2xl mt-1">Designer &amp; Developer</span>
@@ -103,7 +97,7 @@ export default function HeroText({ scrollProgress, isVibrantMode = false, header
                         </h1>
 
                         <div className="mt-2 md:mt-3">
-                            <span className="text-white/50 font-medium tracking-widest uppercase block text-sm sm:text-base md:text-lg">
+                            <span className="theme-hero-subtitle font-medium tracking-widest uppercase block text-sm sm:text-base md:text-lg">
                                 End to end · By one person
                             </span>
                         </div>
@@ -116,11 +110,11 @@ export default function HeroText({ scrollProgress, isVibrantMode = false, header
                         className="hidden md:flex text-right flex-col items-end gap-3 mt-4 md:mt-0"
                     >
                         <div className="space-y-1 transition-all">
-                            <p className="text-base md:text-xl font-medium text-white">Product · Web · Brand · AI</p>
-                            <p className={`text-xs md:text-sm transition-colors duration-500 ${isVibrantMode ? 'text-white' : 'text-zinc-400'}`}>Previously: <span className="text-white">Input Output (Cardano), Nike Training Club</span></p>
+                            <p className="text-base md:text-xl font-medium text-text-primary">Product · Web · Brand · AI</p>
+                            <p className="text-xs md:text-sm text-text-muted">Previously: <span className="text-text-primary">Input Output (Cardano)</span></p>
                         </div>
                         <div className="flex items-start justify-end gap-1.5 transition-all mt-1 md:mt-2 ml-auto w-fit">
-                            <span className={`font-mono tracking-widest uppercase text-[10px] md:text-sm transition-colors duration-500 text-right ${isVibrantMode ? 'text-white' : 'text-zinc-400'}`}>
+                            <span className="font-mono tracking-widest uppercase text-[10px] md:text-sm text-text-muted text-right">
                                 Open for new projects
                             </span>
                             <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-green-500 animate-pulse mt-1 md:mt-1.5 shrink-0" />

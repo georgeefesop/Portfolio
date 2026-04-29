@@ -49,7 +49,7 @@ export default function Process() {
                     <div className="text-center mb-12 md:mb-20">
                         <h2 className="text-3xl md:text-5xl font-bold text-text-primary mb-4 md:mb-6">How I Work</h2>
                         <p className="text-text-secondary text-base md:text-lg max-w-2xl mx-auto">
-                            From messy brief to working product.
+                            From messy brief to working product - listening, mapping, prototyping, then iterating until the right shape ships.
                         </p>
                     </div>
                 </FadeIn>
@@ -82,7 +82,7 @@ function MobileProcessCard({ step, index }: { step: typeof processSteps[number];
                 <h3 className="font-bold text-text-primary text-base mb-2">{step.title}</h3>
                 <p className="text-sm text-text-secondary leading-relaxed">{step.desc}</p>
             </div>
-            <div className="absolute top-2 right-4 text-4xl font-bold opacity-[0.07] font-mono pointer-events-none">
+            <div className="absolute top-2 right-4 text-4xl font-bold opacity-[0.18] font-mono pointer-events-none">
                 0{index + 1}
             </div>
         </div>
@@ -100,8 +100,8 @@ function InteractiveCanvas({ steps }: { steps: typeof processSteps }) {
         if (!containerRef.current) return;
         const updateSize = () => {
             const { offsetWidth } = containerRef.current!;
-            // Compact height for single row
-            const h = isMobile ? steps.length * 240 + 100 : (isTablet ? 750 : 400);
+            // Tablet height tuned so bottom row has ~60px breathing room.
+            const h = isMobile ? steps.length * 240 + 100 : (isTablet ? 820 : 400);
             setSize({ w: offsetWidth, h });
         };
         updateSize();
@@ -241,8 +241,8 @@ function ProcessNode({ step, index, x, y }: any) {
             className="absolute top-0 left-0 w-[260px] z-10"
         >
             <motion.div
-                whileHover={{ scale: 1.05, borderColor: 'rgba(255,255,255,0.4)', backgroundColor: 'rgba(20,20,20,0.95)' }}
-                className="bg-bg-secondary/90 backdrop-blur-md p-5 rounded-xl border border-border-subtle shadow-lg flex flex-col gap-3 group transition-colors select-none relative"
+                whileHover={{ scale: 1.05 }}
+                className="bg-bg-secondary/90 backdrop-blur-md p-5 rounded-xl border border-border-subtle hover:border-accent-primary/50 hover:shadow-lg hover:shadow-accent-primary/10 flex flex-col gap-3 group transition-all duration-300 select-none relative"
             >
                 <div className="flex justify-between items-start">
                     <div className="w-8 h-8 rounded-lg bg-bg-tertiary flex items-center justify-center text-text-secondary group-hover:text-accent-primary transition-colors">
@@ -259,7 +259,7 @@ function ProcessNode({ step, index, x, y }: any) {
                 </div>
 
                 {/* Big Number */}
-                <div className="absolute top-2 right-4 text-4xl font-bold opacity-[0.07] group-hover:opacity-[0.15] transition-opacity font-mono pointer-events-none">
+                <div className="absolute top-2 right-4 text-4xl font-bold opacity-[0.18] group-hover:opacity-[0.3] transition-opacity font-mono pointer-events-none">
                     0{index + 1}
                 </div>
 

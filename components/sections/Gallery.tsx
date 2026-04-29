@@ -41,7 +41,7 @@ export default function Gallery() {
                             <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-2">More Projects</h2>
                             <p className="text-text-secondary">Explorations, concepts, and smaller builds.</p>
                         </div>
-                        <Link href="https://behance.net/georgeefesop" target="_blank" className="text-accent-primary hover:text-white transition-colors mt-4 md:mt-0 font-medium text-left">
+                        <Link href="https://behance.net/georgeefesop" target="_blank" className="text-accent-primary hover:text-text-primary transition-colors mt-4 md:mt-0 font-medium text-left">
                             View all on Behance →
                         </Link>
                     </div>
