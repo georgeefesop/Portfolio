@@ -2,11 +2,13 @@
 
 import FadeIn from '../motion/FadeIn';
 
-// height: optical size; aspect: SVG viewBox aspect ratio (w / h)
+// height: optical size; aspect: SVG viewBox aspect ratio (w / h);
+// extraMl: additional left margin (Tailwind class) on top of the row gap, used to
+// nudge logos that read tight to a heavy neighbour (e.g. Nike after Cardano).
 const logos = [
-    { name: 'Input Output (IOG)', src: '/logos/iog.svg', height: 22, aspect: 240 / 31 },
-    { name: 'Cardano', src: '/logos/cardano.svg', height: 28, aspect: 1250 / 251.17 },
-    { name: 'Nike', src: '/logos/nike.svg', height: 26, aspect: 1000 / 356.39 },
+    { name: 'Input Output (IOG)', src: '/logos/iog.svg', height: 22, aspect: 240 / 31, extraMl: '' },
+    { name: 'Cardano', src: '/logos/cardano.svg', height: 28, aspect: 1250 / 251.17, extraMl: '' },
+    { name: 'Nike', src: '/logos/nike.svg', height: 30, aspect: 1000 / 356.39, extraMl: 'ml-2 md:ml-6' },
 ];
 
 function Logo({ logo }: { logo: typeof logos[number] }) {
@@ -14,7 +16,7 @@ function Logo({ logo }: { logo: typeof logos[number] }) {
         <span
             role="img"
             aria-label={logo.name}
-            className="block shrink-0"
+            className={`block shrink-0 ${logo.extraMl}`}
             style={{
                 width: `${logo.height * logo.aspect}px`,
                 height: `${logo.height}px`,
