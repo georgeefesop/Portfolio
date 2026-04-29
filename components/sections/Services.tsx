@@ -11,12 +11,12 @@ const services = [
     },
     {
         title: 'WordPress, AI-supercharged',
-        description: 'Bring a Figma file, a brief, or a rough idea. I build custom themes from scratch - no template bloat, schema-marked, performance-tuned. AI-assisted dev means bespoke sites in days, not weeks. Local-first workflow, staged, merged clean. Loom walkthrough on handover.',
+        description: 'Microsites, portfolio sites, business websites, online shops - on WordPress, with custom themes built from scratch (no template bloat). Bring a Figma file, a brief, or a rough idea. AI-assisted dev means bespoke sites ship in days, not weeks. Schema-marked, performance-tuned, editable by you. Loom walkthrough on handover.',
         icon: Globe
     },
     {
-        title: 'Custom Next.js Builds',
-        description: 'Bespoke marketing sites, conversion pages, and lightweight web apps on Next.js + Tailwind. Green Core Web Vitals out of the box.',
+        title: 'Custom Next.js Sites',
+        description: 'Marketing sites, landing pages, microsites, and lightweight web apps on Next.js + Tailwind. Custom-coded when polish and performance matter. Green Core Web Vitals out of the box.',
         icon: Zap
     },
     {
