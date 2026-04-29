@@ -93,11 +93,11 @@ export default function HeroText({ scrollProgress, isVibrantMode = false, header
                         </div>
                         <h1 className="font-black tracking-tighter text-white leading-[0.85] transition-all duration-500 uppercase">
                             <span className="md:hidden block">
-                                <span className="block text-3xl sm:text-4xl">Product</span>
+                                <span className="block text-3xl sm:text-4xl">UX / UI Product</span>
                                 <span className="block text-xl sm:text-2xl mt-1">Designer &amp; Developer</span>
                             </span>
                             <span className="hidden md:block">
-                                <span className="block text-5xl lg:text-7xl">PRODUCT</span>
+                                <span className="block text-5xl lg:text-7xl">UX / UI PRODUCT</span>
                                 <span className="block text-3xl lg:text-5xl mt-1">DESIGNER &amp; DEVELOPER</span>
                             </span>
                         </h1>
