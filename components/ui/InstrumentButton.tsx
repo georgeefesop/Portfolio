@@ -42,9 +42,8 @@ export default function InstrumentButton({
             `}
             disabled={disabled}
             style={{
-                fontFamily: '"Instrument Sans", sans-serif',
+                fontFamily: 'var(--font-instrument), "Instrument Sans", sans-serif',
                 fontWeight: 700,
-                fontVariationSettings: '"wght" 700, "wdth" 100',
                 ...style
             }}
         >
