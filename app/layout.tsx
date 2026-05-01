@@ -31,7 +31,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wdth,wght@0,75..100,400..700;1,75..100,400..700&display=swap" rel="stylesheet" />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('theme-preview');if(t&&t!=='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();`,
+            __html: `(function(){try{var t=localStorage.getItem('theme-preview');if(!t){document.documentElement.setAttribute('data-theme','light-olive');}else if(t!=='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){document.documentElement.setAttribute('data-theme','light-olive');}})();`,
           }}
         />
       </head>

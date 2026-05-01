@@ -207,7 +207,7 @@
   /* Deep reddish-brown. Slightly darker than --text-secondary (#4A3826) so the
      signature reads as the strongest weight in this stack.
      Alpha 0.9 to soften the ink one notch in light mode. */
-  background-color: rgba(74, 36, 16, 0.9);
+  background-color: rgba(46, 23, 10, 0.9);
 }
 
 /* Show one element per theme. Apply .theme-only-dark to elements that should
@@ -232,13 +232,13 @@
    reddish-brown hue, so the line sits visually below both the H1 and the signature. */
 .theme-hero-subtitle {
   color: var(--text-primary);
-  opacity: 0.4;
+  opacity: 0.27;
   transition: opacity 500ms ease, color 500ms ease;
 }
 [data-theme^="light-"] .theme-hero-subtitle {
   /* Reddish-brown to share the signature's hue, kept lighter via low opacity. */
   color: rgb(74, 36, 16);
-  opacity: 0.45;
+  opacity: 0.31;
 }
 
 /* === Hero grid that swaps stroke colour between dark and light themes ===
