@@ -1,10 +1,10 @@
-# BUILD: AI Project Estimator — efesop.com
+# BUILD: AI Project Estimator - efesop.com
 
 ## Context
 
 The site is built with **Next.js 14, Tailwind CSS, and Framer Motion**. You already have the **OpenAI API key** configured in the project. Use it.
 
-This feature lives in the **hero section** — specifically the large empty dark space in the center of the page. It does **NOT** replace, move, or break anything currently there. The signature, title, stats, and "Play with a Prototype" button all stay exactly where they are. The estimator sits in the empty space.
+This feature lives in the **hero section** - specifically the large empty dark space in the center of the page. It does **NOT** replace, move, or break anything currently there. The signature, title, stats, and "Play with a Prototype" button all stay exactly where they are. The estimator sits in the empty space.
 
 Style everything to match the existing dark grid aesthetic. **No white cards. No bright flashy elements.** Everything should feel like it belongs on the page already. Use the existing copper/warm accent color for key values. Use Framer Motion for transitions (already installed).
 
@@ -12,7 +12,7 @@ Style everything to match the existing dark grid aesthetic. **No white cards. No
 
 ## STEP-BY-STEP USER JOURNEY
 
-### 1. User Lands on Hero — Initial State
+### 1. User Lands on Hero - Initial State
 
 In the center of the hero's empty space they see:
 
@@ -40,7 +40,7 @@ Ballpark estimate. No email required.
 **Responsive behavior:**
 - Desktop: Block is centered, textarea is ~500px max-width
 - Tablet: Same but slightly narrower
-- Mobile: Full width, stacks vertically, textarea and button are both full width. Comfortable thumb targets — minimum 44px tap height on the button.
+- Mobile: Full width, stacks vertically, textarea and button are both full width. Comfortable thumb targets - minimum 44px tap height on the button.
 
 ---
 
@@ -56,7 +56,7 @@ They type freely. No validation while typing. No real-time feedback. Just let th
 - The input block stays visible but slightly dims (reduce opacity to ~0.6) and scales down subtly
 - A **loading state** appears below the input:
   - Text: `Analyzing your project...`
-  - A subtle pulsing animation or animated dots — nothing flashy, keep it minimal
+  - A subtle pulsing animation or animated dots - nothing flashy, keep it minimal
 - The button becomes **disabled** during loading so they can't spam it
 
 **Timing:**
@@ -162,18 +162,18 @@ Ballpark estimate. Actual scope and pricing will be discussed when we talk.
 ```
 [Refine Estimate]                    [Start Project →]
 ```
-- `Refine Estimate` — left side, subtle/outline style
-- `Start Project →` — right side, styled with your copper accent (matches the "Start Project" button in the nav)
+- `Refine Estimate` - left side, subtle/outline style
+- `Start Project →` - right side, styled with your copper accent (matches the "Start Project" button in the nav)
 
 ---
 
-### 5. Edge Cases — The LLM Returns Different States
+### 5. Edge Cases - The LLM Returns Different States
 
 The JSON response includes a `status` field. Handle each one differently:
 
 ---
 
-**a) status: "needs_clarification" — Input Was Too Vague**
+**a) status: "needs_clarification" - Input Was Too Vague**
 
 Don't show an estimate. Show this instead:
 
@@ -184,7 +184,7 @@ I need a bit more to work with.
 • Who are your users?
 • Do you have existing branding or designs?
 ```
-(The questions come from the LLM's `clarifyingQuestions` array — don't hardcode them)
+(The questions come from the LLM's `clarifyingQuestions` array - don't hardcode them)
 
 One button:
 ```
@@ -194,26 +194,26 @@ Clicking it re-opens the input (empty or with their original text).
 
 ---
 
-**b) status: "too_complex" — Project Is Very Large**
+**b) status: "too_complex" - Project Is Very Large**
 
 Show the estimate as normal BUT add a callout box above the cost:
 
 ```
-⚠ This sounds like a larger project that would benefit from a direct conversation. I can help with product strategy and UX architecture — let's talk.
+⚠ This sounds like a larger project that would benefit from a direct conversation. I can help with product strategy and UX architecture - let's talk.
 ```
 
 Still show the full estimate below it. The `Start Project →` button is the only action button here (no Refine).
 
 ---
 
-**c) status: "out_of_scope" — Not George's Work**
+**c) status: "out_of_scope" - Not George's Work**
 
 Don't show an estimate. Show:
 
 ```
 This isn't something I typically work on.
 
-[The LLM's outOfScopeMessage here — e.g. "You might want to look into a dedicated SEO agency or a native mobile development studio."]
+[The LLM's outOfScopeMessage here - e.g. "You might want to look into a dedicated SEO agency or a native mobile development studio."]
 
 [Start Over]
 ```
@@ -247,7 +247,7 @@ User clicks `[Start Project →]`:
 - The contact form fields are **pre-filled** with data from the estimate:
   - **Project Brief** field → their original idea text
   - **Project Type** dropdown → matched to the closest option
-  - **Budget Range** dropdown → matched to the estimate range (e.g. if estimate was €8k–€12k, select "€5k - €10k" or "€10k - €20k" — pick the closest)
+  - **Budget Range** dropdown → matched to the estimate range (e.g. if estimate was €8k–€12k, select "€5k - €10k" or "€10k - €20k" - pick the closest)
 - They only need to fill in Name and Email, then hit submit
 
 To implement pre-filling: use URL params or a global state (React context / Zustand / whatever state management the project already uses) that the contact form reads on mount. Smooth scroll via `document.querySelector('#contact').scrollIntoView({ behavior: 'smooth' })` or equivalent.
@@ -313,18 +313,18 @@ COST RANGE RULES:
 STATUS RULES:
 - If the user's input is too vague to produce a meaningful estimate (missing product type, no detail, fewer than ~10 meaningful words), return status "needs_clarification" and populate clarifyingQuestions with 3–4 specific questions
 - If the project is clearly outside George's scope (native mobile app development, SEO agency work, video production, physical product manufacturing, etc.), return status "out_of_scope" and populate outOfScopeMessage
-- If the estimated cost exceeds €50,000 or the timeline exceeds 3 months, return status "too_complex" but STILL populate all estimate fields — the user should see a rough number
+- If the estimated cost exceeds €50,000 or the timeline exceeds 3 months, return status "too_complex" but STILL populate all estimate fields - the user should see a rough number
 - Otherwise return status "estimate"
 
 TONE:
 - Professional but direct. Not corporate, not salesy.
-- Be specific in CONSIDERATIONS — reference details the user actually mentioned
+- Be specific in CONSIDERATIONS - reference details the user actually mentioned
 - WHAT'S INCLUDED should reflect the actual deliverables for that project type
 - Never promise availability or make guarantees
 - If something is genuinely unclear, flag it in considerations rather than guessing
 
 REFINEMENT CONTEXT:
-If a previous input is provided in the conversation, acknowledge what changed and adjust the estimate accordingly. Don't start from scratch — build on the previous estimate.
+If a previous input is provided in the conversation, acknowledge what changed and adjust the estimate accordingly. Don't start from scratch - build on the previous estimate.
 ```
 
 ---
@@ -361,9 +361,9 @@ Force the LLM to return this exact structure using OpenAI's `response_format` wi
 ```
 
 **Field rules:**
-- `clarifyingQuestions` — array of strings ONLY when status is `needs_clarification`, otherwise `null`
-- `outOfScopeMessage` — string ONLY when status is `out_of_scope`, otherwise `null`
-- `cost.note` — string if there's something to flag (backend costs, etc.), otherwise `null`
+- `clarifyingQuestions` - array of strings ONLY when status is `needs_clarification`, otherwise `null`
+- `outOfScopeMessage` - string ONLY when status is `out_of_scope`, otherwise `null`
+- `cost.note` - string if there's something to flag (backend costs, etc.), otherwise `null`
 - `timeline` and `cost` must still be populated even when status is `too_complex`
 - When status is `needs_clarification` or `out_of_scope`, timeline/cost/whatsIncluded can be empty but must still exist in the schema
 
@@ -379,14 +379,14 @@ In the Services section, the pricing values (e.g. "From €12.5k", "From €2.5k
 }
 ```
 
-The estimator is now the place users get pricing info. The service cards should show type, timeline, and what's included — but not the price.
+The estimator is now the place users get pricing info. The service cards should show type, timeline, and what's included - but not the price.
 
 ---
 
 ## SUMMARY OF FILES TO CREATE/MODIFY
 
-1. **CREATE** `/api/estimate.js` (or `.ts`) — Next.js API route
-2. **CREATE** a new component e.g. `components/ProjectEstimator.tsx` — the full estimator UI
+1. **CREATE** `/api/estimate.js` (or `.ts`) - Next.js API route
+2. **CREATE** a new component e.g. `components/ProjectEstimator.tsx` - the full estimator UI
 3. **MODIFY** the hero section to include `<ProjectEstimator />` in the empty center space
 4. **MODIFY** the Services section to hide pricing values
 5. **MODIFY** the contact form component to accept and display pre-filled values from the estimator state

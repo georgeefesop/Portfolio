@@ -101,4 +101,4 @@ function doGet(e) {
 
 1. Restart your development server (`npm run dev`) to load the new `.env`.
 2. Submit a contact form on your localhost.
-3. **Check the Google Sheet** — the row should appear instantly!
+3. **Check the Google Sheet** - the row should appear instantly!

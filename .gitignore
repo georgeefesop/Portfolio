@@ -48,3 +48,7 @@ next-env.d.ts
 
 # Local Database
 data/leads.json
+.claude/
+
+# Python bytecode (guard against accidental commits)
+__pycache__/

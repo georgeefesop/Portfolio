@@ -1,4 +1,4 @@
-# ESTIMATOR AMENDMENT — Progressive Reveal + Pills + Expanded Pricing
+# ESTIMATOR AMENDMENT - Progressive Reveal + Pills + Expanded Pricing
 
 ## What This Is
 
@@ -6,7 +6,7 @@ This is an amendment to the existing Project Estimator you already built. Do NOT
 
 1. **Pill buttons** above the textarea for deliverable type selection
 2. **Expanded tier/pricing logic** in the system prompt
-3. **Progressive reveal** on the results card — the user can see HOW the estimate was calculated
+3. **Progressive reveal** on the results card - the user can see HOW the estimate was calculated
 
 Everything else (dark styling, grid aesthetic, copper accents, loading state, edge cases, contact form pre-fill) stays as it is.
 
@@ -28,7 +28,7 @@ Between the "Tell me your idea?" headline and the textarea. One row. Centered.
 
 - **Default state:** No pill selected. All pills sit at base opacity (~0.6), subtle border matching the existing dark theme.
 - **Selected state:** Copper/warm accent border + slight background tint. Only ONE pill can be selected at a time. Clicking a selected pill deselects it.
-- **"Not Sure"** — when selected, visually identical to the others but functionally it sends no deliverable type to the API. The LLM assumes "Design + Prototype" and flags it in considerations.
+- **"Not Sure"** - when selected, visually identical to the others but functionally it sends no deliverable type to the API. The LLM assumes "Design + Prototype" and flags it in considerations.
 - Pills are **optional.** If the user ignores them entirely and just types, nothing breaks. No pill = no `deliverableType` field sent in the request body. The LLM infers from context.
 - On mobile: Pills wrap into two rows if needed. Each pill must be at least 44px tap height.
 
@@ -61,7 +61,7 @@ George works ~25 hours per week on a single project. His effective package rate 
 
 ---
 
-DELIVERABLE TYPE (passed as a parameter — use it to anchor the estimate):
+DELIVERABLE TYPE (passed as a parameter - use it to anchor the estimate):
 
 - design_only: Design files only. Client's dev team builds it. Apply -30% to cost, -25% to timeline vs base.
 - design_prototype: Design + interactive prototype. No backend. This is the base/default.
@@ -73,14 +73,14 @@ DELIVERABLE TYPE (passed as a parameter — use it to anchor the estimate):
 
 SERVICES BY TIER:
 
-TIER 1 — MICRO (€500–€2,500 | 2 days–1 week)
+TIER 1 - MICRO (€500–€2,500 | 2 days–1 week)
   • Single screen redesign          €500   | 2–3 days
   • Design audit                    €750   | 3–5 days
   • Quick prototype (1–2 screens)   €1,000 | 3–7 days
   • Email template                  €500   | 2–3 days
   • Icon/illustration batch         €750   | 3–5 days
 
-TIER 2 — SMALL (€2,500–€5,000 | 1–3 weeks)
+TIER 2 - SMALL (€2,500–€5,000 | 1–3 weeks)
   • Landing page (1–3 pages)        €2,500 | 1–2 weeks
   • Marketing site (up to 5 pages)  €3,500 | 2–3 weeks
   • Traditional brochure site       €3,000 | 2–3 weeks
@@ -88,7 +88,7 @@ TIER 2 — SMALL (€2,500–€5,000 | 1–3 weeks)
   • Small design system             €3,000 | 2–3 weeks
   • Ad creative package             €2,500 | 1–2 weeks
 
-TIER 3 — MEDIUM (€5,000–€12,500 | 3–8 weeks)
+TIER 3 - MEDIUM (€5,000–€12,500 | 3–8 weeks)
   • SaaS Dashboard (5–10 screens)   €5,000 | 4–8 weeks
   • MVP Prototype (functional)      €8,000 | 3–5 weeks
   • E-commerce site (custom)        €7,000 | 4–6 weeks
@@ -97,7 +97,7 @@ TIER 3 — MEDIUM (€5,000–€12,500 | 3–8 weeks)
   • AI integration (feature scope)  €6,000 | 3–5 weeks
   • Corporate site (5–10 pages)     €5,000 | 3–5 weeks
 
-TIER 4 — LARGE (€12,500–€50,000 | 4–16 weeks)
+TIER 4 - LARGE (€12,500–€50,000 | 4–16 weeks)
   • MVP Design + Full Build         €12,500 | 4–6 weeks
   • Complex SaaS platform           €20,000 | 6–10 weeks
   • Fintech / blockchain product    €18,000 | 6–12 weeks
@@ -106,7 +106,7 @@ TIER 4 — LARGE (€12,500–€50,000 | 4–16 weeks)
   • AI-powered product (full)       €20,000 | 6–12 weeks
   • Product + prototype + handoff   €15,000 | 5–8 weeks
 
-TIER 5 — ENTERPRISE (€50,000+ | 3+ months)
+TIER 5 - ENTERPRISE (€50,000+ | 3+ months)
   • Product strategy + architecture  €120/hr
   • Long-term consulting             €120/hr | min 20hrs/month
 
@@ -170,9 +170,9 @@ TIMELINE ↔ PRICE CONSISTENCY CHECK:
   If your numbers don't match, adjust before outputting.
 
 STATUS RULES:
-  • "estimate" — default. Always populate all fields.
-  • "too_complex" — cost exceeds €50,000 or timeline exceeds 3 months. STILL populate all fields.
-  • "out_of_scope" — project is clearly not something George does (logo design, native mobile dev, SEO agency, video production, physical products, Shopify/Wix stores). Populate outOfScopeMessage.
+  • "estimate" - default. Always populate all fields.
+  • "too_complex" - cost exceeds €50,000 or timeline exceeds 3 months. STILL populate all fields.
+  • "out_of_scope" - project is clearly not something George does (logo design, native mobile dev, SEO agency, video production, physical products, Shopify/Wix stores). Populate outOfScopeMessage.
   • Do NOT return "needs_clarification". If input is vague, make reasonable assumptions, estimate, and flag assumptions in considerations.
 
 MATCHING RULES FOR COMMON VAGUE INPUTS:
@@ -188,7 +188,7 @@ MATCHING RULES FOR COMMON VAGUE INPUTS:
 
 TONE:
   • Professional but direct. Not corporate, not salesy.
-  • Be specific in CONSIDERATIONS — reference details the user actually mentioned.
+  • Be specific in CONSIDERATIONS - reference details the user actually mentioned.
   • WHAT'S INCLUDED should reflect actual deliverables for that project type.
   • Never promise availability or make guarantees.
 
@@ -286,10 +286,10 @@ const RESPONSE_SCHEMA = {
 ```
 
 **New fields explained:**
-- `breakdown` — ordered array of calculation steps. Always populated. Last item is always TOTAL.
-- `wideRange` — boolean. `true` if high > low × 2.5. Frontend uses this to show the "narrow it down" prompt.
-- `deliverableNote` — string if the selected pill conflicts with or needs clarifying against what they typed. e.g. "You selected Design Only but described a full product build. I've estimated design-only scope — let me know if that's wrong." Otherwise `null`.
-- `clarifyingQuestions` — kept in schema but ALWAYS `null` now. Removed from logic entirely.
+- `breakdown` - ordered array of calculation steps. Always populated. Last item is always TOTAL.
+- `wideRange` - boolean. `true` if high > low × 2.5. Frontend uses this to show the "narrow it down" prompt.
+- `deliverableNote` - string if the selected pill conflicts with or needs clarifying against what they typed. e.g. "You selected Design Only but described a full product build. I've estimated design-only scope - let me know if that's wrong." Otherwise `null`.
+- `clarifyingQuestions` - kept in schema but ALWAYS `null` now. Removed from logic entirely.
 
 ---
 
@@ -297,7 +297,7 @@ const RESPONSE_SCHEMA = {
 
 This is the big visual change. The results card now reveals itself in layers. The user sees the headline numbers first, then can expand to see the full breakdown.
 
-### Layer 1 — Immediate (shown on load)
+### Layer 1 - Immediate (shown on load)
 
 Everything that currently shows stays. No change to:
 - YOUR IDEA + Edit button
@@ -306,7 +306,7 @@ Everything that currently shows stays. No change to:
 - ESTIMATED COST (copper accent, prominent)
 - The two action buttons at the bottom (Refine / Start Project)
 
-### Layer 2 — "How is this calculated?" (expandable)
+### Layer 2 - "How is this calculated?" (expandable)
 
 A subtle expandable section sits BETWEEN the cost and "What's Included":
 
@@ -316,7 +316,7 @@ A subtle expandable section sits BETWEEN the cost and "What's Included":
 ─────────────────────────────────────
 ```
 
-The label is smaller, muted text. The `∨` chevron indicates it's expandable. Clicking it reveals the breakdown with a smooth expand animation (use Framer Motion — already installed. Use `AnimatePresence` + `motion.div` with height animation or layout animation).
+The label is smaller, muted text. The `∨` chevron indicates it's expandable. Clicking it reveals the breakdown with a smooth expand animation (use Framer Motion - already installed. Use `AnimatePresence` + `motion.div` with height animation or layout animation).
 
 **When expanded, it shows the breakdown array as a stacked list:**
 
@@ -344,7 +344,7 @@ The label is smaller, muted text. The `∨` chevron indicates it's expandable. C
 - TOTAL row: bolder, copper accent on the value, thin border-top above it to separate from the multipliers
 - The whole block uses the same dark card aesthetic as the rest. No white. No flashy colors.
 
-### Layer 3 — "What's Included" (already exists, stays below the breakdown)
+### Layer 3 - "What's Included" (already exists, stays below the breakdown)
 
 No change here. Just moves down when the breakdown is expanded.
 
@@ -357,7 +357,7 @@ That's a pretty wide range. Want to narrow it down?
 [Refine Brief →]
 ```
 
-Small text, muted. The button is subtle — not a full CTA, more like a nudge. Clicking it triggers the same refine flow as the existing Refine Estimate button.
+Small text, muted. The button is subtle - not a full CTA, more like a nudge. Clicking it triggers the same refine flow as the existing Refine Estimate button.
 
 ---
 
@@ -434,4 +434,4 @@ export async function POST(req: Request) {
 | `SYSTEM_PROMPT` constant | Full replacement (see Change 2 above). |
 | `RESPONSE_SCHEMA` constant | Full replacement (see Change 3 above). |
 
-Nothing else changes. Hero layout, contact form pre-fill, loading states, edge case handling, styling foundation — all stays.
+Nothing else changes. Hero layout, contact form pre-fill, loading states, edge case handling, styling foundation - all stays.
