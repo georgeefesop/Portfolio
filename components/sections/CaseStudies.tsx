@@ -95,11 +95,9 @@ export default function CaseStudies() {
         <section id="work" className="bg-bg-primary py-12 md:py-32 scroll-mt-20">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <FadeIn>
-                    <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
-                        <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-text-muted">
-                            Selected Projects
-                        </span>
-                    </div>
+                    <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-text-muted mb-10 block">
+                        Selected Projects
+                    </span>
 
                     <div className="flex flex-wrap gap-x-6 gap-y-2 mb-8 border-b border-border-subtle pb-0">
                         {FILTER_PILLS.map((pill) => {
