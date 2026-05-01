@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { ExternalLink } from 'lucide-react';
 import FadeIn from '../motion/FadeIn';
 import CaseStudyModal from '../ui/CaseStudyModal';
 import ImageWithFallback from '@/components/ui/ImageWithFallback';
@@ -210,7 +209,7 @@ const allItems: Item[] = [
 ];
 
 const PINNED_IDS = ['realfi', 'kingfisher-mortgages'];
-const ALL_VIEW_INITIAL_COUNT = 4;
+const ALL_VIEW_INITIAL_COUNT = 7;
 
 export default function CaseStudies() {
     const [activeId, setActiveId] = useState<string | null>(null);
@@ -306,100 +305,45 @@ export default function CaseStudies() {
                         })}
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        {visible.map((item, idx) =>
-                            item.kind === 'drawer' ? (
-                                <button
-                                    key={item.id}
-                                    type="button"
-                                    onClick={() => setActiveId(item.id)}
-                                    className="group block w-full text-left border border-border-subtle rounded-xl overflow-hidden bg-bg-secondary hover:border-accent-primary/50 hover:shadow-lg hover:shadow-accent-primary/10 transition-all duration-300 focus:outline-none focus-visible:border-accent-primary/60"
-                                    aria-haspopup="dialog"
-                                >
-                                    <div className="p-6 flex flex-col md:flex-row gap-6 md:items-center">
-                                        <div className="relative w-full md:w-64 aspect-[3/2] rounded-lg overflow-hidden flex-shrink-0 bg-bg-tertiary">
-                                            <ImageWithFallback
-                                                src={item.images.thumbnail}
-                                                alt={item.title}
-                                                fill
-                                                quality={100}
-                                                priority={idx < 2}
-                                                sizes="(max-width: 768px) 100vw, 300px"
-                                                className={`object-cover object-top transition-transform duration-700 group-hover:scale-105 ${item.id === 'realfi' ? 'scale-[1.03]' : ''} ${['olympus-sports', 'la-hacienda', 'saxseat'].includes(item.id) ? 'scale-[1.10]' : ''}`}
-                                            />
-                                        </div>
-                                        <div className="flex-1 flex flex-col justify-center min-w-0">
-                                            <div className="flex items-center gap-2 mb-2">
-                                                <span className="w-1 h-1 rounded-full bg-accent-primary" />
-                                                <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-accent-primary">
-                                                    {item.role}
-                                                </span>
-                                            </div>
-                                            <h3 className="text-xl md:text-2xl font-bold text-text-primary mb-1.5 group-hover:text-accent-primary transition-colors tracking-tight leading-tight">
-                                                {item.title}
-                                            </h3>
-                                            <p className="text-text-muted text-sm md:text-base mb-3 max-w-xl font-light leading-snug">
-                                                {item.subtitle}
-                                            </p>
-                                            <div className="flex flex-wrap items-center gap-2">
-                                                {item.tags.slice(0, 3).map((tag) => (
-                                                    <span key={tag} className="bg-bg-tertiary/35 px-2 py-1 rounded text-xs font-mono text-text-muted border border-border-subtle/70">
-                                                        {tag}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        </div>
+                    {activeCategory === 'all' ? (
+                        <div className="space-y-px">
+                            {visible.length > 0 && (
+                                <div className="grid grid-cols-1 md:grid-cols-5 gap-px min-h-[360px]">
+                                    <div className="md:col-span-3">
+                                        <FeaturedCard
+                                            item={visible[0]}
+                                            onOpen={(id) => setActiveId(id)}
+                                            priority
+                                        />
                                     </div>
-                                </button>
-                            ) : (
-                                <a
-                                    key={item.id}
-                                    href={item.externalLink}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="group block border border-border-subtle rounded-xl overflow-hidden bg-bg-secondary hover:border-accent-primary/50 hover:shadow-lg hover:shadow-accent-primary/10 transition-all duration-300"
-                                >
-                                    <div className="w-full text-left p-6 flex flex-col md:flex-row gap-6 md:items-center">
-                                        <div className="relative w-full md:w-64 aspect-[3/2] rounded-lg overflow-hidden flex-shrink-0 bg-bg-tertiary">
-                                            <ImageWithFallback
-                                                src={item.thumbnail}
-                                                alt={item.title}
-                                                fill
-                                                quality={100}
-                                                sizes="(max-width: 768px) 100vw, 300px"
-                                                className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
-                                            />
+                                    {visible.slice(1, 3).map((item, i) => (
+                                        <div key={item.id} className="md:col-span-2">
+                                            <StackedCard item={item} onOpen={(id) => setActiveId(id)} priority={i === 0} />
                                         </div>
-                                        <div className="flex-1 flex flex-col justify-center">
-                                            <div className="flex justify-between items-center">
-                                                <div>
-                                                    <h3 className="text-xl md:text-2xl font-bold text-text-primary mb-1 group-hover:text-accent-primary transition-colors tracking-tight">
-                                                        {item.title}
-                                                    </h3>
-                                                    <p className="text-text-muted text-sm md:text-base mb-3 max-w-xl font-light">
-                                                        {item.subtitle}
-                                                    </p>
-                                                </div>
-                                                <div className="hidden md:flex items-center justify-center p-2 rounded-full border border-border-subtle text-text-muted group-hover:text-text-primary group-hover:border-border-medium transition-all duration-300">
-                                                    <ExternalLink size={18} />
-                                                </div>
-                                            </div>
-                                            <div className="flex flex-wrap items-center gap-2">
-                                                {item.tags.slice(0, 3).map((tag) => (
-                                                    <span key={tag} className="bg-bg-tertiary/35 px-2 py-1 rounded text-xs font-mono text-text-muted border border-border-subtle/70">
-                                                        {tag}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </div>
-                                </a>
-                            ),
-                        )}
-                        {visible.length === 0 && (
-                            <p className="text-text-muted text-center py-12 lg:col-span-2">No projects in this category yet.</p>
-                        )}
-                    </div>
+                                    ))}
+                                </div>
+                            )}
+                            {visible.length > 3 && (
+                                <div className="grid grid-cols-2 md:grid-cols-4 gap-px">
+                                    {visible.slice(3).map((item) => (
+                                        <GridCard key={item.id} item={item} onOpen={(id) => setActiveId(id)} priority={false} />
+                                    ))}
+                                </div>
+                            )}
+                            {visible.length === 0 && (
+                                <p className="text-text-muted text-center py-12">No projects in this category yet.</p>
+                            )}
+                        </div>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px">
+                            {visible.map((item) => (
+                                <GridCard key={item.id} item={item} onOpen={(id) => setActiveId(id)} priority={false} />
+                            ))}
+                            {visible.length === 0 && (
+                                <p className="text-text-muted text-center py-12 col-span-3">No projects in this category yet.</p>
+                            )}
+                        </div>
+                    )}
 
                     {activeCategory === 'all' && !showAllInAllView && ordered.length > ALL_VIEW_INITIAL_COUNT && (
                         <div className="flex justify-center mt-8">
