@@ -142,8 +142,8 @@
   /* Browner deep coffee. Reads as "rich dark brown" on cream rather than neutral grey. */
   --text-primary: #3A2D18;
   --text-secondary: #4A3826;
-  --text-muted: #5C5641;
-  --text-dim: #6E6852;
+  --text-muted: #4F4933;
+  --text-dim: #5C5641;
 
   /* Deep espresso. Must be DARKER than --text-primary so hover transitions
      (text-primary -> accent-primary) deepen rather than lighten on cream. */
