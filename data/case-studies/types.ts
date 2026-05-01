@@ -27,21 +27,24 @@ export type CaseStudyBody = {
     brief: {
         situation: string;
         audience: string;
-        what_made_it_hard: string[];
+        what_made_it_hard: string[]; // exactly 3 points; the modal renders them as a vertical numbered list
     };
+    /** Honest constraint or caveat. Renders at the top of the modal under the tag pills. */
+    honest_note?: string;
     decisions: Array<{
         title: string;
+        /** The screenshot does the "what". Keep this for writers' reference; the modal does not render it. */
         what: string;
+        /** Single rationale paragraph rendered under the screenshot caption. */
         why: string;
-        rejected_alternative?: string;
         screenshot: string;
         caption: string;
     }>;
     process?: string;
     outcome: {
         summary: string;
+        /** Only include if real and verifiable. Fictional / illustrative numbers belong nowhere on the site. */
         metrics?: Array<{ label: string; value: string }>;
-        honest_note?: string;
     };
 };
 

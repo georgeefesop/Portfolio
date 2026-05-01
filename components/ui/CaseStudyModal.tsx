@@ -1,10 +1,31 @@
-﻿'use client';
+'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import ImageWithFallback from '@/components/ui/ImageWithFallback';
+
+interface CaseStudyBody {
+    brief: {
+        situation: string;
+        audience: string;
+        what_made_it_hard: string[];
+    };
+    honest_note?: string;
+    decisions: Array<{
+        title: string;
+        what: string;
+        why: string;
+        screenshot: string;
+        caption: string;
+    }>;
+    process?: string;
+    outcome: {
+        summary: string;
+        metrics?: Array<{ label: string; value: string }>;
+    };
+}
 
 interface CaseStudyData {
     id: string;
@@ -20,6 +41,7 @@ interface CaseStudyData {
         work: string[];
         outcome: string;
     };
+    body?: CaseStudyBody;
     links: {
         live?: string;
         behance?: string;
@@ -67,13 +89,25 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
         return () => window.removeEventListener('keydown', handler);
     }, [project, onClose, lightboxIndex]);
 
-    if (!mounted) return null;
-
-    const galleryImages = project
-        ? (Array.isArray(project.images.gallery)
+    const galleryImages = useMemo(() => {
+        if (!project) return [] as string[];
+        return Array.isArray(project.images.gallery)
             ? project.images.gallery
-            : project.images.gallery.desktop)
-        : [];
+            : project.images.gallery.desktop;
+    }, [project]);
+
+    // For body-mode, the lightbox cycles through decision screenshots first,
+    // then any leftover gallery shots that weren't used inline.
+    const lightboxImages = useMemo(() => {
+        if (!project) return [] as string[];
+        if (!project.body) return galleryImages;
+        const decisionShots = project.body.decisions.map((d) => d.screenshot);
+        const seen = new Set(decisionShots);
+        const extras = galleryImages.filter((g) => !seen.has(g));
+        return [...decisionShots, ...extras];
+    }, [project, galleryImages]);
+
+    if (!mounted) return null;
 
     const content = (
         <AnimatePresence>
@@ -84,7 +118,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.25 }}
-                    className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-8 bg-black/85 backdrop-blur-md"
+                    className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-6 bg-black/85 backdrop-blur-md"
                     onClick={onClose}
                     aria-modal="true"
                     role="dialog"
@@ -111,7 +145,6 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                         className="pointer-events-none absolute left-0 right-0 z-[5] will-change-transform"
                         style={{ height: '220px', top: 0 }}
                     >
-                        {/* Soft fading trail */}
                         <div
                             className="absolute inset-0"
                             style={{
@@ -119,7 +152,6 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                     'linear-gradient(to bottom, transparent 0%, rgba(171,123,98,0.04) 35%, rgba(171,123,98,0.18) 70%, rgba(171,123,98,0.55) 92%, rgba(171,123,98,0.85) 100%)',
                             }}
                         />
-                        {/* Bright leading edge with multi-layer glow */}
                         <div
                             className="absolute left-0 right-0 bottom-0 h-[2px]"
                             style={{
@@ -161,7 +193,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                             </div>
 
                             {/* Title block */}
-                            <div className="px-10 -mt-10 pb-5 relative z-10">
+                            <div className="px-7 -mt-10 pb-5 relative z-10">
                                 <div className="flex items-center gap-2 mb-3">
                                     <span className="relative inline-flex w-1.5 h-1.5">
                                         <span className="absolute inset-0 rounded-full bg-accent-primary animate-ping opacity-60" />
@@ -194,20 +226,28 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                         <span className="text-text-secondary">{project.period}</span>
                                     </div>
                                 </div>
+                                {project.body?.honest_note && (
+                                    <div className="mt-4">
+                                        <SubLabel>Honest note</SubLabel>
+                                        <p className="text-text-muted text-sm italic leading-relaxed mt-2">
+                                            {project.body.honest_note}
+                                        </p>
+                                    </div>
+                                )}
                             </div>
 
-                            {project.description && (
+                            {project.body ? (
+                                <BodyMobileView body={project.body} onScreenshotClick={(i) => setLightboxIndex(i)} />
+                            ) : project.description ? (
                                 <>
                                     {project.description.overview && (
                                         <MobileSection label="Overview">
                                             <p className="whitespace-pre-line">{project.description.overview}</p>
                                         </MobileSection>
                                     )}
-
                                     <MobileSection label="The Challenge">
                                         <p className="whitespace-pre-line">{project.description.challenge}</p>
                                     </MobileSection>
-
                                     <MobileSection label="The Work">
                                         <ul className="space-y-3">
                                             {project.description.work.map((item, i) => (
@@ -218,15 +258,14 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                             ))}
                                         </ul>
                                     </MobileSection>
-
                                     <MobileSection label="The Outcome">
                                         <p className="whitespace-pre-line">{project.description.outcome}</p>
                                     </MobileSection>
                                 </>
-                            )}
+                            ) : null}
 
                             {project.links.live && (
-                                <div className="px-10 pb-5">
+                                <div className="px-7 pb-5">
                                     <a
                                         href={project.links.live}
                                         target="_blank"
@@ -238,39 +277,68 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                 </div>
                             )}
 
-                            <div className="border-t border-border-subtle bg-bg-tertiary/30">
-                                <div className="px-10 py-3 flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-text-muted">
-                                    <span className="w-1.5 h-1.5 rounded-full bg-accent-primary" />
-                                    <span>Gallery</span>
-                                    <span className="text-accent-primary/60">// {galleryImages.length}</span>
+                            {/* Legacy gallery only when no body schema */}
+                            {!project.body && (
+                                <div className="border-t border-border-subtle bg-bg-tertiary/30">
+                                    <div className="px-7 py-3 flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-text-muted">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-accent-primary" />
+                                        <span>Gallery</span>
+                                        <span className="text-accent-primary/60">// {galleryImages.length}</span>
+                                    </div>
+                                    <div className="px-7 pb-6 flex flex-col gap-3">
+                                        {galleryImages.map((img, idx) => (
+                                            <button
+                                                key={idx}
+                                                onClick={() => setLightboxIndex(idx)}
+                                                className="relative w-full aspect-[16/10] rounded-md overflow-hidden bg-bg-tertiary border border-border-subtle"
+                                            >
+                                                <ImageWithFallback
+                                                    src={img}
+                                                    alt={`${project.title} screenshot ${idx + 1}`}
+                                                    fill
+                                                    sizes="100vw"
+                                                    className="object-cover"
+                                                />
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
-                                <div className="px-10 pb-6 flex flex-col gap-3">
-                                    {galleryImages.map((img, idx) => (
-                                        <button
-                                            key={idx}
-                                            onClick={() => setLightboxIndex(idx)}
-                                            className="relative w-full aspect-[16/10] rounded-md overflow-hidden bg-bg-tertiary border border-border-subtle"
-                                        >
-                                            <ImageWithFallback
-                                                src={img}
-                                                alt={`${project.title} screenshot ${idx + 1}`}
-                                                fill
-                                                sizes="100vw"
-                                                className="object-cover"
-                                            />
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
+                            )}
                         </div>
                     </motion.div>
 
-                    {/* DESKTOP: floating identity card (sibling, outside the modal) + main modal */}
+                    {/* DESKTOP: body-mode renders a single full-bleed reading panel.
+                        Legacy description-mode keeps the original aside + main 3-col layout. */}
+                    {project.body ? (
+                        <motion.div
+                            initial={{ clipPath: 'inset(48% 2% 48% 2% round 6px)', opacity: 0, scale: 0.97 }}
+                            animate={{ clipPath: 'inset(0% 0% 0% 0% round 6px)', opacity: 1, scale: 1 }}
+                            exit={{ clipPath: 'inset(48% 2% 48% 2% round 6px)', opacity: 0, scale: 0.98 }}
+                            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                            className="hidden md:flex relative z-[10] w-full max-w-[1280px] md:max-h-[92vh] lg:h-[88vh] lg:max-h-none flex-col bg-bg-secondary border border-border-subtle rounded-md overflow-hidden shadow-[0_24px_70px_-15px_rgba(0,0,0,0.7),0_0_50px_-15px_rgba(171,123,98,0.4)]"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <button
+                                onClick={onClose}
+                                className="absolute top-3 right-3 z-30 p-2 rounded-sm text-text-muted hover:text-text-primary bg-bg-tertiary/50 hover:bg-bg-tertiary/70 backdrop-blur-md border border-border-subtle transition-colors"
+                                aria-label="Close"
+                            >
+                                <X size={16} />
+                            </button>
+                            <div className="flex-1 min-h-0 overflow-y-auto hud-scroll">
+                                <BodyIntro project={project} />
+                                <BodyDesktopView
+                                    body={project.body}
+                                    onScreenshotClick={(i) => setLightboxIndex(i)}
+                                />
+                            </div>
+                        </motion.div>
+                    ) : (
                     <div
-                        className="hidden md:flex relative z-[10] w-full max-w-[1500px] md:flex-col md:max-h-[92vh] md:gap-4 md:overflow-y-auto lg:flex-row lg:h-[88vh] lg:max-h-none lg:gap-5 lg:overflow-visible md:items-stretch hud-scroll"
+                        className="hidden md:flex relative z-[10] w-full max-w-[1500px] md:flex-col md:max-h-[92vh] md:gap-4 md:overflow-y-auto lg:flex-row lg:h-[88vh] lg:max-h-none lg:gap-0 lg:overflow-visible md:items-stretch hud-scroll"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        {/* Floating identity panel - distinct card outside the modal */}
+                        {/* Floating identity panel */}
                         <motion.aside
                             initial={{ opacity: 0, x: -28, scale: 0.97 }}
                             animate={{ opacity: 1, x: 0, scale: 1 }}
@@ -278,7 +346,6 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                             transition={{ duration: 0.55, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
                             className="md:w-full lg:w-[360px] lg:flex-shrink-0 bg-bg-secondary/95 backdrop-blur-md border border-border-subtle rounded-md flex flex-col overflow-hidden shadow-[0_24px_70px_-15px_rgba(0,0,0,0.7),0_0_50px_-15px_rgba(171,123,98,0.45)]"
                         >
-                            {/* Identity HUD strip */}
                             <div className="flex-shrink-0 px-7 pt-5 pb-3.5 border-b border-border-subtle flex items-center gap-2 bg-bg-tertiary/40">
                                 <span className="relative inline-flex w-1.5 h-1.5 flex-shrink-0">
                                     <span className="absolute inset-0 rounded-full bg-accent-primary animate-ping opacity-60" />
@@ -289,7 +356,6 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                 </span>
                             </div>
 
-                            {/* Title block */}
                             <div className="flex-shrink-0 px-7 pt-5 pb-5">
                                 <h3 className="text-2xl font-bold text-text-primary tracking-tight mb-1.5 leading-tight">
                                     {project.title}
@@ -316,14 +382,18 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                 </div>
                             </div>
 
-                            {/* Overview scroll region */}
-                            {project.description?.overview && (
+                            {/* Identity-card scroll body: legacy overview only.
+                                Body-mode entries carry the brief in the main reading panel,
+                                so the identity card stays sparse. */}
+                            {project.description?.overview ? (
                                 <div className="md:flex-1 md:min-h-0 md:overflow-y-auto px-7 pb-6 hud-scroll">
                                     <PanelLabel>Overview</PanelLabel>
                                     <div className="text-text-secondary text-sm leading-relaxed whitespace-pre-line">
                                         {project.description.overview}
                                     </div>
                                 </div>
+                            ) : (
+                                <div className="md:flex-1 md:min-h-0" />
                             )}
 
                             {project.links.live && (
@@ -340,7 +410,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                             )}
                         </motion.aside>
 
-                        {/* Main modal panel */}
+                        {/* Main reading panel */}
                         <motion.div
                             initial={{ clipPath: 'inset(48% 2% 48% 2% round 6px)', opacity: 0, scale: 0.97 }}
                             animate={{ clipPath: 'inset(0% 0% 0% 0% round 6px)', opacity: 1, scale: 1 }}
@@ -356,83 +426,83 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                 <X size={16} />
                             </button>
 
-                            {/* Body */}
                             <motion.div
                                 initial={{ opacity: 0, y: 8 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3, duration: 0.35 }}
                                 className="flex-1 min-h-0 flex flex-col"
                             >
-                                {/* 3-col grid: Challenge / Work / Outcome */}
-                                {project.description && (
-                                    <div className="flex-1 min-h-0 grid md:grid-cols-3 grid-rows-[auto] divide-y md:divide-y-0 md:divide-x divide-border-subtle">
-                                        <ConsolePanel label="The Challenge">
-                                            <p className="text-text-secondary text-sm leading-relaxed whitespace-pre-line">
-                                                {project.description.challenge}
-                                            </p>
-                                        </ConsolePanel>
-                                        <ConsolePanel label="The Work">
-                                            <ul className="space-y-2.5">
-                                                {project.description.work.map((item, i) => (
-                                                    <li key={i} className="text-text-secondary text-sm leading-relaxed flex gap-2">
-                                                        <span className="text-accent-primary flex-shrink-0">▸</span>
-                                                        <span>{item}</span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </ConsolePanel>
-                                        <ConsolePanel label="The Outcome">
-                                            <p className="text-text-secondary text-sm leading-relaxed whitespace-pre-line">
-                                                {project.description.outcome}
-                                            </p>
-                                        </ConsolePanel>
-                                    </div>
-                                )}
+                                {project.description ? (
+                                    <>
+                                        <div className="flex-1 min-h-0 grid md:grid-cols-3 grid-rows-[auto] divide-y md:divide-y-0 md:divide-x divide-border-subtle">
+                                            <ConsolePanel label="The Challenge">
+                                                <p className="text-text-secondary text-sm leading-relaxed whitespace-pre-line">
+                                                    {project.description.challenge}
+                                                </p>
+                                            </ConsolePanel>
+                                            <ConsolePanel label="The Work">
+                                                <ul className="space-y-2.5">
+                                                    {project.description.work.map((item, i) => (
+                                                        <li key={i} className="text-text-secondary text-sm leading-relaxed flex gap-2">
+                                                            <span className="text-accent-primary flex-shrink-0">▸</span>
+                                                            <span>{item}</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </ConsolePanel>
+                                            <ConsolePanel label="The Outcome">
+                                                <p className="text-text-secondary text-sm leading-relaxed whitespace-pre-line">
+                                                    {project.description.outcome}
+                                                </p>
+                                            </ConsolePanel>
+                                        </div>
 
-                                {/* Gallery - full width across the bottom of the modal panel */}
-                                <div className="flex-shrink-0 border-t border-border-subtle bg-bg-tertiary/30">
-                                    <div className="px-7 py-2.5 flex items-center gap-3 text-xs font-mono uppercase tracking-[0.2em] text-text-muted">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-accent-primary" />
-                                        <span>Gallery</span>
-                                        <span className="text-accent-primary/60">// {galleryImages.length}</span>
-                                    </div>
-                                    <div
-                                        className="px-7 pb-5 flex gap-3 overflow-x-auto overflow-y-hidden hud-scroll"
-                                        style={{
-                                            maskImage: 'linear-gradient(to right, black 0, black 92%, transparent 100%)',
-                                            WebkitMaskImage: 'linear-gradient(to right, black 0, black 92%, transparent 100%)',
-                                        }}
-                                    >
-                                        {galleryImages.map((img, idx) => (
-                                            <button
-                                                key={idx}
-                                                onClick={() => setLightboxIndex(idx)}
-                                                className="relative flex-shrink-0 w-[232px] aspect-[4/3] rounded-sm overflow-hidden bg-bg-tertiary cursor-zoom-in hover:brightness-110 transition-all border border-border-subtle hover:border-accent-primary/40"
+                                        {/* Bottom gallery strip - legacy only */}
+                                        <div className="flex-shrink-0 border-t border-border-subtle bg-bg-tertiary/30">
+                                            <div className="px-7 py-2.5 flex items-center gap-3 text-xs font-mono uppercase tracking-[0.2em] text-text-muted">
+                                                <span className="w-1.5 h-1.5 rounded-full bg-accent-primary" />
+                                                <span>Gallery</span>
+                                                <span className="text-accent-primary/60">// {galleryImages.length}</span>
+                                            </div>
+                                            <div
+                                                className="px-7 pb-5 flex gap-3 overflow-x-auto overflow-y-hidden hud-scroll"
+                                                style={{
+                                                    maskImage: 'linear-gradient(to right, black 0, black 92%, transparent 100%)',
+                                                    WebkitMaskImage: 'linear-gradient(to right, black 0, black 92%, transparent 100%)',
+                                                }}
                                             >
-                                                <ImageWithFallback
-                                                    src={img}
-                                                    alt={`${project.title} screenshot ${idx + 1}`}
-                                                    fill
-                                                    sizes="232px"
-                                                    className="object-cover"
-                                                />
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
+                                                {galleryImages.map((img, idx) => (
+                                                    <button
+                                                        key={idx}
+                                                        onClick={() => setLightboxIndex(idx)}
+                                                        className="relative flex-shrink-0 w-[232px] aspect-[4/3] rounded-sm overflow-hidden bg-bg-tertiary cursor-zoom-in hover:brightness-110 transition-all border border-border-subtle hover:border-accent-primary/40"
+                                                    >
+                                                        <ImageWithFallback
+                                                            src={img}
+                                                            alt={`${project.title} screenshot ${idx + 1}`}
+                                                            fill
+                                                            sizes="232px"
+                                                            className="object-cover"
+                                                        />
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : null}
                             </motion.div>
                         </motion.div>
                     </div>
+                    )}
 
-                    {/* Lightbox stays inside the same portal so Esc handler is shared */}
                     <AnimatePresence>
                         {lightboxIndex !== null && project && (
                             <Lightbox
-                                images={galleryImages}
+                                images={lightboxImages}
                                 currentIndex={lightboxIndex}
                                 onClose={() => setLightboxIndex(null)}
-                                onNext={() => setLightboxIndex((lightboxIndex + 1) % galleryImages.length)}
-                                onPrev={() => setLightboxIndex((lightboxIndex - 1 + galleryImages.length) % galleryImages.length)}
+                                onNext={() => setLightboxIndex((lightboxIndex + 1) % lightboxImages.length)}
+                                onPrev={() => setLightboxIndex((lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length)}
                             />
                         )}
                     </AnimatePresence>
@@ -444,7 +514,315 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
     return createPortal(content, document.body);
 }
 
-// --- Console panel: subtle copper label + scrollable body ---
+// --- Body schema: intro block (replaces sidebar, sits at top of single-panel layout) ---
+
+function BodyIntro({ project }: { project: CaseStudyData }) {
+    return (
+        <section className="px-9 pt-7 pb-7 border-b border-border-subtle">
+            <div className="flex items-center gap-2 mb-5">
+                <span className="relative inline-flex w-1.5 h-1.5 flex-shrink-0">
+                    <span className="absolute inset-0 rounded-full bg-accent-primary animate-ping opacity-60" />
+                    <span className="relative inline-block w-1.5 h-1.5 rounded-full bg-accent-primary" />
+                </span>
+                <span className="text-[11px] font-mono uppercase tracking-[0.22em] text-accent-primary truncate">
+                    Case File · {project.id.toUpperCase().replace(/-/g, '_')}
+                </span>
+            </div>
+            <div className="grid md:grid-cols-[minmax(0,1fr)_minmax(0,340px)] gap-x-8 gap-y-6 items-start">
+                <div className="flex flex-col gap-5 order-2 md:order-1">
+                    <div>
+                        <h3 className="text-3xl md:text-[34px] font-semibold text-text-primary tracking-tight leading-[1.1] mb-3">
+                            {project.title}
+                        </h3>
+                        <p className="text-text-muted text-[15px] font-light leading-relaxed max-w-2xl">
+                            {project.subtitle}
+                        </p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-x-5 gap-y-3 font-mono text-xs text-text-muted max-w-md">
+                        <div>
+                            <span className="block text-text-dim text-[10px] uppercase tracking-widest mb-1">Role</span>
+                            <span className="text-text-secondary">{project.role}</span>
+                        </div>
+                        <div>
+                            <span className="block text-text-dim text-[10px] uppercase tracking-widest mb-1">Period</span>
+                            <span className="text-text-secondary">{project.period}</span>
+                        </div>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-2.5 pt-1">
+                        <div className="flex flex-wrap items-center gap-1.5">
+                            {project.tags.map((tag) => (
+                                <span key={tag} className="bg-bg-tertiary/40 px-2 py-0.5 rounded text-[10px] font-mono text-text-muted border border-border-subtle">
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+                        {project.links.live && (
+                            <a
+                                href={project.links.live}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 px-3.5 py-2 bg-accent-primary/10 hover:bg-accent-primary/20 text-accent-primary rounded-sm font-semibold transition-colors text-xs uppercase tracking-widest font-mono"
+                            >
+                                View live <ExternalLink size={12} />
+                            </a>
+                        )}
+                    </div>
+                </div>
+                <div className="relative w-full aspect-[16/10] rounded-sm overflow-hidden bg-bg-tertiary border border-border-subtle order-1 md:order-2">
+                    <ImageWithFallback
+                        src={project.images.hero}
+                        alt={project.title}
+                        fill
+                        sizes="(min-width: 768px) 340px, 100vw"
+                        className="object-cover"
+                    />
+                </div>
+            </div>
+            {project.body?.honest_note && (
+                <div className="mt-6 pt-5 border-t border-border-subtle">
+                    <SubLabel>Honest note</SubLabel>
+                    <p className="text-text-muted text-sm italic leading-relaxed mt-2 max-w-3xl">
+                        {project.body.honest_note}
+                    </p>
+                </div>
+            )}
+        </section>
+    );
+}
+
+// --- Body schema desktop view ---
+
+function BodyDesktopView({ body, onScreenshotClick }: { body: CaseStudyBody; onScreenshotClick: (idx: number) => void }) {
+    const decisions = body.decisions;
+    return (
+        <>
+            {/* BRIEF */}
+            <section className="px-9 pt-8 pb-9 border-b border-border-subtle">
+                <PanelLabel>Brief</PanelLabel>
+                <div className="grid lg:grid-cols-2 gap-x-10 gap-y-5 mb-6">
+                    <BriefCol label="Situation" body={body.brief.situation} />
+                    <BriefCol label="Audience" body={body.brief.audience} />
+                </div>
+                <div>
+                    <SubLabel>What made it hard</SubLabel>
+                    <ul className="mt-3 max-w-3xl">
+                        {body.brief.what_made_it_hard.map((item, i) => (
+                            <li key={i} className="flex gap-3 text-text-secondary text-sm leading-relaxed py-2.5 border-t border-border-subtle/60 first:border-t">
+                                <span className="text-accent-primary/80 font-mono text-[11px] pt-1 select-none">
+                                    {String(i + 1).padStart(2, '0')}
+                                </span>
+                                <span>{item}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            </section>
+
+            {/* DECISIONS */}
+            <section className="px-9 py-8 border-b border-border-subtle">
+                <div className="flex items-center gap-3 mb-7">
+                    <span className="w-1.5 h-1.5 rounded-full bg-accent-primary" />
+                    <span className="text-sm font-mono uppercase tracking-[0.18em] text-accent-primary">
+                        Decisions
+                    </span>
+                    <span className="text-xs font-mono text-accent-primary/60">// {decisions.length}</span>
+                </div>
+                <div className="space-y-9">
+                    {decisions.map((d, i) => (
+                        <DecisionRow
+                            key={i}
+                            index={i}
+                            total={decisions.length}
+                            decision={d}
+                            onScreenshotClick={() => onScreenshotClick(i)}
+                        />
+                    ))}
+                </div>
+            </section>
+
+            {/* PROCESS */}
+            {body.process && (
+                <section className="px-9 py-7 border-b border-border-subtle">
+                    <PanelLabel>Process</PanelLabel>
+                    <p className="text-text-secondary text-sm leading-relaxed max-w-3xl">
+                        {body.process}
+                    </p>
+                </section>
+            )}
+
+            {/* OUTCOME */}
+            <section className="px-9 py-8">
+                <PanelLabel>Outcome</PanelLabel>
+                <p className="text-text-secondary text-[15px] leading-relaxed mb-6 max-w-3xl">
+                    {body.outcome.summary}
+                </p>
+                {body.outcome.metrics && body.outcome.metrics.length > 0 && (
+                    <MetricsRow metrics={body.outcome.metrics} />
+                )}
+            </section>
+        </>
+    );
+}
+
+function BodyMobileView({ body, onScreenshotClick }: { body: CaseStudyBody; onScreenshotClick: (idx: number) => void }) {
+    return (
+        <>
+            <MobileSection label="Brief">
+                <div className="space-y-4">
+                    <div>
+                        <SubLabel>Situation</SubLabel>
+                        <p className="text-text-secondary mt-1">{body.brief.situation}</p>
+                    </div>
+                    <div>
+                        <SubLabel>Audience</SubLabel>
+                        <p className="text-text-secondary mt-1">{body.brief.audience}</p>
+                    </div>
+                    <div>
+                        <SubLabel>What made it hard</SubLabel>
+                        <ul className="mt-2 space-y-2">
+                            {body.brief.what_made_it_hard.map((item, i) => (
+                                <li key={i} className="flex gap-2.5 text-text-secondary text-sm leading-relaxed py-1.5 border-t border-border-subtle/60">
+                                    <span className="text-accent-primary/80 font-mono text-[11px] pt-0.5">
+                                        {String(i + 1).padStart(2, '0')}
+                                    </span>
+                                    <span>{item}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            </MobileSection>
+
+            <MobileSection label={`Decisions // ${body.decisions.length}`}>
+                <div className="space-y-7">
+                    {body.decisions.map((d, i) => (
+                        <DecisionRow
+                            key={i}
+                            index={i}
+                            total={body.decisions.length}
+                            decision={d}
+                            onScreenshotClick={() => onScreenshotClick(i)}
+                            stacked
+                        />
+                    ))}
+                </div>
+            </MobileSection>
+
+            {body.process && (
+                <MobileSection label="Process">
+                    <p className="text-text-secondary">{body.process}</p>
+                </MobileSection>
+            )}
+
+            <MobileSection label="Outcome">
+                <p className="text-text-secondary mb-5">{body.outcome.summary}</p>
+                {body.outcome.metrics && body.outcome.metrics.length > 0 && (
+                    <MetricsRow metrics={body.outcome.metrics} />
+                )}
+            </MobileSection>
+        </>
+    );
+}
+
+function DecisionRow({
+    index,
+    total,
+    decision,
+    onScreenshotClick,
+    stacked,
+}: {
+    index: number;
+    total: number;
+    decision: CaseStudyBody['decisions'][number];
+    onScreenshotClick: () => void;
+    stacked?: boolean;
+}) {
+    const num = String(index + 1).padStart(2, '0');
+    const totalStr = String(total).padStart(2, '0');
+    return (
+        <article className={stacked ? 'flex flex-col gap-4' : 'grid lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)] gap-x-8 gap-y-4 items-start'}>
+            {/* Screenshot + caption (left column on desktop, top on mobile) */}
+            <figure className="flex flex-col">
+                <button
+                    onClick={onScreenshotClick}
+                    className="group relative w-full aspect-[16/10] rounded-sm overflow-hidden bg-bg-tertiary border border-border-subtle hover:border-accent-primary/40 transition-colors cursor-zoom-in"
+                >
+                    <ImageWithFallback
+                        src={decision.screenshot}
+                        alt={decision.caption || decision.title}
+                        fill
+                        sizes="(min-width: 1024px) 760px, 100vw"
+                        className="object-cover group-hover:brightness-110 transition-all"
+                    />
+                </button>
+                {decision.caption && (
+                    <figcaption className="mt-2.5 text-xs font-mono text-text-muted leading-relaxed">
+                        <span className="text-accent-primary/70 mr-1.5">{num}</span>
+                        {decision.caption}
+                    </figcaption>
+                )}
+            </figure>
+
+            {/* Title + single rationale paragraph */}
+            <div>
+                <div className="flex items-center gap-2 mb-2.5">
+                    <span className="text-[11px] font-mono uppercase tracking-[0.22em] text-accent-primary">
+                        Decision {num}
+                    </span>
+                    <span className="text-[11px] font-mono text-accent-primary/50">/ {totalStr}</span>
+                </div>
+                <h4 className="text-[19px] md:text-xl font-semibold text-text-primary leading-snug mb-3 tracking-tight">
+                    {decision.title}
+                </h4>
+                <p className="text-text-secondary text-sm leading-relaxed">
+                    {decision.why}
+                </p>
+            </div>
+        </article>
+    );
+}
+
+function BriefCol({ label, body }: { label: string; body: string }) {
+    return (
+        <div>
+            <SubLabel>{label}</SubLabel>
+            <p className="text-text-secondary text-sm leading-relaxed mt-1.5">{body}</p>
+        </div>
+    );
+}
+
+function MetricsRow({ metrics }: { metrics: Array<{ label: string; value: string }> }) {
+    const cols = Math.min(metrics.length, 4);
+    const colsClass =
+        cols === 1 ? 'grid-cols-1'
+        : cols === 2 ? 'grid-cols-2'
+        : cols === 3 ? 'grid-cols-1 sm:grid-cols-3'
+        : 'grid-cols-2 sm:grid-cols-4';
+    return (
+        <div className={`grid ${colsClass} gap-y-5 gap-x-6 border-t border-border-subtle pt-5`}>
+            {metrics.map((m, i) => (
+                <div key={i} className="flex flex-col gap-1.5">
+                    <span className="text-text-primary text-3xl md:text-[34px] font-semibold tracking-tight leading-none">
+                        {m.value}
+                    </span>
+                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-text-muted">
+                        {m.label}
+                    </span>
+                </div>
+            ))}
+        </div>
+    );
+}
+
+function SubLabel({ children }: { children: React.ReactNode }) {
+    return (
+        <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-text-dim block">
+            {children}
+        </span>
+    );
+}
+
+// --- Console panel (legacy 3-col layout) ---
 
 function ConsolePanel({ label, children }: { label: string; children: React.ReactNode }) {
     return (
@@ -464,7 +842,7 @@ function ConsolePanel({ label, children }: { label: string; children: React.Reac
 
 function MobileSection({ label, children }: { label: string; children: React.ReactNode }) {
     return (
-        <div className="px-10 py-5 border-t border-border-subtle">
+        <div className="px-7 py-5 border-t border-border-subtle">
             <div className="flex items-center gap-2 mb-3">
                 <span className="w-1.5 h-1.5 rounded-full bg-accent-primary" />
                 <span className="text-sm font-mono uppercase tracking-[0.18em] text-accent-primary">
@@ -478,7 +856,7 @@ function MobileSection({ label, children }: { label: string; children: React.Rea
 
 function PanelLabel({ children }: { children: React.ReactNode }) {
     return (
-        <div className="flex items-center gap-2 mb-3">
+        <div className="flex items-center gap-2 mb-4">
             <span className="w-1.5 h-1.5 rounded-full bg-accent-primary" />
             <span className="text-sm font-mono uppercase tracking-[0.18em] text-accent-primary">
                 {children}
@@ -487,7 +865,7 @@ function PanelLabel({ children }: { children: React.ReactNode }) {
     );
 }
 
-// --- Lightbox (lifted from previous drawer, unchanged behaviour) ---
+// --- Lightbox ---
 
 function Lightbox({
     images,
