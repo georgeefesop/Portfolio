@@ -15,7 +15,6 @@ type FeaturedItem = {
 // Thumbnails that ship with built-in white margins/borders - start zoomed and
 // scale further on hover so the user perceives a true zoom-in, not zoom-out.
 const ZOOM_IDS = new Set([
-    'kingfisher-mortgages',
     'olympus-sports',
     'la-hacienda',
     'instant-access-locksmiths',
@@ -24,7 +23,7 @@ const ZOOM_IDS = new Set([
 
 const items: FeaturedItem[] = [
     { id: 'realfi', title: 'RealFi', tag: 'Cardano · Fintech', thumbnail: '/images/realfi/hero.png' },
-    { id: 'kingfisher-mortgages', title: 'Kingfisher Mortgages', tag: 'WordPress · Brand', thumbnail: '/images/kingfisher/hero.png' },
+    { id: 'kingfisher-mortgages', title: 'Kingfisher Mortgages', tag: 'WordPress · Brand', thumbnail: '/images/kingfisher-thumb.png' },
     { id: 'allsop-francis', title: 'Allsop & Francis', tag: 'AI Image Direction', thumbnail: '/images/allsop-francis/2.png' },
     { id: 'uk-vehicles', title: 'UK Vehicles Cyprus', tag: 'Next.js · Commerce', thumbnail: '/images/uk-vehicles/hero.png' },
     { id: 'ai-tools', title: 'AI User Tools', tag: 'UX · AI', thumbnail: '/images/ai-tools/AIUT-2.png' },
@@ -45,13 +44,13 @@ function HorizontalCard({ item }: { item: FeaturedItem }) {
             : 'group-hover:scale-105';
     return (
         <div className="w-[312px] group">
-            <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white/5 border-2 border-white/10 group-hover:border-accent-primary transition-colors">
+            <div className="relative aspect-[3/2] rounded-lg overflow-hidden bg-white/5 border-2 border-white/10 group-hover:border-accent-primary transition-colors">
                 <ImageWithFallback
                     src={item.thumbnail}
                     alt={item.title}
                     fill
                     sizes="312px"
-                    className={`object-cover opacity-90 group-hover:opacity-100 transition-all duration-500 ${zoomClass}`}
+                    className={`object-cover object-top opacity-90 group-hover:opacity-100 transition-all duration-500 ${zoomClass}`}
                 />
             </div>
             <div className="mt-3">

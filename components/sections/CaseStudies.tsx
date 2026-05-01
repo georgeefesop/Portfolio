@@ -135,7 +135,7 @@ export default function CaseStudies() {
                                     aria-haspopup="dialog"
                                 >
                                     <div className="p-6 flex flex-col md:flex-row gap-6 md:items-center">
-                                        <div className="relative w-full md:w-64 aspect-[4/3] rounded-lg overflow-hidden flex-shrink-0 bg-bg-tertiary">
+                                        <div className="relative w-full md:w-64 aspect-[3/2] rounded-lg overflow-hidden flex-shrink-0 bg-bg-tertiary">
                                             <ImageWithFallback
                                                 src={item.images.thumbnail}
                                                 alt={item.title}
@@ -143,7 +143,7 @@ export default function CaseStudies() {
                                                 quality={100}
                                                 priority={idx < 2}
                                                 sizes="(max-width: 768px) 100vw, 300px"
-                                                className={`object-cover transition-transform duration-700 group-hover:scale-105 ${item.id === 'realfi' ? 'scale-[1.03]' : ''} ${item.id === 'instant-access-locksmiths' ? 'scale-[1.12]' : ['olympus-sports', 'la-hacienda', 'saxseat'].includes(item.id) ? 'scale-[1.10]' : ''}`}
+                                                className={`object-cover object-top transition-transform duration-700 group-hover:scale-105 ${item.id === 'realfi' ? 'scale-[1.03]' : ''} ${item.id === 'instant-access-locksmiths' ? 'scale-[1.12]' : ['olympus-sports', 'la-hacienda', 'saxseat'].includes(item.id) ? 'scale-[1.10]' : ''}`}
                                             />
                                         </div>
                                         <div className="flex-1 flex flex-col justify-center min-w-0">
@@ -178,14 +178,14 @@ export default function CaseStudies() {
                                     className="group block border border-border-subtle rounded-xl overflow-hidden bg-bg-secondary hover:border-accent-primary/50 hover:shadow-lg hover:shadow-accent-primary/10 transition-all duration-300"
                                 >
                                     <div className="w-full text-left p-6 flex flex-col md:flex-row gap-6 md:items-center">
-                                        <div className="relative w-full md:w-64 aspect-[4/3] rounded-lg overflow-hidden flex-shrink-0 bg-bg-tertiary">
+                                        <div className="relative w-full md:w-64 aspect-[3/2] rounded-lg overflow-hidden flex-shrink-0 bg-bg-tertiary">
                                             <ImageWithFallback
                                                 src={item.thumbnail}
                                                 alt={item.title}
                                                 fill
                                                 quality={100}
                                                 sizes="(max-width: 768px) 100vw, 300px"
-                                                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                                className="object-cover object-top transition-transform duration-700 group-hover:scale-105"
                                             />
                                         </div>
                                         <div className="flex-1 flex flex-col justify-center">
