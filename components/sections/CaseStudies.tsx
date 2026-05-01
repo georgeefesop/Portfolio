@@ -22,18 +22,44 @@ type Item = DrawerItem | ExternalItem;
 type CardItem = DrawerItem | ExternalItem;
 
 function FeaturedCard({ item, onOpen, priority }: { item: CardItem; onOpen: (id: string) => void; priority: boolean }) {
-    const Tag = item.kind === 'external' ? 'a' : 'button';
-    const extraProps = item.kind === 'external'
-        ? { href: item.externalLink, target: '_blank', rel: 'noopener noreferrer' }
-        : { type: 'button' as const, onClick: () => onOpen(item.id), 'aria-haspopup': 'dialog' as const };
-
+    if (item.kind === 'external') {
+        return (
+            <a
+                href={item.externalLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative block w-full h-full min-h-[320px] overflow-hidden border border-border-subtle bg-bg-secondary hover:border-border-medium transition-colors duration-300 focus:outline-none"
+            >
+                <ImageWithFallback
+                    src={item.thumbnail}
+                    alt={item.title}
+                    fill
+                    quality={90}
+                    priority={priority}
+                    sizes="(max-width: 768px) 100vw, 60vw"
+                    className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-white/60 mb-2 block">
+                        {item.tags[0]}
+                    </span>
+                    <h3 className="text-2xl md:text-3xl font-bold text-white leading-tight tracking-tight group-hover:text-white/90 transition-colors">
+                        {item.title}
+                    </h3>
+                </div>
+            </a>
+        );
+    }
     return (
-        <Tag
-            {...(extraProps as object)}
+        <button
+            type="button"
+            onClick={() => onOpen(item.id)}
+            aria-haspopup="dialog"
             className="group relative block w-full h-full min-h-[320px] overflow-hidden border border-border-subtle bg-bg-secondary hover:border-border-medium transition-colors duration-300 focus:outline-none"
         >
             <ImageWithFallback
-                src={item.kind === 'drawer' ? item.images.thumbnail : item.thumbnail}
+                src={item.images.thumbnail}
                 alt={item.title}
                 fill
                 quality={90}
@@ -44,30 +70,57 @@ function FeaturedCard({ item, onOpen, priority }: { item: CardItem; onOpen: (id:
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-6">
                 <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-white/60 mb-2 block">
-                    {item.kind === 'drawer' ? item.role : item.tags[0]}
+                    {item.role}
                 </span>
                 <h3 className="text-2xl md:text-3xl font-bold text-white leading-tight tracking-tight group-hover:text-white/90 transition-colors">
                     {item.title}
                 </h3>
             </div>
-        </Tag>
+        </button>
     );
 }
 
 function StackedCard({ item, onOpen, priority }: { item: CardItem; onOpen: (id: string) => void; priority: boolean }) {
-    const Tag = item.kind === 'external' ? 'a' : 'button';
-    const extraProps = item.kind === 'external'
-        ? { href: item.externalLink, target: '_blank', rel: 'noopener noreferrer' }
-        : { type: 'button' as const, onClick: () => onOpen(item.id), 'aria-haspopup': 'dialog' as const };
-
+    if (item.kind === 'external') {
+        return (
+            <a
+                href={item.externalLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group block w-full text-left border border-border-subtle bg-bg-secondary hover:border-border-medium transition-colors duration-300 overflow-hidden focus:outline-none"
+            >
+                <div className="relative w-full aspect-[16/9] overflow-hidden bg-bg-tertiary">
+                    <ImageWithFallback
+                        src={item.thumbnail}
+                        alt={item.title}
+                        fill
+                        quality={90}
+                        priority={priority}
+                        sizes="(max-width: 768px) 100vw, 40vw"
+                        className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
+                    />
+                </div>
+                <div className="p-4">
+                    <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-text-muted mb-1.5 block">
+                        {item.tags[0]}
+                    </span>
+                    <h3 className="text-base font-bold text-text-primary leading-tight tracking-tight group-hover:text-accent-primary transition-colors">
+                        {item.title}
+                    </h3>
+                </div>
+            </a>
+        );
+    }
     return (
-        <Tag
-            {...(extraProps as object)}
+        <button
+            type="button"
+            onClick={() => onOpen(item.id)}
+            aria-haspopup="dialog"
             className="group block w-full text-left border border-border-subtle bg-bg-secondary hover:border-border-medium transition-colors duration-300 overflow-hidden focus:outline-none"
         >
             <div className="relative w-full aspect-[16/9] overflow-hidden bg-bg-tertiary">
                 <ImageWithFallback
-                    src={item.kind === 'drawer' ? item.images.thumbnail : item.thumbnail}
+                    src={item.images.thumbnail}
                     alt={item.title}
                     fill
                     quality={90}
@@ -78,30 +131,58 @@ function StackedCard({ item, onOpen, priority }: { item: CardItem; onOpen: (id: 
             </div>
             <div className="p-4">
                 <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-text-muted mb-1.5 block">
-                    {item.kind === 'drawer' ? item.role : item.tags[0]}
+                    {item.role}
                 </span>
                 <h3 className="text-base font-bold text-text-primary leading-tight tracking-tight group-hover:text-accent-primary transition-colors">
                     {item.title}
                 </h3>
             </div>
-        </Tag>
+        </button>
     );
 }
 
 function GridCard({ item, onOpen, priority }: { item: CardItem; onOpen: (id: string) => void; priority: boolean }) {
-    const Tag = item.kind === 'external' ? 'a' : 'button';
-    const extraProps = item.kind === 'external'
-        ? { href: item.externalLink, target: '_blank', rel: 'noopener noreferrer' }
-        : { type: 'button' as const, onClick: () => onOpen(item.id), 'aria-haspopup': 'dialog' as const };
-
+    if (item.kind === 'external') {
+        return (
+            <a
+                href={item.externalLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group block w-full text-left border border-border-subtle bg-bg-secondary hover:border-border-medium transition-colors duration-300 overflow-hidden focus:outline-none"
+            >
+                <div className="relative w-full aspect-[16/9] overflow-hidden bg-bg-tertiary">
+                    <ImageWithFallback
+                        src={item.thumbnail}
+                        alt={item.title}
+                        fill
+                        quality={90}
+                        priority={priority}
+                        sizes="(max-width: 768px) 100vw, 25vw"
+                        className="object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
+                    />
+                </div>
+                <div className="p-4">
+                    <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-text-muted mb-1.5 block">
+                        {item.tags[0]}
+                    </span>
+                    <h3 className="text-sm font-bold text-text-primary mb-1 leading-tight tracking-tight group-hover:text-accent-primary transition-colors">
+                        {item.title}
+                    </h3>
+                    <p className="text-text-muted text-xs leading-snug line-clamp-2">{item.subtitle}</p>
+                </div>
+            </a>
+        );
+    }
     return (
-        <Tag
-            {...(extraProps as object)}
+        <button
+            type="button"
+            onClick={() => onOpen(item.id)}
+            aria-haspopup="dialog"
             className="group block w-full text-left border border-border-subtle bg-bg-secondary hover:border-border-medium transition-colors duration-300 overflow-hidden focus:outline-none"
         >
             <div className="relative w-full aspect-[16/9] overflow-hidden bg-bg-tertiary">
                 <ImageWithFallback
-                    src={item.kind === 'drawer' ? item.images.thumbnail : item.thumbnail}
+                    src={item.images.thumbnail}
                     alt={item.title}
                     fill
                     quality={90}
@@ -112,14 +193,14 @@ function GridCard({ item, onOpen, priority }: { item: CardItem; onOpen: (id: str
             </div>
             <div className="p-4">
                 <span className="text-[10px] font-mono uppercase tracking-[0.18em] text-text-muted mb-1.5 block">
-                    {item.kind === 'drawer' ? item.role : item.tags[0]}
+                    {item.role}
                 </span>
                 <h3 className="text-sm font-bold text-text-primary mb-1 leading-tight tracking-tight group-hover:text-accent-primary transition-colors">
                     {item.title}
                 </h3>
                 <p className="text-text-muted text-xs leading-snug line-clamp-2">{item.subtitle}</p>
             </div>
-        </Tag>
+        </button>
     );
 }
 
