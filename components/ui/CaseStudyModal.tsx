@@ -14,7 +14,7 @@ interface CaseStudyData {
     period: string;
     tags: string[];
     aiBuilt?: boolean;
-    description: {
+    description?: {
         overview?: string;
         challenge: string;
         work: string[];
@@ -23,11 +23,16 @@ interface CaseStudyData {
     links: {
         live?: string;
         behance?: string;
+        github?: string;
     };
     images: {
         thumbnail: string;
         hero: string;
-        gallery: string[];
+        gallery: string[] | {
+            desktop: string[];
+            tablet?: string[];
+            mobile?: string[];
+        };
     };
 }
 
@@ -63,6 +68,12 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
     }, [project, onClose, lightboxIndex]);
 
     if (!mounted) return null;
+
+    const galleryImages = project
+        ? (Array.isArray(project.images.gallery)
+            ? project.images.gallery
+            : project.images.gallery.desktop)
+        : [];
 
     const content = (
         <AnimatePresence>
@@ -185,30 +196,34 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                 </div>
                             </div>
 
-                            {project.description.overview && (
-                                <MobileSection label="Overview">
-                                    <p className="whitespace-pre-line">{project.description.overview}</p>
-                                </MobileSection>
+                            {project.description && (
+                                <>
+                                    {project.description.overview && (
+                                        <MobileSection label="Overview">
+                                            <p className="whitespace-pre-line">{project.description.overview}</p>
+                                        </MobileSection>
+                                    )}
+
+                                    <MobileSection label="The Challenge">
+                                        <p className="whitespace-pre-line">{project.description.challenge}</p>
+                                    </MobileSection>
+
+                                    <MobileSection label="The Work">
+                                        <ul className="space-y-3">
+                                            {project.description.work.map((item, i) => (
+                                                <li key={i} className="flex gap-2.5">
+                                                    <span className="text-accent-primary flex-shrink-0">▸</span>
+                                                    <span>{item}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </MobileSection>
+
+                                    <MobileSection label="The Outcome">
+                                        <p className="whitespace-pre-line">{project.description.outcome}</p>
+                                    </MobileSection>
+                                </>
                             )}
-
-                            <MobileSection label="The Challenge">
-                                <p className="whitespace-pre-line">{project.description.challenge}</p>
-                            </MobileSection>
-
-                            <MobileSection label="The Work">
-                                <ul className="space-y-3">
-                                    {project.description.work.map((item, i) => (
-                                        <li key={i} className="flex gap-2.5">
-                                            <span className="text-accent-primary flex-shrink-0">▸</span>
-                                            <span>{item}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </MobileSection>
-
-                            <MobileSection label="The Outcome">
-                                <p className="whitespace-pre-line">{project.description.outcome}</p>
-                            </MobileSection>
 
                             {project.links.live && (
                                 <div className="px-10 pb-5">
@@ -227,10 +242,10 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                 <div className="px-10 py-3 flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-text-muted">
                                     <span className="w-1.5 h-1.5 rounded-full bg-accent-primary" />
                                     <span>Gallery</span>
-                                    <span className="text-accent-primary/60">// {project.images.gallery.length}</span>
+                                    <span className="text-accent-primary/60">// {galleryImages.length}</span>
                                 </div>
                                 <div className="px-10 pb-6 flex flex-col gap-3">
-                                    {project.images.gallery.map((img, idx) => (
+                                    {galleryImages.map((img, idx) => (
                                         <button
                                             key={idx}
                                             onClick={() => setLightboxIndex(idx)}
@@ -302,7 +317,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                             </div>
 
                             {/* Overview scroll region */}
-                            {project.description.overview && (
+                            {project.description?.overview && (
                                 <div className="md:flex-1 md:min-h-0 md:overflow-y-auto px-7 pb-6 hud-scroll">
                                     <PanelLabel>Overview</PanelLabel>
                                     <div className="text-text-secondary text-sm leading-relaxed whitespace-pre-line">
@@ -349,35 +364,37 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                 className="flex-1 min-h-0 flex flex-col"
                             >
                                 {/* 3-col grid: Challenge / Work / Outcome */}
-                                <div className="flex-1 min-h-0 grid md:grid-cols-3 grid-rows-[auto] divide-y md:divide-y-0 md:divide-x divide-border-subtle">
-                                    <ConsolePanel label="The Challenge">
-                                        <p className="text-text-secondary text-sm leading-relaxed whitespace-pre-line">
-                                            {project.description.challenge}
-                                        </p>
-                                    </ConsolePanel>
-                                    <ConsolePanel label="The Work">
-                                        <ul className="space-y-2.5">
-                                            {project.description.work.map((item, i) => (
-                                                <li key={i} className="text-text-secondary text-sm leading-relaxed flex gap-2">
-                                                    <span className="text-accent-primary flex-shrink-0">▸</span>
-                                                    <span>{item}</span>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </ConsolePanel>
-                                    <ConsolePanel label="The Outcome">
-                                        <p className="text-text-secondary text-sm leading-relaxed whitespace-pre-line">
-                                            {project.description.outcome}
-                                        </p>
-                                    </ConsolePanel>
-                                </div>
+                                {project.description && (
+                                    <div className="flex-1 min-h-0 grid md:grid-cols-3 grid-rows-[auto] divide-y md:divide-y-0 md:divide-x divide-border-subtle">
+                                        <ConsolePanel label="The Challenge">
+                                            <p className="text-text-secondary text-sm leading-relaxed whitespace-pre-line">
+                                                {project.description.challenge}
+                                            </p>
+                                        </ConsolePanel>
+                                        <ConsolePanel label="The Work">
+                                            <ul className="space-y-2.5">
+                                                {project.description.work.map((item, i) => (
+                                                    <li key={i} className="text-text-secondary text-sm leading-relaxed flex gap-2">
+                                                        <span className="text-accent-primary flex-shrink-0">▸</span>
+                                                        <span>{item}</span>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </ConsolePanel>
+                                        <ConsolePanel label="The Outcome">
+                                            <p className="text-text-secondary text-sm leading-relaxed whitespace-pre-line">
+                                                {project.description.outcome}
+                                            </p>
+                                        </ConsolePanel>
+                                    </div>
+                                )}
 
                                 {/* Gallery - full width across the bottom of the modal panel */}
                                 <div className="flex-shrink-0 border-t border-border-subtle bg-bg-tertiary/30">
                                     <div className="px-7 py-2.5 flex items-center gap-3 text-xs font-mono uppercase tracking-[0.2em] text-text-muted">
                                         <span className="w-1.5 h-1.5 rounded-full bg-accent-primary" />
                                         <span>Gallery</span>
-                                        <span className="text-accent-primary/60">// {project.images.gallery.length}</span>
+                                        <span className="text-accent-primary/60">// {galleryImages.length}</span>
                                     </div>
                                     <div
                                         className="px-7 pb-5 flex gap-3 overflow-x-auto overflow-y-hidden hud-scroll"
@@ -386,7 +403,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                             WebkitMaskImage: 'linear-gradient(to right, black 0, black 92%, transparent 100%)',
                                         }}
                                     >
-                                        {project.images.gallery.map((img, idx) => (
+                                        {galleryImages.map((img, idx) => (
                                             <button
                                                 key={idx}
                                                 onClick={() => setLightboxIndex(idx)}
@@ -411,11 +428,11 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                     <AnimatePresence>
                         {lightboxIndex !== null && project && (
                             <Lightbox
-                                images={project.images.gallery}
+                                images={galleryImages}
                                 currentIndex={lightboxIndex}
                                 onClose={() => setLightboxIndex(null)}
-                                onNext={() => setLightboxIndex((lightboxIndex + 1) % project.images.gallery.length)}
-                                onPrev={() => setLightboxIndex((lightboxIndex - 1 + project.images.gallery.length) % project.images.gallery.length)}
+                                onNext={() => setLightboxIndex((lightboxIndex + 1) % galleryImages.length)}
+                                onPrev={() => setLightboxIndex((lightboxIndex - 1 + galleryImages.length) % galleryImages.length)}
                             />
                         )}
                     </AnimatePresence>
