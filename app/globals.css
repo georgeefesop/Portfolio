@@ -44,9 +44,30 @@
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   --font-instrument-sans: var(--font-instrument), var(--font-sans);
+
+  /* Type scale tokens (Utopia fluid scale, base 16->18px, ratio 1.2->1.333,
+     viewports 320->1240px). Use these instead of arbitrary text-[Npx] chains. */
+  --text-caption: var(--step--1);   /* ~13px - eyebrows, captions, labels   */
+  --text-body: var(--step-0);       /* 16-18px - paragraph baseline         */
+  --text-body-lg: var(--step-1);    /* 19-24px - lead paragraphs            */
+  --text-h4: var(--step-2);         /* 23-32px - card titles, subsections   */
+  --text-h3: var(--step-3);         /* 28-43px - section subheads           */
+  --text-h2: var(--step-4);         /* 33-57px - section heads              */
+  --text-h1: var(--step-5);         /* 40-76px - page heads, displays       */
 }
 
 :root {
+  /* Fluid type-scale steps (theme-agnostic - same on dark and light).
+     Generated from Utopia: minVw 320, maxVw 1240, base 16->18px, ratio 1.2->1.333.
+     Negative step floored at --step--1 to keep body text >= 13px on big screens. */
+  --step--1: clamp(0.8333rem, 0.8297rem + 0.0182vw, 0.8438rem);
+  --step-0:  clamp(1rem, 0.9565rem + 0.2174vw, 1.125rem);
+  --step-1:  clamp(1.2rem, 1.0957rem + 0.5217vw, 1.5rem);
+  --step-2:  clamp(1.44rem, 1.2452rem + 0.9739vw, 2rem);
+  --step-3:  clamp(1.728rem, 1.4016rem + 1.6318vw, 2.6663rem);
+  --step-4:  clamp(2.0736rem, 1.5586rem + 2.575vw, 3.5544rem);
+  --step-5:  clamp(2.4883rem, 1.7057rem + 3.913vw, 4.7381rem);
+
   /* Backgrounds */
   --bg-hero: #05050A;
   --bg-primary: #0F0F0F;
@@ -245,6 +266,12 @@
 [data-theme^="light-"] .hero-grid {
   background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cpath d='M0 40L0 0H40' stroke='%232A241D' stroke-width='1' stroke-opacity='1'/%3E%3C/g%3E%3C/svg%3E");
   opacity: 0.18;
+}
+
+/* Featured work strip - images are dimmed slightly on dark mode but should be
+   fully opaque on light themes where the white background creates a wash effect. */
+[data-theme^="light-"] .featured-strip-img {
+  opacity: 1 !important;
 }
 
 /* Fix for Select Options in Dark Mode */
