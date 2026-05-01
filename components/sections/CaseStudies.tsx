@@ -95,16 +95,13 @@ export default function CaseStudies() {
         <section id="work" className="bg-bg-primary py-12 md:py-32 scroll-mt-20">
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
                 <FadeIn>
-                    <div className="flex flex-col md:flex-row justify-between items-end mb-8 gap-8">
-                        <div>
-                            <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-4 tracking-tight">Selected Projects</h2>
-                            <p className="text-text-muted text-lg max-w-xl">
-                                Product, web, AI, and brand work - across fintech, hospitality, trades, and Web3.
-                            </p>
-                        </div>
+                    <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-6 mb-10">
+                        <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-text-muted">
+                            Selected Projects
+                        </span>
                     </div>
 
-                    <div className="flex flex-wrap gap-2 mb-8">
+                    <div className="flex flex-wrap gap-x-6 gap-y-2 mb-8 border-b border-border-subtle pb-0">
                         {FILTER_PILLS.map((pill) => {
                             const isActive = activeCategory === pill.id;
                             const count = getCount(pill.id);
@@ -112,13 +109,15 @@ export default function CaseStudies() {
                                 <button
                                     key={pill.id}
                                     onClick={() => handlePillClick(pill.id)}
-                                    className={`px-4 py-2 rounded-full text-sm font-medium border transition-colors ${isActive
-                                        ? 'bg-accent-primary/15 text-accent-primary border-accent-primary/40'
-                                        : 'bg-bg-tertiary/45 text-text-secondary border-border-medium/70 hover:bg-bg-secondary/70 hover:text-text-primary hover:border-border-strong'
-                                        }`}
+                                    className={`pb-3 text-sm font-medium transition-colors border-b-2 -mb-px ${
+                                        isActive
+                                            ? 'border-text-primary text-text-primary'
+                                            : 'border-transparent text-text-muted hover:text-text-secondary'
+                                    }`}
                                     aria-pressed={isActive}
                                 >
-                                    {pill.label} <span className="opacity-60 font-normal tabular-nums">({count})</span>
+                                    {pill.label}{' '}
+                                    <span className="opacity-50 font-normal tabular-nums">({count})</span>
                                 </button>
                             );
                         })}
@@ -143,7 +142,7 @@ export default function CaseStudies() {
                                                 quality={100}
                                                 priority={idx < 2}
                                                 sizes="(max-width: 768px) 100vw, 300px"
-                                                className={`object-cover object-top transition-transform duration-700 group-hover:scale-105 ${item.id === 'realfi' ? 'scale-[1.03]' : ''} ${item.id === 'instant-access-locksmiths' ? 'scale-[1.12]' : ['olympus-sports', 'la-hacienda', 'saxseat'].includes(item.id) ? 'scale-[1.10]' : ''}`}
+                                                className={`object-cover object-top transition-transform duration-700 group-hover:scale-105 ${item.id === 'realfi' ? 'scale-[1.03]' : ''} ${['olympus-sports', 'la-hacienda', 'saxseat'].includes(item.id) ? 'scale-[1.10]' : ''}`}
                                             />
                                         </div>
                                         <div className="flex-1 flex flex-col justify-center min-w-0">
