@@ -105,8 +105,8 @@
 
   --text-primary: #2A241D;
   --text-secondary: #3D362C;
-  --text-muted: #6B5F50;
-  --text-dim: #8A7E6E;
+  --text-muted: #564B3D;
+  --text-dim: #6B5F50;
 
   --border-subtle: #D4C8AE;
   --border-medium: #C9BBA1;
@@ -123,8 +123,8 @@
 
   --text-primary: #3A332A;
   --text-secondary: #4A4338;
-  --text-muted: #7A6F60;
-  --text-dim: #9A8E7E;
+  --text-muted: #5E5443;
+  --text-dim: #7A6F60;
 
   --border-subtle: #DDD5C2;
   --border-medium: #CDC4B0;
@@ -142,8 +142,8 @@
   /* Browner deep coffee. Reads as "rich dark brown" on cream rather than neutral grey. */
   --text-primary: #3A2D18;
   --text-secondary: #4A3826;
-  --text-muted: #6F6852;
-  --text-dim: #8E876F;
+  --text-muted: #5C5641;
+  --text-dim: #6E6852;
 
   /* Deep espresso. Must be DARKER than --text-primary so hover transitions
      (text-primary -> accent-primary) deepen rather than lighten on cream. */
