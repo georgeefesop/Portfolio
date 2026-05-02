@@ -8,12 +8,12 @@ export default function Intro() {
             <div className="max-w-6xl mx-auto px-6">
                 <FadeIn>
                     <div className="flex flex-col lg:flex-row gap-16 items-start justify-between mb-24">
-                        <h2 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight flex-1">
+                        <h2 className="text-h2 font-medium tracking-tight leading-[1.1] flex-1">
                             <span className="text-text-dim">Your technology is </span>
-                            <span className="text-text-primary">complex.</span>
+                            <span className="font-serif italic font-normal text-accent-primary">complex.</span>
                             <br />
                             <span className="text-text-dim">Your product should be </span>
-                            <span className="text-text-primary">simple.</span>
+                            <span className="font-serif italic font-normal text-text-primary">simple.</span>
                         </h2>
 
                         <div className="flex-1 max-w-lg pt-2">

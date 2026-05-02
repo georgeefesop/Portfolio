@@ -764,13 +764,13 @@ function DecisionRow({
 
             {/* Title + single rationale paragraph */}
             <div>
-                <div className="flex items-center gap-2 mb-2.5">
-                    <span className="text-[11px] font-mono uppercase tracking-[0.22em] text-accent-primary">
-                        Decision {num}
+                <div className="flex items-baseline gap-2 mb-2.5">
+                    <span className="font-serif italic font-normal text-accent-primary text-base md:text-lg leading-none">
+                        {num}
                     </span>
-                    <span className="text-[11px] font-mono text-accent-primary/50">/ {totalStr}</span>
+                    <span className="text-text-dim text-xs font-mono">/ {totalStr}</span>
                 </div>
-                <h4 className="text-[19px] md:text-xl font-semibold text-text-primary leading-snug mb-3 tracking-tight">
+                <h4 className="font-serif italic font-normal text-text-primary text-2xl md:text-3xl leading-tight mb-3 tracking-tight">
                     {decision.title}
                 </h4>
                 <p className="text-text-secondary text-sm leading-relaxed">
@@ -894,9 +894,9 @@ function ConsolePanel({ label, children }: { label: string; children: React.Reac
 function MobileSection({ label, children }: { label: string; children: React.ReactNode }) {
     return (
         <div className="px-7 py-5 border-t border-border-subtle">
-            <div className="flex items-center gap-2 mb-3">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent-primary" />
-                <span className="text-sm font-mono uppercase tracking-[0.18em] text-accent-primary">
+            <div className="flex items-baseline gap-3 mb-4">
+                <span className="block h-px w-6 bg-accent-primary translate-y-[-0.35em]" />
+                <span className="font-serif italic font-normal text-accent-primary text-lg leading-none">
                     {label}
                 </span>
             </div>
@@ -907,9 +907,9 @@ function MobileSection({ label, children }: { label: string; children: React.Rea
 
 function PanelLabel({ children }: { children: React.ReactNode }) {
     return (
-        <div className="flex items-center gap-2 mb-4">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent-primary" />
-            <span className="text-sm font-mono uppercase tracking-[0.18em] text-accent-primary">
+        <div className="flex items-baseline gap-3 mb-5">
+            <span className="block h-px w-8 bg-accent-primary translate-y-[-0.35em]" />
+            <span className="font-serif italic font-normal text-accent-primary text-xl md:text-2xl leading-none">
                 {children}
             </span>
         </div>
