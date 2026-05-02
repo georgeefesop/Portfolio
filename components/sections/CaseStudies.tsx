@@ -117,12 +117,8 @@ export default function CaseStudies() {
             <div className="px-4 sm:px-6 lg:px-10 xl:px-14">
                 <FadeIn>
                     <div className="mb-12">
-                        <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-text-muted mb-4 block">
-                            Work · 01
-                        </span>
-                        <h2 className="font-sans text-h1 leading-[0.95] tracking-tight text-text-primary">
-                            Selected{' '}
-                            <span className="italic font-light text-accent-primary">Projects</span>
+                        <h2 className="font-serif text-h1 leading-[0.95] tracking-tight text-text-primary">
+                            Selected <span className="italic font-normal text-accent-primary">Projects</span>
                         </h2>
                     </div>
 
