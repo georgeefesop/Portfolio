@@ -79,25 +79,25 @@ export default function Navigation() {
     return (
         <nav
             ref={navRef}
-            className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${(scrolled || isOpen) ? 'bg-bg-primary/95 backdrop-blur-sm border-b border-white/5' : 'bg-transparent'
+            className={`nav-root fixed top-0 left-0 right-0 z-[100] transition-all duration-300 ${(scrolled || isOpen) ? 'bg-bg-primary/95 backdrop-blur-sm border-b border-white/5' : 'bg-transparent'
                 }`}
         >
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between items-center h-14 md:h-20">
+            <div className="nav-container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="nav-bar flex justify-between items-center h-14 md:h-20">
                     {/* Logo */}
-                    <Link href="/" className="text-2xl font-bold tracking-tight text-text-primary hover:text-accent-primary transition-colors">
+                    <Link href="/" className="nav-logo text-2xl font-bold tracking-tight text-text-primary hover:text-accent-primary transition-colors">
                         efesop
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <div className="hidden md:flex items-center space-x-8">
+                    <div className="nav-desktop hidden md:flex items-center space-x-8">
                         {navLinks.map((link) => (
                             <a
                                 key={link.name}
                                 href={link.href}
                                 onClick={(e) => scrollToSection(e, link.href)}
-                                className={`text-sm font-medium transition-colors duration-200 ${activeSection === link.href.substring(1)
-                                    ? 'text-accent-primary'
+                                className={`nav-link text-sm font-medium transition-colors duration-200 ${activeSection === link.href.substring(1)
+                                    ? 'nav-link-active text-accent-primary'
                                     : 'text-text-secondary hover:text-text-primary'
                                     }`}
                             >
@@ -108,11 +108,11 @@ export default function Navigation() {
                     </div>
 
                     {/* Mobile right cluster */}
-                    <div className="md:hidden flex items-center gap-3">
+                    <div className="nav-mobile-cluster md:hidden flex items-center gap-3">
                         <ThemePreviewToggle />
                         <button
                             onClick={() => setIsOpen(!isOpen)}
-                            className="text-text-secondary hover:text-text-primary p-2"
+                            className="nav-mobile-toggle text-text-secondary hover:text-text-primary p-2"
                             aria-label="Toggle menu"
                         >
                             {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -128,9 +128,9 @@ export default function Navigation() {
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className="md:hidden bg-bg-primary border-b border-border-subtle overflow-hidden"
+                        className="nav-mobile-drawer md:hidden bg-bg-primary border-b border-border-subtle overflow-hidden"
                     >
-                        <div className="px-4 pt-2 pb-6 space-y-2">
+                        <div className="nav-mobile-list px-4 pt-2 pb-6 space-y-2">
                             {navLinks.map((link) => (
                                 <a
                                     key={link.name}
@@ -150,8 +150,8 @@ export default function Navigation() {
                                             }
                                         }, 300);
                                     }}
-                                    className={`block px-3 py-3 rounded-md text-base font-medium ${activeSection === link.href.substring(1)
-                                        ? 'text-accent-primary bg-bg-secondary'
+                                    className={`nav-mobile-link block px-3 py-3 rounded-md text-base font-medium ${activeSection === link.href.substring(1)
+                                        ? 'nav-mobile-link-active text-accent-primary bg-bg-secondary'
                                         : 'text-text-secondary hover:text-text-primary hover:bg-bg-secondary'
                                         }`}
                                 >

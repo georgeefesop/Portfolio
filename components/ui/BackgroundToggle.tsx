@@ -81,14 +81,14 @@ export default function BackgroundToggle({ onToggle }: BackgroundToggleProps) {
     return (
         <motion.button
             onClick={handleToggle}
-            className="group scale-[0.72] md:scale-[0.8] origin-right md:origin-right relative z-40"
+            className="background-toggle-root group scale-[0.72] md:scale-[0.8] origin-right md:origin-right relative z-40"
             whileTap={{ scale: 0.95 }}
             transition={{ type: 'spring', stiffness: 400, damping: 25 }}
             aria-label={isVibrant ? 'Switch to dark mode' : 'Switch to vibrant mode'}
         >
             {/* Toggle Container */}
             <motion.div
-                className="relative w-16 h-32 rounded-full p-1.5 backdrop-blur-sm border border-white/20"
+                className="background-toggle-track relative w-16 h-32 rounded-full p-1.5 backdrop-blur-sm border border-white/20"
                 animate={{
                     background: isVibrant
                         ? 'rgba(255, 255, 255, 0.4)'
@@ -98,7 +98,7 @@ export default function BackgroundToggle({ onToggle }: BackgroundToggleProps) {
             >
                 {/* Sliding Pill */}
                 <motion.div
-                    className="w-full h-14 rounded-full shadow-lg"
+                    className="background-toggle-thumb w-full h-14 rounded-full shadow-lg"
                     animate={{
                         y: isVibrant ? 0 : 64,
                         background: isVibrant
@@ -112,13 +112,13 @@ export default function BackgroundToggle({ onToggle }: BackgroundToggleProps) {
                 />
 
                 {/* Icons */}
-                <div className="absolute inset-0 flex flex-col items-center justify-between py-4 pointer-events-none">
+                <div className="background-toggle-icons absolute inset-0 flex flex-col items-center justify-between py-4 pointer-events-none">
                     <motion.div
                         animate={{
                             opacity: isVibrant ? 1 : 0.4,
                             color: isVibrant ? '#000000' : '#FFFFFF'
                         }}
-                        className="text-xl"
+                        className="background-toggle-icon background-toggle-icon-vibrant text-xl"
                     >
                         ✨
                     </motion.div>
@@ -127,7 +127,7 @@ export default function BackgroundToggle({ onToggle }: BackgroundToggleProps) {
                             opacity: isVibrant ? 0.4 : 1,
                             color: isVibrant ? '#000000' : '#FFFFFF'
                         }}
-                        className="text-xl"
+                        className="background-toggle-icon background-toggle-icon-dark text-xl"
                     >
                         🌙
                     </motion.div>

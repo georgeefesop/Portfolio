@@ -53,7 +53,7 @@ export default function Hero() {
     }
 
     return (
-        <section className="relative h-screen w-full overflow-hidden bg-black">
+        <section className="hero-section relative h-screen w-full overflow-hidden bg-black">
             <HeroCanvas
                 frames={frameUrls}
                 scrollProgress={scrollProgress}

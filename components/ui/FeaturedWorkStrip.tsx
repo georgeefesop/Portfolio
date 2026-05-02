@@ -22,12 +22,12 @@ const ZOOM_IDS = new Set([
 ]);
 
 const items: FeaturedItem[] = [
-    { id: 'realfi', title: 'RealFi', tag: 'Cardano · Fintech', thumbnail: '/images/realfi/hero.png' },
+    { id: 'realfi', title: 'RealFi', tag: 'Cardano · Fintech', thumbnail: '/images/realfi/realfi-hero-2026-05-02.png' },
     { id: 'kingfisher-mortgages', title: 'Kingfisher Mortgages', tag: 'WordPress · Brand', thumbnail: '/images/kingfisher-thumb.png' },
     { id: 'allsop-francis', title: 'Allsop & Francis', tag: 'AI Image Direction', thumbnail: '/images/allsop-francis/2.png' },
     { id: 'uk-vehicles', title: 'UK Vehicles Cyprus', tag: 'Next.js · Commerce', thumbnail: '/images/uk-vehicles/hero.png' },
     { id: 'ai-tools', title: 'AI User Tools', tag: 'UX · AI', thumbnail: '/images/ai-tools/AIUT-2.png' },
-    { id: 'instant-access-locksmiths', title: 'Instant Access Locksmiths', tag: 'Local SEO · Conversion', thumbnail: '/images/instant-access-locksmiths/hero.png' },
+    { id: 'instant-access-locksmiths', title: 'Instant Access Locksmiths', tag: 'Local SEO · Conversion', thumbnail: '/images/instant-access-locksmiths/hero-thumb.png' },
 ];
 
 function dispatchOpen(item: FeaturedItem) {
@@ -43,22 +43,22 @@ function HorizontalCard({ item }: { item: FeaturedItem }) {
             ? 'scale-110 group-hover:scale-[1.16]'
             : 'group-hover:scale-105';
     return (
-        <div className="w-[312px] group">
-            <div className="relative aspect-[3/2] rounded-lg overflow-hidden bg-white/5 border-2 border-white/10 group-hover:border-accent-primary transition-colors">
+        <div className="featured-work-strip-card featured-work-strip-card-horizontal w-[312px] group">
+            <div className="featured-work-strip-thumb-wrap relative aspect-[3/2] rounded-lg overflow-hidden bg-white/5 border-2 border-white/10 group-hover:border-accent-primary transition-colors">
                 <ImageWithFallback
                     src={item.thumbnail}
                     alt={item.title}
                     fill
                     sizes="312px"
-                    className={`object-cover object-top opacity-90 group-hover:opacity-100 transition-all duration-500 ${zoomClass}`}
+                    className={`featured-work-strip-thumb object-cover object-top opacity-90 group-hover:opacity-100 transition-all duration-500 featured-strip-img ${zoomClass}`}
                 />
             </div>
-            <div className="mt-3">
-                <div className="text-base font-medium text-text-primary truncate group-hover:text-accent-primary transition-colors">
+            <div className="featured-work-strip-meta mt-3">
+                <div className="featured-work-strip-title text-base font-medium text-text-primary truncate group-hover:text-accent-primary transition-colors">
                     {item.title}
                 </div>
-                <div className="mt-1.5">
-                    <span className="inline-block text-xs font-mono uppercase tracking-wider text-text-secondary bg-bg-tertiary/40 border border-border-medium/60 px-2.5 py-1 rounded">
+                <div className="featured-work-strip-tag-wrap mt-1.5">
+                    <span className="featured-work-strip-tag inline-block text-xs font-mono uppercase tracking-wider text-text-secondary bg-bg-tertiary/40 border border-border-medium/60 px-2.5 py-1 rounded">
                         {item.tag}
                     </span>
                 </div>
@@ -71,23 +71,24 @@ function VerticalCard({ item }: { item: FeaturedItem }) {
     const isInstantAccess = item.id === 'instant-access-locksmiths';
     const isZoomed = ZOOM_IDS.has(item.id);
     const zoomClass = isInstantAccess ? 'scale-[1.12]' : isZoomed ? 'scale-110' : '';
+    const posClass = isInstantAccess ? 'object-top' : 'object-center';
     return (
-        <div className="w-full group">
-            <div className="relative aspect-[16/10] rounded-lg overflow-hidden bg-bg-tertiary border-2 border-border-subtle">
+        <div className="featured-work-strip-card featured-work-strip-card-vertical w-full group">
+            <div className="featured-work-strip-thumb-wrap relative aspect-[3/2] rounded-lg overflow-hidden bg-bg-tertiary border-2 border-border-subtle">
                 <ImageWithFallback
                     src={item.thumbnail}
                     alt={item.title}
                     fill
                     sizes="(max-width: 768px) 80vw, 312px"
-                    className={`object-cover opacity-95 transition-transform duration-500 ${zoomClass}`}
+                    className={`featured-work-strip-thumb object-cover opacity-95 transition-transform duration-500 featured-strip-img ${posClass} ${zoomClass}`}
                 />
             </div>
-            <div className="mt-3">
-                <div className="text-base font-medium text-text-primary truncate">
+            <div className="featured-work-strip-meta mt-3">
+                <div className="featured-work-strip-title text-base font-medium text-text-primary truncate">
                     {item.title}
                 </div>
-                <div className="mt-1.5">
-                    <span className="inline-block text-xs font-mono uppercase tracking-wider text-text-secondary bg-bg-tertiary/40 border border-border-medium/60 px-2.5 py-1 rounded">
+                <div className="featured-work-strip-tag-wrap mt-1.5">
+                    <span className="featured-work-strip-tag inline-block text-xs font-mono uppercase tracking-wider text-text-secondary bg-bg-tertiary/40 border border-border-medium/60 px-2.5 py-1 rounded">
                         {item.tag}
                     </span>
                 </div>
@@ -109,7 +110,7 @@ function renderClickable(
                 href={item.externalLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`block shrink-0 pointer-events-auto ${extraClass}`}
+                className={`featured-work-strip-item featured-work-strip-item-link block shrink-0 pointer-events-auto ${extraClass}`}
             >
                 <Inner item={item} />
             </a>
@@ -120,7 +121,7 @@ function renderClickable(
             key={key}
             type="button"
             onClick={() => dispatchOpen(item)}
-            className={`block shrink-0 pointer-events-auto text-left ${extraClass}`}
+            className={`featured-work-strip-item featured-work-strip-item-button block shrink-0 pointer-events-auto text-left ${extraClass}`}
         >
             <Inner item={item} />
         </button>
@@ -164,7 +165,7 @@ function HorizontalStrip() {
 
     return (
         <div
-            className="hidden md:block w-full overflow-hidden"
+            className="featured-work-strip-root featured-work-strip-root-horizontal hidden md:block w-full overflow-hidden"
             style={{
                 WebkitMaskImage: 'linear-gradient(to right, transparent 0, black 8%, black 92%, transparent 100%)',
                 maskImage: 'linear-gradient(to right, transparent 0, black 8%, black 92%, transparent 100%)',
@@ -172,7 +173,7 @@ function HorizontalStrip() {
             onMouseEnter={() => setIsHover(true)}
             onMouseLeave={() => setIsHover(false)}
         >
-            <motion.div ref={trackRef} style={{ x }} className="flex gap-16 w-max will-change-transform">
+            <motion.div ref={trackRef} style={{ x }} className="featured-work-strip-track flex gap-16 w-max will-change-transform">
                 {items.map((item, idx) => renderClickable(item, `a-${idx}`, '', HorizontalCard))}
                 {items.map((item, idx) => renderClickable(item, `b-${idx}`, '', HorizontalCard))}
             </motion.div>
@@ -208,13 +209,13 @@ function VerticalStrip() {
 
     return (
         <div
-            className="md:hidden w-full h-full overflow-hidden"
+            className="featured-work-strip-root featured-work-strip-root-vertical md:hidden w-full h-full overflow-hidden"
             style={{
                 WebkitMaskImage: 'linear-gradient(to bottom, transparent 0, black 14%, black 86%, transparent 100%)',
                 maskImage: 'linear-gradient(to bottom, transparent 0, black 14%, black 86%, transparent 100%)',
             }}
         >
-            <motion.div ref={trackRef} style={{ y }} className="flex flex-col gap-5 h-max will-change-transform px-12">
+            <motion.div ref={trackRef} style={{ y }} className="featured-work-strip-track featured-work-strip-track-vertical flex flex-col gap-5 h-max will-change-transform px-12">
                 {items.map((item, idx) => renderClickable(item, `va-${idx}`, 'block w-full', VerticalCard))}
                 {items.map((item, idx) => renderClickable(item, `vb-${idx}`, 'block w-full', VerticalCard))}
             </motion.div>

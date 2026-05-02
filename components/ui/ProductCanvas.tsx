@@ -1048,7 +1048,7 @@ export default function ProductCanvas({
             ref={containerRef}
             onClick={handleCanvasClick}
             className={cn(
-                "relative w-full flex items-center justify-center overflow-hidden transition-opacity duration-500 h-full",
+                "product-canvas-root relative w-full flex items-center justify-center overflow-hidden transition-opacity duration-500 h-full",
                 mounted ? "opacity-100" : "opacity-0",
                 isModalMode ? "bg-transparent" : "bg-pos-bg-1"
             )}
@@ -1057,7 +1057,7 @@ export default function ProductCanvas({
                 Stroke colour swaps per theme via .pos-grid in globals.css. */}
             {!isModalMode && (
                 <div
-                    className="pos-grid absolute inset-0 opacity-[0.6] pointer-events-none"
+                    className="product-canvas-grid pos-grid absolute inset-0 opacity-[0.6] pointer-events-none"
                     style={{ backgroundSize: '40px 40px' }}
                 />
             )}
@@ -1067,7 +1067,7 @@ export default function ProductCanvas({
             {/* Only show in carousel mode, hidden in modal */}
             {!isModalMode && (
                 <div className={cn(
-                    "absolute left-0 w-full flex flex-col items-center gap-3 z-50 pointer-events-none transition-all duration-500",
+                    "product-canvas-nav absolute left-0 w-full flex flex-col items-center gap-3 z-50 pointer-events-none transition-all duration-500",
                     // Portrait modes: Bottom
                     (isMobile && isPortrait) ? "bottom-8 pb-safe" :
                         (isTablet && isPortrait) ? "bottom-14 pb-safe" :
@@ -1078,30 +1078,30 @@ export default function ProductCanvas({
                 )}>
                     {/* Tap to Continue */}
                     <div className={cn(
-                        "flex items-center gap-2 text-pos-text-1 text-xs uppercase tracking-widest pointer-events-auto cursor-pointer hover:text-pos-text-2 transition-colors",
+                        "product-canvas-nav-tap-hint flex items-center gap-2 text-pos-text-1 text-xs uppercase tracking-widest pointer-events-auto cursor-pointer hover:text-pos-text-2 transition-colors",
                         isMobile ? "scale-90 -translate-y-[10px]" : "mb-[-10px]"
                     )} onClick={(e) => { e.stopPropagation(); handleNext(); }}>
                         <ArrowRight size={12} />
-                        <span>Tap to continue</span>
+                        <span className="product-canvas-nav-tap-hint-text">Tap to continue</span>
                     </div>
 
                     {/* Progress & Nav */}
-                    <div className="flex items-center gap-4 pointer-events-auto">
+                    <div className="product-canvas-nav-controls flex items-center gap-4 pointer-events-auto">
                         <button
                             onClick={handleBack}
                             disabled={step === 0}
-                            className={cn("w-8 h-8 flex items-center justify-center rounded-full hover:bg-pos-text-1/10 hover:text-pos-text-1 transition-all", step === 0 ? "opacity-0" : "opacity-100", isMobile && "scale-90")}
+                            className={cn("product-canvas-nav-back w-8 h-8 flex items-center justify-center rounded-full hover:bg-pos-text-1/10 hover:text-pos-text-1 transition-all", step === 0 ? "opacity-0" : "opacity-100", isMobile && "scale-90")}
                         >
                             <ChevronLeft size={16} />
                         </button>
 
-                        <div className={cn("relative h-1.5 bg-pos-bg-3 rounded-full overflow-hidden group transition-all", isMobile ? "w-[200px]" : "w-[300px]")}>
+                        <div className={cn("product-canvas-progress relative h-1.5 bg-pos-bg-3 rounded-full overflow-hidden group transition-all", isMobile ? "w-[200px]" : "w-[300px]")}>
                             {/* Clickable Overlay Zones */}
-                            <div className="absolute inset-0 flex z-20">
+                            <div className="product-canvas-progress-zones absolute inset-0 flex z-20">
                                 {[0, 1, 2].map(i => (
                                     <div
                                         key={i}
-                                        className="flex-1 cursor-pointer hover:bg-pos-text-1/10 transition-colors"
+                                        className="product-canvas-progress-zone flex-1 cursor-pointer hover:bg-pos-text-1/10 transition-colors"
                                         onClick={(e) => { e.stopPropagation(); setStep(i as StepId); setProgress(0); }}
                                         title={stepsInfo[i].label}
                                     />
@@ -1110,12 +1110,12 @@ export default function ProductCanvas({
 
                             {/* Indicators */}
                             {[1, 2].map(i => (
-                                <div key={i} className="absolute top-0 bottom-0 w-[1px] bg-pos-text-1/40 z-10" style={{ left: `${i * 33.33}%` }} />
+                                <div key={i} className="product-canvas-progress-tick absolute top-0 bottom-0 w-[1px] bg-pos-text-1/40 z-10" style={{ left: `${i * 33.33}%` }} />
                             ))}
 
                             {/* Progress bar - static, accent color */}
                             <div
-                                className="absolute top-0 bottom-0 left-0 bg-pos-accent transition-all duration-300"
+                                className="product-canvas-progress-bar absolute top-0 bottom-0 left-0 bg-pos-accent transition-all duration-300"
                                 style={{ width: `${(step + 1) * 33.33}%` }}
                             />
                         </div>
@@ -1123,7 +1123,7 @@ export default function ProductCanvas({
                         <button
                             onClick={handleNext}
                             disabled={step === 2}
-                            className={cn("w-8 h-8 flex items-center justify-center rounded-full hover:bg-pos-text-1/10 hover:text-pos-text-1 transition-all", step === 2 ? "opacity-0" : "opacity-100")}
+                            className={cn("product-canvas-nav-next w-8 h-8 flex items-center justify-center rounded-full hover:bg-pos-text-1/10 hover:text-pos-text-1 transition-all", step === 2 ? "opacity-0" : "opacity-100")}
                         >
                             <ChevronRight size={16} />
                         </button>
@@ -1132,7 +1132,7 @@ export default function ProductCanvas({
             )}
 
             {/* SCENE CONTENT - removed old tap to continue */}
-            <div className="relative w-full h-full max-w-7xl mx-auto flex items-center justify-center perspective-1000">
+            <div className="product-canvas-stage relative w-full h-full max-w-7xl mx-auto flex items-center justify-center perspective-1000">
 
                 {/* SCENE 1: STICKIES */}
                 {/* Helper for content selection */}
@@ -1147,13 +1147,13 @@ export default function ProductCanvas({
                         <>
                             {/* Column Headers */}
                             <AnimatedElement layout={getLayout('col-header-1', step)}>
-                                <div className="text-xs font-bold text-pos-text-5 uppercase tracking-widest w-[260px] text-center pb-2 border-b-2 border-pos-border-subtle">Backlog</div>
+                                <div className="product-canvas-col-header product-canvas-col-header-backlog text-xs font-bold text-pos-text-5 uppercase tracking-widest w-[260px] text-center pb-2 border-b-2 border-pos-border-subtle">Backlog</div>
                             </AnimatedElement>
                             <AnimatedElement layout={getLayout('col-header-2', step)}>
-                                <div className="text-xs font-bold text-pos-accent uppercase tracking-widest w-[260px] text-center pb-2 border-b-[3px] border-pos-accent/40">In Progress</div>
+                                <div className="product-canvas-col-header product-canvas-col-header-active text-xs font-bold text-pos-accent uppercase tracking-widest w-[260px] text-center pb-2 border-b-[3px] border-pos-accent/40">In Progress</div>
                             </AnimatedElement>
                             <AnimatedElement layout={getLayout('col-header-3', step)}>
-                                <div className="text-xs font-bold text-pos-text-5 uppercase tracking-widest w-[260px] text-center pb-2 border-b-2 border-pos-border-subtle">Review</div>
+                                <div className="product-canvas-col-header product-canvas-col-header-review text-xs font-bold text-pos-text-5 uppercase tracking-widest w-[260px] text-center pb-2 border-b-2 border-pos-border-subtle">Review</div>
                             </AnimatedElement>
 
                             <AnimatedElement layout={getLayout('sticky-A', step)}>
@@ -1186,7 +1186,7 @@ export default function ProductCanvas({
 
                 {/* SCENE 2: DETAILED WIREFRAME (Blueprint for Final POS) */}
                 <AnimatedElement layout={getLayout('sticky-sketch', step)}>
-                    <div className="relative group">
+                    <div className="wireframe-view-root relative group">
                         {/* Annotations (Visible only in Step 1) */}
                         <AnimatePresence>
                             {step === 1 && (
@@ -1197,10 +1197,10 @@ export default function ProductCanvas({
                                         animate={{ opacity: 1, scale: 1, y: 0 }}
                                         exit={{ opacity: 0 }}
                                         transition={{ delay: 2.2, type: "spring" }}
-                                        className="absolute top-[85px] left-[66px] md:-left-28 z-50 pointer-events-none"
+                                        className="wireframe-view-annotation wireframe-view-annotation-categories absolute top-[85px] left-[66px] md:-left-28 z-50 pointer-events-none"
                                         style={{ fontFamily: 'var(--font-caveat)' }}
                                     >
-                                        <div className="text-xl md:text-2xl text-pos-accent font-bold whitespace-nowrap drop-shadow-lg relative">
+                                        <div className="wireframe-view-annotation-text text-xl md:text-2xl text-pos-accent font-bold whitespace-nowrap drop-shadow-lg relative">
                                             Quick Categories
                                         </div>
                                     </motion.div>
@@ -1211,10 +1211,10 @@ export default function ProductCanvas({
                                         animate={{ opacity: 1, scale: 1, y: 0 }}
                                         exit={{ opacity: 0 }}
                                         transition={{ delay: 2.4, type: "spring" }}
-                                        className="absolute top-[175px] left-4 md:-left-28 z-50 pointer-events-none"
+                                        className="wireframe-view-annotation wireframe-view-annotation-menu-tiles absolute top-[175px] left-4 md:-left-28 z-50 pointer-events-none"
                                         style={{ fontFamily: 'var(--font-caveat)' }}
                                     >
-                                        <div className="text-xl md:text-2xl text-pos-accent font-bold whitespace-nowrap drop-shadow-lg relative">
+                                        <div className="wireframe-view-annotation-text text-xl md:text-2xl text-pos-accent font-bold whitespace-nowrap drop-shadow-lg relative">
                                             Menu Tile Grid
                                         </div>
                                     </motion.div>
@@ -1225,10 +1225,10 @@ export default function ProductCanvas({
                                         animate={{ opacity: 1, scale: 1, y: 0 }}
                                         exit={{ opacity: 0 }}
                                         transition={{ delay: 2.6, type: "spring" }}
-                                        className="absolute top-[320px] md:top-32 right-4 md:-right-28 z-50 pointer-events-none"
+                                        className="wireframe-view-annotation wireframe-view-annotation-order-panel absolute top-[320px] md:top-32 right-4 md:-right-28 z-50 pointer-events-none"
                                         style={{ fontFamily: 'var(--font-caveat)' }}
                                     >
-                                        <div className="text-xl md:text-2xl text-pos-accent font-bold whitespace-nowrap drop-shadow-lg relative text-right">
+                                        <div className="wireframe-view-annotation-text text-xl md:text-2xl text-pos-accent font-bold whitespace-nowrap drop-shadow-lg relative text-right">
                                             Live Order Panel
                                         </div>
                                     </motion.div>
@@ -1239,10 +1239,10 @@ export default function ProductCanvas({
                                         animate={{ opacity: 1, scale: 1, y: 0 }}
                                         exit={{ opacity: 0 }}
                                         transition={{ delay: 2.8, type: "spring" }}
-                                        className="absolute bottom-[80px] md:bottom-[134px] right-4 md:-right-[170px] z-50 pointer-events-none"
+                                        className="wireframe-view-annotation wireframe-view-annotation-actions absolute bottom-[80px] md:bottom-[134px] right-4 md:-right-[170px] z-50 pointer-events-none"
                                         style={{ fontFamily: 'var(--font-caveat)' }}
                                     >
-                                        <div className="text-xl md:text-2xl text-pos-accent font-bold whitespace-nowrap drop-shadow-lg relative text-right">
+                                        <div className="wireframe-view-annotation-text text-xl md:text-2xl text-pos-accent font-bold whitespace-nowrap drop-shadow-lg relative text-right">
                                             One-Tap Actions
                                         </div>
                                     </motion.div>
@@ -1253,10 +1253,10 @@ export default function ProductCanvas({
                                         animate={{ opacity: 1, scale: 1, y: 0 }}
                                         exit={{ opacity: 0 }}
                                         transition={{ delay: 3.0, type: "spring" }}
-                                        className="absolute top-[-30px] md:-top-16 right-4 md:right-0 z-50 pointer-events-none"
+                                        className="wireframe-view-annotation wireframe-view-annotation-connection absolute top-[-30px] md:-top-16 right-4 md:right-0 z-50 pointer-events-none"
                                         style={{ fontFamily: 'var(--font-caveat)' }}
                                     >
-                                        <div className="text-xl md:text-2xl text-pos-accent font-bold whitespace-nowrap drop-shadow-lg relative text-right md:text-center">
+                                        <div className="wireframe-view-annotation-text text-xl md:text-2xl text-pos-accent font-bold whitespace-nowrap drop-shadow-lg relative text-right md:text-center">
                                             Connection Status
                                         </div>
                                     </motion.div>
@@ -1275,43 +1275,43 @@ export default function ProductCanvas({
                                 }
                             }}
                             className={cn(
-                                "bg-pos-bg-2/20 backdrop-blur-sm border-2 border-dashed border-pos-border-strong/60 rounded-xl p-0 flex flex-col overflow-hidden transition-all duration-500",
+                                "wireframe-view-frame bg-pos-bg-2/20 backdrop-blur-sm border-2 border-dashed border-pos-border-strong/60 rounded-xl p-0 flex flex-col overflow-hidden transition-all duration-500",
                                 isMobile ? "w-[340px] h-[480px]" : "w-[900px] h-[560px]"
                             )}
                         >
                             {/* Top Bar Wireframe */}
-                            <motion.div variants={{ hidden: { opacity: 0, y: -10, scale: 0.95 }, show: { opacity: 1, y: 0, scale: [0.95, 1.02, 1] } }} className={cn("h-12 border-b-2 border-dashed border-pos-border-strong/50 flex items-center justify-between", isMobile ? "px-3" : "px-4")}>
-                                <div className={cn("border border-pos-border-strong/60 rounded bg-pos-bg-4/20", isMobile ? "w-12 h-3" : "w-24 h-4")} />
-                                <div className={cn("flex", isMobile ? "gap-1.5" : "gap-3")}>
+                            <motion.div variants={{ hidden: { opacity: 0, y: -10, scale: 0.95 }, show: { opacity: 1, y: 0, scale: [0.95, 1.02, 1] } }} className={cn("wireframe-view-topbar h-12 border-b-2 border-dashed border-pos-border-strong/50 flex items-center justify-between", isMobile ? "px-3" : "px-4")}>
+                                <div className={cn("wireframe-view-topbar-logo border border-pos-border-strong/60 rounded bg-pos-bg-4/20", isMobile ? "w-12 h-3" : "w-24 h-4")} />
+                                <div className={cn("wireframe-view-topbar-tabs flex", isMobile ? "gap-1.5" : "gap-3")}>
                                     {[1, 2, 3].map(i => (
-                                        <div key={i} className={cn("border border-pos-border-strong/50 rounded", i === 1 && "bg-pos-bg-5/30", isMobile ? "w-10 h-5" : "w-16 h-6")} />
+                                        <div key={i} className={cn("wireframe-view-topbar-tab border border-pos-border-strong/50 rounded", i === 1 && "bg-pos-bg-5/30", isMobile ? "w-10 h-5" : "w-16 h-6")} />
                                     ))}
                                 </div>
-                                <div className={cn("border border-pos-border-strong/60 rounded bg-pos-bg-4/20", isMobile ? "w-8 h-3" : "w-16 h-4")} />
+                                <div className={cn("wireframe-view-topbar-status border border-pos-border-strong/60 rounded bg-pos-bg-4/20", isMobile ? "w-8 h-3" : "w-16 h-4")} />
                             </motion.div>
 
                             {/* Main Layout - Responsive */}
-                            <div className={cn("flex-1 flex", isMobile ? "flex-col" : "flex-row")}>
+                            <div className={cn("wireframe-view-main flex-1 flex", isMobile ? "flex-col" : "flex-row")}>
                                 {/* LEFT: Menu Section */}
-                                <div className={cn("flex flex-col border-dashed border-pos-border-strong/50", isMobile ? "flex-[60] border-b-2" : "flex-[65] border-r-2")}>
+                                <div className={cn("wireframe-view-menu flex flex-col border-dashed border-pos-border-strong/50", isMobile ? "flex-[60] border-b-2" : "flex-[65] border-r-2")}>
                                     {/* Search + Tabs */}
-                                    <motion.div variants={{ hidden: { opacity: 0, x: -10, scale: 0.95 }, show: { opacity: 1, x: 0, scale: [0.95, 1.02, 1] } }} className="p-4 border-b-2 border-dashed border-pos-border-strong/50 space-y-3">
+                                    <motion.div variants={{ hidden: { opacity: 0, x: -10, scale: 0.95 }, show: { opacity: 1, x: 0, scale: [0.95, 1.02, 1] } }} className="wireframe-view-menu-search-row p-4 border-b-2 border-dashed border-pos-border-strong/50 space-y-3">
                                         {/* Search Bar */}
-                                        <div className="h-9 border border-pos-border-strong/60 rounded-lg flex items-center px-3 gap-2 bg-pos-bg-3/20">
+                                        <div className="wireframe-view-search h-9 border border-pos-border-strong/60 rounded-lg flex items-center px-3 gap-2 bg-pos-bg-3/20">
                                             <Search size={12} className="text-pos-text-4" />
-                                            <div className="flex-1 h-2 bg-pos-bg-5/30 rounded" />
+                                            <div className="wireframe-view-search-fill flex-1 h-2 bg-pos-bg-5/30 rounded" />
                                         </div>
                                         {/* Category Tabs */}
-                                        <div className="flex gap-2">
+                                        <div className="wireframe-view-category-tabs flex gap-2">
                                             {[1, 2, 3].map(i => (
-                                                <div key={i} className={cn("px-4 py-1.5 border border-pos-border-strong/50 rounded-full", i === 1 && "bg-pos-accent/20 border-pos-accent/60")} />
+                                                <div key={i} className={cn("wireframe-view-category-tab px-4 py-1.5 border border-pos-border-strong/50 rounded-full", i === 1 && "bg-pos-accent/20 border-pos-accent/60")} />
                                             ))}
                                         </div>
                                     </motion.div>
 
                                     {/* Menu Grid */}
-                                    <div className="flex-1 p-4 overflow-hidden">
-                                        <div className={cn("grid gap-3 h-full content-start",
+                                    <div className="wireframe-view-menu-grid-wrap flex-1 p-4 overflow-hidden">
+                                        <div className={cn("wireframe-view-menu-grid grid gap-3 h-full content-start",
                                             isNarrowMobile ? "grid-cols-3" :
                                                 (isLandscapeLayout ? "grid-cols-3 xl:grid-cols-4" : (isMobile ? "grid-cols-3" : "grid-cols-4 sm:grid-cols-5"))
                                         )}>
@@ -1319,16 +1319,16 @@ export default function ProductCanvas({
                                                 <motion.div
                                                     key={i}
                                                     variants={{ hidden: { opacity: 0, scale: 0.8 }, show: { opacity: 1, scale: [0.8, 1.05, 1] } }}
-                                                    className="aspect-square border-2 border-dashed border-pos-border-strong/50 rounded-lg flex flex-col overflow-hidden"
+                                                    className="wireframe-view-menu-tile aspect-square border-2 border-dashed border-pos-border-strong/50 rounded-lg flex flex-col overflow-hidden"
                                                 >
                                                     {/* Image Area */}
-                                                    <div className="flex-[7] bg-pos-bg-4/20 flex items-center justify-center border-b border-dashed border-pos-border-strong/30">
+                                                    <div className="wireframe-view-menu-tile-image flex-[7] bg-pos-bg-4/20 flex items-center justify-center border-b border-dashed border-pos-border-strong/30">
                                                         <Coffee size={20} className="text-pos-text-5" />
                                                     </div>
                                                     {/* Info Area */}
-                                                    <div className="flex-[3] p-2 space-y-1 bg-pos-bg-3/10">
-                                                        <div className="h-2 w-3/4 bg-pos-bg-5/30 rounded" />
-                                                        <div className="h-1.5 w-1/2 bg-pos-accent/30 rounded" />
+                                                    <div className="wireframe-view-menu-tile-info flex-[3] p-2 space-y-1 bg-pos-bg-3/10">
+                                                        <div className="wireframe-view-menu-tile-line h-2 w-3/4 bg-pos-bg-5/30 rounded" />
+                                                        <div className="wireframe-view-menu-tile-price h-1.5 w-1/2 bg-pos-accent/30 rounded" />
                                                     </div>
                                                 </motion.div>
                                             ))}
@@ -1337,75 +1337,75 @@ export default function ProductCanvas({
                                 </div>
 
                                 {/* RIGHT: Cart Section */}
-                                <div className={cn("flex flex-col", isMobile ? "flex-[40]" : "flex-[35]")}>
+                                <div className={cn("wireframe-view-cart flex flex-col", isMobile ? "flex-[40]" : "flex-[35]")}>
                                     {/* Ticket Header */}
                                     {!isMobile && (
-                                        <motion.div variants={{ hidden: { opacity: 0, x: 10, scale: 0.95 }, show: { opacity: 1, x: 0, scale: [0.95, 1.02, 1] } }} className="p-3 border-b-2 border-dashed border-pos-border-strong/50 bg-pos-bg-4/20 space-y-2">
-                                            <div className="flex justify-between items-center">
-                                                <div className="h-3 w-20 bg-pos-bg-5/40 rounded" />
-                                                <div className="h-5 w-16 border border-pos-border-strong/60 rounded" />
+                                        <motion.div variants={{ hidden: { opacity: 0, x: 10, scale: 0.95 }, show: { opacity: 1, x: 0, scale: [0.95, 1.02, 1] } }} className="wireframe-view-cart-header p-3 border-b-2 border-dashed border-pos-border-strong/50 bg-pos-bg-4/20 space-y-2">
+                                            <div className="wireframe-view-cart-header-row flex justify-between items-center">
+                                                <div className="wireframe-view-cart-header-title h-3 w-20 bg-pos-bg-5/40 rounded" />
+                                                <div className="wireframe-view-cart-header-pill h-5 w-16 border border-pos-border-strong/60 rounded" />
                                             </div>
-                                            <div className="h-2 w-full bg-pos-bg-5/30 rounded" />
+                                            <div className="wireframe-view-cart-header-line h-2 w-full bg-pos-bg-5/30 rounded" />
                                         </motion.div>
                                     )}
 
                                     {/* Order Items */}
-                                    <div className="flex-1 p-3 space-y-2 overflow-hidden">
+                                    <div className="wireframe-view-cart-items flex-1 p-3 space-y-2 overflow-hidden">
                                         {[1, 2, 3].slice(0, isMobile ? 2 : 3).map(i => (
                                             <motion.div
                                                 key={i}
                                                 variants={{ hidden: { opacity: 0, x: 20, scale: 0.9 }, show: { opacity: 1, x: 0, scale: [0.9, 1.05, 1] } }}
-                                                className="flex items-start gap-2 p-2 border border-dashed border-pos-border-strong/40 rounded"
+                                                className="wireframe-view-cart-item flex items-start gap-2 p-2 border border-dashed border-pos-border-strong/40 rounded"
                                             >
-                                                <div className="w-6 h-6 border border-pos-border-strong/60 rounded flex-shrink-0 bg-pos-bg-4/20" />
-                                                <div className="flex-1 space-y-1">
-                                                    <div className="h-2.5 w-3/4 bg-pos-bg-5/30 rounded" />
-                                                    <div className="h-2 w-1/2 bg-pos-bg-5/20 rounded" />
+                                                <div className="wireframe-view-cart-item-thumb w-6 h-6 border border-pos-border-strong/60 rounded flex-shrink-0 bg-pos-bg-4/20" />
+                                                <div className="wireframe-view-cart-item-info flex-1 space-y-1">
+                                                    <div className="wireframe-view-cart-item-line h-2.5 w-3/4 bg-pos-bg-5/30 rounded" />
+                                                    <div className="wireframe-view-cart-item-sub h-2 w-1/2 bg-pos-bg-5/20 rounded" />
                                                 </div>
-                                                <div className="h-2.5 w-12 bg-pos-bg-5/30 rounded flex-shrink-0" />
+                                                <div className="wireframe-view-cart-item-price h-2.5 w-12 bg-pos-bg-5/30 rounded flex-shrink-0" />
                                             </motion.div>
                                         ))}
                                     </div>
 
                                     {/* Quick Actions (Mobile Compact) */}
                                     {isMobile && (
-                                        <motion.div variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }} className="px-3 border-t-2 border-dashed border-pos-border-strong/50 bg-pos-bg-4/15 py-1">
-                                            <div className="flex justify-between">
-                                                <div className="h-4 w-16 bg-pos-bg-4/30 rounded" />
-                                                <div className="h-4 w-12 bg-pos-bg-4/30 rounded" />
+                                        <motion.div variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }} className="wireframe-view-cart-mobile-actions px-3 border-t-2 border-dashed border-pos-border-strong/50 bg-pos-bg-4/15 py-1">
+                                            <div className="wireframe-view-cart-mobile-actions-row flex justify-between">
+                                                <div className="wireframe-view-cart-mobile-action h-4 w-16 bg-pos-bg-4/30 rounded" />
+                                                <div className="wireframe-view-cart-mobile-action h-4 w-12 bg-pos-bg-4/30 rounded" />
                                             </div>
                                         </motion.div>
                                     )}
 
                                     {/* Desktop Quick Actions */}
                                     {!isMobile && (
-                                        <motion.div variants={{ hidden: { opacity: 0, y: 10, scale: 0.95 }, show: { opacity: 1, y: 0, scale: [0.95, 1.05, 1] } }} className="px-3 py-2 border-t-2 border-dashed border-pos-border-strong/50 bg-pos-bg-4/15">
-                                            <div className="grid grid-cols-4 gap-1.5">
+                                        <motion.div variants={{ hidden: { opacity: 0, y: 10, scale: 0.95 }, show: { opacity: 1, y: 0, scale: [0.95, 1.05, 1] } }} className="wireframe-view-cart-desktop-actions px-3 py-2 border-t-2 border-dashed border-pos-border-strong/50 bg-pos-bg-4/15">
+                                            <div className="wireframe-view-cart-desktop-actions-grid grid grid-cols-4 gap-1.5">
                                                 {[1, 2, 3, 4].map(i => (
-                                                    <div key={i} className="h-6 border border-pos-border-strong/50 rounded" />
+                                                    <div key={i} className="wireframe-view-cart-desktop-action h-6 border border-pos-border-strong/50 rounded" />
                                                 ))}
                                             </div>
                                         </motion.div>
                                     )}
 
                                     {/* Total + Actions */}
-                                    <motion.div variants={{ hidden: { opacity: 0, y: 10, scale: 0.95 }, show: { opacity: 1, y: 0, scale: [0.95, 1.05, 1] } }} className="p-3 border-t-2 border-dashed border-pos-border-strong/50 space-y-3 bg-pos-bg-3/20">
-                                        <div className="flex justify-between items-center">
-                                            <div className="h-3 w-12 bg-pos-bg-4/20 rounded" />
-                                            <div className="h-6 w-20 bg-pos-bg-4/30 rounded" />
+                                    <motion.div variants={{ hidden: { opacity: 0, y: 10, scale: 0.95 }, show: { opacity: 1, y: 0, scale: [0.95, 1.05, 1] } }} className="wireframe-view-cart-total p-3 border-t-2 border-dashed border-pos-border-strong/50 space-y-3 bg-pos-bg-3/20">
+                                        <div className="wireframe-view-cart-total-row flex justify-between items-center">
+                                            <div className="wireframe-view-cart-total-label h-3 w-12 bg-pos-bg-4/20 rounded" />
+                                            <div className="wireframe-view-cart-total-amount h-6 w-20 bg-pos-bg-4/30 rounded" />
                                         </div>
-                                        <div className="flex gap-2">
-                                            <div className="flex-1 h-9 border border-pos-border-strong/60 rounded" />
-                                            <div className="flex-[3] h-9 bg-pos-accent/30 border border-pos-accent/60 rounded" />
+                                        <div className="wireframe-view-cart-total-actions flex gap-2">
+                                            <div className="wireframe-view-cart-total-secondary flex-1 h-9 border border-pos-border-strong/60 rounded" />
+                                            <div className="wireframe-view-cart-total-primary flex-[3] h-9 bg-pos-accent/30 border border-pos-accent/60 rounded" />
                                         </div>
                                     </motion.div>
                                 </div>
                             </div>
 
                             {/* Bottom Status Bar */}
-                            <motion.div variants={{ hidden: { opacity: 0, scale: 0.95 }, show: { opacity: 1, scale: 1 } }} className="h-6 border-t-2 border-dashed border-pos-border-strong/50 flex items-center justify-between px-4 bg-pos-bg-4/20">
-                                <div className="h-2 w-32 bg-pos-bg-5/30 rounded" />
-                                <div className="h-2 w-16 bg-pos-bg-5/30 rounded" />
+                            <motion.div variants={{ hidden: { opacity: 0, scale: 0.95 }, show: { opacity: 1, scale: 1 } }} className="wireframe-view-statusbar h-6 border-t-2 border-dashed border-pos-border-strong/50 flex items-center justify-between px-4 bg-pos-bg-4/20">
+                                <div className="wireframe-view-statusbar-left h-2 w-32 bg-pos-bg-5/30 rounded" />
+                                <div className="wireframe-view-statusbar-right h-2 w-16 bg-pos-bg-5/30 rounded" />
                             </motion.div>
 
 
@@ -1488,55 +1488,55 @@ export default function ProductCanvas({
                                 </AnimatePresence>
 
                                 {/* Top Bar */}
-                                <motion.div variants={{ hidden: { opacity: 0, y: -10 }, show: { opacity: 1, y: 0 } }} className={cn("pos-top-nav bg-pos-bg-2 border-b border-pos-border-medium flex items-center justify-between px-4 rounded-t-[10px] flex-shrink-0", isEffectiveMobile ? "h-8" : "h-12")}>
-                                    <div className="flex items-center gap-2">
-                                        {!isEffectiveMobile && <span className="font-bold text-pos-text-2 tracking-tight text-sm">Aster Café</span>}
-                                        <span className={cn("font-mono font-bold text-pos-accent bg-pos-accent/10 px-1.5 py-0.5 rounded border border-pos-accent/20", isEffectiveMobile ? "text-[9px]" : "text-[10px]")}>MVP PROTOTYPE</span>
+                                <motion.div variants={{ hidden: { opacity: 0, y: -10 }, show: { opacity: 1, y: 0 } }} className={cn("pos-dashboard-topbar pos-top-nav bg-pos-bg-2 border-b border-pos-border-medium flex items-center justify-between px-4 rounded-t-[10px] flex-shrink-0", isEffectiveMobile ? "h-8" : "h-12")}>
+                                    <div className="pos-dashboard-topbar-brand flex items-center gap-2">
+                                        {!isEffectiveMobile && <span className="pos-dashboard-topbar-name font-bold text-pos-text-2 tracking-tight text-sm">Aster Café</span>}
+                                        <span className={cn("pos-dashboard-topbar-badge font-mono font-bold text-pos-accent bg-pos-accent/10 px-1.5 py-0.5 rounded border border-pos-accent/20", isEffectiveMobile ? "text-[9px]" : "text-[10px]")}>MVP PROTOTYPE</span>
                                     </div>
-                                    <div className={cn("flex gap-4 font-medium", isEffectiveMobile ? "text-[10px]" : "text-xs")}>
-                                        <span className={cn("text-pos-text-1 transition-colors", isEffectiveMobile ? "py-1.5" : "px-3 py-1.5 bg-pos-bg-3 rounded-md shadow-sm border border-pos-border-strong")}>Checkout</span>
-                                        <button onClick={() => handleInactiveClick('Orders')} className="text-pos-text-5 py-1.5 hover:text-pos-text-3 cursor-pointer transition-colors relative">
+                                    <div className={cn("pos-dashboard-topbar-tabs flex gap-4 font-medium", isEffectiveMobile ? "text-[10px]" : "text-xs")}>
+                                        <span className={cn("pos-dashboard-topbar-tab pos-dashboard-topbar-tab-active text-pos-text-1 transition-colors", isEffectiveMobile ? "py-1.5" : "px-3 py-1.5 bg-pos-bg-3 rounded-md shadow-sm border border-pos-border-strong")}>Checkout</span>
+                                        <button onClick={() => handleInactiveClick('Orders')} className="pos-dashboard-topbar-tab pos-dashboard-topbar-tab-inactive text-pos-text-5 py-1.5 hover:text-pos-text-3 cursor-pointer transition-colors relative">
                                             Orders
                                             {activeTooltip === 'Orders' && <Tooltip text="Not in scope for MVP" />}
                                         </button>
-                                        <button onClick={() => handleInactiveClick('Reports')} className="text-pos-text-5 py-1.5 hover:text-pos-text-3 cursor-pointer transition-colors relative">
+                                        <button onClick={() => handleInactiveClick('Reports')} className="pos-dashboard-topbar-tab pos-dashboard-topbar-tab-inactive text-pos-text-5 py-1.5 hover:text-pos-text-3 cursor-pointer transition-colors relative">
                                             Reports
                                             {activeTooltip === 'Reports' && <Tooltip text="Not in scope for MVP" />}
                                         </button>
                                     </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="w-1.5 h-1.5 bg-green-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
-                                        <span className={cn("text-pos-text-4 uppercase tracking-wider font-medium", isEffectiveMobile ? "text-[8px]" : "text-[10px]")}>Online</span>
+                                    <div className="pos-dashboard-topbar-status flex items-center gap-2">
+                                        <span className="pos-dashboard-topbar-status-dot w-1.5 h-1.5 bg-green-500 rounded-full shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
+                                        <span className={cn("pos-dashboard-topbar-status-label text-pos-text-4 uppercase tracking-wider font-medium", isEffectiveMobile ? "text-[8px]" : "text-[10px]")}>Online</span>
                                     </div>
                                 </motion.div>
 
                                 {/* Main Content: 2-Column Layout (Landscape) / Stacked (Portrait) */}
-                                <div className={cn("flex-1 flex min-h-0", !isLandscapeLayout ? "flex-col" : "flex-row")}>
+                                <div className={cn("pos-dashboard-main flex-1 flex min-h-0", !isLandscapeLayout ? "flex-col" : "flex-row")}>
                                     {/* LEFT: Menu Grid */}
-                                    <div className={cn("flex flex-col min-h-0", !isLandscapeLayout ? "flex-1 border-b border-pos-border-medium bg-pos-bg-3/40" : "flex-[65] border-r border-pos-border-medium bg-pos-bg-2/50")}>
+                                    <div className={cn("pos-dashboard-menu flex flex-col min-h-0", !isLandscapeLayout ? "flex-1 border-b border-pos-border-medium bg-pos-bg-3/40" : "flex-[65] border-r border-pos-border-medium bg-pos-bg-2/50")}>
                                         {/* Search + Categories */}
                                         {/* Search + Categories */}
-                                        <motion.div variants={{ hidden: { opacity: 0, x: -10 }, show: { opacity: 1, x: 0 } }} className={cn("flex items-center gap-3", isEffectiveMobile ? "p-1" : (isShortViewport ? "p-2 border-b border-pos-border-subtle" : "p-4 border-b border-pos-border-subtle"))}>
+                                        <motion.div variants={{ hidden: { opacity: 0, x: -10 }, show: { opacity: 1, x: 0 } }} className={cn("pos-dashboard-menu-search-row flex items-center gap-3", isEffectiveMobile ? "p-1" : (isShortViewport ? "p-2 border-b border-pos-border-subtle" : "p-4 border-b border-pos-border-subtle"))}>
                                             {/* Search Bar: Re-enabled for Tablet Portrait as requested */}
                                             {!isEffectiveMobile && (
-                                                <div className="relative flex-1">
-                                                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-pos-text-5" size={14} />
+                                                <div className="pos-dashboard-search-wrap relative flex-1">
+                                                    <Search className="pos-dashboard-search-icon absolute left-3 top-1/2 -translate-y-1/2 text-pos-text-5" size={14} />
                                                     <input
                                                         type="text"
                                                         value={searchQuery}
                                                         onChange={(e) => setSearchQuery(e.target.value)}
                                                         placeholder="Search menu..."
-                                                        className="w-full pl-9 pr-3 py-2 bg-pos-bg-3 border border-pos-border-medium rounded-lg text-sm text-pos-text-3 placeholder:text-pos-text-5 focus:outline-none focus:border-pos-border-strong"
+                                                        className="pos-dashboard-search-input w-full pl-9 pr-3 py-2 bg-pos-bg-3 border border-pos-border-medium rounded-lg text-sm text-pos-text-3 placeholder:text-pos-text-5 focus:outline-none focus:border-pos-border-strong"
                                                     />
                                                 </div>
                                             )}
                                             {/* Category Tabs */}
-                                            <div className={cn("flex gap-2", isEffectiveMobile ? "overflow-x-auto scrollbar-hide flex-1" : "flex-shrink-0")}>
+                                            <div className={cn("pos-dashboard-categories flex gap-2", isEffectiveMobile ? "overflow-x-auto scrollbar-hide flex-1" : "flex-shrink-0")}>
                                                 {['All', 'Coffee', 'Tea', 'Pastry'].map((cat, i) => (
                                                     <button
                                                         key={cat}
                                                         className={cn(
-                                                            "inline-flex items-center justify-center rounded-full font-medium whitespace-nowrap cursor-pointer border transition-all duration-200",
+                                                            "pos-dashboard-category inline-flex items-center justify-center rounded-full font-medium whitespace-nowrap cursor-pointer border transition-all duration-200",
                                                             isEffectiveMobile ? "px-4 py-1.5 text-[11px]" : "px-5 py-2 text-xs",
                                                             selectedCategory === cat
                                                                 ? "bg-pos-accent text-pos-accent-text shadow-md shadow-pos-accent/20 border-pos-accent font-semibold"
@@ -1553,9 +1553,9 @@ export default function ProductCanvas({
                                         {/* Menu Grid */}
                                         <motion.div
                                             variants={{ hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.03, delayChildren: 0.3 } } }}
-                                            className={cn("flex-1 overflow-y-auto scrollbar-custom", isEffectiveMobile ? "p-2" : (isShortViewport ? "p-2" : "p-4"))}
+                                            className={cn("pos-dashboard-menu-scroll flex-1 overflow-y-auto scrollbar-custom", isEffectiveMobile ? "p-2" : (isShortViewport ? "p-2" : "p-4"))}
                                         >
-                                            <div className={cn("grid",
+                                            <div className={cn("pos-dashboard-menu-grid grid",
                                                 isNarrowMobile ? "grid-cols-3 gap-1.5" :
                                                     isLandscapeLayout ? (posDimensions.width < 900 ? "grid-cols-3 gap-3" : (isShortViewport ? "grid-cols-4 gap-2.5" : "grid-cols-4 gap-4")) :
                                                         isTablet ? (isShortViewport ? "grid-cols-5 gap-2.5" : "grid-cols-4 md:grid-cols-5 gap-3") :
@@ -1582,9 +1582,9 @@ export default function ProductCanvas({
                                                                 }
                                                             }}
                                                             onMouseEnter={playHoverSound}
-                                                            className="bg-pos-bg-3 border border-pos-border-strong/40 rounded-xl overflow-hidden cursor-pointer hover:border-pos-border-strong/50 hover:bg-pos-bg-4 transition-colors group select-none"
+                                                            className="pos-dashboard-menu-item bg-pos-bg-3 border border-pos-border-strong/40 rounded-xl overflow-hidden cursor-pointer hover:border-pos-border-strong/50 hover:bg-pos-bg-4 transition-colors group select-none"
                                                         >
-                                                            <div className={cn("bg-pos-bg-2 relative overflow-hidden rounded-t-xl", isEffectiveMobile ? "aspect-video" : (isShortViewport ? "aspect-video" : "aspect-[4/3]"))}>
+                                                            <div className={cn("pos-dashboard-menu-item-image-wrap bg-pos-bg-2 relative overflow-hidden rounded-t-xl", isEffectiveMobile ? "aspect-video" : (isShortViewport ? "aspect-video" : "aspect-[4/3]"))}>
                                                                 {/* Category Image */}
                                                                 <motion.img
                                                                     initial={{ scale: 1.05 }}
@@ -1592,18 +1592,18 @@ export default function ProductCanvas({
                                                                     src={getItemImageSrc(item.name, item.category)}
                                                                     alt={item.name}
                                                                     draggable={false}
-                                                                    className="w-full h-full object-cover opacity-100"
+                                                                    className="pos-dashboard-menu-item-image w-full h-full object-cover opacity-100"
                                                                 />
 
                                                                 {/* Flash Wipe Effect */}
-                                                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full group-hover:transition-transform group-hover:duration-700 group-hover:ease-in-out" />
+                                                                <div className="pos-dashboard-menu-item-flash absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full group-hover:transition-transform group-hover:duration-700 group-hover:ease-in-out" />
 
                                                                 {/* Hover Overlay Gradient */}
-                                                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
+                                                                <div className="pos-dashboard-menu-item-overlay absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-60" />
                                                             </div>
-                                                            <div className={cn("relative flex items-center justify-between", isEffectiveMobile ? "p-2" : "p-3")}>
-                                                                <h3 className={cn("!font-[400] tracking-wide text-pos-text-2 leading-tight truncate", isEffectiveMobile ? "text-[10px] xs:text-xs" : "text-sm")}>{item.name}</h3>
-                                                                <span className={cn("!font-[400] text-pos-text-4 ml-2 shrink-0", isEffectiveMobile ? "text-[10px]" : "text-sm")}>€{item.price.toFixed(2)}</span>
+                                                            <div className={cn("pos-dashboard-menu-item-info relative flex items-center justify-between", isEffectiveMobile ? "p-2" : "p-3")}>
+                                                                <h3 className={cn("pos-dashboard-menu-item-name !font-[400] tracking-wide text-pos-text-2 leading-tight truncate", isEffectiveMobile ? "text-[10px] xs:text-xs" : "text-sm")}>{item.name}</h3>
+                                                                <span className={cn("pos-dashboard-menu-item-price !font-[400] text-pos-text-4 ml-2 shrink-0", isEffectiveMobile ? "text-[10px]" : "text-sm")}>€{item.price.toFixed(2)}</span>
                                                             </div>
                                                         </motion.div>
                                                     ))}
@@ -1613,24 +1613,24 @@ export default function ProductCanvas({
 
                                     {/* RIGHT: Cart & Actions */}
                                     {/* Responsive Cart - flexbox auto-sizing */}
-                                    <div className={cn("flex flex-col bg-pos-bg-2 border-l border-pos-border-subtle", !isLandscapeLayout ? "flex-none h-auto max-h-[40%] min-h-[160px] border-t border-pos-border-subtle" : "flex-[35] min-h-0")}>
+                                    <div className={cn("pos-dashboard-cart flex flex-col bg-pos-bg-2 border-l border-pos-border-subtle", !isLandscapeLayout ? "flex-none h-auto max-h-[40%] min-h-[160px] border-t border-pos-border-subtle" : "flex-[35] min-h-0")}>
                                         {/* Cart Header */}
                                         {!isEffectiveMobile && (
-                                            <div className={cn("border-b border-pos-border-subtle flex items-center justify-between", isShortViewport ? "p-2" : "p-4")}>
-                                                <div className="flex items-center gap-2">
+                                            <div className={cn("pos-dashboard-cart-header border-b border-pos-border-subtle flex items-center justify-between", isShortViewport ? "p-2" : "p-4")}>
+                                                <div className="pos-dashboard-cart-header-title flex items-center gap-2">
                                                     <Receipt size={16} className="text-pos-accent" />
-                                                    <span className="font-semibold text-pos-text-2 text-sm">Order</span>
+                                                    <span className="pos-dashboard-cart-header-label font-semibold text-pos-text-2 text-sm">Order</span>
                                                 </div>
-                                                <div className="flex items-center gap-2">
+                                                <div className="pos-dashboard-cart-header-actions flex items-center gap-2">
                                                     <button
                                                         onClick={(e) => { e.stopPropagation(); setIsMuted(!isMuted); }}
-                                                        className="text-pos-text-5 hover:text-pos-text-3 transition-colors p-1"
+                                                        className="pos-dashboard-cart-mute-button text-pos-text-5 hover:text-pos-text-3 transition-colors p-1"
                                                     >
                                                         {isMuted ? <VolumeX size={14} /> : <Volume2 size={14} />}
                                                     </button>
                                                     <button
                                                         onClick={(e) => { e.stopPropagation(); clearCart(); }}
-                                                        className="text-[10px] text-pos-text-5 hover:text-pos-text-3 transition-colors bg-pos-bg-3 px-2 py-1 rounded cursor-pointer"
+                                                        className="pos-dashboard-cart-clear-button text-[10px] text-pos-text-5 hover:text-pos-text-3 transition-colors bg-pos-bg-3 px-2 py-1 rounded cursor-pointer"
                                                     >
                                                         Clear
                                                     </button>
@@ -1639,10 +1639,10 @@ export default function ProductCanvas({
                                         )}
 
                                         {/* Order Items List */}
-                                        <div ref={cartContainerRef} className={cn("flex-1 overflow-y-auto p-2 pb-8 space-y-1 scrollbar-custom relative", !isLandscapeLayout && "max-h-[140px] min-h-[100px]")}>
+                                        <div ref={cartContainerRef} className={cn("pos-dashboard-cart-items flex-1 overflow-y-auto p-2 pb-8 space-y-1 scrollbar-custom relative", !isLandscapeLayout && "max-h-[140px] min-h-[100px]")}>
                                             {isEffectiveMobile && orderItems.length === 0 && (
-                                                <div className="absolute inset-0 flex items-center justify-center p-6 text-center">
-                                                    <span className="text-[10px] text-pos-text-6 font-medium uppercase tracking-tight leading-relaxed">
+                                                <div className="pos-dashboard-cart-empty absolute inset-0 flex items-center justify-center p-6 text-center">
+                                                    <span className="pos-dashboard-cart-empty-text text-[10px] text-pos-text-6 font-medium uppercase tracking-tight leading-relaxed">
                                                         Tap menu items<br />to add to order
                                                     </span>
                                                 </div>
@@ -1655,25 +1655,25 @@ export default function ProductCanvas({
                                                         animate={{ opacity: 1, x: 0, scale: 1 }}
                                                         exit={{ opacity: 0, height: 0, scale: 0.9 }}
                                                         transition={{ duration: 0.3, ease: "easeOut" }}
-                                                        className={cn("flex items-start rounded-lg hover:bg-pos-bg-3/50 group", isEffectiveMobile ? "gap-2 p-1" : "gap-3 p-2")}
+                                                        className={cn("pos-dashboard-cart-item flex items-start rounded-lg hover:bg-pos-bg-3/50 group", isEffectiveMobile ? "gap-2 p-1" : "gap-3 p-2")}
                                                     >
-                                                        <div className="flex items-center gap-1 mt-0.5">
-                                                            <button onClick={(e) => { e.stopPropagation(); playQuantitySound(); updateQuantity(i, -1); }} className="w-6 h-6 flex items-center justify-center bg-pos-bg-4 text-pos-text-3 hover:text-pos-text-1 rounded border border-pos-border-strong cursor-pointer">-</button>
-                                                            <div className="w-6 h-6 flex items-center justify-center bg-pos-text-1/40 rounded text-xs font-medium text-pos-text-2 border border-pos-border-subtle">
+                                                        <div className="pos-dashboard-cart-item-qty flex items-center gap-1 mt-0.5">
+                                                            <button onClick={(e) => { e.stopPropagation(); playQuantitySound(); updateQuantity(i, -1); }} className="pos-dashboard-cart-item-qty-button pos-dashboard-cart-item-qty-button-minus w-6 h-6 flex items-center justify-center bg-pos-bg-4 text-pos-text-3 hover:text-pos-text-1 rounded border border-pos-border-strong cursor-pointer">-</button>
+                                                            <div className="pos-dashboard-cart-item-qty-value w-6 h-6 flex items-center justify-center bg-pos-text-1/40 rounded text-xs font-medium text-pos-text-2 border border-pos-border-subtle">
                                                                 {item.qty}
                                                             </div>
-                                                            <button onClick={(e) => { e.stopPropagation(); playQuantitySound(); updateQuantity(i, 1); }} className="w-6 h-6 flex items-center justify-center bg-pos-bg-4 text-pos-text-3 hover:text-pos-text-1 rounded border border-pos-border-strong cursor-pointer">+</button>
+                                                            <button onClick={(e) => { e.stopPropagation(); playQuantitySound(); updateQuantity(i, 1); }} className="pos-dashboard-cart-item-qty-button pos-dashboard-cart-item-qty-button-plus w-6 h-6 flex items-center justify-center bg-pos-bg-4 text-pos-text-3 hover:text-pos-text-1 rounded border border-pos-border-strong cursor-pointer">+</button>
                                                         </div>
-                                                        <div className="flex-1 min-w-0">
-                                                            <div className="flex justify-between">
-                                                                <span className={cn("text-pos-text-2 truncate font-medium pr-2", isEffectiveMobile ? "text-xs" : "text-sm")}>{item.name}</span>
-                                                                <span className={cn("text-pos-text-3", isEffectiveMobile ? "text-xs" : "text-sm")}>€{(item.price * item.qty).toFixed(2)}</span>
+                                                        <div className="pos-dashboard-cart-item-info flex-1 min-w-0">
+                                                            <div className="pos-dashboard-cart-item-row flex justify-between">
+                                                                <span className={cn("pos-dashboard-cart-item-name text-pos-text-2 truncate font-medium pr-2", isEffectiveMobile ? "text-xs" : "text-sm")}>{item.name}</span>
+                                                                <span className={cn("pos-dashboard-cart-item-price text-pos-text-3", isEffectiveMobile ? "text-xs" : "text-sm")}>€{(item.price * item.qty).toFixed(2)}</span>
                                                             </div>
-                                                            {item.modifiers && <div className={cn("text-pos-text-5", isEffectiveMobile ? "text-[9px]" : "text-[10px] truncate")}>{item.modifiers}</div>}
+                                                            {item.modifiers && <div className={cn("pos-dashboard-cart-item-modifiers text-pos-text-5", isEffectiveMobile ? "text-[9px]" : "text-[10px] truncate")}>{item.modifiers}</div>}
                                                         </div>
                                                         <button
                                                             onClick={(e) => { e.stopPropagation(); removeFromCart(i); }}
-                                                            className={cn("p-1 hover:text-red-400 text-pos-text-6 transition-opacity", isEffectiveMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100")}
+                                                            className={cn("pos-dashboard-cart-item-remove p-1 hover:text-red-400 text-pos-text-6 transition-opacity", isEffectiveMobile ? "opacity-100" : "opacity-0 group-hover:opacity-100")}
                                                         >
                                                             <Minus size={12} />
                                                         </button>
@@ -1684,13 +1684,13 @@ export default function ProductCanvas({
 
                                         {/* Quick Actions */}
                                         {!isEffectiveMobile && (
-                                            <motion.div variants={{ hidden: { opacity: 0 }, show: { opacity: 1 } }} className="px-3 py-2 border-t border-pos-border-subtle bg-pos-bg-2 relative z-10">
-                                                <div className="grid grid-cols-4 gap-1.5">
+                                            <motion.div variants={{ hidden: { opacity: 0 }, show: { opacity: 1 } }} className="pos-dashboard-cart-quick-actions px-3 py-2 border-t border-pos-border-subtle bg-pos-bg-2 relative z-10">
+                                                <div className="pos-dashboard-cart-quick-actions-grid grid grid-cols-4 gap-1.5">
                                                     {['Discount', 'Loyalty', 'Split', 'Print'].map(action => (
                                                         <button
                                                             key={action}
                                                             onClick={() => handleInactiveClick(action)}
-                                                            className="px-2 py-1.5 bg-pos-bg-3 border border-pos-border-medium text-[9px] text-pos-text-4 rounded hover:bg-pos-bg-4 transition-colors cursor-pointer relative"
+                                                            className="pos-dashboard-cart-quick-action px-2 py-1.5 bg-pos-bg-3 border border-pos-border-medium text-[9px] text-pos-text-4 rounded hover:bg-pos-bg-4 transition-colors cursor-pointer relative"
                                                         >
                                                             {action}
                                                             {activeTooltip === action && <Tooltip text="Not in scope for MVP" position="top" />}
@@ -1701,35 +1701,35 @@ export default function ProductCanvas({
                                         )}
 
                                         {/* Total + Actions */}
-                                        <motion.div variants={{ hidden: { opacity: 0 }, show: { opacity: 1 } }} className={cn("border-t border-pos-border-subtle bg-pos-bg-2 flex-shrink-0 relative z-10", isEffectiveMobile ? "p-1.5" : "p-3")}>
+                                        <motion.div variants={{ hidden: { opacity: 0 }, show: { opacity: 1 } }} className={cn("pos-dashboard-cart-total border-t border-pos-border-subtle bg-pos-bg-2 flex-shrink-0 relative z-10", isEffectiveMobile ? "p-1.5" : "p-3")}>
                                             {!isEffectiveMobile && (
-                                                <div className="flex flex-col gap-1 mb-3">
-                                                    <div className="flex justify-between items-center text-xs text-pos-text-5">
-                                                        <span>Subtotal</span>
-                                                        <span>€{calculateTotals().net}</span>
+                                                <div className="pos-dashboard-cart-total-summary flex flex-col gap-1 mb-3">
+                                                    <div className="pos-dashboard-cart-total-row flex justify-between items-center text-xs text-pos-text-5">
+                                                        <span className="pos-dashboard-cart-total-label">Subtotal</span>
+                                                        <span className="pos-dashboard-cart-total-value">€{calculateTotals().net}</span>
                                                     </div>
-                                                    <div className="flex justify-between items-center text-xs text-pos-text-5">
-                                                        <span>VAT (10%)</span>
-                                                        <span>€{calculateTotals().tax}</span>
+                                                    <div className="pos-dashboard-cart-total-row flex justify-between items-center text-xs text-pos-text-5">
+                                                        <span className="pos-dashboard-cart-total-label">VAT (10%)</span>
+                                                        <span className="pos-dashboard-cart-total-value">€{calculateTotals().tax}</span>
                                                     </div>
-                                                    <div className="flex justify-between items-center mt-1 pt-2 border-t border-pos-border-subtle">
-                                                        <span className="font-medium text-pos-text-4 text-sm">Total</span>
-                                                        <span className="font-bold font-mono text-pos-text-1 text-xl">€{calculateTotals().total}</span>
+                                                    <div className="pos-dashboard-cart-total-row pos-dashboard-cart-total-row-grand flex justify-between items-center mt-1 pt-2 border-t border-pos-border-subtle">
+                                                        <span className="pos-dashboard-cart-total-grand-label font-medium text-pos-text-4 text-sm">Total</span>
+                                                        <span className="pos-dashboard-cart-total-grand-value font-bold font-mono text-pos-text-1 text-xl">€{calculateTotals().total}</span>
                                                     </div>
                                                 </div>
                                             )}
-                                            <div className="flex gap-2 items-center">
+                                            <div className="pos-dashboard-cart-cta-row flex gap-2 items-center">
                                                 {isEffectiveMobile ? (
                                                     <button
                                                         onClick={(e) => { e.stopPropagation(); clearCart(); }}
-                                                        className="px-3 py-2 text-[10px] bg-pos-bg-3 hover:bg-pos-bg-4 text-pos-text-3 font-medium rounded transition-colors border border-pos-border-medium cursor-pointer"
+                                                        className="pos-dashboard-cart-clear-cta px-3 py-2 text-[10px] bg-pos-bg-3 hover:bg-pos-bg-4 text-pos-text-3 font-medium rounded transition-colors border border-pos-border-medium cursor-pointer"
                                                     >
                                                         Clear
                                                     </button>
                                                 ) : (
                                                     <button
                                                         onClick={(e) => { e.stopPropagation(); handleInactiveClick('Hold'); }}
-                                                        className={cn("py-2.5 text-xs bg-pos-bg-5 hover:bg-pos-text-5 text-pos-text-2 font-medium rounded transition-colors border border-pos-border-strong cursor-pointer relative", isEffectiveMobile && posDimensions.width < 700 ? "flex-1" : "flex-1 max-w-[100px]")}
+                                                        className={cn("pos-dashboard-cart-hold-cta py-2.5 text-xs bg-pos-bg-5 hover:bg-pos-text-5 text-pos-text-2 font-medium rounded transition-colors border border-pos-border-strong cursor-pointer relative", isEffectiveMobile && posDimensions.width < 700 ? "flex-1" : "flex-1 max-w-[100px]")}
                                                     >
                                                         Hold
                                                         {activeTooltip === 'Hold' && <Tooltip text="Not in scope for MVP" position="top" />}
@@ -1737,7 +1737,7 @@ export default function ProductCanvas({
                                                 )}
                                                 <button
                                                     onClick={(e) => { e.stopPropagation(); playSendToKitchenSound(); sendToKitchen(); }}
-                                                    className={cn("bg-pos-accent hover:bg-pos-accent/90 text-pos-accent-text font-bold rounded transition-all shadow-lg relative overflow-hidden cursor-pointer", isEffectiveMobile && posDimensions.width < 700 ? "flex-1 py-2 text-xs" : "flex-[2] py-2.5 text-sm")}
+                                                    className={cn("pos-dashboard-cart-send-cta bg-pos-accent hover:bg-pos-accent/90 text-pos-accent-text font-bold rounded transition-all shadow-lg relative overflow-hidden cursor-pointer", isEffectiveMobile && posDimensions.width < 700 ? "flex-1 py-2 text-xs" : "flex-[2] py-2.5 text-sm")}
                                                 >
                                                     <AnimatePresence mode="wait">
                                                         {showConfirmation ? (
@@ -1746,10 +1746,10 @@ export default function ProductCanvas({
                                                                 initial={{ opacity: 0, y: 10 }}
                                                                 animate={{ opacity: 1, y: 0 }}
                                                                 exit={{ opacity: 0, y: -10 }}
-                                                                className="flex items-center justify-center gap-2"
+                                                                className="pos-dashboard-cart-send-success flex items-center justify-center gap-2"
                                                             >
                                                                 <CheckCircle size={18} />
-                                                                <span>Sent!</span>
+                                                                <span className="pos-dashboard-cart-send-success-text">Sent!</span>
                                                             </motion.div>
                                                         ) : (
                                                             <motion.span
@@ -1764,10 +1764,10 @@ export default function ProductCanvas({
                                                     </AnimatePresence>
                                                 </button>
                                                 {isEffectiveMobile && (
-                                                    <div className="flex flex-col items-end min-w-[50px] leading-tight">
-                                                        <span className="text-[10px] text-pos-text-4 font-medium uppercase tracking-tighter">Total</span>
+                                                    <div className="pos-dashboard-cart-mobile-total flex flex-col items-end min-w-[50px] leading-tight">
+                                                        <span className="pos-dashboard-cart-mobile-total-label text-[10px] text-pos-text-4 font-medium uppercase tracking-tighter">Total</span>
 
-                                                        <span className="text-sm font-bold font-mono text-pos-text-1">€{calculateTotals().total}</span>
+                                                        <span className="pos-dashboard-cart-mobile-total-value text-sm font-bold font-mono text-pos-text-1">€{calculateTotals().total}</span>
                                                     </div>
                                                 )}
                                             </div>
@@ -1782,29 +1782,29 @@ export default function ProductCanvas({
                                             initial={{ opacity: 0, y: 20, scale: 0.9 }}
                                             animate={{ opacity: 1, y: 0, scale: 1 }}
                                             exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
-                                            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100] w-[350px] bg-pos-bg-2 shadow-[0_0_50px_rgba(0,0,0,0.8)] rounded-xl border border-pos-border-subtle overflow-hidden"
+                                            className="kitchen-toast-root absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[100] w-[350px] bg-pos-bg-2 shadow-[0_0_50px_rgba(0,0,0,0.8)] rounded-xl border border-pos-border-subtle overflow-hidden"
                                         >
-                                            <div className="bg-pos-bg-3 px-4 py-3 border-b border-pos-border-medium/50 flex justify-between items-center text-pos-text-4">
-                                                <div className="flex items-center gap-2.5">
+                                            <div className="kitchen-toast-header bg-pos-bg-3 px-4 py-3 border-b border-pos-border-medium/50 flex justify-between items-center text-pos-text-4">
+                                                <div className="kitchen-toast-header-title flex items-center gap-2.5">
                                                     <Receipt size={14} className="text-pos-accent" />
-                                                    <span className="text-xs font-bold uppercase tracking-widest">Kitchen Ticket</span>
+                                                    <span className="kitchen-toast-header-label text-xs font-bold uppercase tracking-widest">Kitchen Ticket</span>
                                                 </div>
-                                                <span className="text-xs font-mono font-bold text-pos-text-5">#184-A</span>
+                                                <span className="kitchen-toast-header-id text-xs font-mono font-bold text-pos-text-5">#184-A</span>
                                             </div>
-                                            <div className="p-5 bg-pos-bg-2/50 space-y-4">
-                                                <div className="space-y-3">
+                                            <div className="kitchen-toast-body p-5 bg-pos-bg-2/50 space-y-4">
+                                                <div className="kitchen-toast-items space-y-3">
                                                     {toastItems.map((item, i) => (
-                                                        <div key={i} className="flex justify-between items-center text-sm">
-                                                            <div className="flex gap-4">
-                                                                <span className="font-bold text-pos-accent">{item.qty}x</span>
-                                                                <span className="text-pos-text-3 font-medium">{item.name}</span>
+                                                        <div key={i} className="kitchen-toast-item flex justify-between items-center text-sm">
+                                                            <div className="kitchen-toast-item-name flex gap-4">
+                                                                <span className="kitchen-toast-item-qty font-bold text-pos-accent">{item.qty}x</span>
+                                                                <span className="kitchen-toast-item-label text-pos-text-3 font-medium">{item.name}</span>
                                                             </div>
-                                                            <span className="text-pos-text-5 font-mono">€{(item.price * item.qty).toFixed(2)}</span>
+                                                            <span className="kitchen-toast-item-price text-pos-text-5 font-mono">€{(item.price * item.qty).toFixed(2)}</span>
                                                         </div>
                                                     ))}
                                                 </div>
-                                                <div className="pt-4 border-t border-dashed border-pos-border-subtle flex justify-center text-center">
-                                                    <span className="text-[11px] text-pos-text-5 font-medium uppercase tracking-tight">Order Route: Main Kitchen</span>
+                                                <div className="kitchen-toast-route pt-4 border-t border-dashed border-pos-border-subtle flex justify-center text-center">
+                                                    <span className="kitchen-toast-route-text text-[11px] text-pos-text-5 font-medium uppercase tracking-tight">Order Route: Main Kitchen</span>
                                                 </div>
                                             </div>
                                             {/* Small timer bar at bottom */}
@@ -1812,25 +1812,25 @@ export default function ProductCanvas({
                                                 initial={{ scaleX: 1 }}
                                                 animate={{ scaleX: 0 }}
                                                 transition={{ duration: 4, ease: "linear" }}
-                                                className="h-1 bg-pos-accent w-full origin-left"
+                                                className="kitchen-toast-timer h-1 bg-pos-accent w-full origin-left"
                                             />
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
 
                                 {/* Bottom Status Bar */}
-                                <motion.div variants={{ hidden: { opacity: 0 }, show: { opacity: 1 } }} className={cn("pos-system-footer bg-pos-bg-1 border-t border-pos-border-subtle flex items-center justify-between px-4 rounded-b-[10px] flex-shrink-0", isEffectiveMobile ? "h-6" : "h-6")}>
-                                    <div className={cn("flex items-center gap-3", isEffectiveMobile ? "text-[10px]" : "text-[9px]", "text-pos-text-6")}>
-                                        <span className="flex items-center gap-1">
-                                            <span className="w-1 h-1 bg-green-500 rounded-full" />
+                                <motion.div variants={{ hidden: { opacity: 0 }, show: { opacity: 1 } }} className={cn("pos-dashboard-footer pos-system-footer bg-pos-bg-1 border-t border-pos-border-subtle flex items-center justify-between px-4 rounded-b-[10px] flex-shrink-0", isEffectiveMobile ? "h-6" : "h-6")}>
+                                    <div className={cn("pos-dashboard-footer-meta flex items-center gap-3", isEffectiveMobile ? "text-[10px]" : "text-[9px]", "text-pos-text-6")}>
+                                        <span className="pos-dashboard-footer-status flex items-center gap-1">
+                                            <span className="pos-dashboard-footer-status-dot w-1 h-1 bg-green-500 rounded-full" />
                                             Online
                                         </span>
-                                        <span>•</span>
-                                        <span>Terminal 01</span>
-                                        <span>•</span>
-                                        <span>v2.4.1</span>
+                                        <span className="pos-dashboard-footer-divider">•</span>
+                                        <span className="pos-dashboard-footer-terminal">Terminal 01</span>
+                                        <span className="pos-dashboard-footer-divider">•</span>
+                                        <span className="pos-dashboard-footer-version">v2.4.1</span>
                                     </div>
-                                    <div className={cn(isEffectiveMobile ? "text-[10px]" : "text-[9px]", "text-pos-text-6")}>
+                                    <div className={cn("pos-dashboard-footer-time", isEffectiveMobile ? "text-[10px]" : "text-[9px]", "text-pos-text-6")}>
                                         10:42 AM
                                     </div>
                                 </motion.div>
@@ -1844,52 +1844,52 @@ export default function ProductCanvas({
                 </AnimatedElement>
 
                 <AnimatedElement layout={getLayout('panel-order-center', step)}>
-                    <div className="w-[260px] h-[500px] bg-pos-bg-2 border border-pos-border-medium/50 rounded-lg flex flex-col shadow-2xl overflow-hidden">
-                        <div className="p-3 bg-pos-bg-3/30 border-b border-pos-border-subtle/50 flex justify-between items-center">
-                            <span className="text-xs font-mono text-pos-text-4">Order #184</span>
-                            <div className="flex gap-2">
-                                <span className="text-[10px] bg-pos-bg-3 text-pos-text-4 px-1.5 py-0.5 rounded">Dine-in</span>
-                                <span className="text-[10px] text-pos-text-5">Tbl 3</span>
+                    <div className="order-center-root w-[260px] h-[500px] bg-pos-bg-2 border border-pos-border-medium/50 rounded-lg flex flex-col shadow-2xl overflow-hidden">
+                        <div className="order-center-header p-3 bg-pos-bg-3/30 border-b border-pos-border-subtle/50 flex justify-between items-center">
+                            <span className="order-center-header-id text-xs font-mono text-pos-text-4">Order #184</span>
+                            <div className="order-center-header-meta flex gap-2">
+                                <span className="order-center-header-tag text-[10px] bg-pos-bg-3 text-pos-text-4 px-1.5 py-0.5 rounded">Dine-in</span>
+                                <span className="order-center-header-table text-[10px] text-pos-text-5">Tbl 3</span>
                             </div>
                         </div>
-                        <div className="flex-1 p-3 space-y-3 overflow-y-auto">
+                        <div className="order-center-items flex-1 p-3 space-y-3 overflow-y-auto">
                             {[
                                 { n: "Latte", m: "Oat • Lg", p: "5.50", q: 1 },
                                 { n: "Croissant", m: "Warmed", p: "4.00", q: 1 },
                                 { n: "Avocado Tst", m: "Poached Egg", p: "12.00", q: 1 }
                             ].map((item, i) => (
-                                <div key={i} className="flex justify-between text-xs group">
-                                    <div className="flex gap-2">
-                                        <div className="w-5 h-5 bg-pos-bg-3 rounded flex items-center justify-center text-[10px] text-pos-text-5 border border-pos-border-medium/50">{item.q}</div>
-                                        <div>
-                                            <div className="text-pos-text-2 font-medium">{item.n}</div>
-                                            <div className="text-[10px] text-pos-text-5">{item.m}</div>
+                                <div key={i} className="order-center-item flex justify-between text-xs group">
+                                    <div className="order-center-item-info flex gap-2">
+                                        <div className="order-center-item-qty w-5 h-5 bg-pos-bg-3 rounded flex items-center justify-center text-[10px] text-pos-text-5 border border-pos-border-medium/50">{item.q}</div>
+                                        <div className="order-center-item-text">
+                                            <div className="order-center-item-name text-pos-text-2 font-medium">{item.n}</div>
+                                            <div className="order-center-item-modifiers text-[10px] text-pos-text-5">{item.m}</div>
                                         </div>
                                     </div>
-                                    <div className="text-pos-text-3">€{item.p}</div>
+                                    <div className="order-center-item-price text-pos-text-3">€{item.p}</div>
                                 </div>
                             ))}
                             {/* Empty state lines */}
-                            <div className="border-t border-dashed border-pos-border-subtle pt-2">
-                                <div className="text-[10px] text-pos-text-6 italic">Tap to add item...</div>
+                            <div className="order-center-empty border-t border-dashed border-pos-border-subtle pt-2">
+                                <div className="order-center-empty-text text-[10px] text-pos-text-6 italic">Tap to add item...</div>
                             </div>
                         </div>
 
                         {/* Modifier Chips */}
-                        <div className="px-3 py-2 border-t border-pos-border-subtle/50 bg-pos-bg-3/20 flex gap-2 flex-wrap">
-                            {["Sm", "Md", "Lg"].map(s => <span key={s} className="px-2 py-0.5 bg-pos-bg-3 border border-pos-border-medium text-[9px] text-pos-text-4 rounded-full">{s}</span>)}
-                            <div className="w-px h-4 bg-pos-bg-4" />
-                            {["Oat", "Soy", "Alm"].map(s => <span key={s} className="px-2 py-0.5 bg-pos-bg-3 border border-pos-border-medium text-[9px] text-pos-text-4 rounded-full">{s}</span>)}
+                        <div className="order-center-chips px-3 py-2 border-t border-pos-border-subtle/50 bg-pos-bg-3/20 flex gap-2 flex-wrap">
+                            {["Sm", "Md", "Lg"].map(s => <span key={s} className="order-center-chip px-2 py-0.5 bg-pos-bg-3 border border-pos-border-medium text-[9px] text-pos-text-4 rounded-full">{s}</span>)}
+                            <div className="order-center-chip-divider w-px h-4 bg-pos-bg-4" />
+                            {["Oat", "Soy", "Alm"].map(s => <span key={s} className="order-center-chip px-2 py-0.5 bg-pos-bg-3 border border-pos-border-medium text-[9px] text-pos-text-4 rounded-full">{s}</span>)}
                         </div>
 
-                        <div className="p-3 border-t border-pos-border-subtle bg-pos-bg-2 space-y-2">
-                            <div className="flex justify-between text-sm font-bold text-pos-text-1 mb-2">
-                                <span>Total</span>
-                                <span>€21.50</span>
+                        <div className="order-center-footer p-3 border-t border-pos-border-subtle bg-pos-bg-2 space-y-2">
+                            <div className="order-center-total flex justify-between text-sm font-bold text-pos-text-1 mb-2">
+                                <span className="order-center-total-label">Total</span>
+                                <span className="order-center-total-value">€21.50</span>
                             </div>
-                            <div className="flex gap-2">
-                                <button className="flex-1 py-2 bg-pos-bg-4 hover:bg-pos-bg-5 text-pos-text-3 text-[10px] font-bold rounded transition-colors cursor-default border border-pos-border-strong">Hold</button>
-                                <button className="flex-[3] py-2 bg-pos-accent hover:bg-pos-accent/90 text-pos-accent-text font-bold text-xs rounded transition-colors shadow-[0_0_15px_rgba(255,255,255,0.1)] cursor-pointer">Send to Kitchen</button>
+                            <div className="order-center-cta-row flex gap-2">
+                                <button className="order-center-cta order-center-cta-secondary flex-1 py-2 bg-pos-bg-4 hover:bg-pos-bg-5 text-pos-text-3 text-[10px] font-bold rounded transition-colors cursor-default border border-pos-border-strong">Hold</button>
+                                <button className="order-center-cta order-center-cta-primary flex-[3] py-2 bg-pos-accent hover:bg-pos-accent/90 text-pos-accent-text font-bold text-xs rounded transition-colors shadow-[0_0_15px_rgba(255,255,255,0.1)] cursor-pointer">Send to Kitchen</button>
                             </div>
                         </div>
                     </div>
@@ -1916,7 +1916,7 @@ function ResizeHandle({ direction, onResize, onResizeStart, onResizeEnd }: {
     onResizeEnd: () => void
 }) {
     const getClassName = () => {
-        const base = "absolute z-[100] transition-colors hover:bg-pos-accent/20 ";
+        const base = "resize-handle-root absolute z-[100] transition-colors hover:bg-pos-accent/20 ";
         switch (direction) {
             case 'n': return base + "top-0 left-0 right-0 h-1.5 cursor-ns-resize";
             case 's': return base + "bottom-0 left-0 right-0 h-1.5 cursor-ns-resize";
@@ -1971,7 +1971,7 @@ function AnimatedElement({
 
     return (
         <motion.div
-            className={cn("absolute top-1/2 left-1/2 will-change-transform", className, isHidden && "pointer-events-none invisible")}
+            className={cn("animated-element-root absolute top-1/2 left-1/2 will-change-transform", className, isHidden && "pointer-events-none invisible")}
             initial={false}
             animate={{
                 x: layout.x,
@@ -2011,32 +2011,32 @@ function StickyUI({ title, text, variant = "default", size = "md" }: { title: st
     const isAlert = variant === "red" || variant === "orange";
 
     return (
-        <div className={cn("backdrop-blur-md rounded-xl border shadow-lg flex flex-col gap-2 transition-all duration-500",
+        <div className={cn("sticky-ui-root backdrop-blur-md rounded-xl border shadow-lg flex flex-col gap-2 transition-all duration-500",
             size === "lg" ? "w-[240px] h-[180px] p-6" : "w-[240px] h-[180px] p-5", // Uniform size
-            variant === "red" && "bg-red-500/10 border-red-500/30 hover:bg-red-500/20 hover:border-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.1)]",
-            variant === "orange" && "bg-orange-500/10 border-orange-500/30 hover:bg-orange-500/20 hover:border-orange-500/50",
-            variant === "primary" && "bg-pos-accent/5 border-pos-accent/20 shadow-[0_0_20px_rgba(34,197,94,0.1)]",
-            variant === "default" && "bg-bg-secondary/90 border-border-subtle hover:border-border-medium"
+            variant === "red" && "sticky-ui-red bg-red-500/10 border-red-500/30 hover:bg-red-500/20 hover:border-red-500/50 shadow-[0_0_20px_rgba(239,68,68,0.1)]",
+            variant === "orange" && "sticky-ui-orange bg-orange-500/10 border-orange-500/30 hover:bg-orange-500/20 hover:border-orange-500/50",
+            variant === "primary" && "sticky-ui-primary bg-pos-accent/5 border-pos-accent/20 shadow-[0_0_20px_rgba(34,197,94,0.1)]",
+            variant === "default" && "sticky-ui-default bg-bg-secondary/90 border-border-subtle hover:border-border-medium"
         )}>
             {/* Header Icon/Dot */}
-            <div className="flex items-center justify-between">
-                <div className={cn("w-2 h-2 rounded-full",
+            <div className="sticky-ui-header flex items-center justify-between">
+                <div className={cn("sticky-ui-dot w-2 h-2 rounded-full",
                     variant === "red" ? "bg-red-500 animate-pulse" :
                         variant === "orange" ? "bg-orange-500" :
                             variant === "primary" ? "bg-pos-accent" : "bg-pos-bg-4"
                 )} />
-                {isAlert && <AlertCircle size={14} className={cn("opacity-80", variant === "red" ? "text-red-400" : "text-orange-400")} />}
-                {variant === "primary" && <CheckCircle size={14} className="text-pos-accent opacity-80" />}
+                {isAlert && <AlertCircle size={14} className={cn("sticky-ui-alert-icon opacity-80", variant === "red" ? "text-red-400" : "text-orange-400")} />}
+                {variant === "primary" && <CheckCircle size={14} className="sticky-ui-check-icon text-pos-accent opacity-80" />}
             </div>
 
-            <div className="flex flex-col gap-1 mt-2">
-                <span className={cn("font-bold leading-tight",
+            <div className="sticky-ui-body flex flex-col gap-1 mt-2">
+                <span className={cn("sticky-ui-title font-bold leading-tight",
                     size === "lg" ? "text-lg" : "text-base",
                     variant === "red" ? "text-red-200" :
                         variant === "orange" ? "text-orange-200" : "text-text-primary"
                 )}>{title}</span>
 
-                <span className={cn("leading-snug",
+                <span className={cn("sticky-ui-text leading-snug",
                     size === "lg" ? "text-sm" : "text-xs",
                     isAlert ? "text-pos-text-1/70" : "text-text-secondary"
                 )}>{text}</span>
@@ -2051,36 +2051,36 @@ function StickyUI({ title, text, variant = "default", size = "md" }: { title: st
 function TicketUI({ data, dimmed, showAssigned, compact }: { data: any, dimmed?: boolean, showAssigned?: boolean, compact?: boolean }) {
     if (!data) return null;
     return (
-        <div className={cn("bg-pos-bg-3/80 backdrop-blur-md rounded-xl border-2 border-pos-border-medium shadow-lg flex flex-col transition-all duration-300 group select-none relative hover:border-pos-border-strong",
+        <div className={cn("ticket-ui-root bg-pos-bg-3/80 backdrop-blur-md rounded-xl border-2 border-pos-border-medium shadow-lg flex flex-col transition-all duration-300 group select-none relative hover:border-pos-border-strong",
             compact ? "w-[240px] p-4 gap-2" : "w-[260px] p-5 gap-3",
             dimmed && "opacity-40" // Increased from opacity-15
         )}>
             {/* Ticket Label - Visual Cue */}
-            <div className="absolute -top-2.5 left-4 bg-pos-bg-3 text-pos-text-5 text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded border border-pos-border-medium shadow-sm">
+            <div className="ticket-ui-label absolute -top-2.5 left-4 bg-pos-bg-3 text-pos-text-5 text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded border border-pos-border-medium shadow-sm">
                 Ticket
             </div>
 
             {!compact && (
-                <div className="flex justify-between items-start">
+                <div className="ticket-ui-meta flex justify-between items-start">
                     {/* ID Pill */}
-                    <div className={cn("px-2 py-0.5 rounded bg-bg-tertiary border border-pos-border-subtle text-[10px] font-mono font-bold text-text-secondary transition-opacity", dimmed && "opacity-30")}>
+                    <div className={cn("ticket-ui-id px-2 py-0.5 rounded bg-bg-tertiary border border-pos-border-subtle text-[10px] font-mono font-bold text-text-secondary transition-opacity", dimmed && "opacity-30")}>
                         {data.id}
                     </div>
                     {/* Avatar / User */}
-                    <div className={cn("w-6 h-6 rounded-full bg-pos-bg-3 border border-pos-border-medium flex items-center justify-center text-[9px] font-bold text-pos-text-5 transition-opacity", dimmed && "opacity-30")}>
+                    <div className={cn("ticket-ui-avatar w-6 h-6 rounded-full bg-pos-bg-3 border border-pos-border-medium flex items-center justify-center text-[9px] font-bold text-pos-text-5 transition-opacity", dimmed && "opacity-30")}>
                         {data.user}
                     </div>
                 </div>
             )}
 
-            <div>
-                <h3 className={cn("font-bold transition-opacity mb-1",
+            <div className="ticket-ui-body">
+                <h3 className={cn("ticket-ui-title font-bold transition-opacity mb-1",
                     compact ? "text-sm leading-tight" : "text-base leading-tight",
                     data.variant === "red" ? "text-red-400" :
                         data.variant === "orange" ? "text-orange-400" : "text-text-primary",
                     dimmed && "opacity-30"
                 )}>{data.title}</h3>
-                <p className={cn("transition-opacity text-text-secondary leading-snug",
+                <p className={cn("ticket-ui-text transition-opacity text-text-secondary leading-snug",
                     compact ? "text-[11px]" : "text-sm",
                     dimmed && "opacity-30"
                 )}>{data.text}</p>
@@ -2088,23 +2088,23 @@ function TicketUI({ data, dimmed, showAssigned, compact }: { data: any, dimmed?:
 
             {/* Product-grade fields - Hidden in compact mode */}
             {!compact && (data.impact || data.goal || data.constraints) && (
-                <div className={cn("space-y-2 pt-2 border-t border-border-subtle transition-opacity", dimmed && "opacity-30")}>
+                <div className={cn("ticket-ui-fields space-y-2 pt-2 border-t border-border-subtle transition-opacity", dimmed && "opacity-30")}>
                     {data.impact && (
-                        <div className="flex gap-2">
-                            <span className="text-[10px] font-mono font-bold text-pos-text-5 uppercase w-16 flex-shrink-0">Impact:</span>
-                            <span className="text-xs text-pos-text-4">{data.impact}</span>
+                        <div className="ticket-ui-field flex gap-2">
+                            <span className="ticket-ui-field-label text-[10px] font-mono font-bold text-pos-text-5 uppercase w-16 flex-shrink-0">Impact:</span>
+                            <span className="ticket-ui-field-value text-xs text-pos-text-4">{data.impact}</span>
                         </div>
                     )}
                     {data.goal && (
-                        <div className="flex gap-2">
-                            <span className="text-[10px] font-mono font-bold text-pos-text-5 uppercase w-16 flex-shrink-0">Goal:</span>
-                            <span className="text-xs text-pos-accent font-medium">{data.goal}</span>
+                        <div className="ticket-ui-field flex gap-2">
+                            <span className="ticket-ui-field-label text-[10px] font-mono font-bold text-pos-text-5 uppercase w-16 flex-shrink-0">Goal:</span>
+                            <span className="ticket-ui-field-value text-xs text-pos-accent font-medium">{data.goal}</span>
                         </div>
                     )}
                     {data.constraints && (
-                        <div className="flex gap-2">
-                            <span className="text-[10px] font-mono font-bold text-pos-text-5 uppercase w-16 flex-shrink-0">Context:</span>
-                            <span className="text-xs text-pos-text-5">{data.constraints}</span>
+                        <div className="ticket-ui-field flex gap-2">
+                            <span className="ticket-ui-field-label text-[10px] font-mono font-bold text-pos-text-5 uppercase w-16 flex-shrink-0">Context:</span>
+                            <span className="ticket-ui-field-value text-xs text-pos-text-5">{data.constraints}</span>
                         </div>
                     )}
                 </div>
@@ -2112,8 +2112,8 @@ function TicketUI({ data, dimmed, showAssigned, compact }: { data: any, dimmed?:
 
             {/* Footer Tags */}
             {!compact && (
-                <div className="flex gap-2 mt-1">
-                    <span className={cn("px-2 py-0.5 rounded text-[10px] uppercase tracking-wide font-bold transition-opacity",
+                <div className="ticket-ui-tags flex gap-2 mt-1">
+                    <span className={cn("ticket-ui-tag px-2 py-0.5 rounded text-[10px] uppercase tracking-wide font-bold transition-opacity",
                         data.variant === "red" ? "bg-red-500/10 text-red-400 border border-red-500/20" :
                             data.variant === "orange" ? "bg-orange-500/10 text-orange-400 border border-orange-500/20" :
                                 "bg-pos-bg-3 text-pos-text-4 border border-pos-border-medium",
@@ -2126,22 +2126,22 @@ function TicketUI({ data, dimmed, showAssigned, compact }: { data: any, dimmed?:
 
             {/* Assigned Cue (Internal) */}
             {!compact && showAssigned && (
-                <div className="absolute bottom-5 right-5">
-                    <div className="flex items-center gap-1.5 px-2 py-1 rounded bg-pos-bg-2 border border-pos-border-subtle backdrop-blur-sm shadow-sm opacity-90">
-                        <span className="w-1.5 h-1.5 bg-pos-accent rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
-                        <span className="text-[9px] text-pos-text-4 font-medium tracking-wide">
-                            Assigned: <span className="text-pos-text-2">George</span>
+                <div className="ticket-ui-assigned absolute bottom-5 right-5">
+                    <div className="ticket-ui-assigned-badge flex items-center gap-1.5 px-2 py-1 rounded bg-pos-bg-2 border border-pos-border-subtle backdrop-blur-sm shadow-sm opacity-90">
+                        <span className="ticket-ui-assigned-dot w-1.5 h-1.5 bg-pos-accent rounded-full animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
+                        <span className="ticket-ui-assigned-text text-[9px] text-pos-text-4 font-medium tracking-wide">
+                            Assigned: <span className="ticket-ui-assigned-name text-pos-text-2">George</span>
                         </span>
                     </div>
                 </div>
             )}
 
             {compact && (
-                <div className="flex gap-2 transition-all duration-500 mt-1">
-                    <div className="px-1.5 py-0.5 rounded bg-pos-bg-3/50 border border-pos-border-medium/50 text-[9px] text-pos-text-5 font-medium font-mono uppercase tracking-tighter">
-                        Goal: <span className="text-pos-accent opacity-80">&lt; 2 taps</span>
+                <div className="ticket-ui-compact-tags flex gap-2 transition-all duration-500 mt-1">
+                    <div className="ticket-ui-compact-tag ticket-ui-compact-tag-goal px-1.5 py-0.5 rounded bg-pos-bg-3/50 border border-pos-border-medium/50 text-[9px] text-pos-text-5 font-medium font-mono uppercase tracking-tighter">
+                        Goal: <span className="ticket-ui-compact-tag-value text-pos-accent opacity-80">&lt; 2 taps</span>
                     </div>
-                    <div className="px-1.5 py-0.5 rounded bg-pos-bg-3/50 border border-pos-border-medium/50 text-[9px] text-pos-text-6 font-medium font-mono uppercase tracking-tighter">
+                    <div className="ticket-ui-compact-tag ticket-ui-compact-tag-offline px-1.5 py-0.5 rounded bg-pos-bg-3/50 border border-pos-border-medium/50 text-[9px] text-pos-text-6 font-medium font-mono uppercase tracking-tighter">
                         Offline
                     </div>
                 </div>
@@ -2153,15 +2153,15 @@ function TicketUI({ data, dimmed, showAssigned, compact }: { data: any, dimmed?:
 // Keep ExpandedCardUI matching sticky style roughly (it already does mostly)
 function ExpandedCardUI({ title, q, a }: { title: string, q: string, a: string[] }) {
     return (
-        <div className="w-[260px] bg-bg-secondary/95 backdrop-blur-md rounded-xl border border-border-subtle shadow-2xl p-4 flex flex-col gap-3 relative overflow-hidden">
+        <div className="expanded-card-ui-root w-[260px] bg-bg-secondary/95 backdrop-blur-md rounded-xl border border-border-subtle shadow-2xl p-4 flex flex-col gap-3 relative overflow-hidden">
 
-            <div className="text-[11px] font-bold text-pos-accent uppercase tracking-wide bg-pos-accent/5 w-fit px-2.5 py-1 rounded-full border border-pos-accent/10">{title}</div>
-            <div className="space-y-2">
-                <div className="text-sm font-medium text-pos-text-1 leading-snug">{q}</div>
-                <div className="space-y-1">
+            <div className="expanded-card-ui-title text-[11px] font-bold text-pos-accent uppercase tracking-wide bg-pos-accent/5 w-fit px-2.5 py-1 rounded-full border border-pos-accent/10">{title}</div>
+            <div className="expanded-card-ui-body space-y-2">
+                <div className="expanded-card-ui-question text-sm font-medium text-pos-text-1 leading-snug">{q}</div>
+                <div className="expanded-card-ui-answers space-y-1">
                     {a.map((ans, i) => (
-                        <div key={i} className="text-xs text-pos-text-4 bg-pos-bg-3/40 px-2 py-1.5 rounded flex items-start gap-2 border border-pos-border-subtle">
-                            <span className="text-pos-accent mt-0.5">•</span> {ans}
+                        <div key={i} className="expanded-card-ui-answer text-xs text-pos-text-4 bg-pos-bg-3/40 px-2 py-1.5 rounded flex items-start gap-2 border border-pos-border-subtle">
+                            <span className="expanded-card-ui-answer-bullet text-pos-accent mt-0.5">•</span> {ans}
                         </div>
                     ))}
                 </div>
@@ -2172,11 +2172,11 @@ function ExpandedCardUI({ title, q, a }: { title: string, q: string, a: string[]
 
 function DecisionsCardUI({ items }: { items: string[] }) {
     return (
-        <div className="w-[280px] bg-pos-accent/5 backdrop-blur-md rounded-xl border border-pos-accent/20 shadow-2xl p-4 text-center">
-            <h3 className="text-sm font-bold text-pos-accent mb-3 uppercase tracking-widest">Decisions Locked</h3>
-            <div className="flex flex-col gap-2">
+        <div className="decisions-card-root w-[280px] bg-pos-accent/5 backdrop-blur-md rounded-xl border border-pos-accent/20 shadow-2xl p-4 text-center">
+            <h3 className="decisions-card-title text-sm font-bold text-pos-accent mb-3 uppercase tracking-widest">Decisions Locked</h3>
+            <div className="decisions-card-list flex flex-col gap-2">
                 {items.map((item, i) => (
-                    <div key={item} className="flex items-center gap-2 text-[11px] font-medium text-pos-text-1 bg-pos-bg-2/80 px-3 py-1.5 rounded-md border border-pos-border-subtle shadow-sm text-left">
+                    <div key={item} className="decisions-card-item flex items-center gap-2 text-[11px] font-medium text-pos-text-1 bg-pos-bg-2/80 px-3 py-1.5 rounded-md border border-pos-border-subtle shadow-sm text-left">
                         <Check size={10} className="text-pos-accent" />
                         {item}
                     </div>
@@ -2188,11 +2188,11 @@ function DecisionsCardUI({ items }: { items: string[] }) {
 
 function FlowStripUI() {
     return (
-        <div className="flex items-center gap-2 bg-pos-bg-2/90 backdrop-blur px-5 py-3 rounded-full border border-pos-border-subtle shadow-xl">
+        <div className="flow-strip-root flex items-center gap-2 bg-pos-bg-2/90 backdrop-blur px-5 py-3 rounded-full border border-pos-border-subtle shadow-xl">
             {["Order", "Modify", "Pay", "Kitchen", "Close"].map((step, i, arr) => (
                 <React.Fragment key={step}>
-                    <span className="text-xs font-bold text-pos-text-3">{step}</span>
-                    {i < arr.length - 1 && <ArrowRight size={12} className="text-pos-text-6" />}
+                    <span className="flow-strip-step text-xs font-bold text-pos-text-3">{step}</span>
+                    {i < arr.length - 1 && <ArrowRight size={12} className="flow-strip-arrow text-pos-text-6" />}
                 </React.Fragment>
             ))}
         </div>
@@ -2201,10 +2201,10 @@ function FlowStripUI() {
 
 function GroupCardUI({ title, items }: { title: string, items: string[] }) {
     return (
-        <div className="w-[180px] bg-pos-bg-2/50 backdrop-blur-sm border-2 border-dashed border-pos-border-subtle rounded-xl p-3 flex flex-col gap-2 relative">
-            <div className="text-[9px] font-bold text-pos-text-5 uppercase tracking-widest text-center mb-1">{title}</div>
+        <div className="group-card-root w-[180px] bg-pos-bg-2/50 backdrop-blur-sm border-2 border-dashed border-pos-border-subtle rounded-xl p-3 flex flex-col gap-2 relative">
+            <div className="group-card-title text-[9px] font-bold text-pos-text-5 uppercase tracking-widest text-center mb-1">{title}</div>
             {items.map(item => (
-                <div key={item} className="bg-pos-bg-3/80 text-pos-text-3 text-[10px] px-2 py-1.5 rounded shadow-sm border border-pos-border-subtle text-center">
+                <div key={item} className="group-card-item bg-pos-bg-3/80 text-pos-text-3 text-[10px] px-2 py-1.5 rounded shadow-sm border border-pos-border-subtle text-center">
                     {item}
                 </div>
             ))}
@@ -2215,23 +2215,23 @@ function GroupCardUI({ title, items }: { title: string, items: string[] }) {
 // Panels
 function PanelCheckoutUI({ data, isProduct }: { data: any, isProduct: boolean }) {
     return (
-        <div className={cn("bg-pos-bg-2 border border-pos-border-medium/60 rounded-lg shadow-xl overflow-hidden flex flex-col transition-all duration-500",
+        <div className={cn("panel-checkout-root bg-pos-bg-2 border border-pos-border-medium/60 rounded-lg shadow-xl overflow-hidden flex flex-col transition-all duration-500",
             isProduct ? "w-[240px] h-[450px]" : "w-[260px] h-[350px]"
         )}>
             {!isProduct && (
-                <div className="p-3 border-b border-pos-border-subtle">
-                    <div className="text-xs font-bold text-pos-text-1 mb-0.5">{data.title}</div>
-                    <div className="text-[10px] text-pos-text-5">{data.sub}</div>
+                <div className="panel-checkout-header p-3 border-b border-pos-border-subtle">
+                    <div className="panel-checkout-header-title text-xs font-bold text-pos-text-1 mb-0.5">{data.title}</div>
+                    <div className="panel-checkout-header-sub text-[10px] text-pos-text-5">{data.sub}</div>
                 </div>
             )}
 
-            <div className="p-3 flex gap-2 overflow-x-auto pb-0 mb-2 no-scrollbar">
-                {data.categories.map((c: string) => <span key={c} className="text-[10px] bg-pos-bg-3 text-pos-text-4 px-2 py-1 rounded-full whitespace-nowrap border border-pos-border-medium">{c}</span>)}
+            <div className="panel-checkout-categories p-3 flex gap-2 overflow-x-auto pb-0 mb-2 no-scrollbar">
+                {data.categories.map((c: string) => <span key={c} className="panel-checkout-category text-[10px] bg-pos-bg-3 text-pos-text-4 px-2 py-1 rounded-full whitespace-nowrap border border-pos-border-medium">{c}</span>)}
             </div>
 
-            <div className="flex-1 grid grid-cols-2 gap-2 p-3 pt-0 content-start">
+            <div className="panel-checkout-grid flex-1 grid grid-cols-2 gap-2 p-3 pt-0 content-start">
                 {data.items.slice(0, isProduct ? 12 : 6).map((item: string) => (
-                    <div key={item} className="aspect-[4/3] bg-pos-bg-3/30 border border-pos-border-subtle rounded flex items-center justify-center text-[10px] text-pos-text-3 font-medium hover:bg-pos-bg-4 transition-colors cursor-pointer text-center px-1">
+                    <div key={item} className="panel-checkout-item aspect-[4/3] bg-pos-bg-3/30 border border-pos-border-subtle rounded flex items-center justify-center text-[10px] text-pos-text-3 font-medium hover:bg-pos-bg-4 transition-colors cursor-pointer text-center px-1">
                         {item}
                     </div>
                 ))}
@@ -2239,10 +2239,10 @@ function PanelCheckoutUI({ data, isProduct }: { data: any, isProduct: boolean })
 
             {/* Hint only in Scene 4 */}
             {!isProduct && (
-                <div className="p-2 border-t border-pos-border-subtle bg-pos-bg-3/20">
-                    <div className="flex flex-col gap-1 opacity-50">
-                        <div className="h-1.5 w-full bg-pos-bg-4 rounded-full" />
-                        <div className="h-1.5 w-2/3 bg-pos-bg-4 rounded-full" />
+                <div className="panel-checkout-hint p-2 border-t border-pos-border-subtle bg-pos-bg-3/20">
+                    <div className="panel-checkout-hint-lines flex flex-col gap-1 opacity-50">
+                        <div className="panel-checkout-hint-line h-1.5 w-full bg-pos-bg-4 rounded-full" />
+                        <div className="panel-checkout-hint-line h-1.5 w-2/3 bg-pos-bg-4 rounded-full" />
                     </div>
                 </div>
             )}
@@ -2252,34 +2252,34 @@ function PanelCheckoutUI({ data, isProduct }: { data: any, isProduct: boolean })
 
 function PanelPaymentUI({ data, isProduct }: { data: any, isProduct: boolean }) {
     return (
-        <div className={cn("bg-pos-bg-2 border border-pos-border-medium/60 rounded-lg shadow-xl overflow-hidden flex flex-col transition-all duration-500",
+        <div className={cn("panel-payment-root bg-pos-bg-2 border border-pos-border-medium/60 rounded-lg shadow-xl overflow-hidden flex flex-col transition-all duration-500",
             isProduct ? "w-[260px] h-[190px]" : "w-[260px] h-[250px]"
         )}>
             {!isProduct && (
-                <div className="p-3 border-b border-pos-border-subtle">
-                    <div className="text-xs font-bold text-pos-text-1 mb-0.5">{data.title}</div>
-                    <div className="text-[10px] text-pos-text-5">{data.sub}</div>
+                <div className="panel-payment-header p-3 border-b border-pos-border-subtle">
+                    <div className="panel-payment-header-title text-xs font-bold text-pos-text-1 mb-0.5">{data.title}</div>
+                    <div className="panel-payment-header-sub text-[10px] text-pos-text-5">{data.sub}</div>
                 </div>
             )}
-            <div className="p-4 flex flex-col gap-3">
-                <div className="flex justify-between items-end">
-                    <div className="flex flex-col">
-                        <span className="text-pos-text-5 text-[10px]">Total + Tax</span>
-                        <span className="text-pos-text-1 text-xl font-bold font-mono">{data.total}</span>
+            <div className="panel-payment-body p-4 flex flex-col gap-3">
+                <div className="panel-payment-total-row flex justify-between items-end">
+                    <div className="panel-payment-total flex flex-col">
+                        <span className="panel-payment-total-label text-pos-text-5 text-[10px]">Total + Tax</span>
+                        <span className="panel-payment-total-value text-pos-text-1 text-xl font-bold font-mono">{data.total}</span>
                     </div>
                 </div>
 
-                <div className="flex gap-2">
+                <div className="panel-payment-tips flex gap-2">
                     {data.tips.map((t: string) => (
-                        <div key={t} className="flex-1 py-1.5 bg-pos-bg-3 border border-pos-border-medium text-pos-text-4 text-center text-[10px] rounded cursor-pointer hover:bg-pos-bg-4 transition-colors">{t}</div>
+                        <div key={t} className="panel-payment-tip flex-1 py-1.5 bg-pos-bg-3 border border-pos-border-medium text-pos-text-4 text-center text-[10px] rounded cursor-pointer hover:bg-pos-bg-4 transition-colors">{t}</div>
                     ))}
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 mt-1">
-                    <button className="py-2 bg-pos-text-1 hover:bg-pos-text-2 text-pos-bg-2 font-bold text-xs rounded flex items-center justify-center gap-1 transition-colors">
+                <div className="panel-payment-actions grid grid-cols-2 gap-2 mt-1">
+                    <button className="panel-payment-action panel-payment-action-card py-2 bg-pos-text-1 hover:bg-pos-text-2 text-pos-bg-2 font-bold text-xs rounded flex items-center justify-center gap-1 transition-colors">
                         <CreditCard size={12} /> Card
                     </button>
-                    <button className="py-2 bg-pos-bg-3 hover:bg-pos-bg-4 text-pos-text-1 font-medium text-xs rounded border border-pos-border-medium transition-colors">Cash</button>
+                    <button className="panel-payment-action panel-payment-action-cash py-2 bg-pos-bg-3 hover:bg-pos-bg-4 text-pos-text-1 font-medium text-xs rounded border border-pos-border-medium transition-colors">Cash</button>
                 </div>
             </div>
         </div>
@@ -2288,25 +2288,25 @@ function PanelPaymentUI({ data, isProduct }: { data: any, isProduct: boolean }) 
 
 function PanelKitchenUI({ data, isProduct }: { data: any, isProduct: boolean }) {
     return (
-        <div className={cn("bg-pos-bg-2 border border-pos-border-medium/60 rounded-lg shadow-xl overflow-hidden flex flex-col transition-all duration-500",
+        <div className={cn("panel-kitchen-root bg-pos-bg-2 border border-pos-border-medium/60 rounded-lg shadow-xl overflow-hidden flex flex-col transition-all duration-500",
             isProduct ? "w-[260px] h-[130px]" : "w-[260px] h-[200px]"
         )}>
             {!isProduct && (
-                <div className="p-3 border-b border-pos-border-subtle">
-                    <div className="text-xs font-bold text-pos-text-1 mb-0.5">{data.title}</div>
-                    <div className="text-[10px] text-pos-text-5">{data.sub}</div>
+                <div className="panel-kitchen-header p-3 border-b border-pos-border-subtle">
+                    <div className="panel-kitchen-header-title text-xs font-bold text-pos-text-1 mb-0.5">{data.title}</div>
+                    <div className="panel-kitchen-header-sub text-[10px] text-pos-text-5">{data.sub}</div>
                 </div>
             )}
-            <div className="p-3 space-y-2">
+            <div className="panel-kitchen-tickets p-3 space-y-2">
                 {data.tickets.map((t: any) => (
-                    <div key={t.id} className="bg-pos-bg-3/30 border border-pos-border-subtle p-2 rounded flex justify-between items-center text-xs">
-                        <div className="flex flex-col">
-                            <span className="text-pos-text-1 font-mono font-bold">{t.id}</span>
-                            <span className="text-[9px] text-pos-text-6">Table 3</span>
+                    <div key={t.id} className="panel-kitchen-ticket bg-pos-bg-3/30 border border-pos-border-subtle p-2 rounded flex justify-between items-center text-xs">
+                        <div className="panel-kitchen-ticket-info flex flex-col">
+                            <span className="panel-kitchen-ticket-id text-pos-text-1 font-mono font-bold">{t.id}</span>
+                            <span className="panel-kitchen-ticket-table text-[9px] text-pos-text-6">Table 3</span>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <span className={cn("px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider", t.s === "Ready" ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20")}>{t.s}</span>
-                            <span className="text-pos-text-5 text-[10px] min-w-[20px] text-right">{t.t}</span>
+                        <div className="panel-kitchen-ticket-meta flex items-center gap-2">
+                            <span className={cn("panel-kitchen-ticket-status px-1.5 py-0.5 rounded text-[9px] font-bold uppercase tracking-wider", t.s === "Ready" ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20")}>{t.s}</span>
+                            <span className="panel-kitchen-ticket-time text-pos-text-5 text-[10px] min-w-[20px] text-right">{t.t}</span>
                         </div>
                     </div>
                 ))}
@@ -2323,14 +2323,14 @@ function Tooltip({ text, position = "bottom" }: { text: string, position?: "top"
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
             className={cn(
-                "absolute z-50 bg-pos-bg-2 text-pos-text-2 text-[10px] px-2 py-1 rounded border border-pos-border-medium shadow-xl whitespace-nowrap pointer-events-none",
+                "tooltip-root absolute z-50 bg-pos-bg-2 text-pos-text-2 text-[10px] px-2 py-1 rounded border border-pos-border-medium shadow-xl whitespace-nowrap pointer-events-none",
                 position === "top" ? "bottom-full mb-1.5" : "top-full mt-1.5",
                 "left-1/2 -translate-x-1/2"
             )}
         >
             {text}
             <div className={cn(
-                "absolute w-2 h-2 bg-pos-bg-2 border-pos-border-medium rotate-45 left-1/2 -translate-x-1/2",
+                "tooltip-arrow absolute w-2 h-2 bg-pos-bg-2 border-pos-border-medium rotate-45 left-1/2 -translate-x-1/2",
                 position === "top" ? "bottom-[-5px] border-b border-r" : "top-[-5px] border-l border-t"
             )} />
         </motion.div>
@@ -2461,40 +2461,40 @@ function SplashScreen({ isShortViewport }: { isShortViewport?: boolean }) {
         <motion.div
             exit={{ x: "100%", opacity: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute inset-0 z-[200] flex flex-col sm:flex-row pointer-events-none rounded-xl overflow-hidden"
+            className="splash-screen-root absolute inset-0 z-[200] flex flex-col sm:flex-row pointer-events-none rounded-xl overflow-hidden"
         >
             {/* Top/Left Side: Semi-transparent backdrop with descriptive text */}
-            <div className="flex-1 h-auto sm:h-auto bg-pos-bg-1/80 backdrop-blur-md flex flex-col items-center justify-center p-6 sm:p-12 text-center relative z-20">
-                <div className="max-w-md">
-                    <h1 className="text-2xl sm:text-4xl font-bold text-pos-text-1 tracking-tighter leading-tight">
+            <div className="splash-screen-intro flex-1 h-auto sm:h-auto bg-pos-bg-1/80 backdrop-blur-md flex flex-col items-center justify-center p-6 sm:p-12 text-center relative z-20">
+                <div className="splash-screen-intro-inner max-w-md">
+                    <h1 className="splash-screen-title text-2xl sm:text-4xl font-bold text-pos-text-1 tracking-tighter leading-tight">
                         Interactive MVP<br />Prototype
                     </h1>
-                    <div className="h-px w-8 sm:w-12 bg-pos-accent my-4 sm:my-6 mx-auto opacity-50" />
-                    <p className="text-pos-text-4 font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.2em] leading-relaxed">
+                    <div className="splash-screen-rule h-px w-8 sm:w-12 bg-pos-accent my-4 sm:my-6 mx-auto opacity-50" />
+                    <p className="splash-screen-subtitle text-pos-text-4 font-mono text-[9px] sm:text-[10px] uppercase tracking-[0.2em] leading-relaxed">
                         Coffee Shop POS Terminal v1.4<br />
-                        <span className="text-pos-text-5">George Efesopoulos • 2024</span>
+                        <span className="splash-screen-attribution text-pos-text-5">George Efesopoulos • 2024</span>
                     </p>
                 </div>
             </div>
 
             {/* Bottom/Right Side: Login Terminal */}
-            <div className="w-full sm:w-[320px] h-auto max-h-[420px] sm:max-h-none sm:h-auto bg-pos-bg-2 border-t sm:border-t-0 sm:border-l border-pos-border-subtle shadow-2xl flex flex-col justify-start sm:justify-center pt-8 sm:pt-0 p-4 sm:p-8 relative z-10 overflow-y-auto sm:overflow-visible no-scrollbar">
+            <div className="splash-screen-terminal w-full sm:w-[320px] h-auto max-h-[420px] sm:max-h-none sm:h-auto bg-pos-bg-2 border-t sm:border-t-0 sm:border-l border-pos-border-subtle shadow-2xl flex flex-col justify-start sm:justify-center pt-8 sm:pt-0 p-4 sm:p-8 relative z-10 overflow-y-auto sm:overflow-visible no-scrollbar">
                 {/* User Profile - Hidden on mobile & short viewports */}
                 {(!isShortViewport) && (
-                    <div className="hidden sm:flex flex-col items-center gap-2 mb-10">
-                        <div className="w-12 h-12 sm:w-24 sm:h-24 rounded-full bg-pos-bg-3 border-2 border-pos-border-medium p-1 shadow-inner relative flex-shrink-0">
+                    <div className="splash-screen-profile hidden sm:flex flex-col items-center gap-2 mb-10">
+                        <div className="splash-screen-avatar-wrap w-12 h-12 sm:w-24 sm:h-24 rounded-full bg-pos-bg-3 border-2 border-pos-border-medium p-1 shadow-inner relative flex-shrink-0">
                             {/* Avatar Placeholder */}
-                            <div className="w-full h-full rounded-full bg-gradient-to-br from-pos-bg-4 to-pos-bg-3 flex items-center justify-center text-pos-text-5 font-bold text-base sm:text-3xl">
+                            <div className="splash-screen-avatar w-full h-full rounded-full bg-gradient-to-br from-pos-bg-4 to-pos-bg-3 flex items-center justify-center text-pos-text-5 font-bold text-base sm:text-3xl">
                                 GE
                             </div>
                             {/* Status Dot */}
-                            <div className={cn("absolute bottom-0 right-0 sm:bottom-1 sm:right-1 w-3 h-3 sm:w-5 sm:h-5 rounded-full border-2 sm:border-4 border-pos-bg-2 transition-colors duration-500",
+                            <div className={cn("splash-screen-status-dot absolute bottom-0 right-0 sm:bottom-1 sm:right-1 w-3 h-3 sm:w-5 sm:h-5 rounded-full border-2 sm:border-4 border-pos-bg-2 transition-colors duration-500",
                                 isSuccess ? "bg-pos-accent" : "bg-pos-text-5"
                             )} />
                         </div>
-                        <div className="text-left sm:text-center">
-                            <h2 className="text-pos-text-1 font-bold text-sm sm:text-xl tracking-tight">George Efesopoulos</h2>
-                            <p className={cn("text-[9px] sm:text-xs font-mono uppercase tracking-widest transition-colors duration-300 mt-0.5 sm:mt-1.5",
+                        <div className="splash-screen-profile-text text-left sm:text-center">
+                            <h2 className="splash-screen-profile-name text-pos-text-1 font-bold text-sm sm:text-xl tracking-tight">George Efesopoulos</h2>
+                            <p className={cn("splash-screen-profile-status text-[9px] sm:text-xs font-mono uppercase tracking-widest transition-colors duration-300 mt-0.5 sm:mt-1.5",
                                 isSuccess ? "text-pos-accent" : "text-pos-text-5"
                             )}>{status}</p>
                         </div>
@@ -2502,7 +2502,7 @@ function SplashScreen({ isShortViewport }: { isShortViewport?: boolean }) {
                 )}
 
                 {/* PIN Dots */}
-                <div className="flex justify-center gap-3 sm:gap-5 mb-2 sm:mb-10">
+                <div className="splash-screen-pin-dots flex justify-center gap-3 sm:gap-5 mb-2 sm:mb-10">
                     {[1, 2, 3, 4].map(i => (
                         <motion.div
                             key={i}
@@ -2514,7 +2514,7 @@ function SplashScreen({ isShortViewport }: { isShortViewport?: boolean }) {
                                 backgroundColor: { duration: 0 },
                                 scale: { duration: 0.2 }
                             }}
-                            className={cn("w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full ring-2 ring-offset-2 ring-offset-pos-bg-2 transition-none",
+                            className={cn("splash-screen-pin-dot w-2.5 sm:w-3 h-2.5 sm:h-3 rounded-full ring-2 ring-offset-2 ring-offset-pos-bg-2 transition-none",
                                 i <= pinLength ? (isSuccess ? "ring-pos-accent bg-pos-accent" : "ring-pos-text-2 bg-pos-text-2") : "ring-pos-border-medium bg-pos-bg-3"
                             )}
                         />
@@ -2522,11 +2522,11 @@ function SplashScreen({ isShortViewport }: { isShortViewport?: boolean }) {
                 </div>
 
                 {/* Keypad Visuals */}
-                <div className="grid grid-cols-3 gap-1.5 sm:gap-3">
+                <div className="splash-screen-keypad grid grid-cols-3 gap-1.5 sm:gap-3">
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 'Del', 0, 'Enter'].map(key => (
                         <div
                             key={key}
-                            className={cn("h-8 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center font-mono transition-all duration-150 border",
+                            className={cn("splash-screen-key h-8 sm:h-12 rounded-lg sm:rounded-xl flex items-center justify-center font-mono transition-all duration-150 border",
                                 typeof key === 'number' ? "text-sm sm:text-lg" : "text-[8px] sm:text-[10px] uppercase tracking-wider font-bold",
                                 activeKey === key
                                     ? "bg-pos-bg-4 text-pos-text-1 border-pos-border-strong scale-95"
@@ -2588,7 +2588,7 @@ function ModifierPopup({ item, onClose, onAdd, currentModifiers, onToggleModifie
 
     return (
         <div
-            className="absolute z-[60] pointer-events-auto shadow-2xl rounded-2xl overflow-hidden flex flex-col bg-pos-bg-2 border border-pos-border-medium"
+            className="modifier-popup-root absolute z-[60] pointer-events-auto shadow-2xl rounded-2xl overflow-hidden flex flex-col bg-pos-bg-2 border border-pos-border-medium"
             style={{
                 left: pos?.x || 0,
                 top: pos?.y || 0,
@@ -2604,35 +2604,35 @@ function ModifierPopup({ item, onClose, onAdd, currentModifiers, onToggleModifie
                 The simplest "click outside" is an invisible fixed overlay.
             */}
             {/* Transparent Backdrop to catch clicks outside */}
-            <div className="fixed inset-0 z-[-1]" onClick={(e) => {
+            <div className="modifier-popup-backdrop fixed inset-0 z-[-1]" onClick={(e) => {
                 e.stopPropagation();
                 onClose();
             }} />
 
             {/* Header */}
-            <div className="flex items-center gap-3 p-3 border-b border-pos-border-subtle bg-pos-bg-2 relative z-10 shrink-0">
-                <div className="w-10 h-10 rounded-lg overflow-hidden bg-pos-bg-3 border border-pos-border-medium flex-shrink-0 shadow-sm">
-                    <img src={getItemImageSrc(item.name, item.category)} alt={item.name} className="w-full h-full object-cover" />
+            <div className="modifier-popup-header flex items-center gap-3 p-3 border-b border-pos-border-subtle bg-pos-bg-2 relative z-10 shrink-0">
+                <div className="modifier-popup-thumb w-10 h-10 rounded-lg overflow-hidden bg-pos-bg-3 border border-pos-border-medium flex-shrink-0 shadow-sm">
+                    <img src={getItemImageSrc(item.name, item.category)} alt={item.name} className="modifier-popup-thumb-image w-full h-full object-cover" />
                 </div>
-                <div className="flex-1 min-w-0">
-                    <h3 className="text-sm font-bold text-pos-text-1 leading-tight">{item.name}</h3>
-                    <p className="text-pos-accent text-xl font-bold mt-1 tracking-tight">€{calculateTotal()}</p>
+                <div className="modifier-popup-header-text flex-1 min-w-0">
+                    <h3 className="modifier-popup-title text-sm font-bold text-pos-text-1 leading-tight">{item.name}</h3>
+                    <p className="modifier-popup-price text-pos-accent text-xl font-bold mt-1 tracking-tight">€{calculateTotal()}</p>
                 </div>
                 {/* Close button optional since clicking outside works, but good for UX */}
-                <button onClick={onClose} className="p-1 text-pos-text-5 hover:text-pos-text-1 transition-colors cursor-pointer rounded-full hover:bg-pos-bg-3">
+                <button onClick={onClose} className="modifier-popup-close p-1 text-pos-text-5 hover:text-pos-text-1 transition-colors cursor-pointer rounded-full hover:bg-pos-bg-3">
                     <X size={14} />
                 </button>
             </div>
 
             {/* Modifiers Scroll Area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-custom bg-pos-bg-2/95">
+            <div className="modifier-popup-scroll flex-1 overflow-y-auto p-4 space-y-4 scrollbar-custom bg-pos-bg-2/95">
                 {item.modifiers?.map((mod: any) => (
-                    <div key={mod.name} className="space-y-2">
-                        <div className="flex justify-between items-baseline px-0.5">
-                            <h4 className="text-[10px] font-bold text-pos-text-5 uppercase tracking-wider">{mod.name}</h4>
-                            {mod.type === 'radio' && <span className="text-[8px] text-pos-accent font-bold tracking-wide uppercase">Req</span>}
+                    <div key={mod.name} className="modifier-popup-group space-y-2">
+                        <div className="modifier-popup-group-header flex justify-between items-baseline px-0.5">
+                            <h4 className="modifier-popup-group-label text-[10px] font-bold text-pos-text-5 uppercase tracking-wider">{mod.name}</h4>
+                            {mod.type === 'radio' && <span className="modifier-popup-group-required text-[8px] text-pos-accent font-bold tracking-wide uppercase">Req</span>}
                         </div>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="modifier-popup-options flex flex-wrap gap-2">
                             {mod.options.map((opt: any) => {
                                 const label = typeof opt === 'string' ? opt : opt.label;
                                 const isSelected = mod.type === 'radio'
@@ -2644,15 +2644,15 @@ function ModifierPopup({ item, onClose, onAdd, currentModifiers, onToggleModifie
                                         key={label}
                                         onClick={() => onToggleModifier(mod.name, label, mod.type)}
                                         className={cn(
-                                            "px-4 py-2.5 rounded-xl text-xs font-medium transition-all border flex items-center gap-2 group cursor-pointer shadow-sm relative overflow-hidden",
+                                            "modifier-popup-option px-4 py-2.5 rounded-xl text-xs font-medium transition-all border flex items-center gap-2 group cursor-pointer shadow-sm relative overflow-hidden",
                                             isSelected
-                                                ? "bg-pos-accent text-pos-accent-text border-pos-accent font-bold"
+                                                ? "modifier-popup-option-active bg-pos-accent text-pos-accent-text border-pos-accent font-bold"
                                                 : "bg-pos-bg-3 text-pos-text-4 border-pos-border-medium hover:bg-pos-bg-4 hover:text-pos-text-2"
                                         )}
                                     >
-                                        <span className="relative z-10">{label}</span>
+                                        <span className="modifier-popup-option-label relative z-10">{label}</span>
                                         {typeof opt !== 'string' && opt.price && (
-                                            <span className={cn("text-[10px] font-bold transition-colors ml-0.5",
+                                            <span className={cn("modifier-popup-option-price text-[10px] font-bold transition-colors ml-0.5",
                                                 isSelected
                                                     ? "text-pos-accent-text/50"
                                                     : "text-pos-accent"
@@ -2669,18 +2669,18 @@ function ModifierPopup({ item, onClose, onAdd, currentModifiers, onToggleModifie
             </div>
 
             {/* Footer */}
-            <div className="p-4 border-t border-pos-border-subtle bg-pos-bg-2 shrink-0">
-                <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2 bg-pos-bg-3 rounded-xl p-1 border border-pos-border-medium h-12">
-                        <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-10 h-10 flex items-center justify-center text-pos-text-4 hover:text-pos-text-1 hover:bg-pos-bg-4 rounded-lg transition-colors cursor-pointer"><Minus size={14} /></button>
-                        <span className="w-6 text-center font-mono font-bold text-sm text-pos-text-1">{quantity}</span>
-                        <button onClick={() => setQuantity(quantity + 1)} className="w-10 h-10 flex items-center justify-center text-pos-text-4 hover:text-pos-text-1 hover:bg-pos-bg-4 rounded-lg transition-colors cursor-pointer"><Plus size={14} /></button>
+            <div className="modifier-popup-footer p-4 border-t border-pos-border-subtle bg-pos-bg-2 shrink-0">
+                <div className="modifier-popup-footer-row flex items-center gap-4">
+                    <div className="modifier-popup-qty flex items-center gap-2 bg-pos-bg-3 rounded-xl p-1 border border-pos-border-medium h-12">
+                        <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="modifier-popup-qty-button modifier-popup-qty-button-minus w-10 h-10 flex items-center justify-center text-pos-text-4 hover:text-pos-text-1 hover:bg-pos-bg-4 rounded-lg transition-colors cursor-pointer"><Minus size={14} /></button>
+                        <span className="modifier-popup-qty-value w-6 text-center font-mono font-bold text-sm text-pos-text-1">{quantity}</span>
+                        <button onClick={() => setQuantity(quantity + 1)} className="modifier-popup-qty-button modifier-popup-qty-button-plus w-10 h-10 flex items-center justify-center text-pos-text-4 hover:text-pos-text-1 hover:bg-pos-bg-4 rounded-lg transition-colors cursor-pointer"><Plus size={14} /></button>
                     </div>
                     <button
                         onClick={onAdd}
-                        className="flex-1 h-12 bg-pos-accent hover:bg-pos-accent/90 text-pos-accent-text font-bold text-sm rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer"
+                        className="modifier-popup-add-cta flex-1 h-12 bg-pos-accent hover:bg-pos-accent/90 text-pos-accent-text font-bold text-sm rounded-xl shadow-lg flex items-center justify-center gap-2 transition-all active:scale-[0.98] cursor-pointer"
                     >
-                        <span>Add to Order</span>
+                        <span className="modifier-popup-add-cta-text">Add to Order</span>
                     </button>
                 </div>
             </div>

@@ -14,34 +14,34 @@ const socialLinks = [
 
 export default function Footer() {
     return (
-        <footer className="bg-bg-hero text-text-primary py-16 border-t border-border-subtle">
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
+        <footer className="footer-root bg-bg-hero text-text-primary py-16 border-t border-border-subtle">
+            <div className="footer-container max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="footer-grid grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
                     {/* Brand Column */}
-                    <div className="space-y-4">
-                        <Link href="/" className="text-2xl font-bold tracking-tight">
+                    <div className="footer-brand space-y-4">
+                        <Link href="/" className="footer-brand-logo text-2xl font-bold tracking-tight">
                             efesop
                         </Link>
-                        <p className="text-text-muted text-sm max-w-xs">
+                        <p className="footer-brand-description text-text-muted text-sm max-w-xs">
                             Product Designer specializing in complex systems, Web3, and AI integrations. Based in Cyprus.
                         </p>
-                        <p className="text-text-dim text-xs">
+                        <p className="footer-brand-copyright text-text-dim text-xs">
                             © 2026 George Efesopoulos - Efesop. All rights reserved.
                         </p>
                         <div
                             role="img"
                             aria-label="George Efesopoulos"
-                            className="theme-signature h-[52px] w-full max-w-[320px] mt-2"
+                            className="footer-brand-signature theme-signature h-[52px] w-full max-w-[320px] mt-2"
                             style={{ aspectRatio: '375 / 73' }}
                         />
                     </div>
 
                     {/* Links Column */}
-                    <div>
-                        <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wider mb-4">
+                    <div className="footer-column">
+                        <h3 className="footer-column-heading text-sm font-semibold text-text-primary uppercase tracking-wider mb-4">
                             Explore
                         </h3>
-                        <ul className="space-y-3">
+                        <ul className="footer-link-list space-y-3">
                             {[
                                 { label: 'Work', href: '#work' },
                                 { label: 'Services', href: '#services' },
@@ -49,10 +49,10 @@ export default function Footer() {
                                 { label: 'About', href: '#about' },
                                 { label: 'Hire on Upwork', href: '#contact' },
                             ].map((item) => (
-                                <li key={item.label}>
+                                <li key={item.label} className="footer-link-item">
                                     <a
                                         href={item.href}
-                                        className="text-text-secondary hover:text-accent-primary transition-colors text-sm"
+                                        className="footer-link text-text-secondary hover:text-accent-primary transition-colors text-sm"
                                     >
                                         {item.label}
                                     </a>
@@ -62,20 +62,20 @@ export default function Footer() {
                     </div>
 
                     {/* Socials Column */}
-                    <div>
-                        <h3 className="text-sm font-semibold text-text-primary uppercase tracking-wider mb-4">
+                    <div className="footer-column">
+                        <h3 className="footer-column-heading text-sm font-semibold text-text-primary uppercase tracking-wider mb-4">
                             Connect
                         </h3>
-                        <ul className="space-y-3">
+                        <ul className="footer-social-list space-y-3">
                             {socialLinks.map((link) => (
-                                <li key={link.name}>
+                                <li key={link.name} className="footer-social-item">
                                     <a
                                         href={link.href}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="flex items-center gap-3 text-text-secondary hover:text-accent-primary transition-colors text-sm group"
+                                        className="footer-social-link flex items-center gap-3 text-text-secondary hover:text-accent-primary transition-colors text-sm group"
                                     >
-                                        <link.icon size={18} className="group-hover:scale-110 transition-transform" />
+                                        <link.icon size={18} className="footer-social-icon group-hover:scale-110 transition-transform" />
                                         {link.name}
                                     </a>
                                 </li>
@@ -84,8 +84,8 @@ export default function Footer() {
                     </div>
                 </div>
 
-                <div className="pt-8 border-t border-border-subtle flex flex-col md:flex-row justify-between items-center gap-4">
-                    <div className="flex gap-4">
+                <div className="footer-bottom pt-8 border-t border-border-subtle flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div className="footer-bottom-links flex gap-4">
                         {/* Optional extra legal links could go here */}
                     </div>
                 </div>

@@ -4,30 +4,30 @@ import FadeIn from '../motion/FadeIn';
 
 export default function Intro() {
     return (
-        <section className="bg-bg-primary pt-32 pb-24">
-            <div className="max-w-6xl mx-auto px-6">
+        <section className="intro-section bg-bg-primary pt-32 pb-24">
+            <div className="intro-container max-w-6xl mx-auto px-6">
                 <FadeIn>
-                    <div className="flex flex-col lg:flex-row gap-16 items-start justify-between mb-24">
-                        <h2 className="text-h2 font-medium tracking-tight leading-[1.1] flex-1">
-                            <span className="text-text-dim">Your technology is </span>
-                            <span className="font-serif italic font-normal text-accent-primary">complex.</span>
+                    <div className="intro-header flex flex-col lg:flex-row gap-16 items-start justify-between mb-24">
+                        <h2 className="intro-heading text-4xl md:text-6xl font-bold tracking-tight leading-tight flex-1">
+                            <span className="intro-heading-dim text-text-dim">Your technology is </span>
+                            <span className="intro-heading-emphasis text-text-primary">complex.</span>
                             <br />
-                            <span className="text-text-dim">Your product should be </span>
-                            <span className="font-serif italic font-normal text-text-primary">simple.</span>
+                            <span className="intro-heading-dim text-text-dim">Your product should be </span>
+                            <span className="intro-heading-emphasis text-text-primary">simple.</span>
                         </h2>
 
-                        <div className="flex-1 max-w-lg pt-2">
-                            <p className="text-xl text-text-muted leading-relaxed mb-8 text-balance">
+                        <div className="intro-lede flex-1 max-w-lg pt-2">
+                            <p className="intro-lede-body text-xl text-text-muted leading-relaxed mb-8 text-balance">
                                 Great products deserve great design. I partner with founders, agencies, and small businesses to design and build the web, end to end.
                             </p>
-                            <div className="h-px w-24 bg-accent-primary mb-8" />
-                            <p className="text-sm font-mono text-text-dim uppercase tracking-widest">
+                            <div className="intro-divider h-px w-24 bg-accent-primary mb-8" />
+                            <p className="intro-lede-tags text-sm font-mono text-text-dim uppercase tracking-widest">
                                 Design • Strategy • Development
                             </p>
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-border-subtle pt-12">
+                    <div className="intro-pillars grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-border-subtle pt-12">
                         {[
                             {
                                 title: "Systems Thinking",
@@ -42,11 +42,11 @@ export default function Intro() {
                                 desc: "I speak your language. Git commits, component architecture, deployment pipelines. I bridge the divide between Figma and production."
                             }
                         ].map((item) => (
-                            <div key={item.title} className="group">
-                                <h3 className="text-lg font-bold text-text-primary mb-3 group-hover:text-accent-primary transition-colors">
+                            <div key={item.title} className="intro-pillar group">
+                                <h3 className="intro-pillar-heading text-lg font-bold text-text-primary mb-3 group-hover:text-accent-primary transition-colors">
                                     {item.title}
                                 </h3>
-                                <p className="text-text-secondary leading-relaxed text-sm">
+                                <p className="intro-pillar-description text-text-secondary leading-relaxed text-sm">
                                     {item.desc}
                                 </p>
                             </div>

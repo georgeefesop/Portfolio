@@ -118,14 +118,14 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.25 }}
-                    className="fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-6 bg-black/85 backdrop-blur-md"
+                    className="case-study-modal-root fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-6 bg-black/85 backdrop-blur-md"
                     onClick={onClose}
                     aria-modal="true"
                     role="dialog"
                 >
                     {/* Faint grid texture overlay (HUD vibe) */}
                     <div
-                        className="pointer-events-none absolute inset-0 opacity-[0.06]"
+                        className="case-study-modal-grid-overlay pointer-events-none absolute inset-0 opacity-[0.06]"
                         style={{
                             backgroundImage:
                                 'linear-gradient(to right, rgba(171,123,98,0.6) 1px, transparent 1px), linear-gradient(to bottom, rgba(171,123,98,0.6) 1px, transparent 1px)',
@@ -142,18 +142,18 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                             y: { duration: 0.55, ease: 'linear', delay: 0.05 },
                             opacity: { duration: 0.15, delay: 0.05 },
                         }}
-                        className="pointer-events-none absolute left-0 right-0 z-[5] will-change-transform"
+                        className="case-study-modal-scan-beam pointer-events-none absolute left-0 right-0 z-[5] will-change-transform"
                         style={{ height: '220px', top: 0 }}
                     >
                         <div
-                            className="absolute inset-0"
+                            className="case-study-modal-scan-beam-gradient absolute inset-0"
                             style={{
                                 background:
                                     'linear-gradient(to bottom, transparent 0%, rgba(171,123,98,0.04) 35%, rgba(171,123,98,0.18) 70%, rgba(171,123,98,0.55) 92%, rgba(171,123,98,0.85) 100%)',
                             }}
                         />
                         <div
-                            className="absolute left-0 right-0 bottom-0 h-[2px]"
+                            className="case-study-modal-scan-beam-line absolute left-0 right-0 bottom-0 h-[2px]"
                             style={{
                                 background: 'var(--accent-primary)',
                                 boxShadow:
@@ -168,68 +168,68 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                         animate={{ opacity: 1, scale: 1 }}
                         exit={{ opacity: 0, scale: 0.97 }}
                         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-                        className="md:hidden relative z-[10] w-full max-h-[92vh] flex flex-col bg-bg-secondary border border-border-subtle rounded-md overflow-hidden shadow-[0_24px_60px_-15px_rgba(0,0,0,0.7),0_0_40px_-15px_rgba(171,123,98,0.4)]"
+                        className="case-study-modal-mobile-panel md:hidden relative z-[10] w-full max-h-[92vh] flex flex-col bg-bg-secondary border border-border-subtle rounded-md overflow-hidden shadow-[0_24px_60px_-15px_rgba(0,0,0,0.7),0_0_40px_-15px_rgba(171,123,98,0.4)]"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <button
                             onClick={onClose}
-                            className="absolute top-3 right-3 z-30 p-2 rounded-sm text-text-muted bg-bg-tertiary/60 backdrop-blur-md border border-border-subtle"
+                            className="case-study-modal-close-button absolute top-3 right-3 z-30 p-2 rounded-sm text-text-muted bg-bg-tertiary/60 backdrop-blur-md border border-border-subtle"
                             aria-label="Close"
                         >
                             <X size={16} />
                         </button>
 
-                        <div className="overflow-y-auto hud-scroll flex-1">
+                        <div className="case-study-modal-mobile-scroll overflow-y-auto hud-scroll flex-1">
                             {/* Hero image */}
-                            <div className="relative aspect-[16/10] w-full bg-bg-secondary">
+                            <div className="case-study-modal-mobile-hero relative aspect-[16/10] w-full bg-bg-secondary">
                                 <ImageWithFallback
                                     src={project.images.hero}
                                     alt={project.title}
                                     fill
                                     sizes="100vw"
-                                    className="object-cover"
+                                    className="case-study-modal-mobile-hero-image object-cover"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-bg-secondary via-bg-secondary/40 to-transparent" />
+                                <div className="case-study-modal-mobile-hero-gradient absolute inset-0 bg-gradient-to-t from-bg-secondary via-bg-secondary/40 to-transparent" />
                             </div>
 
                             {/* Title block */}
-                            <div className="px-7 -mt-10 pb-5 relative z-10">
-                                <div className="flex items-center gap-2 mb-3">
-                                    <span className="relative inline-flex w-1.5 h-1.5">
-                                        <span className="absolute inset-0 rounded-full bg-accent-primary animate-ping opacity-60" />
-                                        <span className="relative inline-block w-1.5 h-1.5 rounded-full bg-accent-primary" />
+                            <div className="case-study-modal-mobile-title-block px-7 -mt-10 pb-5 relative z-10">
+                                <div className="case-study-modal-mobile-eyebrow flex items-center gap-2 mb-3">
+                                    <span className="case-study-modal-mobile-eyebrow-dot relative inline-flex w-1.5 h-1.5">
+                                        <span className="case-study-modal-mobile-eyebrow-dot-ping absolute inset-0 rounded-full bg-accent-primary animate-ping opacity-60" />
+                                        <span className="case-study-modal-mobile-eyebrow-dot-core relative inline-block w-1.5 h-1.5 rounded-full bg-accent-primary" />
                                     </span>
-                                    <span className="text-[11px] font-mono uppercase tracking-[0.22em] text-accent-primary truncate">
+                                    <span className="case-study-modal-mobile-eyebrow-text text-[11px] font-mono uppercase tracking-[0.22em] text-accent-primary truncate">
                                         Case File · {project.id.toUpperCase().replace(/-/g, '_').slice(0, 14)}
                                     </span>
                                 </div>
-                                <h3 className="text-2xl font-bold text-text-primary tracking-tight mb-2 leading-tight">
+                                <h3 className="case-study-modal-mobile-title text-2xl font-bold text-text-primary tracking-tight mb-2 leading-tight">
                                     {project.title}
                                 </h3>
-                                <p className="text-text-muted text-base font-light leading-snug mb-4">
+                                <p className="case-study-modal-mobile-subtitle text-text-muted text-base font-light leading-snug mb-4">
                                     {project.subtitle}
                                 </p>
-                                <div className="flex flex-wrap items-center gap-1.5 mb-4">
+                                <div className="case-study-modal-mobile-tag-list flex flex-wrap items-center gap-1.5 mb-4">
                                     {project.tags.map((tag) => (
-                                        <span key={tag} className="bg-bg-tertiary/40 px-2 py-0.5 rounded text-[10px] font-mono text-text-muted border border-border-subtle">
+                                        <span key={tag} className="case-study-modal-mobile-tag bg-bg-tertiary/40 px-2 py-0.5 rounded text-[10px] font-mono text-text-muted border border-border-subtle">
                                             {tag}
                                         </span>
                                     ))}
                                 </div>
-                                <div className="grid grid-cols-2 gap-3 font-mono text-xs text-text-muted pb-4 border-b border-border-subtle">
-                                    <div>
-                                        <span className="block text-text-dim text-[10px] uppercase tracking-widest mb-1">Role</span>
-                                        <span className="text-text-secondary">{project.role}</span>
+                                <div className="case-study-modal-mobile-meta-grid grid grid-cols-2 gap-3 font-mono text-xs text-text-muted pb-4 border-b border-border-subtle">
+                                    <div className="case-study-modal-mobile-meta-cell">
+                                        <span className="case-study-modal-mobile-meta-label block text-text-dim text-[10px] uppercase tracking-widest mb-1">Role</span>
+                                        <span className="case-study-modal-mobile-meta-value text-text-secondary">{project.role}</span>
                                     </div>
-                                    <div>
-                                        <span className="block text-text-dim text-[10px] uppercase tracking-widest mb-1">Period</span>
-                                        <span className="text-text-secondary">{project.period}</span>
+                                    <div className="case-study-modal-mobile-meta-cell">
+                                        <span className="case-study-modal-mobile-meta-label block text-text-dim text-[10px] uppercase tracking-widest mb-1">Period</span>
+                                        <span className="case-study-modal-mobile-meta-value text-text-secondary">{project.period}</span>
                                     </div>
                                 </div>
                                 {project.body?.honest_note && (
-                                    <div className="mt-4">
+                                    <div className="case-study-modal-mobile-honest-note mt-4">
                                         <SubLabel>Honest note</SubLabel>
-                                        <p className="text-text-muted text-sm italic leading-relaxed mt-2">
+                                        <p className="case-study-modal-mobile-honest-note-text text-text-muted text-sm italic leading-relaxed mt-2">
                                             {project.body.honest_note}
                                         </p>
                                     </div>
@@ -249,11 +249,11 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                         <p className="whitespace-pre-line">{project.description.challenge}</p>
                                     </MobileSection>
                                     <MobileSection label="The Work">
-                                        <ul className="space-y-3">
+                                        <ul className="case-study-modal-mobile-work-list space-y-3">
                                             {project.description.work.map((item, i) => (
-                                                <li key={i} className="flex gap-2.5">
-                                                    <span className="text-accent-primary flex-shrink-0">▸</span>
-                                                    <span>{item}</span>
+                                                <li key={i} className="case-study-modal-mobile-work-item flex gap-2.5">
+                                                    <span className="case-study-modal-mobile-work-bullet text-accent-primary flex-shrink-0">▸</span>
+                                                    <span className="case-study-modal-mobile-work-text">{item}</span>
                                                 </li>
                                             ))}
                                         </ul>
@@ -265,12 +265,12 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                             ) : null}
 
                             {project.links.live && (
-                                <div className="px-7 pb-5">
+                                <div className="case-study-modal-mobile-cta-wrap px-7 pb-5">
                                     <a
                                         href={project.links.live}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 px-4 py-2.5 bg-accent-primary/10 hover:bg-accent-primary/20 text-accent-primary rounded-sm font-semibold transition-colors text-xs uppercase tracking-widest font-mono"
+                                        className="case-study-modal-mobile-cta inline-flex items-center gap-2 px-4 py-2.5 bg-accent-primary/10 hover:bg-accent-primary/20 text-accent-primary rounded-sm font-semibold transition-colors text-xs uppercase tracking-widest font-mono"
                                     >
                                         View live <ExternalLink size={12} />
                                     </a>
@@ -279,25 +279,25 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
 
                             {/* Legacy gallery only when no body schema */}
                             {!project.body && (
-                                <div className="border-t border-border-subtle bg-bg-tertiary/30">
-                                    <div className="px-7 py-3 flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-text-muted">
-                                        <span className="w-1.5 h-1.5 rounded-full bg-accent-primary" />
-                                        <span>Gallery</span>
-                                        <span className="text-accent-primary/60">// {galleryImages.length}</span>
+                                <div className="case-study-modal-mobile-gallery border-t border-border-subtle bg-bg-tertiary/30">
+                                    <div className="case-study-modal-mobile-gallery-header px-7 py-3 flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-text-muted">
+                                        <span className="case-study-modal-mobile-gallery-dot w-1.5 h-1.5 rounded-full bg-accent-primary" />
+                                        <span className="case-study-modal-mobile-gallery-label">Gallery</span>
+                                        <span className="case-study-modal-mobile-gallery-count text-accent-primary/60">// {galleryImages.length}</span>
                                     </div>
-                                    <div className="px-7 pb-6 flex flex-col gap-3">
+                                    <div className="case-study-modal-mobile-gallery-list px-7 pb-6 flex flex-col gap-3">
                                         {galleryImages.map((img, idx) => (
                                             <button
                                                 key={idx}
                                                 onClick={() => setLightboxIndex(idx)}
-                                                className="relative w-full aspect-[16/10] rounded-md overflow-hidden bg-bg-tertiary border border-border-subtle"
+                                                className="case-study-modal-mobile-gallery-item relative w-full aspect-[16/10] rounded-md overflow-hidden bg-bg-tertiary border border-border-subtle"
                                             >
                                                 <ImageWithFallback
                                                     src={img}
                                                     alt={`${project.title} screenshot ${idx + 1}`}
                                                     fill
                                                     sizes="100vw"
-                                                    className="object-cover"
+                                                    className="case-study-modal-mobile-gallery-image object-cover"
                                                 />
                                             </button>
                                         ))}
@@ -315,17 +315,17 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                             animate={{ clipPath: 'inset(0% 0% 0% 0% round 6px)', opacity: 1, scale: 1 }}
                             exit={{ clipPath: 'inset(48% 2% 48% 2% round 6px)', opacity: 0, scale: 0.98 }}
                             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                            className="hidden md:flex relative z-[10] w-full max-w-[1280px] md:max-h-[92vh] lg:h-[88vh] lg:max-h-none flex-col bg-bg-secondary border border-border-subtle rounded-md overflow-hidden shadow-[0_24px_70px_-15px_rgba(0,0,0,0.7),0_0_50px_-15px_rgba(171,123,98,0.4)]"
+                            className="case-study-modal-desktop-panel hidden md:flex relative z-[10] w-full max-w-[1280px] md:max-h-[92vh] lg:h-[88vh] lg:max-h-none flex-col bg-bg-secondary border border-border-subtle rounded-md overflow-hidden shadow-[0_24px_70px_-15px_rgba(0,0,0,0.7),0_0_50px_-15px_rgba(171,123,98,0.4)]"
                             onClick={(e) => e.stopPropagation()}
                         >
                             <button
                                 onClick={onClose}
-                                className="absolute top-3 right-3 z-30 p-2 rounded-sm text-text-muted hover:text-text-primary bg-bg-tertiary/50 hover:bg-bg-tertiary/70 backdrop-blur-md border border-border-subtle transition-colors"
+                                className="case-study-modal-desktop-close-button absolute top-3 right-3 z-30 p-2 rounded-sm text-text-muted hover:text-text-primary bg-bg-tertiary/50 hover:bg-bg-tertiary/70 backdrop-blur-md border border-border-subtle transition-colors"
                                 aria-label="Close"
                             >
                                 <X size={16} />
                             </button>
-                            <div className="flex-1 min-h-0 overflow-y-auto hud-scroll">
+                            <div className="case-study-modal-desktop-scroll flex-1 min-h-0 overflow-y-auto hud-scroll">
                                 <BodyIntro project={project} />
                                 <BodyDesktopView
                                     body={project.body}
@@ -335,7 +335,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                         </motion.div>
                     ) : (
                     <div
-                        className="hidden md:flex relative z-[10] w-full max-w-[1500px] md:flex-col md:max-h-[92vh] md:gap-4 md:overflow-y-auto lg:flex-row lg:h-[88vh] lg:max-h-none lg:gap-0 lg:overflow-visible md:items-stretch hud-scroll"
+                        className="case-study-modal-legacy-shell hidden md:flex relative z-[10] w-full max-w-[1500px] md:flex-col md:max-h-[92vh] md:gap-4 md:overflow-y-auto lg:flex-row lg:h-[88vh] lg:max-h-none lg:gap-0 lg:overflow-visible md:items-stretch hud-scroll"
                         onClick={(e) => e.stopPropagation()}
                     >
                         {/* Floating identity panel */}
@@ -344,40 +344,40 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                             animate={{ opacity: 1, x: 0, scale: 1 }}
                             exit={{ opacity: 0, x: -20, scale: 0.97 }}
                             transition={{ duration: 0.55, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
-                            className="md:w-full lg:w-[360px] lg:flex-shrink-0 bg-bg-secondary/95 backdrop-blur-md border border-border-subtle rounded-md flex flex-col overflow-hidden shadow-[0_24px_70px_-15px_rgba(0,0,0,0.7),0_0_50px_-15px_rgba(171,123,98,0.45)]"
+                            className="case-study-modal-aside md:w-full lg:w-[360px] lg:flex-shrink-0 bg-bg-secondary/95 backdrop-blur-md border border-border-subtle rounded-md flex flex-col overflow-hidden shadow-[0_24px_70px_-15px_rgba(0,0,0,0.7),0_0_50px_-15px_rgba(171,123,98,0.45)]"
                         >
-                            <div className="flex-shrink-0 px-7 pt-5 pb-3.5 border-b border-border-subtle flex items-center gap-2 bg-bg-tertiary/40">
-                                <span className="relative inline-flex w-1.5 h-1.5 flex-shrink-0">
-                                    <span className="absolute inset-0 rounded-full bg-accent-primary animate-ping opacity-60" />
-                                    <span className="relative inline-block w-1.5 h-1.5 rounded-full bg-accent-primary" />
+                            <div className="case-study-modal-aside-header flex-shrink-0 px-7 pt-5 pb-3.5 border-b border-border-subtle flex items-center gap-2 bg-bg-tertiary/40">
+                                <span className="case-study-modal-aside-eyebrow-dot relative inline-flex w-1.5 h-1.5 flex-shrink-0">
+                                    <span className="case-study-modal-aside-eyebrow-dot-ping absolute inset-0 rounded-full bg-accent-primary animate-ping opacity-60" />
+                                    <span className="case-study-modal-aside-eyebrow-dot-core relative inline-block w-1.5 h-1.5 rounded-full bg-accent-primary" />
                                 </span>
-                                <span className="text-[11px] font-mono uppercase tracking-[0.22em] text-accent-primary truncate">
+                                <span className="case-study-modal-aside-eyebrow-text text-[11px] font-mono uppercase tracking-[0.22em] text-accent-primary truncate">
                                     Case File · {project.id.toUpperCase().replace(/-/g, '_').slice(0, 14)}
                                 </span>
                             </div>
 
-                            <div className="flex-shrink-0 px-7 pt-5 pb-5">
-                                <h3 className="text-2xl font-bold text-text-primary tracking-tight mb-1.5 leading-tight">
+                            <div className="case-study-modal-aside-identity flex-shrink-0 px-7 pt-5 pb-5">
+                                <h3 className="case-study-modal-aside-title text-2xl font-bold text-text-primary tracking-tight mb-1.5 leading-tight">
                                     {project.title}
                                 </h3>
-                                <p className="text-text-muted text-sm font-light leading-snug mb-4">
+                                <p className="case-study-modal-aside-subtitle text-text-muted text-sm font-light leading-snug mb-4">
                                     {project.subtitle}
                                 </p>
-                                <div className="flex flex-wrap items-center gap-1.5 mb-5">
+                                <div className="case-study-modal-aside-tag-list flex flex-wrap items-center gap-1.5 mb-5">
                                     {project.tags.map((tag) => (
-                                        <span key={tag} className="bg-bg-tertiary/40 px-2 py-0.5 rounded text-[10px] font-mono text-text-muted border border-border-subtle">
+                                        <span key={tag} className="case-study-modal-aside-tag bg-bg-tertiary/40 px-2 py-0.5 rounded text-[10px] font-mono text-text-muted border border-border-subtle">
                                             {tag}
                                         </span>
                                     ))}
                                 </div>
-                                <div className="grid grid-cols-2 gap-3 font-mono text-xs text-text-muted pb-4 border-b border-border-subtle">
-                                    <div>
-                                        <span className="block text-text-dim text-[10px] uppercase tracking-widest mb-1">Role</span>
-                                        <span className="text-text-secondary">{project.role}</span>
+                                <div className="case-study-modal-aside-meta-grid grid grid-cols-2 gap-3 font-mono text-xs text-text-muted pb-4 border-b border-border-subtle">
+                                    <div className="case-study-modal-aside-meta-cell">
+                                        <span className="case-study-modal-aside-meta-label block text-text-dim text-[10px] uppercase tracking-widest mb-1">Role</span>
+                                        <span className="case-study-modal-aside-meta-value text-text-secondary">{project.role}</span>
                                     </div>
-                                    <div>
-                                        <span className="block text-text-dim text-[10px] uppercase tracking-widest mb-1">Period</span>
-                                        <span className="text-text-secondary">{project.period}</span>
+                                    <div className="case-study-modal-aside-meta-cell">
+                                        <span className="case-study-modal-aside-meta-label block text-text-dim text-[10px] uppercase tracking-widest mb-1">Period</span>
+                                        <span className="case-study-modal-aside-meta-value text-text-secondary">{project.period}</span>
                                     </div>
                                 </div>
                             </div>
@@ -386,23 +386,23 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                 Body-mode entries carry the brief in the main reading panel,
                                 so the identity card stays sparse. */}
                             {project.description?.overview ? (
-                                <div className="md:flex-1 md:min-h-0 md:overflow-y-auto px-7 pb-6 hud-scroll">
+                                <div className="case-study-modal-aside-overview md:flex-1 md:min-h-0 md:overflow-y-auto px-7 pb-6 hud-scroll">
                                     <PanelLabel>Overview</PanelLabel>
-                                    <div className="text-text-secondary text-sm leading-relaxed whitespace-pre-line">
+                                    <div className="case-study-modal-aside-overview-text text-text-secondary text-sm leading-relaxed whitespace-pre-line">
                                         {project.description.overview}
                                     </div>
                                 </div>
                             ) : (
-                                <div className="md:flex-1 md:min-h-0" />
+                                <div className="case-study-modal-aside-spacer md:flex-1 md:min-h-0" />
                             )}
 
                             {project.links.live && (
-                                <div className="flex-shrink-0 px-7 py-4 border-t border-border-subtle bg-bg-tertiary/30">
+                                <div className="case-study-modal-aside-cta-wrap flex-shrink-0 px-7 py-4 border-t border-border-subtle bg-bg-tertiary/30">
                                     <a
                                         href={project.links.live}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-2 px-3.5 py-2 bg-accent-primary/10 hover:bg-accent-primary/20 text-accent-primary rounded-sm font-semibold transition-colors text-xs uppercase tracking-widest font-mono"
+                                        className="case-study-modal-aside-cta inline-flex items-center gap-2 px-3.5 py-2 bg-accent-primary/10 hover:bg-accent-primary/20 text-accent-primary rounded-sm font-semibold transition-colors text-xs uppercase tracking-widest font-mono"
                                     >
                                         View live <ExternalLink size={12} />
                                     </a>
@@ -416,11 +416,11 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                             animate={{ clipPath: 'inset(0% 0% 0% 0% round 6px)', opacity: 1, scale: 1 }}
                             exit={{ clipPath: 'inset(48% 2% 48% 2% round 6px)', opacity: 0, scale: 0.98 }}
                             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                            className="relative flex-1 min-w-0 flex flex-col bg-bg-secondary border border-border-subtle rounded-md overflow-hidden shadow-[0_24px_70px_-15px_rgba(0,0,0,0.7),0_0_50px_-15px_rgba(171,123,98,0.4)]"
+                            className="case-study-modal-main relative flex-1 min-w-0 flex flex-col bg-bg-secondary border border-border-subtle rounded-md overflow-hidden shadow-[0_24px_70px_-15px_rgba(0,0,0,0.7),0_0_50px_-15px_rgba(171,123,98,0.4)]"
                         >
                             <button
                                 onClick={onClose}
-                                className="absolute top-3 right-3 z-30 p-2 rounded-sm text-text-muted hover:text-text-primary bg-bg-tertiary/50 hover:bg-bg-tertiary/70 backdrop-blur-md border border-border-subtle transition-colors"
+                                className="case-study-modal-main-close-button absolute top-3 right-3 z-30 p-2 rounded-sm text-text-muted hover:text-text-primary bg-bg-tertiary/50 hover:bg-bg-tertiary/70 backdrop-blur-md border border-border-subtle transition-colors"
                                 aria-label="Close"
                             >
                                 <X size={16} />
@@ -430,42 +430,42 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                 initial={{ opacity: 0, y: 8 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.3, duration: 0.35 }}
-                                className="flex-1 min-h-0 flex flex-col"
+                                className="case-study-modal-main-inner flex-1 min-h-0 flex flex-col"
                             >
                                 {project.description ? (
                                     <>
-                                        <div className="flex-1 min-h-0 grid md:grid-cols-3 grid-rows-[auto] divide-y md:divide-y-0 md:divide-x divide-border-subtle">
+                                        <div className="case-study-modal-main-grid flex-1 min-h-0 grid md:grid-cols-3 grid-rows-[auto] divide-y md:divide-y-0 md:divide-x divide-border-subtle">
                                             <ConsolePanel label="The Challenge">
-                                                <p className="text-text-secondary text-sm leading-relaxed whitespace-pre-line">
+                                                <p className="case-study-modal-main-text text-text-secondary text-sm leading-relaxed whitespace-pre-line">
                                                     {project.description.challenge}
                                                 </p>
                                             </ConsolePanel>
                                             <ConsolePanel label="The Work">
-                                                <ul className="space-y-2.5">
+                                                <ul className="case-study-modal-main-work-list space-y-2.5">
                                                     {project.description.work.map((item, i) => (
-                                                        <li key={i} className="text-text-secondary text-sm leading-relaxed flex gap-2">
-                                                            <span className="text-accent-primary flex-shrink-0">▸</span>
-                                                            <span>{item}</span>
+                                                        <li key={i} className="case-study-modal-main-work-item text-text-secondary text-sm leading-relaxed flex gap-2">
+                                                            <span className="case-study-modal-main-work-bullet text-accent-primary flex-shrink-0">▸</span>
+                                                            <span className="case-study-modal-main-work-text">{item}</span>
                                                         </li>
                                                     ))}
                                                 </ul>
                                             </ConsolePanel>
                                             <ConsolePanel label="The Outcome">
-                                                <p className="text-text-secondary text-sm leading-relaxed whitespace-pre-line">
+                                                <p className="case-study-modal-main-text text-text-secondary text-sm leading-relaxed whitespace-pre-line">
                                                     {project.description.outcome}
                                                 </p>
                                             </ConsolePanel>
                                         </div>
 
                                         {/* Bottom gallery strip - legacy only */}
-                                        <div className="flex-shrink-0 border-t border-border-subtle bg-bg-tertiary/30">
-                                            <div className="px-7 py-2.5 flex items-center gap-3 text-xs font-mono uppercase tracking-[0.2em] text-text-muted">
-                                                <span className="w-1.5 h-1.5 rounded-full bg-accent-primary" />
-                                                <span>Gallery</span>
-                                                <span className="text-accent-primary/60">// {galleryImages.length}</span>
+                                        <div className="case-study-modal-gallery-strip flex-shrink-0 border-t border-border-subtle bg-bg-tertiary/30">
+                                            <div className="case-study-modal-gallery-strip-header px-7 py-2.5 flex items-center gap-3 text-xs font-mono uppercase tracking-[0.2em] text-text-muted">
+                                                <span className="case-study-modal-gallery-strip-dot w-1.5 h-1.5 rounded-full bg-accent-primary" />
+                                                <span className="case-study-modal-gallery-strip-label">Gallery</span>
+                                                <span className="case-study-modal-gallery-strip-count text-accent-primary/60">// {galleryImages.length}</span>
                                             </div>
                                             <div
-                                                className="px-7 pb-5 flex gap-3 overflow-x-auto overflow-y-hidden hud-scroll"
+                                                className="case-study-modal-gallery-strip-list px-7 pb-5 flex gap-3 overflow-x-auto overflow-y-hidden hud-scroll"
                                                 style={{
                                                     maskImage: 'linear-gradient(to right, black 0, black 92%, transparent 100%)',
                                                     WebkitMaskImage: 'linear-gradient(to right, black 0, black 92%, transparent 100%)',
@@ -475,14 +475,14 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                                     <button
                                                         key={idx}
                                                         onClick={() => setLightboxIndex(idx)}
-                                                        className="relative flex-shrink-0 w-[232px] aspect-[4/3] rounded-sm overflow-hidden bg-bg-tertiary cursor-zoom-in hover:brightness-110 transition-all border border-border-subtle hover:border-accent-primary/40"
+                                                        className="case-study-modal-gallery-strip-item relative flex-shrink-0 w-[232px] aspect-[4/3] rounded-sm overflow-hidden bg-bg-tertiary cursor-zoom-in hover:brightness-110 transition-all border border-border-subtle hover:border-accent-primary/40"
                                                     >
                                                         <ImageWithFallback
                                                             src={img}
                                                             alt={`${project.title} screenshot ${idx + 1}`}
                                                             fill
                                                             sizes="232px"
-                                                            className="object-cover"
+                                                            className="case-study-modal-gallery-strip-image object-cover"
                                                         />
                                                     </button>
                                                 ))}
@@ -518,40 +518,40 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
 
 function BodyIntro({ project }: { project: CaseStudyData }) {
     return (
-        <section className="px-9 pt-7 pb-7 border-b border-border-subtle">
-            <div className="flex items-center gap-2 mb-5">
-                <span className="relative inline-flex w-1.5 h-1.5 flex-shrink-0">
-                    <span className="absolute inset-0 rounded-full bg-accent-primary animate-ping opacity-60" />
-                    <span className="relative inline-block w-1.5 h-1.5 rounded-full bg-accent-primary" />
+        <section className="body-intro-root px-9 pt-7 pb-7 border-b border-border-subtle">
+            <div className="body-intro-eyebrow flex items-center gap-2 mb-5">
+                <span className="body-intro-eyebrow-dot relative inline-flex w-1.5 h-1.5 flex-shrink-0">
+                    <span className="body-intro-eyebrow-dot-ping absolute inset-0 rounded-full bg-accent-primary animate-ping opacity-60" />
+                    <span className="body-intro-eyebrow-dot-core relative inline-block w-1.5 h-1.5 rounded-full bg-accent-primary" />
                 </span>
-                <span className="text-[11px] font-mono uppercase tracking-[0.22em] text-accent-primary truncate">
+                <span className="body-intro-eyebrow-text text-[11px] font-mono uppercase tracking-[0.22em] text-accent-primary truncate">
                     Case File · {project.id.toUpperCase().replace(/-/g, '_')}
                 </span>
             </div>
-            <div className="grid md:grid-cols-[minmax(0,1fr)_minmax(0,340px)] gap-x-8 gap-y-6 items-start">
-                <div className="flex flex-col gap-5 order-2 md:order-1">
-                    <div>
-                        <h3 className="text-3xl md:text-[34px] font-semibold text-text-primary tracking-tight leading-[1.1] mb-3">
+            <div className="body-intro-grid grid md:grid-cols-[minmax(0,1fr)_minmax(0,340px)] gap-x-8 gap-y-6 items-start">
+                <div className="body-intro-text-col flex flex-col gap-5 order-2 md:order-1">
+                    <div className="body-intro-headline">
+                        <h3 className="body-intro-title text-3xl md:text-[34px] font-semibold text-text-primary tracking-tight leading-[1.1] mb-3">
                             {project.title}
                         </h3>
-                        <p className="text-text-muted text-[15px] font-light leading-relaxed max-w-2xl">
+                        <p className="body-intro-subtitle text-text-muted text-[15px] font-light leading-relaxed max-w-2xl">
                             {project.subtitle}
                         </p>
                     </div>
-                    <div className="grid grid-cols-2 gap-x-5 gap-y-3 font-mono text-xs text-text-muted max-w-md">
-                        <div>
-                            <span className="block text-text-dim text-[10px] uppercase tracking-widest mb-1">Role</span>
-                            <span className="text-text-secondary">{project.role}</span>
+                    <div className="body-intro-meta-grid grid grid-cols-2 gap-x-5 gap-y-3 font-mono text-xs text-text-muted max-w-md">
+                        <div className="body-intro-meta-cell">
+                            <span className="body-intro-meta-label block text-text-dim text-[10px] uppercase tracking-widest mb-1">Role</span>
+                            <span className="body-intro-meta-value text-text-secondary">{project.role}</span>
                         </div>
-                        <div>
-                            <span className="block text-text-dim text-[10px] uppercase tracking-widest mb-1">Period</span>
-                            <span className="text-text-secondary">{project.period}</span>
+                        <div className="body-intro-meta-cell">
+                            <span className="body-intro-meta-label block text-text-dim text-[10px] uppercase tracking-widest mb-1">Period</span>
+                            <span className="body-intro-meta-value text-text-secondary">{project.period}</span>
                         </div>
                     </div>
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-2.5 pt-1">
-                        <div className="flex flex-wrap items-center gap-1.5">
+                    <div className="body-intro-tag-row flex flex-wrap items-center gap-x-3 gap-y-2.5 pt-1">
+                        <div className="body-intro-tag-list flex flex-wrap items-center gap-1.5">
                             {project.tags.map((tag) => (
-                                <span key={tag} className="bg-bg-tertiary/40 px-2 py-0.5 rounded text-[10px] font-mono text-text-muted border border-border-subtle">
+                                <span key={tag} className="body-intro-tag bg-bg-tertiary/40 px-2 py-0.5 rounded text-[10px] font-mono text-text-muted border border-border-subtle">
                                     {tag}
                                 </span>
                             ))}
@@ -561,32 +561,32 @@ function BodyIntro({ project }: { project: CaseStudyData }) {
                                 href={project.links.live}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 px-3.5 py-2 bg-accent-primary/10 hover:bg-accent-primary/20 text-accent-primary rounded-sm font-semibold transition-colors text-xs uppercase tracking-widest font-mono"
+                                className="body-intro-cta inline-flex items-center gap-2 px-3.5 py-2 bg-accent-primary/10 hover:bg-accent-primary/20 text-accent-primary rounded-sm font-semibold transition-colors text-xs uppercase tracking-widest font-mono"
                             >
                                 View live <ExternalLink size={12} />
                             </a>
                         )}
                     </div>
                 </div>
-                <div className="relative w-full aspect-[16/10] rounded-sm overflow-hidden bg-bg-tertiary border border-border-subtle order-1 md:order-2">
+                <div className="body-intro-hero relative w-full aspect-[16/10] rounded-sm overflow-hidden bg-bg-tertiary border border-border-subtle order-1 md:order-2">
                     <ImageWithFallback
                         src={project.images.hero}
                         alt={project.title}
                         fill
                         sizes="(min-width: 768px) 340px, 100vw"
-                        className="object-cover"
+                        className="body-intro-hero-image object-cover"
                     />
                 </div>
             </div>
             {project.body?.outcome?.metrics && project.body.outcome.metrics.length > 0 && (
-                <div className="mt-7">
+                <div className="body-intro-metrics mt-7">
                     <MetricsCircles metrics={project.body.outcome.metrics} />
                 </div>
             )}
             {project.body?.honest_note && (
-                <div className="mt-6 pt-5 border-t border-border-subtle">
+                <div className="body-intro-honest-note mt-6 pt-5 border-t border-border-subtle">
                     <SubLabel>Honest note</SubLabel>
-                    <p className="text-text-muted text-sm italic leading-relaxed mt-2 max-w-3xl">
+                    <p className="body-intro-honest-note-text text-text-muted text-sm italic leading-relaxed mt-2 max-w-3xl">
                         {project.body.honest_note}
                     </p>
                 </div>
@@ -602,21 +602,21 @@ function BodyDesktopView({ body, onScreenshotClick }: { body: CaseStudyBody; onS
     return (
         <>
             {/* BRIEF */}
-            <section className="px-9 pt-8 pb-9 border-b border-border-subtle">
+            <section className="body-desktop-brief px-9 pt-8 pb-9 border-b border-border-subtle">
                 <PanelLabel>Brief</PanelLabel>
-                <div className="grid lg:grid-cols-2 gap-x-10 gap-y-5 mb-6">
+                <div className="body-desktop-brief-grid grid lg:grid-cols-2 gap-x-10 gap-y-5 mb-6">
                     <BriefCol label="Situation" body={body.brief.situation} />
                     <BriefCol label="Audience" body={body.brief.audience} />
                 </div>
-                <div>
+                <div className="body-desktop-brief-hard">
                     <SubLabel>What made it hard</SubLabel>
-                    <ul className="mt-3 max-w-3xl">
+                    <ul className="body-desktop-brief-hard-list mt-3 max-w-3xl">
                         {body.brief.what_made_it_hard.map((item, i) => (
-                            <li key={i} className="flex gap-3 text-text-secondary text-sm leading-relaxed py-2.5 border-t border-border-subtle/60 first:border-t">
-                                <span className="text-accent-primary/80 font-mono text-[11px] pt-1 select-none">
+                            <li key={i} className="body-desktop-brief-hard-item flex gap-3 text-text-secondary text-sm leading-relaxed py-2.5 border-t border-border-subtle/60 first:border-t">
+                                <span className="body-desktop-brief-hard-index text-accent-primary/80 font-mono text-[11px] pt-1 select-none">
                                     {String(i + 1).padStart(2, '0')}
                                 </span>
-                                <span>{item}</span>
+                                <span className="body-desktop-brief-hard-text">{item}</span>
                             </li>
                         ))}
                     </ul>
@@ -624,15 +624,15 @@ function BodyDesktopView({ body, onScreenshotClick }: { body: CaseStudyBody; onS
             </section>
 
             {/* DECISIONS */}
-            <section className="px-9 py-8 border-b border-border-subtle">
-                <div className="flex items-center gap-3 mb-7">
-                    <span className="w-1.5 h-1.5 rounded-full bg-accent-primary" />
-                    <span className="text-sm font-mono uppercase tracking-[0.18em] text-accent-primary">
+            <section className="body-desktop-decisions px-9 py-8 border-b border-border-subtle">
+                <div className="body-desktop-decisions-header flex items-center gap-3 mb-7">
+                    <span className="body-desktop-decisions-dot w-1.5 h-1.5 rounded-full bg-accent-primary" />
+                    <span className="body-desktop-decisions-label text-sm font-mono uppercase tracking-[0.18em] text-accent-primary">
                         Decisions
                     </span>
-                    <span className="text-xs font-mono text-accent-primary/60">// {decisions.length}</span>
+                    <span className="body-desktop-decisions-count text-xs font-mono text-accent-primary/60">// {decisions.length}</span>
                 </div>
-                <div className="space-y-9">
+                <div className="body-desktop-decisions-list space-y-9">
                     {decisions.map((d, i) => (
                         <DecisionRow
                             key={i}
@@ -647,18 +647,18 @@ function BodyDesktopView({ body, onScreenshotClick }: { body: CaseStudyBody; onS
 
             {/* PROCESS */}
             {body.process && (
-                <section className="px-9 py-7 border-b border-border-subtle">
+                <section className="body-desktop-process px-9 py-7 border-b border-border-subtle">
                     <PanelLabel>Process</PanelLabel>
-                    <p className="text-text-secondary text-sm leading-relaxed max-w-3xl">
+                    <p className="body-desktop-process-text text-text-secondary text-sm leading-relaxed max-w-3xl">
                         {body.process}
                     </p>
                 </section>
             )}
 
             {/* OUTCOME */}
-            <section className="px-9 py-8">
+            <section className="body-desktop-outcome px-9 py-8">
                 <PanelLabel>Outcome</PanelLabel>
-                <p className="text-text-secondary text-[15px] leading-relaxed max-w-3xl">
+                <p className="body-desktop-outcome-text text-text-secondary text-[15px] leading-relaxed max-w-3xl">
                     {body.outcome.summary}
                 </p>
             </section>
@@ -670,24 +670,24 @@ function BodyMobileView({ body, onScreenshotClick }: { body: CaseStudyBody; onSc
     return (
         <>
             <MobileSection label="Brief">
-                <div className="space-y-4">
-                    <div>
+                <div className="body-mobile-brief space-y-4">
+                    <div className="body-mobile-brief-block">
                         <SubLabel>Situation</SubLabel>
-                        <p className="text-text-secondary mt-1">{body.brief.situation}</p>
+                        <p className="body-mobile-brief-text text-text-secondary mt-1">{body.brief.situation}</p>
                     </div>
-                    <div>
+                    <div className="body-mobile-brief-block">
                         <SubLabel>Audience</SubLabel>
-                        <p className="text-text-secondary mt-1">{body.brief.audience}</p>
+                        <p className="body-mobile-brief-text text-text-secondary mt-1">{body.brief.audience}</p>
                     </div>
-                    <div>
+                    <div className="body-mobile-brief-block">
                         <SubLabel>What made it hard</SubLabel>
-                        <ul className="mt-2 space-y-2">
+                        <ul className="body-mobile-brief-hard-list mt-2 space-y-2">
                             {body.brief.what_made_it_hard.map((item, i) => (
-                                <li key={i} className="flex gap-2.5 text-text-secondary text-sm leading-relaxed py-1.5 border-t border-border-subtle/60">
-                                    <span className="text-accent-primary/80 font-mono text-[11px] pt-0.5">
+                                <li key={i} className="body-mobile-brief-hard-item flex gap-2.5 text-text-secondary text-sm leading-relaxed py-1.5 border-t border-border-subtle/60">
+                                    <span className="body-mobile-brief-hard-index text-accent-primary/80 font-mono text-[11px] pt-0.5">
                                         {String(i + 1).padStart(2, '0')}
                                     </span>
-                                    <span>{item}</span>
+                                    <span className="body-mobile-brief-hard-text">{item}</span>
                                 </li>
                             ))}
                         </ul>
@@ -696,7 +696,7 @@ function BodyMobileView({ body, onScreenshotClick }: { body: CaseStudyBody; onSc
             </MobileSection>
 
             <MobileSection label={`Decisions // ${body.decisions.length}`}>
-                <div className="space-y-7">
+                <div className="body-mobile-decisions-list space-y-7">
                     {body.decisions.map((d, i) => (
                         <DecisionRow
                             key={i}
@@ -712,12 +712,12 @@ function BodyMobileView({ body, onScreenshotClick }: { body: CaseStudyBody; onSc
 
             {body.process && (
                 <MobileSection label="Process">
-                    <p className="text-text-secondary">{body.process}</p>
+                    <p className="body-mobile-process-text text-text-secondary">{body.process}</p>
                 </MobileSection>
             )}
 
             <MobileSection label="Outcome">
-                <p className="text-text-secondary">{body.outcome.summary}</p>
+                <p className="body-mobile-outcome-text text-text-secondary">{body.outcome.summary}</p>
             </MobileSection>
         </>
     );
@@ -739,41 +739,41 @@ function DecisionRow({
     const num = String(index + 1).padStart(2, '0');
     const totalStr = String(total).padStart(2, '0');
     return (
-        <article className={stacked ? 'flex flex-col gap-4' : 'grid lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)] gap-x-8 gap-y-4 items-start'}>
+        <article className={`decision-row-root ${stacked ? 'flex flex-col gap-4' : 'grid lg:grid-cols-[minmax(0,1.65fr)_minmax(0,1fr)] gap-x-8 gap-y-4 items-start'}`}>
             {/* Screenshot + caption (left column on desktop, top on mobile) */}
-            <figure className="flex flex-col">
+            <figure className="decision-row-figure flex flex-col">
                 <button
                     onClick={onScreenshotClick}
-                    className="group relative w-full aspect-[16/10] rounded-sm overflow-hidden bg-bg-tertiary border border-border-subtle hover:border-accent-primary/40 transition-colors cursor-zoom-in"
+                    className="decision-row-screenshot-button group relative w-full aspect-[16/10] rounded-sm overflow-hidden bg-bg-tertiary border border-border-subtle hover:border-accent-primary/40 transition-colors cursor-zoom-in"
                 >
                     <ImageWithFallback
                         src={decision.screenshot}
                         alt={decision.caption || decision.title}
                         fill
                         sizes="(min-width: 1024px) 760px, 100vw"
-                        className="object-cover group-hover:brightness-110 transition-all"
+                        className="decision-row-screenshot-image object-cover group-hover:brightness-110 transition-all"
                     />
                 </button>
                 {decision.caption && (
-                    <figcaption className="mt-2.5 text-xs font-mono text-text-muted leading-relaxed">
-                        <span className="text-accent-primary/70 mr-1.5">{num}</span>
+                    <figcaption className="decision-row-caption mt-2.5 text-xs font-mono text-text-muted leading-relaxed">
+                        <span className="decision-row-caption-index text-accent-primary/70 mr-1.5">{num}</span>
                         {decision.caption}
                     </figcaption>
                 )}
             </figure>
 
             {/* Title + single rationale paragraph */}
-            <div>
-                <div className="flex items-baseline gap-2 mb-2.5">
-                    <span className="font-serif italic font-normal text-accent-primary text-base md:text-lg leading-none">
-                        {num}
+            <div className="decision-row-text-col">
+                <div className="decision-row-eyebrow flex items-center gap-2 mb-2.5">
+                    <span className="decision-row-eyebrow-label text-[11px] font-mono uppercase tracking-[0.22em] text-accent-primary">
+                        Decision {num}
                     </span>
-                    <span className="text-text-dim text-xs font-mono">/ {totalStr}</span>
+                    <span className="decision-row-eyebrow-total text-[11px] font-mono text-accent-primary/50">/ {totalStr}</span>
                 </div>
-                <h4 className="font-serif italic font-normal text-text-primary text-2xl md:text-3xl leading-tight mb-3 tracking-tight">
+                <h4 className="decision-row-title text-[19px] md:text-xl font-semibold text-text-primary leading-snug mb-3 tracking-tight">
                     {decision.title}
                 </h4>
-                <p className="text-text-secondary text-sm leading-relaxed">
+                <p className="decision-row-rationale text-text-secondary text-sm leading-relaxed">
                     {decision.why}
                 </p>
             </div>
@@ -783,9 +783,9 @@ function DecisionRow({
 
 function BriefCol({ label, body }: { label: string; body: string }) {
     return (
-        <div>
+        <div className="brief-col-root">
             <SubLabel>{label}</SubLabel>
-            <p className="text-text-secondary text-sm leading-relaxed mt-1.5">{body}</p>
+            <p className="brief-col-text text-text-secondary text-sm leading-relaxed mt-1.5">{body}</p>
         </div>
     );
 }
@@ -796,15 +796,15 @@ function MetricsCircles({ metrics }: { metrics: Array<{ label: string; value: st
     const RADIUS = 38;
     const CIRC = 2 * Math.PI * RADIUS;
     return (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-5 border-t border-border-subtle pt-5">
+        <div className="metrics-circles-root grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-5 border-t border-border-subtle pt-5">
             {metrics.map((m, i) => {
                 const num = parseFloat(m.value);
                 const pct = Number.isFinite(num) ? Math.max(0, Math.min(100, num)) : 100;
                 const offset = CIRC * (1 - pct / 100);
                 return (
-                    <div key={i} className="flex flex-col items-center text-center gap-2.5">
-                        <div className="relative w-[88px] h-[88px]">
-                            <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
+                    <div key={i} className="metrics-circles-item flex flex-col items-center text-center gap-2.5">
+                        <div className="metrics-circles-ring relative w-[88px] h-[88px]">
+                            <svg viewBox="0 0 100 100" className="metrics-circles-svg w-full h-full -rotate-90">
                                 <circle
                                     cx="50"
                                     cy="50"
@@ -828,11 +828,11 @@ function MetricsCircles({ metrics }: { metrics: Array<{ label: string; value: st
                                     transition={{ duration: 1.1, delay: 0.15 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
                                 />
                             </svg>
-                            <span className="absolute inset-0 flex items-center justify-center text-text-primary text-2xl md:text-[26px] font-semibold tracking-tight tabular-nums">
+                            <span className="metrics-circles-value absolute inset-0 flex items-center justify-center text-text-primary text-2xl md:text-[26px] font-semibold tracking-tight tabular-nums">
                                 {m.value}
                             </span>
                         </div>
-                        <span className="text-[10px] md:text-[11px] font-mono font-bold uppercase tracking-[0.18em] text-text-muted leading-tight max-w-[14ch]">
+                        <span className="metrics-circles-label text-[10px] md:text-[11px] font-mono font-bold uppercase tracking-[0.18em] text-text-muted leading-tight max-w-[14ch]">
                             {m.label}
                         </span>
                     </div>
@@ -850,13 +850,13 @@ function MetricsRow({ metrics }: { metrics: Array<{ label: string; value: string
         : cols === 3 ? 'grid-cols-1 sm:grid-cols-3'
         : 'grid-cols-2 sm:grid-cols-4';
     return (
-        <div className={`grid ${colsClass} gap-y-5 gap-x-6 border-t border-border-subtle pt-5`}>
+        <div className={`metrics-row-root grid ${colsClass} gap-y-5 gap-x-6 border-t border-border-subtle pt-5`}>
             {metrics.map((m, i) => (
-                <div key={i} className="flex flex-col gap-1.5">
-                    <span className="text-text-primary text-3xl md:text-[34px] font-semibold tracking-tight leading-none">
+                <div key={i} className="metrics-row-item flex flex-col gap-1.5">
+                    <span className="metrics-row-value text-text-primary text-3xl md:text-[34px] font-semibold tracking-tight leading-none">
                         {m.value}
                     </span>
-                    <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-text-muted">
+                    <span className="metrics-row-label text-[10px] font-mono uppercase tracking-[0.2em] text-text-muted">
                         {m.label}
                     </span>
                 </div>
@@ -867,7 +867,7 @@ function MetricsRow({ metrics }: { metrics: Array<{ label: string; value: string
 
 function SubLabel({ children }: { children: React.ReactNode }) {
     return (
-        <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-text-dim block">
+        <span className="sub-label-root text-[10px] font-mono uppercase tracking-[0.22em] text-text-dim block">
             {children}
         </span>
     );
@@ -877,14 +877,14 @@ function SubLabel({ children }: { children: React.ReactNode }) {
 
 function ConsolePanel({ label, children }: { label: string; children: React.ReactNode }) {
     return (
-        <div className="flex flex-col md:min-h-0 bg-bg-secondary/40">
-            <div className="flex-shrink-0 px-7 py-3.5 border-b border-border-subtle flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-accent-primary" />
-                <span className="text-sm font-mono uppercase tracking-[0.18em] text-accent-primary">
+        <div className="console-panel-root flex flex-col md:min-h-0 bg-bg-secondary/40">
+            <div className="console-panel-header flex-shrink-0 px-7 py-3.5 border-b border-border-subtle flex items-center gap-2">
+                <span className="console-panel-dot w-1.5 h-1.5 rounded-full bg-accent-primary" />
+                <span className="console-panel-label text-sm font-mono uppercase tracking-[0.18em] text-accent-primary">
                     {label}
                 </span>
             </div>
-            <div className="md:flex-1 md:min-h-0 md:overflow-y-auto px-7 py-5 hud-scroll">
+            <div className="console-panel-body md:flex-1 md:min-h-0 md:overflow-y-auto px-7 py-5 hud-scroll">
                 {children}
             </div>
         </div>
@@ -893,23 +893,23 @@ function ConsolePanel({ label, children }: { label: string; children: React.Reac
 
 function MobileSection({ label, children }: { label: string; children: React.ReactNode }) {
     return (
-        <div className="px-7 py-5 border-t border-border-subtle">
-            <div className="flex items-baseline gap-3 mb-4">
-                <span className="block h-px w-6 bg-accent-primary translate-y-[-0.35em]" />
-                <span className="font-serif italic font-normal text-accent-primary text-lg leading-none">
+        <div className="mobile-section-root px-7 py-5 border-t border-border-subtle">
+            <div className="mobile-section-header flex items-baseline gap-3 mb-4">
+                <span className="mobile-section-rule block h-px w-6 bg-text-dim translate-y-[-0.35em]" />
+                <span className="mobile-section-label font-serif italic font-normal text-text-primary text-lg leading-none">
                     {label}
                 </span>
             </div>
-            <div className="text-text-secondary text-base leading-relaxed">{children}</div>
+            <div className="mobile-section-body text-text-secondary text-base leading-relaxed">{children}</div>
         </div>
     );
 }
 
 function PanelLabel({ children }: { children: React.ReactNode }) {
     return (
-        <div className="flex items-baseline gap-3 mb-5">
-            <span className="block h-px w-8 bg-accent-primary translate-y-[-0.35em]" />
-            <span className="font-serif italic font-normal text-accent-primary text-xl md:text-2xl leading-none">
+        <div className="panel-label-root flex items-baseline gap-3 mb-5">
+            <span className="panel-label-rule block h-px w-8 bg-text-dim translate-y-[-0.35em]" />
+            <span className="panel-label-text font-serif italic font-normal text-text-primary text-xl md:text-2xl leading-none">
                 {children}
             </span>
         </div>
@@ -962,19 +962,19 @@ function Lightbox({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[140] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center overflow-hidden touch-none"
+            className="lightbox-root fixed inset-0 z-[140] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center overflow-hidden touch-none"
             onClick={onClose}
             onWheel={handleWheel}
         >
             <button
-                className="absolute top-6 right-6 z-[150] text-white/50 hover:text-white transition-colors bg-black/20 p-2 rounded-full backdrop-blur-md"
+                className="lightbox-close-button absolute top-6 right-6 z-[150] text-white/50 hover:text-white transition-colors bg-black/20 p-2 rounded-full backdrop-blur-md"
                 onClick={onClose}
             >
                 <X size={32} />
             </button>
 
             <button
-                className="hidden md:block absolute left-6 top-1/2 -translate-y-1/2 z-[150] p-4 rounded-full bg-white/5 hover:bg-white/10 text-white/50 hover:text-white transition-all backdrop-blur-md border border-white/10 hover:border-white/20"
+                className="lightbox-prev-button hidden md:block absolute left-6 top-1/2 -translate-y-1/2 z-[150] p-4 rounded-full bg-white/5 hover:bg-white/10 text-white/50 hover:text-white transition-all backdrop-blur-md border border-white/10 hover:border-white/20"
                 onClick={(e) => {
                     e.stopPropagation();
                     onPrev();
@@ -984,7 +984,7 @@ function Lightbox({
                 <ChevronLeft size={24} />
             </button>
             <button
-                className="hidden md:block absolute right-6 top-1/2 -translate-y-1/2 z-[150] p-4 rounded-full bg-white/5 hover:bg-white/10 text-white/50 hover:text-white transition-all backdrop-blur-md border border-white/10 hover:border-white/20"
+                className="lightbox-next-button hidden md:block absolute right-6 top-1/2 -translate-y-1/2 z-[150] p-4 rounded-full bg-white/5 hover:bg-white/10 text-white/50 hover:text-white transition-all backdrop-blur-md border border-white/10 hover:border-white/20"
                 onClick={(e) => {
                     e.stopPropagation();
                     onNext();
@@ -994,7 +994,7 @@ function Lightbox({
                 <ChevronRight size={24} />
             </button>
 
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-[150] bg-black/40 px-4 py-2 rounded-full backdrop-blur-md border border-white/10 text-white/70 text-sm font-mono tracking-widest">
+            <div className="lightbox-counter absolute bottom-8 left-1/2 -translate-x-1/2 z-[150] bg-black/40 px-4 py-2 rounded-full backdrop-blur-md border border-white/10 text-white/70 text-sm font-mono tracking-widest">
                 {currentIndex + 1} / {images.length}
             </div>
 
@@ -1003,7 +1003,7 @@ function Lightbox({
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
-                className="relative w-full h-full flex items-center justify-center"
+                className="lightbox-stage relative w-full h-full flex items-center justify-center"
                 drag={scale === 1 ? 'x' : true}
                 dragConstraints={
                     scale === 1
@@ -1016,11 +1016,11 @@ function Lightbox({
                 transition={dragTransition}
                 onDoubleClick={handleDoubleClick}
             >
-                <div className="relative w-full max-w-7xl h-full p-4 flex items-center justify-center pointer-events-none">
+                <div className="lightbox-frame relative w-full max-w-7xl h-full p-4 flex items-center justify-center pointer-events-none">
                     <img
                         src={src}
                         alt="Project Gallery"
-                        className="max-w-full max-h-[80vh] object-contain select-none shadow-2xl drop-shadow-2xl pointer-events-auto rounded-lg"
+                        className="lightbox-image max-w-full max-h-[80vh] object-contain select-none shadow-2xl drop-shadow-2xl pointer-events-auto rounded-lg"
                         draggable={false}
                         onClick={(e) => e.stopPropagation()}
                     />

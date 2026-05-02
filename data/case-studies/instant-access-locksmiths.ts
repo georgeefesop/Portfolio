@@ -55,7 +55,7 @@ const instantAccessLocksmiths: CaseStudy = {
         },
     },
     images: {
-        thumbnail: '/images/instant-access-locksmiths/instant-access-locksmiths-thumb.jpg',
+        thumbnail: '/images/instant-access-locksmiths/hero-thumb.png',
         hero: '/images/instant-access-locksmiths/instant-access-locksmiths-hero.png',
         gallery: {
             desktop: [

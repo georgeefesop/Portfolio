@@ -14,6 +14,7 @@ export type ExternalCase = {
     categories: CategoryId[];
     thumbnail: string;
     externalLink: string;
+    duration?: string;
 };
 
 export type LegacyDescription = {

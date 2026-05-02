@@ -51,14 +51,14 @@ export default function ThemePreviewToggle() {
     };
 
     if (!mounted) {
-        return <div className="h-8 w-[160px]" aria-hidden />;
+        return <div className="theme-preview-toggle-placeholder h-8 w-[160px]" aria-hidden />;
     }
 
     return (
         <div
             role="radiogroup"
             aria-label="Theme preview"
-            className="flex items-center gap-2.5 rounded-full border border-border-subtle bg-bg-secondary/60 backdrop-blur-sm px-2 py-1"
+            className="theme-preview-toggle-root flex items-center gap-2.5 rounded-full border border-border-subtle bg-bg-secondary/60 backdrop-blur-sm px-2 py-1"
         >
             {THEMES.map(t => {
                 const isActive = t.id === active;
@@ -71,7 +71,7 @@ export default function ThemePreviewToggle() {
                         aria-label={`Preview ${t.label} theme`}
                         title={t.label}
                         onClick={() => handlePick(t.id)}
-                        className={`relative h-6 w-6 rounded-full transition-transform duration-200 ${isActive ? 'scale-110' : 'hover:scale-105'
+                        className={`theme-preview-toggle-swatch relative h-6 w-6 rounded-full transition-transform duration-200 ${isActive ? 'theme-preview-toggle-swatch-active scale-110' : 'hover:scale-105'
                             }`}
                         style={{
                             backgroundColor: t.swatch,

@@ -25,8 +25,8 @@ export default function InstrumentButton({
         <button
             type={type}
             onClick={onClick}
-            className={`
-                relative z-[10] 
+            className={`instrument-button-root
+                relative z-[10]
                 text-black rounded-full 
                 pointer-events-auto 
                 transition-all duration-300 

@@ -153,7 +153,7 @@ export default function HeroCanvas({
     return (
         <canvas
             ref={canvasRef}
-            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+            className="hero-canvas-root absolute inset-0 w-full h-full object-cover pointer-events-none"
             style={{
                 imageRendering: 'auto', // webkit-optimize-contrast is deprecated/standardizing
                 filter: 'contrast(1.1) brightness(0.9)'

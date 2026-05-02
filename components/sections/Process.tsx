@@ -35,34 +35,37 @@ const processSteps = [
 
 export default function Process() {
     return (
-        <section id="how-i-work" className="bg-bg-primary py-16 md:py-32 overflow-hidden relative border-b border-border-subtle select-none scroll-mt-20">
+        <section id="how-i-work" className="process-section bg-bg-primary py-16 md:py-32 overflow-hidden relative border-b border-border-subtle select-none scroll-mt-20">
             {/* Background Grid */}
-            <div className="absolute inset-0 opacity-[0.03]"
+            <div className="process-background-grid absolute inset-0 opacity-[0.03]"
                 style={{
                     backgroundImage: 'linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px)',
                     backgroundSize: '40px 40px'
                 }}
             />
 
-            <div className="max-w-7xl mx-auto px-4 relative z-10">
+            <div className="process-container max-w-7xl mx-auto px-4 relative z-10">
                 <FadeIn>
-                    <div className="text-center mb-12 md:mb-20">
-                        <h2 className="text-3xl md:text-5xl font-bold text-text-primary mb-4 md:mb-6">How I Work</h2>
-                        <p className="text-text-secondary text-base md:text-lg max-w-2xl mx-auto">
+                    <div className="process-header text-center mb-12 md:mb-20">
+                        <h2 className="process-heading font-serif text-h1 leading-[0.95] tracking-tight mb-4 md:mb-6">
+                            <span className="process-heading-prefix text-text-dim">From</span>{' '}
+                            <span className="process-heading-accent italic font-normal text-text-primary">Brief to Build</span>
+                        </h2>
+                        <p className="process-description text-text-secondary text-base md:text-lg max-w-2xl mx-auto">
                             From messy brief to working product - listening, mapping, prototyping, then iterating until the right shape ships.
                         </p>
                     </div>
                 </FadeIn>
 
                 {/* Mobile: simple stacked column with consistent spacing */}
-                <div className="md:hidden flex flex-col gap-4 max-w-md mx-auto">
+                <div className="process-mobile-list md:hidden flex flex-col gap-4 max-w-md mx-auto">
                     {processSteps.map((step, i) => (
                         <MobileProcessCard key={step.id} step={step} index={i} />
                     ))}
                 </div>
 
                 {/* Desktop / tablet: interactive draggable canvas */}
-                <div className="hidden md:block">
+                <div className="process-desktop-canvas hidden md:block">
                     <InteractiveCanvas steps={processSteps} />
                 </div>
             </div>
@@ -72,17 +75,17 @@ export default function Process() {
 
 function MobileProcessCard({ step, index }: { step: typeof processSteps[number]; index: number }) {
     return (
-        <div className="bg-bg-secondary/90 backdrop-blur-md p-5 rounded-xl border border-border-subtle shadow-lg flex flex-col gap-3 relative">
-            <div className="flex justify-between items-start">
-                <div className="w-8 h-8 rounded-lg bg-bg-tertiary flex items-center justify-center text-text-secondary">
+        <div className="mobile-process-card bg-bg-secondary/90 backdrop-blur-md p-5 rounded-xl border border-border-subtle shadow-lg flex flex-col gap-3 relative">
+            <div className="mobile-process-card-header flex justify-between items-start">
+                <div className="mobile-process-card-icon-wrap w-8 h-8 rounded-lg bg-bg-tertiary flex items-center justify-center text-text-secondary">
                     <step.icon size={16} />
                 </div>
             </div>
-            <div>
-                <h3 className="font-bold text-text-primary text-base mb-2">{step.title}</h3>
-                <p className="text-sm text-text-secondary leading-relaxed">{step.desc}</p>
+            <div className="mobile-process-card-body">
+                <h3 className="mobile-process-card-title font-bold text-text-primary text-base mb-2">{step.title}</h3>
+                <p className="mobile-process-card-description text-sm text-text-secondary leading-relaxed">{step.desc}</p>
             </div>
-            <div className="absolute top-2 right-4 text-4xl font-bold opacity-[0.18] font-mono pointer-events-none">
+            <div className="mobile-process-card-step-number absolute top-2 right-4 text-4xl font-bold opacity-[0.18] font-mono pointer-events-none">
                 0{index + 1}
             </div>
         </div>
@@ -109,10 +112,10 @@ function InteractiveCanvas({ steps }: { steps: typeof processSteps }) {
         return () => window.removeEventListener('resize', updateSize);
     }, [isMobile, steps.length]);
 
-    if (size.w === 0) return <div ref={containerRef} className="h-[400px] w-full" />;
+    if (size.w === 0) return <div ref={containerRef} className="interactive-canvas-placeholder h-[400px] w-full" />;
 
     return (
-        <div ref={containerRef} className="relative w-full" style={{ height: size.h }}>
+        <div ref={containerRef} className="interactive-canvas relative w-full" style={{ height: size.h }}>
             <CanvasNodes steps={steps} size={size} containerRef={containerRef} isMobile={isMobile} isTablet={isTablet} isSmallDesktop={isSmallDesktop} />
         </div>
     );
@@ -150,7 +153,7 @@ function CanvasNodes({ steps, size, containerRef, isMobile, isTablet, isSmallDes
 
     return (
         <>
-            <svg className="absolute inset-0 w-full h-full pointer-events-none overflow-visible" style={{ zIndex: 0 }}>
+            <svg className="canvas-nodes-connections absolute inset-0 w-full h-full pointer-events-none overflow-visible" style={{ zIndex: 0 }}>
                 {steps.map((_, i) => {
                     if (i === steps.length - 1 || isMobile || isTablet) return null;
                     return (
@@ -229,7 +232,7 @@ function SmartConnection({ from, to }: { from: { x: any, y: any }, to: { x: any,
             stroke="currentColor"
             strokeWidth="3"
             strokeDasharray="4 4"
-            className="text-accent-primary/40 transition-colors duration-500"
+            className="smart-connection-path text-accent-primary/40 transition-colors duration-500"
         />
     );
 }
@@ -238,34 +241,34 @@ function ProcessNode({ step, index, x, y }: any) {
     return (
         <motion.div
             style={{ x, y }}
-            className="absolute top-0 left-0 w-[260px] z-10"
+            className="process-node absolute top-0 left-0 w-[260px] z-10"
         >
             <motion.div
                 whileHover={{ scale: 1.05 }}
-                className="bg-bg-secondary/90 backdrop-blur-md p-5 rounded-xl border border-border-subtle hover:border-accent-primary/50 hover:shadow-lg hover:shadow-accent-primary/10 flex flex-col gap-3 group transition-all duration-300 select-none relative"
+                className="process-node-card bg-bg-secondary/90 backdrop-blur-md p-5 rounded-xl border border-border-subtle hover:border-accent-primary/50 hover:shadow-lg hover:shadow-accent-primary/10 flex flex-col gap-3 group transition-all duration-300 select-none relative"
             >
-                <div className="flex justify-between items-start">
-                    <div className="w-8 h-8 rounded-lg bg-bg-tertiary flex items-center justify-center text-text-secondary group-hover:text-accent-primary transition-colors">
+                <div className="process-node-header flex justify-between items-start">
+                    <div className="process-node-icon-wrap w-8 h-8 rounded-lg bg-bg-tertiary flex items-center justify-center text-text-secondary group-hover:text-accent-primary transition-colors">
                         <step.icon size={16} />
                     </div>
                 </div>
 
-                <div>
-                    <h3 className="font-bold text-text-primary text-base mb-2 group-hover:text-accent-primary transition-colors">{step.title}</h3>
+                <div className="process-node-body">
+                    <h3 className="process-node-title font-bold text-text-primary text-base mb-2 group-hover:text-accent-primary transition-colors">{step.title}</h3>
                     {/* Removed line-clamp to show full text */}
-                    <p className="text-sm text-text-secondary leading-relaxed">
+                    <p className="process-node-description text-sm text-text-secondary leading-relaxed">
                         {step.desc}
                     </p>
                 </div>
 
                 {/* Big Number */}
-                <div className="absolute top-2 right-4 text-4xl font-bold opacity-[0.18] group-hover:opacity-[0.3] transition-opacity font-mono pointer-events-none">
+                <div className="process-node-step-number absolute top-2 right-4 text-4xl font-bold opacity-[0.18] group-hover:opacity-[0.3] transition-opacity font-mono pointer-events-none">
                     0{index + 1}
                 </div>
 
                 {/* Visible Anchors */}
-                <div className="absolute top-[75px] -left-1.5 w-3 h-3 rounded-full bg-bg-secondary border-2 border-border-medium group-hover:border-accent-primary transition-colors z-20" />
-                <div className="absolute top-[75px] -right-1.5 w-3 h-3 rounded-full bg-bg-secondary border-2 border-border-medium group-hover:border-accent-primary transition-colors z-20" />
+                <div className="process-node-anchor process-node-anchor-left absolute top-[75px] -left-1.5 w-3 h-3 rounded-full bg-bg-secondary border-2 border-border-medium group-hover:border-accent-primary transition-colors z-20" />
+                <div className="process-node-anchor process-node-anchor-right absolute top-[75px] -right-1.5 w-3 h-3 rounded-full bg-bg-secondary border-2 border-border-medium group-hover:border-accent-primary transition-colors z-20" />
             </motion.div>
         </motion.div>
     )

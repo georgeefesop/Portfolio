@@ -18,11 +18,11 @@ import { externalCases } from './external';
 export const cases: CaseStudy[] = [
     realfi,
     aiTools,
-    stellar,
+    instantAccess,
     ukVehicles,
     kingfisher,
     olympus,
-    instantAccess,
+    stellar,
     forecast,
     laHacienda,
     allsop,

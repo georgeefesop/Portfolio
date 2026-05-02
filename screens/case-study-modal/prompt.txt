@@ -1,0 +1,16 @@
+Editorial dark-mode case-study modal mockup for a senior product designer's portfolio. Replaces a tired three-panel "Challenge / Work / Outcome" layout with a longform, decision-led reading view tailored to a richer schema (brief, decisions with inline screenshots, process, outcome).
+
+Brand: deep near-black background #0F0F0F, raised panels #1A1A1A, sunken inputs #242424. Text on dark: pure white #FFFFFF for headlines, light grey #E5E5E5 for body, soft grey #A0A0A0 for muted labels. Accent terracotta #AB7B62 for emphasis, eyebrow dots, hairline highlights, decisive CTAs. Sage #A8B5A0 used sparingly for status badges. Hairline borders #2A2A2A. Mono small-caps labels in a JetBrains-Mono-style monospace ("CASE FILE · KINGFISHER_MOR", "// 7", "DECISION 02 OF 05"). Headlines in a clean editorial sans (Inter or Instrument Sans). Generous whitespace. Backdrop blur on floating panels.
+
+Layout (1376 x 768, viewed on a desktop): a portrait dim backdrop with the page behind faded to near-black. Dialog floats centred. TWO connected surfaces, with a 16px gap between them.
+
+LEFT, a fixed identity card 360px wide, full modal height. Top: terracotta dot + "CASE FILE · KINGFISHER_MOR" mono label. Then big white title "Kingfisher Mortgages". Subtitle: 2-line muted grey description sentence. Below: 5 small pill-shaped tags with hairline borders. Beneath, a tiny 2-column meta block (ROLE / PERIOD) in mono caps. At the bottom: a pinned terracotta-tinted "View live" button. The whole card sits inside a hairline border with a soft warm glow.
+
+RIGHT, the main reading panel, full height, scrolls. Vertical stack:
+1. A small "BRIEF" mono section label in terracotta. Two short paragraphs (Situation, Audience) and a tight bullet list "WHAT MADE IT HARD" with four hairline-divided one-liners.
+2. Big "DECISIONS" section label. Then a stack of 5 decision blocks, each as a horizontal card: left half = a wide editorial screenshot of a website section (cream paper with serif headline, italic-coral on a key word), right half = decision title in white sans, two short paragraphs (What / Why) on dark, and a small terracotta "Rejected: ..." line. Decisions are numbered "01" through "05" in mono caps top-left of each block. Hairline rules separate them.
+3. A small "PROCESS" mono section label. One paragraph in muted grey.
+4. "OUTCOME" mono section label. One short summary paragraph, then a 3-up metric row with big number + small mono label, then a subdued italic "honest note" in grey.
+5. A close X icon at the very top right of the whole dialog.
+
+Beat: feels like a Bloomberg terminal designed by a New Yorker art director. Quietly confident, lots of negative space, generous reading rhythm, hairlines doing the structural work. NO rounded SaaS cards, NO icon-in-tinted-box clusters, NO drop shadows on tiles, NO em-dashes anywhere, NO emojis. Square or 4px-radius corners only. Restrained. The reader can scan headlines or read the whole thing without bouncing.

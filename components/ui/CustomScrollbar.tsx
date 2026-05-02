@@ -111,14 +111,14 @@ export default function CustomScrollbar() {
 
     return (
         <motion.div
-            className={`fixed right-0 top-0 bottom-0 z-50 group flex flex-col items-center py-1 transition-all duration-300 ${isDragging ? 'w-4' : 'w-2 hover:w-4'
+            className={`custom-scrollbar-root fixed right-0 top-0 bottom-0 z-50 group flex flex-col items-center py-1 transition-all duration-300 ${isDragging ? 'custom-scrollbar-root-dragging w-4' : 'w-2 hover:w-4'
                 }`}
             initial={{ opacity: 0 }}
             animate={{ opacity: isVisible || isDragging ? 1 : 0 }}
             transition={{ duration: 0.3 }}
         >
             {/* Hit area extension */}
-            <div className="absolute inset-0 px-2 cursor-pointer pointer-events-auto" />
+            <div className="custom-scrollbar-hitarea absolute inset-0 px-2 cursor-pointer pointer-events-auto" />
 
             {/* Thumb - Using a motion.div for position sync */}
             <motion.div
@@ -128,7 +128,7 @@ export default function CustomScrollbar() {
                     height: thumbHeight,
                     width: '100%',
                 }}
-                className={`
+                className={`custom-scrollbar-thumb
                     relative rounded-full cursor-grab active:cursor-grabbing pointer-events-auto
                     ${isVibrant
                         ? 'bg-white shadow-[0_0_15px_rgba(255,255,255,0.5)]'

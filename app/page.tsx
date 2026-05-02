@@ -5,7 +5,6 @@ import CaseStudies from "@/components/sections/CaseStudies";
 import Services from "@/components/sections/Services";
 import Process from "@/components/sections/Process";
 import PrototypeShowcase from "@/components/sections/PrototypeShowcase";
-import Resources from "@/components/sections/Resources";
 import About from "@/components/sections/About";
 import Contact from "@/components/sections/Contact";
 import Footer from "@/components/ui/Footer";
@@ -24,7 +23,6 @@ export default function Home() {
             <Services />
             <Process />
             <PrototypeShowcase />
-            <Resources />
             <About />
             <Contact />
             <Footer />

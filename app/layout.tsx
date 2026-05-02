@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono, Caveat, Instrument_Sans, Newsreader } from "next/font/google";
+import { Inter, JetBrains_Mono, Caveat, Instrument_Sans, Newsreader, Inconsolata, Karla } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/ui/Navigation";
 import CustomScrollbar from "@/components/ui/CustomScrollbar";
@@ -12,6 +12,8 @@ const caveat = Caveat({ subsets: ["latin"], variable: "--font-caveat", display: 
 const instrumentSans = Instrument_Sans({ subsets: ["latin"], weight: ["700"], variable: "--font-instrument", display: "swap", preload: false });
 // Display serif for headings, eyebrows, and editorial italic accents.
 const newsreader = Newsreader({ subsets: ["latin"], weight: ["400", "500", "600"], style: ["normal", "italic"], variable: "--font-newsreader", display: "swap" });
+const inconsolata = Inconsolata({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-inconsolata", display: "swap", preload: false });
+const karla = Karla({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-karla", display: "swap", preload: false });
 
 export const metadata: Metadata = {
   title: "efesop | Product Designer for Complex Systems",
@@ -36,7 +38,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={`${inter.variable} ${jetbrainsMono.variable} ${caveat.variable} ${instrumentSans.variable} ${newsreader.variable} font-sans bg-bg-primary text-text-primary antialiased`} suppressHydrationWarning>
+      <body className={`${inter.variable} ${jetbrainsMono.variable} ${caveat.variable} ${instrumentSans.variable} ${newsreader.variable} ${inconsolata.variable} ${karla.variable} font-sans bg-bg-primary text-text-primary antialiased`} suppressHydrationWarning>
         <Navigation />
         {children}
         <CustomScrollbar />

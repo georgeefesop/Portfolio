@@ -25,69 +25,70 @@ function UpworkWordmark({ className, style }: { className?: string; style?: Reac
 
 export default function Contact() {
     return (
-        <section id="contact" className="bg-bg-primary py-16 md:py-24 scroll-mt-20">
-            <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="contact" className="contact-section bg-bg-primary py-16 md:py-24 scroll-mt-20">
+            <div className="contact-container max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
                 <FadeIn>
-                    <div className="text-center mb-10">
-                        <p className="text-sm uppercase tracking-wider text-text-muted mb-3">
+                    <div className="contact-header text-center mb-10">
+                        <p className="contact-eyebrow font-serif italic text-text-muted text-lg md:text-xl mb-3">
                             The fastest way to work together
                         </p>
-                        <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-3">
-                            Hire me on Upwork
+                        <h2 className="contact-heading font-serif text-h1 leading-[0.95] tracking-tight mb-4">
+                            <span className="contact-heading-dim text-text-dim">Hire me on</span>{' '}
+                            <span className="contact-heading-emphasis italic font-normal text-text-primary">Upwork</span>
                         </h2>
-                        <p className="text-text-secondary text-lg max-w-2xl mx-auto">
+                        <p className="contact-subheading text-text-secondary text-lg max-w-2xl mx-auto">
                             Escrow protection, verified reviews, no invoices to chase. I work mostly through Upwork - it&apos;s the cleanest path for both of us.
                         </p>
                     </div>
 
-                    <div className="bg-bg-secondary p-6 md:p-8 rounded-2xl border border-border-subtle shadow-sm">
+                    <div className="contact-card bg-bg-secondary p-6 md:p-8 rounded-2xl border border-border-subtle shadow-sm">
 
                         {/* Identity strip */}
-                        <div className="flex flex-wrap items-center gap-3 pb-6 border-b border-border-subtle/50">
-                            <UpworkWordmark className="h-7 w-auto" style={{ color: UPWORK_GREEN }} />
+                        <div className="contact-identity flex flex-wrap items-center gap-3 pb-6 border-b border-border-subtle/50">
+                            <UpworkWordmark className="contact-identity-logo h-7 w-auto" style={{ color: UPWORK_GREEN }} />
                             <span
-                                className="px-2 py-0.5 text-[10px] font-bold tracking-wider text-white rounded-full"
+                                className="contact-identity-badge px-2 py-0.5 text-[10px] font-bold tracking-wider text-white rounded-full"
                                 style={{ backgroundColor: UPWORK_GREEN }}
                             >
                                 PRO
                             </span>
                         </div>
 
-                        <div className="pt-5 pb-6">
-                            <p className="text-text-primary font-bold">George E.</p>
-                            <p className="text-text-secondary text-sm">Product Designer + Bespoke Web Builder</p>
+                        <div className="contact-name pt-5 pb-6">
+                            <p className="contact-name-value text-text-primary font-bold">George E.</p>
+                            <p className="contact-name-role text-text-secondary text-sm">Product Designer + Bespoke Web Builder</p>
                         </div>
 
                         {/* Stats row */}
-                        <div className="grid grid-cols-3 divide-x divide-border-subtle border-y border-border-subtle/50">
+                        <div className="contact-stats grid grid-cols-3 divide-x divide-border-subtle border-y border-border-subtle/50">
                             {[
                                 { value: '100%', label: 'Job Success' },
                                 { value: '5.0 ★', label: 'Avg rating' },
                                 { value: '0–4 hr', label: 'Response time' },
                             ].map((s) => (
-                                <div key={s.label} className="text-center py-5 px-2">
-                                    <p className="text-2xl md:text-3xl font-bold text-text-primary">{s.value}</p>
-                                    <p className="text-[11px] uppercase tracking-wider text-text-muted mt-1">{s.label}</p>
+                                <div key={s.label} className="contact-stat text-center py-5 px-2">
+                                    <p className="contact-stat-value text-2xl md:text-3xl font-bold text-text-primary">{s.value}</p>
+                                    <p className="contact-stat-label text-[11px] uppercase tracking-wider text-text-muted mt-1">{s.label}</p>
                                 </div>
                             ))}
                         </div>
 
                         {/* Testimonial */}
-                        <blockquote className="mt-6 pl-4 border-l-2 border-accent-primary text-text-secondary italic">
-                            <p>&ldquo;George impressed me a lot. With a two-day turnaround and a challenging brief, he brought the goods and put together a design that nailed the tone.&rdquo;</p>
-                            <footer className="mt-2 text-xs not-italic text-text-muted">- Upwork client, UI/UX project</footer>
+                        <blockquote className="contact-quote mt-6 pl-4 border-l-2 border-accent-primary text-text-secondary italic">
+                            <p className="contact-quote-body">&ldquo;George impressed me a lot. With a two-day turnaround and a challenging brief, he brought the goods and put together a design that nailed the tone.&rdquo;</p>
+                            <footer className="contact-quote-attribution mt-2 text-xs not-italic text-text-muted">- Upwork client, UI/UX project</footer>
                         </blockquote>
 
                         {/* Why-Upwork value props */}
-                        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-5">
+                        <div className="contact-value-props mt-8 grid grid-cols-1 md:grid-cols-3 gap-5">
                             {[
                                 { icon: Shield, title: 'Escrow-protected' },
                                 { icon: Star, title: 'Verified reviews' },
                                 { icon: Zap, title: 'Zero admin' },
                             ].map((v) => (
-                                <div key={v.title} className="flex items-center gap-3">
-                                    <v.icon className="text-accent-primary shrink-0" size={18} />
-                                    <p className="text-text-primary font-semibold text-sm">{v.title}</p>
+                                <div key={v.title} className="contact-value-prop flex items-center gap-3">
+                                    <v.icon className="contact-value-prop-icon text-accent-primary shrink-0" size={18} />
+                                    <p className="contact-value-prop-title text-text-primary font-semibold text-sm">{v.title}</p>
                                 </div>
                             ))}
                         </div>
@@ -97,17 +98,17 @@ export default function Contact() {
                             href={UPWORK_PROFILE_URL}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="mt-8 w-full flex items-center justify-center gap-2 text-white font-bold py-4 rounded-lg transition-colors group bg-[#14A800] hover:bg-[#108300]"
+                            className="contact-cta-button mt-8 w-full flex items-center justify-center gap-2 text-white font-bold py-4 rounded-lg transition-colors group bg-[#14A800] hover:bg-[#108300]"
                         >
                             Hire me on Upwork
-                            <ArrowRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
+                            <ArrowRight size={18} className="contact-cta-icon group-hover:translate-x-0.5 transition-transform" />
                         </a>
 
                         {/* Direct-contact strip */}
-                        <div className="mt-6 pt-6 border-t border-border-subtle/50 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-text-muted">
+                        <div className="contact-direct mt-6 pt-6 border-t border-border-subtle/50 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-text-muted">
                             <a
                                 href="mailto:george.efesop@gmail.com"
-                                className="flex items-center gap-2 hover:text-text-primary transition-colors"
+                                className="contact-direct-link flex items-center gap-2 hover:text-text-primary transition-colors"
                             >
                                 <Mail size={14} />
                                 george.efesop@gmail.com
@@ -116,14 +117,14 @@ export default function Contact() {
                                 href="https://wa.me/35797907137"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="flex items-center gap-2 hover:text-text-primary transition-colors"
+                                className="contact-direct-link flex items-center gap-2 hover:text-text-primary transition-colors"
                             >
                                 <MessageCircle size={14} />
                                 WhatsApp
                             </a>
                             <a
                                 href="tel:+35797907137"
-                                className="flex items-center gap-2 hover:text-text-primary transition-colors whitespace-nowrap"
+                                className="contact-direct-link flex items-center gap-2 hover:text-text-primary transition-colors whitespace-nowrap"
                             >
                                 <Phone size={14} />
                                 +357 97 907 137

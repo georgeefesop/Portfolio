@@ -123,15 +123,15 @@ export default function ProductHero() {
     };
 
     return (
-        <section className="relative h-[100svh] w-full overflow-hidden bg-bg-hero">
+        <section className="product-hero-section relative h-[100svh] w-full overflow-hidden bg-bg-hero">
             {/* Background Grid - swaps stroke color via theme. See .hero-grid in globals.css. */}
-            <div className="absolute inset-0 z-0">
-                <div className="hero-grid absolute inset-0 pointer-events-none" />
+            <div className="product-hero-grid-wrap absolute inset-0 z-0">
+                <div className="product-hero-grid hero-grid absolute inset-0 pointer-events-none" />
             </div>
 
             {/* ProductCanvas - Only in carousel mode */}
             {ENABLE_CAROUSEL && (
-                <div className="absolute inset-0 z-0">
+                <div className="product-hero-canvas-wrap absolute inset-0 z-0">
                     <ErrorBoundary>
                         <ProductCanvas step={step} setStep={setStep} />
                     </ErrorBoundary>
@@ -141,7 +141,7 @@ export default function ProductHero() {
             {/* Featured work strip - sits in the upper-middle of the hero, behind
                 HeroText (which only occupies the bottom). md+ only. */}
             {!ENABLE_CAROUSEL && (
-                <div className="hidden md:block absolute left-0 right-0 z-[18] pointer-events-none" style={{ top: '26%' }}>
+                <div className="product-hero-featured-strip product-hero-featured-strip-desktop hidden md:block absolute left-0 right-0 z-[18] pointer-events-none" style={{ top: '26%' }}>
                     <FeaturedWorkStrip />
                 </div>
             )}
@@ -149,7 +149,7 @@ export default function ProductHero() {
             {/* Vertical featured strip - mobile only. Cards scroll up off-screen,
                 running from the top of the hero down to just above the signature. */}
             {!ENABLE_CAROUSEL && (
-                <div className="md:hidden absolute left-0 right-0 z-[18] pointer-events-auto" style={{ top: '6%', bottom: '24%' }}>
+                <div className="product-hero-featured-strip product-hero-featured-strip-mobile md:hidden absolute left-0 right-0 z-[18] pointer-events-auto" style={{ top: '6%', bottom: '24%' }}>
                     <FeaturedWorkStrip orientation="vertical" />
                 </div>
             )}
@@ -167,14 +167,14 @@ export default function ProductHero() {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 1, duration: 0.8 }}
-                    className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none z-10"
+                    className="product-hero-scroll-indicator absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none z-10"
                 >
                     <motion.div
                         animate={{ y: [0, 8, 0] }}
                         transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                        className="text-text-muted transition-colors duration-500"
+                        className="product-hero-scroll-indicator-arrow text-text-muted transition-colors duration-500"
                     >
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <svg className="product-hero-scroll-indicator-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                             <path d="M12 5v14M19 12l-7 7-7-7" />
                         </svg>
                     </motion.div>
@@ -190,7 +190,7 @@ export default function ProductHero() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 0.3 }}
-                            className="fixed inset-0 z-[9999] flex flex-col items-center justify-center p-4 md:p-8 lg:p-12"
+                            className="product-hero-modal-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center p-4 md:p-8 lg:p-12"
                             style={{
                                 backgroundColor: 'rgba(0, 0, 0, 0.7)'
                             }}
@@ -202,11 +202,11 @@ export default function ProductHero() {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 transition={{ duration: 0.3, delay: 0.1 }}
-                                className="relative w-full max-w-[95vw] lg:max-w-[1400px] flex-1 max-h-[88vh] flex items-center justify-center p-0"
+                                className="product-hero-modal-content relative w-full max-w-[95vw] lg:max-w-[1400px] flex-1 max-h-[88vh] flex items-center justify-center p-0"
                                 onClick={(e) => e.stopPropagation()}
                             >
                                 {/* POS Demo - Fills container */}
-                                <div className="w-full h-full flex items-center justify-center overflow-visible">
+                                <div className="product-hero-modal-canvas-wrap w-full h-full flex items-center justify-center overflow-visible">
                                     <ErrorBoundary>
                                         <ProductCanvas step={2} setStep={setStep} isModalMode={true} />
                                     </ErrorBoundary>
@@ -220,7 +220,7 @@ export default function ProductHero() {
                                 exit={{ opacity: 0, y: 10 }}
                                 transition={{ duration: 0.3, delay: 0.2 }}
                                 onClick={handleCloseModal}
-                                className="mt-2 px-8 py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors backdrop-blur-md border border-white/20 font-medium z-50 shrink-0"
+                                className="product-hero-modal-close mt-2 px-8 py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors backdrop-blur-md border border-white/20 font-medium z-50 shrink-0"
                             >
                                 Close Prototype
                             </motion.button>
