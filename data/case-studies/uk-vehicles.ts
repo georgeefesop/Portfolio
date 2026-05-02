@@ -25,10 +25,10 @@ const ukVehicles: CaseStudy = {
         live: 'https://ukvehiclescyprus.com/en'
     },
     images: {
-        thumbnail: "/images/uk-vehicles/hero.png",
-        hero: "/images/uk-vehicles/hero.png",
+        thumbnail: "/images/uk-vehicles/hero-2.png",
+        hero: "/images/uk-vehicles/hero-2.png",
         gallery: [
-            "/images/uk-vehicles/hero.png",
+            "/images/uk-vehicles/hero-2.png",
             "/images/uk-vehicles/calc.png",
             "/images/uk-vehicles/info.png"
         ]

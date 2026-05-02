@@ -25,7 +25,7 @@ const items: FeaturedItem[] = [
     { id: 'realfi', title: 'RealFi', tag: 'Cardano · Fintech', thumbnail: '/images/realfi/realfi-hero-2026-05-02.png' },
     { id: 'kingfisher-mortgages', title: 'Kingfisher Mortgages', tag: 'WordPress · Brand', thumbnail: '/images/kingfisher-thumb.png' },
     { id: 'allsop-francis', title: 'Allsop & Francis', tag: 'AI Image Direction', thumbnail: '/images/allsop-francis/2.png' },
-    { id: 'uk-vehicles', title: 'UK Vehicles Cyprus', tag: 'Next.js · Commerce', thumbnail: '/images/uk-vehicles/hero.png' },
+    { id: 'uk-vehicles', title: 'UK Vehicles Cyprus', tag: 'Next.js · Commerce', thumbnail: '/images/uk-vehicles/hero-2.png' },
     { id: 'ai-tools', title: 'AI User Tools', tag: 'UX · AI', thumbnail: '/images/ai-tools/AIUT-2.png' },
     { id: 'instant-access-locksmiths', title: 'Instant Access Locksmiths', tag: 'Local SEO · Conversion', thumbnail: '/images/instant-access-locksmiths/hero-thumb.png' },
 ];
@@ -34,7 +34,7 @@ function dispatchOpen(item: FeaturedItem) {
     window.dispatchEvent(new CustomEvent('featured:open', { detail: { id: item.id } }));
 }
 
-function HorizontalCard({ item }: { item: FeaturedItem }) {
+function HorizontalCard({ item, priority }: { item: FeaturedItem; priority?: boolean }) {
     const isInstantAccess = item.id === 'instant-access-locksmiths';
     const isZoomed = ZOOM_IDS.has(item.id);
     const zoomClass = isInstantAccess
@@ -50,6 +50,7 @@ function HorizontalCard({ item }: { item: FeaturedItem }) {
                     alt={item.title}
                     fill
                     sizes="312px"
+                    priority={priority}
                     className={`featured-work-strip-thumb object-cover object-top opacity-90 group-hover:opacity-100 transition-all duration-500 featured-strip-img ${zoomClass}`}
                 />
             </div>
@@ -67,7 +68,7 @@ function HorizontalCard({ item }: { item: FeaturedItem }) {
     );
 }
 
-function VerticalCard({ item }: { item: FeaturedItem }) {
+function VerticalCard({ item, priority }: { item: FeaturedItem; priority?: boolean }) {
     const isInstantAccess = item.id === 'instant-access-locksmiths';
     const isZoomed = ZOOM_IDS.has(item.id);
     const zoomClass = isInstantAccess ? 'scale-[1.12]' : isZoomed ? 'scale-110' : '';
@@ -80,6 +81,7 @@ function VerticalCard({ item }: { item: FeaturedItem }) {
                     alt={item.title}
                     fill
                     sizes="(max-width: 768px) 80vw, 312px"
+                    priority={priority}
                     className={`featured-work-strip-thumb object-cover opacity-95 transition-transform duration-500 featured-strip-img ${posClass} ${zoomClass}`}
                 />
             </div>
@@ -101,7 +103,8 @@ function renderClickable(
     item: FeaturedItem,
     key: string,
     extraClass: string,
-    Inner: React.ComponentType<{ item: FeaturedItem }>,
+    Inner: React.ComponentType<{ item: FeaturedItem; priority?: boolean }>,
+    priority?: boolean,
 ) {
     if (item.externalLink) {
         return (
@@ -112,7 +115,7 @@ function renderClickable(
                 rel="noopener noreferrer"
                 className={`featured-work-strip-item featured-work-strip-item-link block shrink-0 pointer-events-auto ${extraClass}`}
             >
-                <Inner item={item} />
+                <Inner item={item} priority={priority} />
             </a>
         );
     }
@@ -123,7 +126,7 @@ function renderClickable(
             onClick={() => dispatchOpen(item)}
             className={`featured-work-strip-item featured-work-strip-item-button block shrink-0 pointer-events-auto text-left ${extraClass}`}
         >
-            <Inner item={item} />
+            <Inner item={item} priority={priority} />
         </button>
     );
 }
@@ -174,7 +177,7 @@ function HorizontalStrip() {
             onMouseLeave={() => setIsHover(false)}
         >
             <motion.div ref={trackRef} style={{ x }} className="featured-work-strip-track flex gap-16 w-max will-change-transform">
-                {items.map((item, idx) => renderClickable(item, `a-${idx}`, '', HorizontalCard))}
+                {items.map((item, idx) => renderClickable(item, `a-${idx}`, '', HorizontalCard, idx === 0))}
                 {items.map((item, idx) => renderClickable(item, `b-${idx}`, '', HorizontalCard))}
             </motion.div>
         </div>
@@ -216,7 +219,7 @@ function VerticalStrip() {
             }}
         >
             <motion.div ref={trackRef} style={{ y }} className="featured-work-strip-track featured-work-strip-track-vertical flex flex-col gap-5 h-max will-change-transform px-12">
-                {items.map((item, idx) => renderClickable(item, `va-${idx}`, 'block w-full', VerticalCard))}
+                {items.map((item, idx) => renderClickable(item, `va-${idx}`, 'block w-full', VerticalCard, idx === 0))}
                 {items.map((item, idx) => renderClickable(item, `vb-${idx}`, 'block w-full', VerticalCard))}
             </motion.div>
         </div>

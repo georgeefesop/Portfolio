@@ -112,7 +112,21 @@ const allItems: Item[] = [
     ...externalCases.map((c) => ({ ...c, kind: 'external' as const })),
 ];
 
-const PINNED_IDS = ['kingfisher-mortgages', 'realfi'];
+const PINNED_IDS = [
+    'kingfisher-mortgages',
+    'realfi',
+    'instant-access-locksmiths',
+    'allsop-francis',
+    'uk-vehicles',
+    'bank-of-cyprus',
+    'ai-tools',
+    'shackle',
+    'saxseat',
+    'olympus-sports',
+    'la-hacienda',
+];
+
+const TRAILING_IDS = ['figma-microinteractions'];
 
 export default function CaseStudies() {
     const [activeId, setActiveId] = useState<string | null>(null);
@@ -120,12 +134,14 @@ export default function CaseStudies() {
     const [shuffledAllOrderIds, setShuffledAllOrderIds] = useState<string[] | null>(null);
 
     useEffect(() => {
-        const restIds = allItems.filter((i) => !PINNED_IDS.includes(i.id)).map((i) => i.id);
+        const restIds = allItems
+            .filter((i) => !PINNED_IDS.includes(i.id) && !TRAILING_IDS.includes(i.id))
+            .map((i) => i.id);
         for (let i = restIds.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [restIds[i], restIds[j]] = [restIds[j], restIds[i]];
         }
-        setShuffledAllOrderIds([...PINNED_IDS, ...restIds]);
+        setShuffledAllOrderIds([...PINNED_IDS, ...restIds, ...TRAILING_IDS]);
     }, []);
 
     useEffect(() => {
@@ -149,8 +165,9 @@ export default function CaseStudies() {
                     .filter(Boolean) as Item[];
             }
             const pinned = PINNED_IDS.map((id) => allItems.find((i) => i.id === id)).filter(Boolean) as Item[];
-            const rest = allItems.filter((i) => !PINNED_IDS.includes(i.id));
-            return [...pinned, ...rest];
+            const trailing = TRAILING_IDS.map((id) => allItems.find((i) => i.id === id)).filter(Boolean) as Item[];
+            const rest = allItems.filter((i) => !PINNED_IDS.includes(i.id) && !TRAILING_IDS.includes(i.id));
+            return [...pinned, ...rest, ...trailing];
         }
         const drawer = allItems.filter((i) => i.kind === 'drawer' && i.categories.includes(activeCategory));
         const ext = allItems.filter((i) => i.kind === 'external' && i.categories.includes(activeCategory));
