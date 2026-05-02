@@ -578,6 +578,11 @@ function BodyIntro({ project }: { project: CaseStudyData }) {
                     />
                 </div>
             </div>
+            {project.body?.outcome?.metrics && project.body.outcome.metrics.length > 0 && (
+                <div className="mt-7">
+                    <MetricsCircles metrics={project.body.outcome.metrics} />
+                </div>
+            )}
             {project.body?.honest_note && (
                 <div className="mt-6 pt-5 border-t border-border-subtle">
                     <SubLabel>Honest note</SubLabel>
@@ -653,12 +658,9 @@ function BodyDesktopView({ body, onScreenshotClick }: { body: CaseStudyBody; onS
             {/* OUTCOME */}
             <section className="px-9 py-8">
                 <PanelLabel>Outcome</PanelLabel>
-                <p className="text-text-secondary text-[15px] leading-relaxed mb-6 max-w-3xl">
+                <p className="text-text-secondary text-[15px] leading-relaxed max-w-3xl">
                     {body.outcome.summary}
                 </p>
-                {body.outcome.metrics && body.outcome.metrics.length > 0 && (
-                    <MetricsRow metrics={body.outcome.metrics} />
-                )}
             </section>
         </>
     );
@@ -715,10 +717,7 @@ function BodyMobileView({ body, onScreenshotClick }: { body: CaseStudyBody; onSc
             )}
 
             <MobileSection label="Outcome">
-                <p className="text-text-secondary mb-5">{body.outcome.summary}</p>
-                {body.outcome.metrics && body.outcome.metrics.length > 0 && (
-                    <MetricsRow metrics={body.outcome.metrics} />
-                )}
+                <p className="text-text-secondary">{body.outcome.summary}</p>
             </MobileSection>
         </>
     );
@@ -787,6 +786,58 @@ function BriefCol({ label, body }: { label: string; body: string }) {
         <div>
             <SubLabel>{label}</SubLabel>
             <p className="text-text-secondary text-sm leading-relaxed mt-1.5">{body}</p>
+        </div>
+    );
+}
+
+function MetricsCircles({ metrics }: { metrics: Array<{ label: string; value: string }> }) {
+    // Treat numeric values 0-100 as a fill percentage. Anything that doesn't parse
+    // cleanly falls back to a full ring so the visual still reads.
+    const RADIUS = 38;
+    const CIRC = 2 * Math.PI * RADIUS;
+    return (
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-5 border-t border-border-subtle pt-5">
+            {metrics.map((m, i) => {
+                const num = parseFloat(m.value);
+                const pct = Number.isFinite(num) ? Math.max(0, Math.min(100, num)) : 100;
+                const offset = CIRC * (1 - pct / 100);
+                return (
+                    <div key={i} className="flex flex-col items-center text-center gap-2.5">
+                        <div className="relative w-[88px] h-[88px]">
+                            <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
+                                <circle
+                                    cx="50"
+                                    cy="50"
+                                    r={RADIUS}
+                                    fill="none"
+                                    stroke="var(--color-border-subtle, rgba(255,255,255,0.08))"
+                                    strokeWidth="6"
+                                />
+                                <motion.circle
+                                    cx="50"
+                                    cy="50"
+                                    r={RADIUS}
+                                    fill="none"
+                                    stroke="var(--color-accent-primary, #AB7B62)"
+                                    strokeWidth="6"
+                                    strokeLinecap="round"
+                                    strokeDasharray={CIRC}
+                                    initial={{ strokeDashoffset: CIRC }}
+                                    whileInView={{ strokeDashoffset: offset }}
+                                    viewport={{ once: true, margin: '-10% 0px' }}
+                                    transition={{ duration: 1.1, delay: 0.15 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
+                                />
+                            </svg>
+                            <span className="absolute inset-0 flex items-center justify-center text-text-primary text-2xl md:text-[26px] font-semibold tracking-tight tabular-nums">
+                                {m.value}
+                            </span>
+                        </div>
+                        <span className="text-[10px] md:text-[11px] font-mono font-bold uppercase tracking-[0.18em] text-text-muted leading-tight max-w-[14ch]">
+                            {m.label}
+                        </span>
+                    </div>
+                );
+            })}
         </div>
     );
 }
