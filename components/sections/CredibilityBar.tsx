@@ -8,7 +8,6 @@ import FadeIn from '../motion/FadeIn';
 const logos = [
     { name: 'Input Output (IOG)', src: '/logos/iog.svg', height: 22, aspect: 240 / 31, extraMl: '' },
     { name: 'Cardano', src: '/logos/cardano.svg', height: 28, aspect: 1250 / 251.17, extraMl: '' },
-    { name: 'Nike', src: '/logos/nike.svg', height: 30, aspect: 1000 / 356.39, extraMl: 'ml-2 md:ml-6' },
 ];
 
 function Logo({ logo }: { logo: typeof logos[number] }) {
@@ -53,7 +52,7 @@ export default function CredibilityBar() {
                         </div>
 
                         <p className="credibility-bar-caption text-sm text-text-muted font-mono">
-                            2 yrs at IOG · Lead designer on RealFi (Cardano) · 12 yrs freelancing
+                            2 yrs at IOG · Lead designer on RealFi (Cardano $80bn ecosystem) · 12 yrs freelancing
                         </p>
                     </div>
                 </FadeIn>

@@ -29,18 +29,18 @@ function ThumbCard({ item, onOpen, priority }: { item: Item; onOpen: (id: string
     const src = item.kind === 'external' ? item.thumbnail : item.images.thumbnail;
     const isVideo = item.kind === 'external' && !!item.duration;
     const sharedClass =
-        'group relative block w-full overflow-hidden border border-border-subtle bg-bg-secondary hover:border-border-medium transition-colors duration-300 focus:outline-none rounded aspect-[3/2]';
+        'group relative block w-full overflow-hidden border-2 border-border-subtle bg-bg-secondary hover:border-accent-primary transition-colors duration-300 focus:outline-none rounded aspect-[3/2]';
 
     const overlays = (
         <>
             {/* Title + category pills - bottom left */}
             <div className="thumb-card-overlay absolute bottom-0 left-0 right-0 p-3 flex flex-row items-end gap-2 pointer-events-none">
-                <span className="thumb-card-title min-w-0 shrink text-base font-medium normal-case tracking-[0.2px] text-[rgba(58,45,24,0.88)] bg-[#cdc4a8] border-2 border-[#a48e70] px-[14px] pt-1 pb-[5px] rounded whitespace-nowrap overflow-hidden text-ellipsis" style={{ fontFamily: 'var(--font-karla), "Karla Fallback", system-ui, sans-serif' }}>
+                <span className="thumb-card-title min-w-0 shrink text-base font-medium normal-case tracking-[0.2px] border-2 px-[14px] pt-1 pb-[5px] rounded whitespace-nowrap overflow-hidden text-ellipsis">
                     {item.title}
                 </span>
                 <div className="thumb-card-tag-list flex flex-wrap gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                     {item.categories.map((cat) => (
-                        <span key={cat} className={`thumb-card-tag ${PILL} !bg-[#cdc4a8] !border-[#a48e70] !font-medium !tracking-[1.4px] !leading-[1.2]`} style={{ fontFamily: 'var(--font-karla), system-ui, sans-serif' }}>{CATEGORY_LABEL[cat] ?? cat}</span>
+                        <span key={cat} className={`thumb-card-tag ${PILL} !font-medium !tracking-[1.4px] !leading-[1.2]`}>{CATEGORY_LABEL[cat] ?? cat}</span>
                     ))}
                 </div>
             </div>

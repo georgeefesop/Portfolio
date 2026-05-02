@@ -278,6 +278,38 @@
   opacity: 1 !important;
 }
 
+/* Thumb card overlay pills - dark defaults, light overrides */
+.thumb-card-title {
+  font-family: var(--font-karla), "Karla Fallback", system-ui, sans-serif;
+  color: #b2a695;
+  background-color: #0f0f10;
+  border-color: #242424;
+  transition: color 300ms ease;
+}
+
+.group:hover .thumb-card-title {
+  color: var(--accent-primary) !important;
+}
+
+.thumb-card-tag {
+  font-family: var(--font-karla), system-ui, sans-serif;
+  color: #b2a695 !important;
+  background-color: #0f0f0f !important;
+  border-color: #3a3a3a !important;
+}
+
+[data-theme^="light-"] .thumb-card-title {
+  color: rgba(58, 45, 24, 0.88);
+  background-color: #cdc4a8;
+  border-color: #a48e70;
+}
+
+[data-theme^="light-"] .thumb-card-tag {
+  color: #2a1b08 !important;
+  background-color: #cdc4a8 !important;
+  border-color: #a48e70 !important;
+}
+
 /* Fix for Select Options in Dark Mode */
 select option {
   background-color: #1A1A1A;
