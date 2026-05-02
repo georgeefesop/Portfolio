@@ -144,6 +144,12 @@ function rewriteHtml(html) {
   // Also handle JSON-escaped form: http:\/\/localhost:8080\/ (inside inline JS)
   result = result.replace(/https?:\\\/\\\/localhost:8080\\\//g, `${PREFIX}\\/`);
 
+  // Rewrite root-relative wp-content/wp-includes paths in src/href attributes
+  result = result.replace(
+    /\b(src|href)=(['"])\/(wp-(?:content|includes)\/)/gi,
+    (_, attr, quote, path) => `${attr}=${quote}${PREFIX}/${path}`
+  );
+
   return result;
 }
 
@@ -168,6 +174,14 @@ function extractHtmlAssets(html) {
       if (u.startsWith(`${BASE_URL}/`)) urls.add(u);
     }
   }
+
+  // Root-relative src="/wp-content/..." or src='/wp-content/...'
+  const rootSrcRe = /\bsrc=["']\/(wp-(?:content|includes)\/[^"'>\s]+)["']/gi;
+  while ((m = rootSrcRe.exec(html)) !== null) urls.add(`${BASE_URL}/${m[1]}`);
+
+  // Root-relative href="/wp-content/..." (CSS link tags)
+  const rootHrefRe = /\bhref=["']\/(wp-(?:content|includes)\/[^"'>\s]+)["']/gi;
+  while ((m = rootHrefRe.exec(html)) !== null) urls.add(`${BASE_URL}/${m[1]}`);
 
   return urls;
 }
