@@ -6,6 +6,8 @@
   --color-bg-primary: var(--bg-primary);
   --color-bg-secondary: var(--bg-secondary);
   --color-bg-tertiary: var(--bg-tertiary);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-bg-elevated-alt: var(--bg-elevated-alt);
 
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
@@ -15,6 +17,7 @@
   --color-accent-primary: var(--accent-primary);
   --color-accent-secondary: var(--accent-secondary);
   --color-accent-highlight: var(--accent-highlight);
+  --color-accent-coral: var(--accent-coral);
 
   --color-border-subtle: var(--border-subtle);
   --color-border-medium: var(--border-medium);
@@ -77,6 +80,8 @@
   --bg-primary: #0F0F0F;
   --bg-secondary: #1A1A1A;
   --bg-tertiary: #242424;
+  --bg-elevated: #242424;
+  --bg-elevated-alt: #1F1F1F;
 
   /* Text */
   --text-primary: #FFFFFF;
@@ -88,6 +93,7 @@
   --accent-primary: #AB7B62;
   --accent-secondary: #A8B5A0;
   --accent-highlight: #B87333;
+  --accent-coral: #ECA58D;
 
   /* Borders */
   --border-subtle: #2A2A2A;
@@ -117,6 +123,17 @@
   --pos-accent-hover: #9A6B52;
   --pos-accent-text: #000000;      /* black ink reads on terracotta */
 
+  /* Project thumb cards (CaseStudies grid). Decorative tokens lifted out of
+     the component so each theme can tune the card's chrome independently.
+     Designed in light-olive first; dark values translate the same intent
+     (subtle border, soft drop, slightly elevated title chip). */
+  --thumb-card-border: var(--border-medium);
+  --thumb-card-shadow: 2px 2px 1px 1px rgba(0, 0, 0, 0.45);
+  --thumb-card-title-bg: var(--bg-tertiary);
+  --thumb-card-title-border: var(--border-medium);
+  --thumb-card-title-color: var(--text-secondary);
+  --thumb-card-title-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.45);
+
   color-scheme: dark;
 }
 
@@ -127,6 +144,9 @@
   --bg-primary: #EFE6D6;
   --bg-secondary: #E5DAC4;
   --bg-tertiary: #DCD0B6;
+  --bg-elevated: #F5ECD8;
+  --bg-elevated-alt: #ECE2CC;
+  --accent-coral: #ECA58D;
 
   --text-primary: #2A241D;
   --text-secondary: #3D362C;
@@ -137,6 +157,14 @@
   --border-medium: #C9BBA1;
   --border-strong: #B8A98C;
 
+  /* Thumb-card chrome - shared across the warm light themes. */
+  --thumb-card-border: #DEDACE;
+  --thumb-card-shadow: 2px 2px 1px 1px rgba(92, 86, 65, 0.11);
+  --thumb-card-title-bg: var(--border-subtle);
+  --thumb-card-title-border: var(--bg-tertiary);
+  --thumb-card-title-color: var(--text-muted);
+  --thumb-card-title-shadow: 2px 2px 2px 1px rgba(58, 45, 24, 0.11);
+
   color-scheme: light;
 }
 
@@ -145,6 +173,9 @@
   --bg-primary: #F1EDE3;
   --bg-secondary: #E8E2D2;
   --bg-tertiary: #DDD5C2;
+  --bg-elevated: #F7F1E1;
+  --bg-elevated-alt: #EFE9D8;
+  --accent-coral: #ECA58D;
 
   --text-primary: #3A332A;
   --text-secondary: #4A4338;
@@ -155,6 +186,13 @@
   --border-medium: #CDC4B0;
   --border-strong: #BBB09A;
 
+  --thumb-card-border: #DEDACE;
+  --thumb-card-shadow: 2px 2px 1px 1px rgba(92, 86, 65, 0.11);
+  --thumb-card-title-bg: var(--border-subtle);
+  --thumb-card-title-border: var(--bg-tertiary);
+  --thumb-card-title-color: var(--text-muted);
+  --thumb-card-title-shadow: 2px 2px 2px 1px rgba(58, 45, 24, 0.11);
+
   color-scheme: light;
 }
 
@@ -163,6 +201,9 @@
   --bg-primary: #E8E0CA;
   --bg-secondary: #DDD3B9;     /* subtle card surface */
   --bg-tertiary: #C5B894;       /* darker - pills + clear card hover */
+  --bg-elevated: #F0E8D2;       /* lighter than primary - cards pop above modal */
+  --bg-elevated-alt: #E6DCC0;   /* zebra alternation in tables */
+  --accent-coral: #ECA58D;      /* coral accent for CTA chips */
 
   /* Browner deep coffee. Reads as "rich dark brown" on cream rather than neutral grey. */
   --text-primary: #3A2D18;
@@ -179,6 +220,16 @@
   --border-subtle: #CDC4A8;
   --border-medium: #BFB596;
   --border-strong: #A89B78;
+
+  /* Thumb cards. Hand-tweaked for this theme - other warm-light themes share
+     the same intent above. Title color is a touch redder than --text-muted
+     so the chip has its own identity. */
+  --thumb-card-border: #DEDACE;
+  --thumb-card-shadow: 2px 2px 1px 1px rgba(92, 86, 65, 0.11);
+  --thumb-card-title-bg: rgba(205, 196, 168, 0.98);
+  --thumb-card-title-border: var(--bg-tertiary);
+  --thumb-card-title-color: #4E413C;
+  --thumb-card-title-shadow: 2px 2px 2px 1px rgba(58, 45, 24, 0.11);
 
   /* Prototype POS - light mode. Warm cream palette so the POS feels like a sibling
      to the rest of the light theme rather than a sterile cool-gray dropdown. */
@@ -344,6 +395,17 @@ h6 {
 
 @utility text-balance {
   text-wrap: balance;
+}
+
+/* === Case-study modal type utilities === */
+.font-karla-ui {
+  font-family: var(--font-karla), "Karla Fallback", system-ui, sans-serif;
+}
+.font-fraunces-display {
+  font-family: var(--font-fraunces), "Fraunces Fallback", Georgia, serif;
+}
+.font-system-ui {
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 /* === Editorial type utilities ===

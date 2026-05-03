@@ -220,15 +220,15 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                         Case File · {project.id.toUpperCase().replace(/-/g, '_').slice(0, 14)}
                                     </span>
                                 </div>
-                                <h3 className="case-study-modal-mobile-title text-2xl font-bold text-text-primary tracking-tight mb-2 leading-tight">
+                                <h3 className="case-study-modal-mobile-title text-3xl font-fraunces-display font-medium text-text-primary tracking-tight mb-2 leading-tight">
                                     {project.title}
                                 </h3>
-                                <p className="case-study-modal-mobile-subtitle text-text-muted text-base font-light leading-snug mb-4">
+                                <p className="case-study-modal-mobile-subtitle text-text-muted text-base font-light leading-snug pt-3 pb-[7px] mb-4">
                                     {project.subtitle}
                                 </p>
                                 <div className="case-study-modal-mobile-tag-list flex flex-wrap items-center gap-1.5 mb-4">
                                     {project.tags.map((tag) => (
-                                        <span key={tag} className="case-study-modal-mobile-tag bg-bg-tertiary/40 px-2 py-0.5 rounded text-[10px] font-mono text-text-muted border border-border-subtle">
+                                        <span key={tag} className="case-study-modal-mobile-tag bg-bg-primary px-2 py-0.5 rounded text-[12px] font-karla-ui text-text-muted border border-bg-primary">
                                             {tag}
                                         </span>
                                     ))}
@@ -287,7 +287,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                         href={project.links.live}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="case-study-modal-mobile-cta inline-flex items-center gap-2 px-4 py-2.5 bg-accent-highlight/15 hover:bg-accent-highlight/25 text-accent-highlight rounded-sm font-semibold transition-colors text-xs uppercase tracking-widest font-mono"
+                                        className="case-study-modal-mobile-cta inline-flex items-center gap-2 px-4 py-2.5 bg-bg-primary hover:bg-bg-primary/80 text-text-primary border border-border-medium rounded-sm font-medium transition-colors text-sm font-karla-ui"
                                     >
                                         View live <ExternalLink size={12} />
                                     </a>
@@ -374,15 +374,15 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                             </div>
 
                             <div className="case-study-modal-aside-identity flex-shrink-0 px-7 pt-5 pb-5">
-                                <h3 className="case-study-modal-aside-title text-2xl font-bold text-text-primary tracking-tight mb-1.5 leading-tight">
+                                <h3 className="case-study-modal-aside-title text-[36px] font-fraunces-display font-medium text-text-primary tracking-tight mb-1.5 leading-tight">
                                     {project.title}
                                 </h3>
-                                <p className="case-study-modal-aside-subtitle text-text-muted text-sm font-light leading-snug mb-4">
+                                <p className="case-study-modal-aside-subtitle text-text-muted text-base font-light leading-snug pt-3 pb-[7px] mb-4">
                                     {project.subtitle}
                                 </p>
                                 <div className="case-study-modal-aside-tag-list flex flex-wrap items-center gap-1.5 mb-5">
                                     {project.tags.map((tag) => (
-                                        <span key={tag} className="case-study-modal-aside-tag bg-bg-tertiary/40 px-2 py-0.5 rounded text-[10px] font-mono text-text-muted border border-border-subtle">
+                                        <span key={tag} className="case-study-modal-aside-tag bg-bg-primary px-2 py-0.5 rounded text-[12px] font-karla-ui text-text-muted border border-bg-primary">
                                             {tag}
                                         </span>
                                     ))}
@@ -419,7 +419,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                         href={project.links.live}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="case-study-modal-aside-cta inline-flex items-center gap-2 px-3.5 py-2 bg-accent-highlight/15 hover:bg-accent-highlight/25 text-accent-highlight rounded-sm font-semibold transition-colors text-xs uppercase tracking-widest font-mono"
+                                        className="case-study-modal-aside-cta inline-flex items-center gap-2 px-3.5 py-2 bg-bg-primary hover:bg-bg-primary/80 text-text-primary border border-border-medium rounded-sm font-medium transition-colors text-sm font-karla-ui"
                                     >
                                         View live <ExternalLink size={12} />
                                     </a>
@@ -548,10 +548,10 @@ function BodyIntro({ project }: { project: CaseStudyData }) {
             <div className="body-intro-grid grid md:grid-cols-[minmax(0,1fr)_minmax(0,340px)] gap-x-8 gap-y-6 items-start">
                 <div className="body-intro-text-col flex flex-col gap-5 order-2 md:order-1">
                     <div className="body-intro-headline">
-                        <h3 className="body-intro-title text-3xl md:text-[34px] font-semibold text-text-primary tracking-tight leading-[1.1] mb-3">
+                        <h3 className="body-intro-title text-3xl md:text-[36px] font-fraunces-display font-medium text-text-primary tracking-tight leading-[1.1] mb-3">
                             {project.title}
                         </h3>
-                        <p className="body-intro-subtitle text-text-muted text-[15px] font-light leading-relaxed max-w-2xl">
+                        <p className="body-intro-subtitle text-text-muted text-base font-light leading-relaxed pt-3 pb-[7px] max-w-2xl">
                             {project.subtitle}
                         </p>
                     </div>
@@ -568,7 +568,7 @@ function BodyIntro({ project }: { project: CaseStudyData }) {
                     <div className="body-intro-tag-row flex flex-wrap items-center gap-x-3 gap-y-2.5 pt-1">
                         <div className="body-intro-tag-list flex flex-wrap items-center gap-1.5">
                             {project.tags.map((tag) => (
-                                <span key={tag} className="body-intro-tag bg-bg-tertiary/40 px-2 py-0.5 rounded text-[10px] font-mono text-text-muted border border-border-subtle">
+                                <span key={tag} className="body-intro-tag bg-bg-primary px-2 py-0.5 rounded text-[12px] font-karla-ui text-text-muted border border-bg-primary">
                                     {tag}
                                 </span>
                             ))}
@@ -578,7 +578,7 @@ function BodyIntro({ project }: { project: CaseStudyData }) {
                                 href={project.links.live}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="body-intro-cta inline-flex items-center gap-2 px-3.5 py-2 bg-accent-highlight/15 hover:bg-accent-highlight/25 text-accent-highlight rounded-sm font-semibold transition-colors text-xs uppercase tracking-widest font-mono"
+                                className="body-intro-cta inline-flex items-center gap-2 px-3.5 py-2 bg-bg-primary hover:bg-bg-primary/80 text-text-primary border border-border-medium rounded-sm font-medium transition-colors text-sm font-karla-ui"
                             >
                                 View live <ExternalLink size={12} />
                             </a>
@@ -841,13 +841,20 @@ function BriefCol({ label, body }: { label: string; body: string }) {
     );
 }
 
-function MetricsCircles({ metrics }: { metrics: Array<{ label: string; value: string }> }) {
+function MetricsCirclesPlain({ metrics }: { metrics: Array<{ label: string; value: string }> }) {
+    return <MetricsCircles metrics={metrics} bordered={false} />;
+}
+
+function MetricsCircles({ metrics, bordered = true }: { metrics: Array<{ label: string; value: string }>; bordered?: boolean }) {
     // Treat numeric values 0-100 as a fill percentage. Anything that doesn't parse
     // cleanly falls back to a full ring so the visual still reads.
     const RADIUS = 38;
     const CIRC = 2 * Math.PI * RADIUS;
+    const wrapperClass = bordered
+        ? 'metrics-circles-root grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-5 border-t border-border-subtle pt-5'
+        : 'metrics-circles-root grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-5';
     return (
-        <div className="metrics-circles-root grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-5 border-t border-border-subtle pt-5">
+        <div className={wrapperClass}>
             {metrics.map((m, i) => {
                 const num = parseFloat(m.value);
                 const pct = Number.isFinite(num) ? Math.max(0, Math.min(100, num)) : 100;
@@ -944,10 +951,10 @@ function ComparisonDiffTable({
     const cell = 'comparison-diff-td text-text-primary text-[13px] py-2.5 px-3 tabular-nums';
 
     return (
-        <div className="comparison-diff-wrap mt-7 border border-border-subtle rounded-xl overflow-hidden">
+        <div className="comparison-diff-wrap mt-7 border border-border-subtle rounded-xl overflow-hidden bg-bg-elevated">
             <table className="comparison-diff-table w-full border-collapse text-left">
                 <thead>
-                    <tr className="bg-bg-secondary/40">
+                    <tr className="bg-bg-elevated-alt">
                         <th className={headerCell}>Metric</th>
                         <th className={headerCell}>{a.label}</th>
                         <th className={headerCell}>{b.label}</th>
@@ -955,13 +962,14 @@ function ComparisonDiffTable({
                     </tr>
                 </thead>
                 <tbody>
-                    {lhRows.map(row => {
+                    {lhRows.map((row, i) => {
                         const av = a.lighthouse[row.key];
                         const bv = b.lighthouse[row.key];
                         const diff = bv - av;
                         const better = diff === 0 ? 'same' : diff > 0 ? 'b' : 'a';
+                        const zebra = i % 2 === 1 ? 'bg-bg-elevated-alt/60' : '';
                         return (
-                            <tr key={row.key} className="border-t border-border-subtle">
+                            <tr key={row.key} className={`border-t border-border-subtle ${zebra}`}>
                                 <td className={`${cell} text-text-secondary`}>{row.label}</td>
                                 <td className={`${cell} ${better === 'a' ? 'text-accent-primary font-medium' : ''}`}>{av}</td>
                                 <td className={`${cell} ${better === 'b' ? 'text-accent-primary font-medium' : ''}`}>{bv}</td>
@@ -971,13 +979,14 @@ function ComparisonDiffTable({
                             </tr>
                         );
                     })}
-                    {extraLabels.map(label => {
+                    {extraLabels.map((label, i) => {
                         const av = aExtra(label);
                         const bv = bExtra(label);
                         if (!av || !bv) return null;
                         const d = deltaForExtra(av, bv);
+                        const zebra = (lhRows.length + i) % 2 === 1 ? 'bg-bg-elevated-alt/60' : '';
                         return (
-                            <tr key={`extra-${label}`} className="border-t border-border-subtle">
+                            <tr key={`extra-${label}`} className={`border-t border-border-subtle ${zebra}`}>
                                 <td className={`${cell} text-text-secondary`}>{label}</td>
                                 <td className={`${cell} ${d?.better === 'a' ? 'text-accent-primary font-medium' : ''}`}>{av}</td>
                                 <td className={`${cell} ${d?.better === 'b' ? 'text-accent-primary font-medium' : ''}`}>{bv}</td>
@@ -1000,7 +1009,7 @@ function ComparisonGrid({
 }) {
     const gridClass = stacked
         ? 'comparison-grid grid grid-cols-1 gap-7'
-        : 'comparison-grid grid grid-cols-1 lg:grid-cols-2 gap-7';
+        : 'comparison-grid grid grid-cols-1 lg:grid-cols-2 gap-7 lg:grid-rows-[auto_auto_auto]';
     return (
         <div className={gridClass}>
             {builds.map((b, i) => {
@@ -1013,45 +1022,51 @@ function ComparisonGrid({
                 return (
                     <div
                         key={i}
-                        className="comparison-card border border-border-subtle rounded-xl p-5 md:p-6 flex flex-col gap-5"
+                        className="comparison-card relative border border-border-subtle rounded-xl bg-bg-elevated shadow-[0_2px_8px_-2px_rgba(0,0,0,0.06)] grid grid-rows-[auto_auto_auto] lg:grid-rows-subgrid lg:row-span-3 overflow-hidden"
                     >
-                        <div className="comparison-card-head flex items-start justify-between gap-3 flex-wrap">
-                            <div className="comparison-card-meta">
-                                <h4 className="comparison-card-label text-text-primary text-base md:text-lg font-semibold tracking-tight">
-                                    {b.label}
-                                </h4>
-                                {b.note && (
-                                    <p className="comparison-card-note text-text-muted text-[13px] leading-relaxed mt-1 max-w-md">
-                                        {b.note}
-                                    </p>
-                                )}
-                            </div>
-                            {b.href && (
-                                <a
-                                    href={b.href}
-                                    target={b.href.startsWith('http') ? '_blank' : undefined}
-                                    rel={b.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                                    className="comparison-card-link inline-flex items-center gap-2 px-3.5 py-2 bg-accent-highlight/15 hover:bg-accent-highlight/25 text-accent-highlight rounded-sm font-semibold transition-colors text-xs uppercase tracking-widest font-mono whitespace-nowrap"
-                                >
-                                    View <ExternalLink size={12} />
-                                </a>
-                            )}
-                        </div>
-                        <MetricsCircles metrics={lh} />
-                        {b.extras && b.extras.length > 0 && (
-                            <dl className="comparison-card-extras grid grid-cols-2 gap-x-4 gap-y-2 pt-3 border-t border-border-subtle">
-                                {b.extras.map((e, j) => (
-                                    <div key={j} className="comparison-card-extras-row flex items-baseline justify-between gap-3">
-                                        <dt className="comparison-card-extras-label text-text-muted text-[11px] font-mono uppercase tracking-[0.14em]">
-                                            {e.label}
-                                        </dt>
-                                        <dd className="comparison-card-extras-value text-text-primary text-[13px] font-medium tabular-nums">
-                                            {e.value}
-                                        </dd>
-                                    </div>
-                                ))}
-                            </dl>
+                        {b.href && (
+                            <a
+                                href={b.href}
+                                target={b.href.startsWith('http') ? '_blank' : undefined}
+                                rel={b.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                                className="comparison-card-link absolute top-5 right-5 md:top-6 md:right-6 inline-flex items-center gap-2 px-3.5 py-2 bg-bg-primary hover:bg-bg-primary/80 text-text-primary border border-border-medium rounded-sm font-medium transition-colors text-sm font-karla-ui whitespace-nowrap z-[2]"
+                            >
+                                View <ExternalLink size={12} />
+                            </a>
                         )}
+                        <header className="comparison-card-head px-5 md:px-6 pt-5 md:pt-6 pb-5 pr-24 border-b border-border-subtle">
+                            <h4 className="comparison-card-label text-text-primary text-base md:text-lg font-semibold tracking-tight">
+                                {b.label}
+                            </h4>
+                            {b.note && (
+                                <p className="comparison-card-note text-text-muted text-[13px] leading-relaxed mt-1.5 max-w-md">
+                                    {b.note}
+                                </p>
+                            )}
+                        </header>
+                        <div className="comparison-card-body px-5 md:px-6 py-6 bg-bg-elevated-alt/60 flex items-center">
+                            <div className="w-full">
+                                <MetricsCirclesPlain metrics={lh} />
+                            </div>
+                        </div>
+                        <footer className="comparison-card-foot px-5 md:px-6 py-5 border-t border-border-subtle">
+                            {b.extras && b.extras.length > 0 ? (
+                                <dl className="comparison-card-extras grid grid-cols-2 gap-x-4 gap-y-2.5">
+                                    {b.extras.map((e, j) => (
+                                        <div key={j} className="comparison-card-extras-row flex items-baseline justify-between gap-3">
+                                            <dt className="comparison-card-extras-label text-text-muted text-[11px] font-mono uppercase tracking-[0.14em]">
+                                                {e.label}
+                                            </dt>
+                                            <dd className="comparison-card-extras-value text-text-primary text-[13px] font-medium tabular-nums">
+                                                {e.value}
+                                            </dd>
+                                        </div>
+                                    ))}
+                                </dl>
+                            ) : (
+                                <span className="text-text-muted text-[12px] font-mono uppercase tracking-[0.14em]">No extras</span>
+                            )}
+                        </footer>
                     </div>
                 );
             })}

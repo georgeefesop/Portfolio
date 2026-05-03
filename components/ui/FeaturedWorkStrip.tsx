@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState, useRef, useEffect } from 'react';
 import { motion, useMotionValue, useAnimationFrame } from 'framer-motion';
@@ -12,8 +12,6 @@ type FeaturedItem = {
     externalLink?: string;
 };
 
-// Thumbnails that ship with built-in white margins/borders - start zoomed and
-// scale further on hover so the user perceives a true zoom-in, not zoom-out.
 const ZOOM_IDS = new Set([
     'olympus-sports',
     'la-hacienda',
@@ -44,7 +42,7 @@ function HorizontalCard({ item, priority }: { item: FeaturedItem; priority?: boo
             : 'group-hover:scale-105';
     return (
         <div className="featured-work-strip-card featured-work-strip-card-horizontal w-[312px] group">
-            <div className="featured-work-strip-thumb-wrap relative aspect-[3/2] rounded-lg overflow-hidden bg-white/5 border-2 border-white/10 group-hover:border-accent-primary transition-colors">
+            <div className="featured-work-strip-thumb-wrap relative aspect-[3/2] rounded-lg overflow-hidden bg-white/5 border-2 border-white/10 group-hover:[border-color:var(--thumb-card-border)] [box-shadow:none] group-hover:[box-shadow:var(--thumb-card-shadow)] transition-colors">
                 <ImageWithFallback
                     src={item.thumbnail}
                     alt={item.title}
@@ -139,7 +137,7 @@ export default function FeaturedWorkStrip({ orientation = 'horizontal' }: { orie
 function HorizontalStrip() {
     const x = useMotionValue(0);
     const [isHover, setIsHover] = useState(false);
-    const speedRef = useRef(0); // current px/sec
+    const speedRef = useRef(0);
     const halfWidth = useRef(0);
     const trackRef = useRef<HTMLDivElement>(null);
 
@@ -154,12 +152,11 @@ function HorizontalStrip() {
     }, []);
 
     useAnimationFrame((_t, delta) => {
-        // Asymmetric: ease to a stop on hover, snap back to full speed on leave.
         if (isHover) {
             const k = 1 - Math.exp(-delta * 0.005);
             speedRef.current += (0 - speedRef.current) * k;
         } else {
-            speedRef.current = 60; // px/sec, instant resume
+            speedRef.current = 60;
         }
         let next = x.get() - speedRef.current * (delta / 1000);
         if (halfWidth.current > 0 && next <= -halfWidth.current) next += halfWidth.current;
@@ -201,8 +198,7 @@ function VerticalStrip() {
     }, []);
 
     useAnimationFrame((_t, delta) => {
-        // Always at full speed on mobile - no hover pause needed.
-        const target = 35; // px/sec, slower than horizontal
+        const target = 35;
         const k = 1 - Math.exp(-delta * 0.003);
         speedRef.current += (target - speedRef.current) * k;
         let next = y.get() - speedRef.current * (delta / 1000);

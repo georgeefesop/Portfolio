@@ -28,19 +28,41 @@ const PILL = 'inline-block text-xs font-mono uppercase tracking-wider text-text-
 function ThumbCard({ item, onOpen, priority }: { item: Item; onOpen: (id: string) => void; priority: boolean }) {
     const src = item.kind === 'external' ? item.thumbnail : item.images.thumbnail;
     const isVideo = item.kind === 'external' && !!item.duration;
+
     const sharedClass =
-        'group relative block w-full overflow-hidden border-2 border-border-subtle bg-bg-secondary hover:border-accent-primary transition-colors duration-300 focus:outline-none rounded aspect-[3/2]';
+        'group relative block w-full overflow-hidden border bg-bg-secondary transition-colors duration-300 focus:outline-none aspect-[3/2]'
+        + ' [border-color:var(--thumb-card-border)] hover:[border-color:var(--thumb-card-border)]'
+        + ' rounded-[6px_24px_6px_6px]'
+        + ' [box-shadow:var(--thumb-card-shadow)]';
 
     const overlays = (
         <>
-            {/* Title + category pills - bottom left */}
+            {/* Title + category pills - bottom left.
+                Title takes priority and is never truncated; if there isn't enough
+                room for the pills alongside it, the pill row fades out toward the
+                right edge of the card via a CSS mask. */}
             <div className="thumb-card-overlay absolute bottom-0 left-0 right-0 p-3 flex flex-row items-end gap-2 pointer-events-none">
-                <span className="thumb-card-title min-w-0 shrink text-base font-medium normal-case tracking-[0.2px] border-2 px-[14px] pt-1 pb-[5px] rounded whitespace-nowrap overflow-hidden text-ellipsis">
+                <span
+                    className={
+                        'thumb-card-title shrink-0 text-base font-medium tracking-[0.2px] border px-[14px] pt-1 pb-[5px] whitespace-nowrap'
+                        + ' [background-color:var(--thumb-card-title-bg)]'
+                        + ' [border-color:var(--thumb-card-title-border)]'
+                        + ' [color:var(--thumb-card-title-color)]'
+                        + ' rounded-[12px_12px_12px_3px]'
+                        + ' [box-shadow:var(--thumb-card-title-shadow)]'
+                    }
+                >
                     {item.title}
                 </span>
-                <div className="thumb-card-tag-list flex flex-wrap gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <div
+                    className="thumb-card-tag-list flex flex-row flex-nowrap gap-1 min-w-0 flex-1 overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                    style={{
+                        maskImage: 'linear-gradient(to right, black 0%, black 60%, transparent 100%)',
+                        WebkitMaskImage: 'linear-gradient(to right, black 0%, black 60%, transparent 100%)',
+                    }}
+                >
                     {item.categories.map((cat) => (
-                        <span key={cat} className={`thumb-card-tag ${PILL} !font-medium !tracking-[1.4px] !leading-[1.2]`}>{CATEGORY_LABEL[cat] ?? cat}</span>
+                        <span key={cat} className={`thumb-card-tag ${PILL} !font-medium !tracking-[1.4px] !leading-[1.2] shrink-0`}>{CATEGORY_LABEL[cat] ?? cat}</span>
                     ))}
                 </div>
             </div>
@@ -132,7 +154,6 @@ export default function CaseStudies() {
     const [activeId, setActiveId] = useState<string | null>(null);
     const [activeCategory, setActiveCategory] = useState<CategoryId | 'all'>('all');
     const [shuffledAllOrderIds, setShuffledAllOrderIds] = useState<string[] | null>(null);
-
     useEffect(() => {
         const restIds = allItems
             .filter((i) => !PINNED_IDS.includes(i.id) && !TRAILING_IDS.includes(i.id))
@@ -188,7 +209,7 @@ export default function CaseStudies() {
                         </h2>
                     </div>
 
-                    <div className="case-studies-filter-bar flex flex-wrap gap-x-6 gap-y-2 mb-8 border-b border-border-subtle pb-0">
+                    <div className="case-studies-filter-bar flex flex-wrap gap-x-6 gap-y-2 mb-8 border-b [border-color:var(--bg-secondary)] pb-0">
                         {FILTER_PILLS.map((pill) => {
                             const isActive = activeCategory === pill.id;
                             const count = getCount(pill.id);

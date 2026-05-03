@@ -5,6 +5,7 @@ import { useScrollProgress } from '@/hooks/useScrollProgress';
 import ProductCanvas from '@/components/ui/ProductCanvas';
 import HeroText from '@/components/ui/HeroText';
 import FeaturedWorkStrip from '@/components/ui/FeaturedWorkStrip';
+import HeroGrid from '@/components/ui/HeroGrid';
 import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -124,9 +125,9 @@ export default function ProductHero() {
 
     return (
         <section className="product-hero-section relative h-[100svh] w-full overflow-hidden bg-bg-hero">
-            {/* Background Grid - swaps stroke color via theme. See .hero-grid in globals.css. */}
+            {/* Background Grid - programmatic canvas with mouse trail. */}
             <div className="product-hero-grid-wrap absolute inset-0 z-0">
-                <div className="product-hero-grid hero-grid absolute inset-0 pointer-events-none" />
+                <HeroGrid />
             </div>
 
             {/* ProductCanvas - Only in carousel mode */}
