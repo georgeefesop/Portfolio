@@ -20,9 +20,7 @@ const ZOOM_IDS = new Set([
 ]);
 
 const items: FeaturedItem[] = [
-    { id: 'realfi', title: 'RealFi', tag: 'Cardano · Fintech', thumbnail: '/images/realfi/realfi-hero-2026-05-02.png' },
     { id: 'kingfisher-mortgages', title: 'Kingfisher Mortgages', tag: 'WordPress · Brand', thumbnail: '/images/kingfisher-thumb.png' },
-    { id: 'allsop-francis', title: 'Allsop & Francis', tag: 'AI Image Direction', thumbnail: '/images/allsop-francis/2.png' },
     { id: 'uk-vehicles', title: 'UK Vehicles Cyprus', tag: 'Next.js · Commerce', thumbnail: '/images/uk-vehicles/hero-2.png' },
     { id: 'ai-tools', title: 'AI User Tools', tag: 'UX · AI', thumbnail: '/images/ai-tools/AIUT-2.png' },
     { id: 'instant-access-locksmiths', title: 'Instant Access Locksmiths', tag: 'Local SEO · Conversion', thumbnail: '/images/instant-access-locksmiths/hero-thumb.png' },
