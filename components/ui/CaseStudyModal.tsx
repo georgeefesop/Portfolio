@@ -24,6 +24,7 @@ interface CaseStudyBody {
     comparison?: {
         heading?: string;
         intro?: string;
+        methodology?: string;
         builds: Array<{
             label: string;
             href?: string;
@@ -639,6 +640,25 @@ function BodyDesktopView({ body, onScreenshotClick }: { body: CaseStudyBody; onS
                 </div>
             </section>
 
+            {/* COMPARISON */}
+            {body.comparison && body.comparison.builds.length > 0 && (
+                <section className="body-desktop-comparison px-9 py-8 border-b border-border-subtle">
+                    <PanelLabel>{body.comparison.heading || 'Comparison'}</PanelLabel>
+                    {body.comparison.intro && (
+                        <p className="body-desktop-comparison-intro text-text-secondary text-[15px] leading-relaxed max-w-3xl mb-7">
+                            {body.comparison.intro}
+                        </p>
+                    )}
+                    <ComparisonGrid builds={body.comparison.builds} />
+                    <ComparisonDiffTable builds={body.comparison.builds} />
+                    {body.comparison.methodology && (
+                        <p className="body-desktop-comparison-methodology text-text-muted text-[12px] leading-relaxed max-w-3xl mt-4 italic">
+                            {body.comparison.methodology}
+                        </p>
+                    )}
+                </section>
+            )}
+
             {/* DECISIONS */}
             <section className="body-desktop-decisions px-9 py-8 border-b border-border-subtle">
                 <div className="body-desktop-decisions-header flex items-center gap-3 mb-7">
@@ -668,19 +688,6 @@ function BodyDesktopView({ body, onScreenshotClick }: { body: CaseStudyBody; onS
                     <p className="body-desktop-process-text text-text-secondary text-sm leading-relaxed max-w-3xl">
                         {body.process}
                     </p>
-                </section>
-            )}
-
-            {/* COMPARISON */}
-            {body.comparison && body.comparison.builds.length > 0 && (
-                <section className="body-desktop-comparison px-9 py-8 border-b border-border-subtle">
-                    <PanelLabel>{body.comparison.heading || 'Comparison'}</PanelLabel>
-                    {body.comparison.intro && (
-                        <p className="body-desktop-comparison-intro text-text-secondary text-[15px] leading-relaxed max-w-3xl mb-7">
-                            {body.comparison.intro}
-                        </p>
-                    )}
-                    <ComparisonGrid builds={body.comparison.builds} />
                 </section>
             )}
 
@@ -724,6 +731,21 @@ function BodyMobileView({ body, onScreenshotClick }: { body: CaseStudyBody; onSc
                 </div>
             </MobileSection>
 
+            {body.comparison && body.comparison.builds.length > 0 && (
+                <MobileSection label={body.comparison.heading || 'Comparison'}>
+                    {body.comparison.intro && (
+                        <p className="body-mobile-comparison-intro text-text-secondary mb-5">{body.comparison.intro}</p>
+                    )}
+                    <ComparisonGrid builds={body.comparison.builds} stacked />
+                    <ComparisonDiffTable builds={body.comparison.builds} />
+                    {body.comparison.methodology && (
+                        <p className="body-mobile-comparison-methodology text-text-muted text-[12px] leading-relaxed mt-4 italic">
+                            {body.comparison.methodology}
+                        </p>
+                    )}
+                </MobileSection>
+            )}
+
             <MobileSection label={`Decisions // ${body.decisions.length}`}>
                 <div className="body-mobile-decisions-list space-y-7">
                     {body.decisions.map((d, i) => (
@@ -742,15 +764,6 @@ function BodyMobileView({ body, onScreenshotClick }: { body: CaseStudyBody; onSc
             {body.process && (
                 <MobileSection label="Process">
                     <p className="body-mobile-process-text text-text-secondary">{body.process}</p>
-                </MobileSection>
-            )}
-
-            {body.comparison && body.comparison.builds.length > 0 && (
-                <MobileSection label={body.comparison.heading || 'Comparison'}>
-                    {body.comparison.intro && (
-                        <p className="body-mobile-comparison-intro text-text-secondary mb-5">{body.comparison.intro}</p>
-                    )}
-                    <ComparisonGrid builds={body.comparison.builds} stacked />
                 </MobileSection>
             )}
 
@@ -876,6 +889,104 @@ function MetricsCircles({ metrics }: { metrics: Array<{ label: string; value: st
                     </div>
                 );
             })}
+        </div>
+    );
+}
+
+function parseNumeric(value: string): { num: number; unit: string } | null {
+    const match = value.trim().match(/^([0-9]+(?:[.,][0-9]+)?)\s*([A-Za-z%]*)$/);
+    if (!match) return null;
+    const num = parseFloat(match[1].replace(',', ''));
+    if (!Number.isFinite(num)) return null;
+    return { num, unit: match[2] };
+}
+
+function deltaForExtra(a: string, b: string): { display: string; better: 'a' | 'b' | 'same' } | null {
+    const pa = parseNumeric(a);
+    const pb = parseNumeric(b);
+    if (!pa || !pb || pa.unit !== pb.unit) return null;
+    if (pa.num === pb.num) return { display: 'same', better: 'same' };
+    // Convert to KB if comparing MB / KB mixed
+    const lowerUnitA = pa.unit.toLowerCase();
+    const lowerUnitB = pb.unit.toLowerCase();
+    let ax = pa.num;
+    let bx = pb.num;
+    if (lowerUnitA === 'mb') ax *= 1024;
+    if (lowerUnitB === 'mb') bx *= 1024;
+    if (ax === bx) return { display: 'same', better: 'same' };
+    const ratio = bx / ax;
+    const better = bx < ax ? 'b' : 'a';
+    if (better === 'b') {
+        return { display: `${(ratio < 1 ? 1 / ratio : ratio).toFixed(ratio < 0.5 || ratio > 2 ? 1 : 2)}× lighter`, better };
+    }
+    return { display: `${(1 / ratio).toFixed(2)}× heavier`, better };
+}
+
+function ComparisonDiffTable({
+    builds,
+}: {
+    builds: NonNullable<CaseStudyBody['comparison']>['builds'];
+}) {
+    if (builds.length < 2) return null;
+    const [a, b] = builds;
+    const lhRows: Array<{ label: string; key: 'performance' | 'accessibility' | 'bestPractices' | 'seo' }> = [
+        { label: 'Performance', key: 'performance' },
+        { label: 'Accessibility', key: 'accessibility' },
+        { label: 'Best Practices', key: 'bestPractices' },
+        { label: 'SEO', key: 'seo' },
+    ];
+
+    const extraLabels = Array.from(new Set([...(a.extras || []).map(e => e.label), ...(b.extras || []).map(e => e.label)]));
+    const aExtra = (label: string) => a.extras?.find(e => e.label === label)?.value;
+    const bExtra = (label: string) => b.extras?.find(e => e.label === label)?.value;
+
+    const headerCell = 'comparison-diff-th text-text-muted text-[11px] font-mono uppercase tracking-[0.14em] py-2.5 px-3 text-left';
+    const cell = 'comparison-diff-td text-text-primary text-[13px] py-2.5 px-3 tabular-nums';
+
+    return (
+        <div className="comparison-diff-wrap mt-7 border border-border-subtle rounded-xl overflow-hidden">
+            <table className="comparison-diff-table w-full border-collapse text-left">
+                <thead>
+                    <tr className="bg-bg-secondary/40">
+                        <th className={headerCell}>Metric</th>
+                        <th className={headerCell}>{a.label}</th>
+                        <th className={headerCell}>{b.label}</th>
+                        <th className={headerCell}>Improvement</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {lhRows.map(row => {
+                        const av = a.lighthouse[row.key];
+                        const bv = b.lighthouse[row.key];
+                        const diff = bv - av;
+                        const better = diff === 0 ? 'same' : diff > 0 ? 'b' : 'a';
+                        return (
+                            <tr key={row.key} className="border-t border-border-subtle">
+                                <td className={`${cell} text-text-secondary`}>{row.label}</td>
+                                <td className={`${cell} ${better === 'a' ? 'text-accent-primary font-medium' : ''}`}>{av}</td>
+                                <td className={`${cell} ${better === 'b' ? 'text-accent-primary font-medium' : ''}`}>{bv}</td>
+                                <td className={`${cell} text-text-muted`}>
+                                    {diff === 0 ? '-' : `${diff > 0 ? '+' : ''}${diff} pts`}
+                                </td>
+                            </tr>
+                        );
+                    })}
+                    {extraLabels.map(label => {
+                        const av = aExtra(label);
+                        const bv = bExtra(label);
+                        if (!av || !bv) return null;
+                        const d = deltaForExtra(av, bv);
+                        return (
+                            <tr key={`extra-${label}`} className="border-t border-border-subtle">
+                                <td className={`${cell} text-text-secondary`}>{label}</td>
+                                <td className={`${cell} ${d?.better === 'a' ? 'text-accent-primary font-medium' : ''}`}>{av}</td>
+                                <td className={`${cell} ${d?.better === 'b' ? 'text-accent-primary font-medium' : ''}`}>{bv}</td>
+                                <td className={`${cell} text-text-muted`}>{d ? d.display : '-'}</td>
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table>
         </div>
     );
 }

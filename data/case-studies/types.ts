@@ -60,12 +60,14 @@ export type CaseStudyBody = {
         caption: string;
     }>;
     process?: string;
-    /** Optional side-by-side stack comparison. When present, the modal renders a section with one column per build, each showing Lighthouse rings + extras. */
+    /** Optional side-by-side stack comparison. When present, the modal renders a section with one column per build, each showing Lighthouse rings + extras, then a delta table summarising the differences. */
     comparison?: {
         /** Heading shown above the comparison block. */
         heading?: string;
         /** Short intro paragraph. */
         intro?: string;
+        /** Methodology footnote shown beneath the diff table, e.g. "Measured live via Google PageSpeed Insights API on 2026-05-03." */
+        methodology?: string;
         builds: StackBuild[];
     };
     outcome: {

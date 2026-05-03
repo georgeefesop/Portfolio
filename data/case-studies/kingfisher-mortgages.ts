@@ -54,6 +54,7 @@ const kingfisher: CaseStudy = {
         comparison: {
             heading: 'Same brand, two stacks',
             intro: 'I shipped the same homepage on two different systems so the choice between them is visible, not theoretical. The WordPress build is what most small service businesses run; the headless build is what a team scales to once the visual ceiling and the editing workflow start fighting each other. The numbers below are real Lighthouse scores measured on production; click "View" on either card to load that build in a new tab and confirm. Headline differences: page weight drops from 7.2 MB to 860 KB, desktop performance climbs from 78 to 96, mobile performance from 56 to 67.',
+            methodology: 'Numbers measured live via the Google PageSpeed Insights v5 API on 2026-05-03, desktop strategy, against /kingfisher and /kingfisher-sanity on production. Page weight, request count, and DOM tag count come from the same audit run plus a direct fetch of the rendered HTML. Lighthouse scores fluctuate run-to-run by a few points; values shown are from a single sample.',
             builds: [
                 {
                     label: 'WordPress + Elementor',
