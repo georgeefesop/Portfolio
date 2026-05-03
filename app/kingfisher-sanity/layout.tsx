@@ -3,7 +3,6 @@ import type { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Kingfisher Mortgages',
   description: 'Specialist mortgages for the self-employed, contractors, and limited company directors.',
-  robots: { index: false },
 }
 
 export default function KingfisherSanityLayout({
