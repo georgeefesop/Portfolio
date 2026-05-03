@@ -287,7 +287,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                         href={project.links.live}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="case-study-modal-mobile-cta inline-flex items-center gap-2 px-4 py-2.5 bg-accent-primary/10 hover:bg-accent-primary/20 text-accent-primary rounded-sm font-semibold transition-colors text-xs uppercase tracking-widest font-mono"
+                                        className="case-study-modal-mobile-cta inline-flex items-center gap-2 px-4 py-2.5 bg-accent-highlight/15 hover:bg-accent-highlight/25 text-accent-highlight rounded-sm font-semibold transition-colors text-xs uppercase tracking-widest font-mono"
                                     >
                                         View live <ExternalLink size={12} />
                                     </a>
@@ -419,7 +419,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                         href={project.links.live}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="case-study-modal-aside-cta inline-flex items-center gap-2 px-3.5 py-2 bg-accent-primary/10 hover:bg-accent-primary/20 text-accent-primary rounded-sm font-semibold transition-colors text-xs uppercase tracking-widest font-mono"
+                                        className="case-study-modal-aside-cta inline-flex items-center gap-2 px-3.5 py-2 bg-accent-highlight/15 hover:bg-accent-highlight/25 text-accent-highlight rounded-sm font-semibold transition-colors text-xs uppercase tracking-widest font-mono"
                                     >
                                         View live <ExternalLink size={12} />
                                     </a>
@@ -578,7 +578,7 @@ function BodyIntro({ project }: { project: CaseStudyData }) {
                                 href={project.links.live}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="body-intro-cta inline-flex items-center gap-2 px-3.5 py-2 bg-accent-primary/10 hover:bg-accent-primary/20 text-accent-primary rounded-sm font-semibold transition-colors text-xs uppercase tracking-widest font-mono"
+                                className="body-intro-cta inline-flex items-center gap-2 px-3.5 py-2 bg-accent-highlight/15 hover:bg-accent-highlight/25 text-accent-highlight rounded-sm font-semibold transition-colors text-xs uppercase tracking-widest font-mono"
                             >
                                 View live <ExternalLink size={12} />
                             </a>
@@ -1031,9 +1031,9 @@ function ComparisonGrid({
                                     href={b.href}
                                     target={b.href.startsWith('http') ? '_blank' : undefined}
                                     rel={b.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                                    className="comparison-card-link inline-flex items-center gap-1.5 text-[12px] font-mono uppercase tracking-[0.16em] text-accent-primary hover:underline whitespace-nowrap"
+                                    className="comparison-card-link inline-flex items-center gap-2 px-3.5 py-2 bg-accent-highlight/15 hover:bg-accent-highlight/25 text-accent-highlight rounded-sm font-semibold transition-colors text-xs uppercase tracking-widest font-mono whitespace-nowrap"
                                 >
-                                    View <ExternalLink size={11} />
+                                    View <ExternalLink size={12} />
                                 </a>
                             )}
                         </div>
