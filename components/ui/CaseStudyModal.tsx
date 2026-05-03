@@ -21,6 +21,22 @@ interface CaseStudyBody {
         caption: string;
     }>;
     process?: string;
+    comparison?: {
+        heading?: string;
+        intro?: string;
+        builds: Array<{
+            label: string;
+            href?: string;
+            note?: string;
+            lighthouse: {
+                performance: number;
+                accessibility: number;
+                bestPractices: number;
+                seo: number;
+            };
+            extras?: Array<{ label: string; value: string }>;
+        }>;
+    };
     outcome: {
         summary: string;
         metrics?: Array<{ label: string; value: string }>;
@@ -655,6 +671,19 @@ function BodyDesktopView({ body, onScreenshotClick }: { body: CaseStudyBody; onS
                 </section>
             )}
 
+            {/* COMPARISON */}
+            {body.comparison && body.comparison.builds.length > 0 && (
+                <section className="body-desktop-comparison px-9 py-8 border-b border-border-subtle">
+                    <PanelLabel>{body.comparison.heading || 'Comparison'}</PanelLabel>
+                    {body.comparison.intro && (
+                        <p className="body-desktop-comparison-intro text-text-secondary text-[15px] leading-relaxed max-w-3xl mb-7">
+                            {body.comparison.intro}
+                        </p>
+                    )}
+                    <ComparisonGrid builds={body.comparison.builds} />
+                </section>
+            )}
+
             {/* OUTCOME */}
             <section className="body-desktop-outcome px-9 py-8">
                 <PanelLabel>Outcome</PanelLabel>
@@ -713,6 +742,15 @@ function BodyMobileView({ body, onScreenshotClick }: { body: CaseStudyBody; onSc
             {body.process && (
                 <MobileSection label="Process">
                     <p className="body-mobile-process-text text-text-secondary">{body.process}</p>
+                </MobileSection>
+            )}
+
+            {body.comparison && body.comparison.builds.length > 0 && (
+                <MobileSection label={body.comparison.heading || 'Comparison'}>
+                    {body.comparison.intro && (
+                        <p className="body-mobile-comparison-intro text-text-secondary mb-5">{body.comparison.intro}</p>
+                    )}
+                    <ComparisonGrid builds={body.comparison.builds} stacked />
                 </MobileSection>
             )}
 
@@ -835,6 +873,74 @@ function MetricsCircles({ metrics }: { metrics: Array<{ label: string; value: st
                         <span className="metrics-circles-label text-[10px] md:text-[11px] font-mono font-bold uppercase tracking-[0.18em] text-text-muted leading-tight max-w-[14ch]">
                             {m.label}
                         </span>
+                    </div>
+                );
+            })}
+        </div>
+    );
+}
+
+function ComparisonGrid({
+    builds,
+    stacked = false,
+}: {
+    builds: NonNullable<CaseStudyBody['comparison']>['builds'];
+    stacked?: boolean;
+}) {
+    const gridClass = stacked
+        ? 'comparison-grid grid grid-cols-1 gap-7'
+        : 'comparison-grid grid grid-cols-1 lg:grid-cols-2 gap-7';
+    return (
+        <div className={gridClass}>
+            {builds.map((b, i) => {
+                const lh = [
+                    { label: 'Performance', value: String(b.lighthouse.performance) },
+                    { label: 'Accessibility', value: String(b.lighthouse.accessibility) },
+                    { label: 'Best Practices', value: String(b.lighthouse.bestPractices) },
+                    { label: 'SEO', value: String(b.lighthouse.seo) },
+                ];
+                return (
+                    <div
+                        key={i}
+                        className="comparison-card border border-border-subtle rounded-xl p-5 md:p-6 flex flex-col gap-5"
+                    >
+                        <div className="comparison-card-head flex items-start justify-between gap-3 flex-wrap">
+                            <div className="comparison-card-meta">
+                                <h4 className="comparison-card-label text-text-primary text-base md:text-lg font-semibold tracking-tight">
+                                    {b.label}
+                                </h4>
+                                {b.note && (
+                                    <p className="comparison-card-note text-text-muted text-[13px] leading-relaxed mt-1 max-w-md">
+                                        {b.note}
+                                    </p>
+                                )}
+                            </div>
+                            {b.href && (
+                                <a
+                                    href={b.href}
+                                    target={b.href.startsWith('http') ? '_blank' : undefined}
+                                    rel={b.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                                    className="comparison-card-link inline-flex items-center gap-1.5 text-[12px] font-mono uppercase tracking-[0.16em] text-accent-primary hover:underline whitespace-nowrap"
+                                >
+                                    View <ExternalLink size={11} />
+                                </a>
+                            )}
+                        </div>
+                        <MetricsCircles metrics={lh} />
+                        {b.extras && b.extras.length > 0 && (
+                            <dl className="comparison-card-extras grid grid-cols-2 gap-x-4 gap-y-2 pt-3 border-t border-border-subtle">
+                                {b.extras.map((e, j) => (
+                                    <div key={j} className="comparison-card-extras-row flex items-baseline justify-between gap-3">
+                                        <dt className="comparison-card-extras-label text-text-muted text-[11px] font-mono uppercase tracking-[0.14em]">
+                                            {e.label}
+                                        </dt>
+                                        <dd className="comparison-card-extras-value text-text-primary text-[13px] font-medium tabular-nums">
+                                            {e.value}
+                                        </dd>
+                                    </div>
+                                ))}
+                            </dl>
+                        )}
                     </div>
                 );
             })}

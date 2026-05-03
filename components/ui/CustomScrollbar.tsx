@@ -2,8 +2,10 @@
 
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 export default function CustomScrollbar() {
+    const pathname = usePathname();
     const { scrollYProgress } = useScroll();
     const [pageHeight, setPageHeight] = useState(0);
     const [viewportHeight, setViewportHeight] = useState(0);
@@ -108,6 +110,7 @@ export default function CustomScrollbar() {
     };
 
     if (pageHeight <= viewportHeight + 1) return null;
+    if (pathname?.startsWith('/kingfisher')) return null;
 
     return (
         <motion.div

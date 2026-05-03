@@ -50,5 +50,10 @@ next-env.d.ts
 data/leads.json
 .claude/
 
+# screenshot diffs and other ephemeral exports (recon docs are kept explicitly)
+_export/diff/
+_export/subscreenshots/
+_export/thumbnails/
+
 # Python bytecode (guard against accidental commits)
 __pycache__/

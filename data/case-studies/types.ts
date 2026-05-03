@@ -24,6 +24,24 @@ export type LegacyDescription = {
     outcome: string;
 };
 
+export type StackBuild = {
+    /** Short label for the stack, e.g. "WordPress + Elementor" or "Next.js + Sanity" */
+    label: string;
+    /** Public URL where this build can be viewed. Optional in case one is offline. */
+    href?: string;
+    /** Optional one-line note shown under the label, e.g. "Free Elementor tier, no Pro plugins" */
+    note?: string;
+    /** Lighthouse scores for THIS build, 0-100. Render as ringed circles via the existing MetricsCircles. */
+    lighthouse: {
+        performance: number;
+        accessibility: number;
+        bestPractices: number;
+        seo: number;
+    };
+    /** Optional extra stats - page weight, DOM nodes, TTI, etc. Free-form so we can mix units. */
+    extras?: Array<{ label: string; value: string }>;
+};
+
 export type CaseStudyBody = {
     brief: {
         situation: string;
@@ -42,6 +60,14 @@ export type CaseStudyBody = {
         caption: string;
     }>;
     process?: string;
+    /** Optional side-by-side stack comparison. When present, the modal renders a section with one column per build, each showing Lighthouse rings + extras. */
+    comparison?: {
+        /** Heading shown above the comparison block. */
+        heading?: string;
+        /** Short intro paragraph. */
+        intro?: string;
+        builds: StackBuild[];
+    };
     outcome: {
         summary: string;
         /** Only include if real and verifiable. Fictional / illustrative numbers belong nowhere on the site. */

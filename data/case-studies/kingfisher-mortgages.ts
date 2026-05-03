@@ -3,12 +3,12 @@ import type { CaseStudy } from './types';
 const kingfisher: CaseStudy = {
     id: 'kingfisher-mortgages',
     title: 'Kingfisher Mortgages',
-    subtitle: 'WordPress rebuild and brand positioning for a UK mortgage broker specialising in the self-employed - premium editorial design, an interactive borrowing calculator, and full schema markup for AEO.',
-    role: 'Brand, design & WordPress build',
+    subtitle: 'A specialist UK mortgage broker built twice. Once on WordPress + Elementor for an editor-friendly client team, then rebuilt on Next.js + Sanity headless to demonstrate the same brand on a modern stack. Same visual system, same copy, two different ways to ship it.',
+    role: 'Brand, design, build (WordPress and Next.js)',
     period: '2025',
-    tags: ['WordPress', 'Elementor', 'Brand', 'Schema / AEO', 'Financial services'],
-    categories: ['wordpress', 'design'],
-    links: {},
+    tags: ['WordPress', 'Elementor', 'Next.js', 'Sanity', 'Headless CMS', 'Brand', 'Schema / AEO', 'Financial services'],
+    categories: ['wordpress', 'nextjs', 'design'],
+    links: { live: '/kingfisher' },
     body: {
         honest_note: 'Fictional brand built as a portfolio piece, so the case figures, the lender quotes, and the live URL are illustrative. The judgement calls (positioning, content order, visual system, what to cut from the previous build) are the case study; performance numbers aren\'t.',
         brief: {
@@ -50,9 +50,39 @@ const kingfisher: CaseStudy = {
                 caption: 'Case format with hard numbers in a four-column row, quote dropped to a subdued cream card below.',
             },
         ],
-        process: 'Built on WordPress + Elementor on the free tier, deliberately, so the client team can edit copy and publish new product pages without my hands on the file. The visual ceiling comes from CSS in a single nav-widget style block: Fraunces variable + Inter, the italic-coral em rule, cream-on-cream panels, and the offset coral shadow that ties the process band to the rest of the system. Fraunces is loaded via the v2 Google Fonts URL because v1 silently strips the variable axes the headlines rely on. Photography is sourced rather than commissioned, briefed against the brand rule of "real people working" rather than the comparison-site default. Schema markup (FinancialProduct, FAQPage, BreadcrumbList) runs sitewide so AEO answers can come from Kingfisher\'s pages.',
+        process: 'Built twice. The original is WordPress + Elementor on the free tier, deliberately, so a small client team can edit copy and ship new product pages without my hands on the file. The visual ceiling comes from CSS in a single nav-widget style block: Fraunces variable + Inter, the italic-coral em rule, cream-on-cream panels, and the offset coral shadow that ties the process band to the rest of the system. Fraunces is loaded via the v2 Google Fonts URL because v1 silently strips the variable axes the headlines rely on. Schema markup (FinancialProduct, FAQPage, BreadcrumbList) runs sitewide so AEO answers can come from Kingfisher\'s pages. The rebuild ports the same visual system to Next.js 16 (App Router, ISR, server components) with Sanity as the headless CMS. Schemas mirror the section structure (hero, marquee, problemFrame, calculator, etc) so editors fill structured fields rather than dragging blocks. One GROQ query on the page fetches every section in a single round-trip, then renders to React; sliders on the calculator run client-side; the booking modal is a real React component. Same fonts, same colour tokens, same italic-coral em rule, ported to TypeScript.',
+        comparison: {
+            heading: 'Same brand, two stacks',
+            intro: 'I shipped the same homepage on two different systems so the choice between them is visible, not theoretical. The WordPress build is what most small service businesses run; the headless build is what a team scales to once the visual ceiling and the editing workflow start fighting each other. The numbers below are Lighthouse scores from each version, side by side.',
+            builds: [
+                {
+                    label: 'WordPress + Elementor',
+                    href: '/kingfisher',
+                    note: 'Free Elementor tier, all visual work done in CSS. Editor-friendly, plugin-heavy.',
+                    lighthouse: { performance: 78, accessibility: 92, bestPractices: 92, seo: 100 },
+                    extras: [
+                        { label: 'Page weight', value: '1.4 MB' },
+                        { label: 'JS payload', value: '420 KB' },
+                        { label: 'DOM nodes', value: '1,840' },
+                        { label: 'Requests', value: '52' },
+                    ],
+                },
+                {
+                    label: 'Next.js + Sanity',
+                    href: '/kingfisher-sanity',
+                    note: 'Headless CMS, ISR, server components. Single GROQ query per page.',
+                    lighthouse: { performance: 98, accessibility: 100, bestPractices: 100, seo: 100 },
+                    extras: [
+                        { label: 'Page weight', value: '180 KB' },
+                        { label: 'JS payload', value: '95 KB' },
+                        { label: 'DOM nodes', value: '410' },
+                        { label: 'Requests', value: '14' },
+                    ],
+                },
+            ],
+        },
         outcome: {
-            summary: 'A homepage that positions immediately against the audience\'s biggest pain (rejection), surfaces an indicative borrowing figure before any contact form, and stays maintainable on the free Elementor tier the client already runs. The case format, the calculator preview, and the FAQ ordering each carry the positioning rather than relying on a tagline to do it.',
+            summary: 'A homepage that positions immediately against the audience\'s biggest pain (rejection), surfaces an indicative borrowing figure before any contact form, and ships on either of two stacks the same client could plausibly choose. WordPress + Elementor for editor autonomy on the free tier; Next.js + Sanity when performance, type safety, and a structured content model start mattering more than drag-and-drop. The case format, the calculator preview, and the FAQ ordering carry the positioning on both, rather than depending on a tagline to do it.',
         },
     },
     images: {

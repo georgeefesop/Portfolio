@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { Menu, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -16,10 +17,13 @@ const navLinks = [
 ];
 
 export default function Navigation() {
+    const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [activeSection, setActiveSection] = useState('');
     const navRef = useRef<HTMLElement>(null);
+
+    if (pathname?.startsWith('/kingfisher')) return null;
 
     // Close menu when clicking outside
     useEffect(() => {
