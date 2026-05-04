@@ -33,23 +33,23 @@ function dispatchOpen(item: FeaturedItem) {
 function HorizontalCard({ item, priority }: { item: FeaturedItem; priority?: boolean }) {
     const isInstantAccess = item.id === 'instant-access-locksmiths';
     const isZoomed = ZOOM_IDS.has(item.id);
-    const zoomClass = isInstantAccess
-        ? 'scale-[1.12] group-hover:scale-[1.18]'
-        : isZoomed
-            ? 'scale-110 group-hover:scale-[1.16]'
-            : 'group-hover:scale-105';
+    const baseScale = isInstantAccess ? 'scale-[1.12]' : isZoomed ? 'scale-110' : '';
     return (
         <div className="featured-work-strip-card featured-work-strip-card-horizontal w-[312px] group">
-            <div className="featured-work-strip-thumb-wrap relative aspect-[3/2] rounded-lg overflow-hidden bg-white/5 border-2 border-white/10 group-hover:[border-color:var(--thumb-card-border)] [box-shadow:none] group-hover:[box-shadow:var(--thumb-card-shadow)] transition-colors">
+            <motion.div
+                className="featured-work-strip-thumb-wrap relative aspect-[3/2] rounded-lg overflow-hidden bg-white/5 border-2 border-white/10 group-hover:[border-color:var(--thumb-card-border)] [box-shadow:2px_2px_3px_2px_rgba(74,56,38,0.08)] group-hover:[box-shadow:var(--thumb-card-shadow)] transition-[box-shadow,border-color] duration-300"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            >
                 <ImageWithFallback
                     src={item.thumbnail}
                     alt={item.title}
                     fill
                     sizes="312px"
                     priority={priority}
-                    className={`featured-work-strip-thumb object-cover object-top opacity-90 group-hover:opacity-100 transition-all duration-500 featured-strip-img ${zoomClass}`}
+                    className={`featured-work-strip-thumb object-cover object-top opacity-90 group-hover:opacity-100 transition-opacity duration-500 featured-strip-img ${baseScale}`}
                 />
-            </div>
+            </motion.div>
             <div className="featured-work-strip-meta mt-3">
                 <div className="featured-work-strip-title text-base font-medium text-text-primary truncate group-hover:text-accent-primary transition-colors">
                     {item.title}
@@ -101,23 +101,19 @@ function renderClickable(
     extraClass: string,
     Inner: React.ComponentType<{ item: FeaturedItem; priority?: boolean }>,
     priority?: boolean,
+    animIndex?: number,
 ) {
-    if (item.externalLink) {
-        return (
-            <a
-                key={key}
-                href={item.externalLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`featured-work-strip-item featured-work-strip-item-link block shrink-0 pointer-events-auto ${extraClass}`}
-            >
-                <Inner item={item} priority={priority} />
-            </a>
-        );
-    }
-    return (
+    const inner = item.externalLink ? (
+        <a
+            href={item.externalLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`featured-work-strip-item featured-work-strip-item-link block shrink-0 pointer-events-auto ${extraClass}`}
+        >
+            <Inner item={item} priority={priority} />
+        </a>
+    ) : (
         <button
-            key={key}
             type="button"
             onClick={() => dispatchOpen(item)}
             className={`featured-work-strip-item featured-work-strip-item-button block shrink-0 pointer-events-auto text-left ${extraClass}`}
@@ -125,6 +121,21 @@ function renderClickable(
             <Inner item={item} priority={priority} />
         </button>
     );
+
+    if (animIndex !== undefined) {
+        return (
+            <motion.div
+                key={key}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.45 + animIndex * 0.06, ease: [0.22, 1, 0.36, 1] }}
+            >
+                {inner}
+            </motion.div>
+        );
+    }
+
+    return <div key={key}>{inner}</div>;
 }
 
 export default function FeaturedWorkStrip({ orientation = 'horizontal' }: { orientation?: 'horizontal' | 'vertical' }) {
@@ -138,10 +149,19 @@ function HorizontalStrip() {
     const speedRef = useRef(0);
     const halfWidth = useRef(0);
     const trackRef = useRef<HTMLDivElement>(null);
+    const rootRef = useRef<HTMLDivElement>(null);
+    const visibleRef = useRef(true);
 
     useEffect(() => {
         const update = () => {
-            if (trackRef.current) halfWidth.current = trackRef.current.scrollWidth / 2;
+            const track = trackRef.current;
+            if (!track || track.children.length <= items.length) return;
+            // Distance from first item of set A to first item of set B = exact
+            // seamless wrap distance. Don't use scrollWidth / N - that includes
+            // edge gaps and is off by half a gap per loop, causing visible jumps.
+            const first = track.children[0] as HTMLElement;
+            const second = track.children[items.length] as HTMLElement;
+            halfWidth.current = second.offsetLeft - first.offsetLeft;
         };
         update();
         const ro = new ResizeObserver(update);
@@ -149,7 +169,14 @@ function HorizontalStrip() {
         return () => ro.disconnect();
     }, []);
 
+    useEffect(() => {
+        const io = new IntersectionObserver(([e]) => { visibleRef.current = e.isIntersecting; }, { threshold: 0 });
+        if (rootRef.current) io.observe(rootRef.current);
+        return () => io.disconnect();
+    }, []);
+
     useAnimationFrame((_t, delta) => {
+        if (!visibleRef.current) return;
         if (isHover) {
             const k = 1 - Math.exp(-delta * 0.005);
             speedRef.current += (0 - speedRef.current) * k;
@@ -163,7 +190,8 @@ function HorizontalStrip() {
 
     return (
         <div
-            className="featured-work-strip-root featured-work-strip-root-horizontal hidden md:block w-full overflow-hidden"
+            ref={rootRef}
+            className="featured-work-strip-root featured-work-strip-root-horizontal hidden md:block w-full [overflow-x:clip] py-3"
             style={{
                 WebkitMaskImage: 'linear-gradient(to right, transparent 0, black 8%, black 92%, transparent 100%)',
                 maskImage: 'linear-gradient(to right, transparent 0, black 8%, black 92%, transparent 100%)',
@@ -172,8 +200,9 @@ function HorizontalStrip() {
             onMouseLeave={() => setIsHover(false)}
         >
             <motion.div ref={trackRef} style={{ x }} className="featured-work-strip-track flex gap-16 w-max will-change-transform">
-                {items.map((item, idx) => renderClickable(item, `a-${idx}`, '', HorizontalCard, idx === 0))}
-                {items.map((item, idx) => renderClickable(item, `b-${idx}`, '', HorizontalCard))}
+                {items.map((item, idx) => renderClickable(item, `a-${idx}`, '', HorizontalCard, idx === 0, idx))}
+                {items.map((item, idx) => renderClickable(item, `b-${idx}`, '', HorizontalCard, false, items.length + idx))}
+                {items.map((item, idx) => renderClickable(item, `c-${idx}`, '', HorizontalCard, false, items.length * 2 + idx))}
             </motion.div>
         </div>
     );
@@ -184,10 +213,16 @@ function VerticalStrip() {
     const speedRef = useRef(0);
     const halfHeight = useRef(0);
     const trackRef = useRef<HTMLDivElement>(null);
+    const rootRef = useRef<HTMLDivElement>(null);
+    const visibleRef = useRef(true);
 
     useEffect(() => {
         const update = () => {
-            if (trackRef.current) halfHeight.current = trackRef.current.scrollHeight / 2;
+            const track = trackRef.current;
+            if (!track || track.children.length <= items.length) return;
+            const first = track.children[0] as HTMLElement;
+            const second = track.children[items.length] as HTMLElement;
+            halfHeight.current = second.offsetTop - first.offsetTop;
         };
         update();
         const ro = new ResizeObserver(update);
@@ -195,7 +230,14 @@ function VerticalStrip() {
         return () => ro.disconnect();
     }, []);
 
+    useEffect(() => {
+        const io = new IntersectionObserver(([e]) => { visibleRef.current = e.isIntersecting; }, { threshold: 0 });
+        if (rootRef.current) io.observe(rootRef.current);
+        return () => io.disconnect();
+    }, []);
+
     useAnimationFrame((_t, delta) => {
+        if (!visibleRef.current) return;
         const target = 35;
         const k = 1 - Math.exp(-delta * 0.003);
         speedRef.current += (target - speedRef.current) * k;
@@ -206,6 +248,7 @@ function VerticalStrip() {
 
     return (
         <div
+            ref={rootRef}
             className="featured-work-strip-root featured-work-strip-root-vertical md:hidden w-full h-full overflow-hidden"
             style={{
                 WebkitMaskImage: 'linear-gradient(to bottom, transparent 0, black 14%, black 86%, transparent 100%)',
@@ -213,8 +256,9 @@ function VerticalStrip() {
             }}
         >
             <motion.div ref={trackRef} style={{ y }} className="featured-work-strip-track featured-work-strip-track-vertical flex flex-col gap-5 h-max will-change-transform px-12">
-                {items.map((item, idx) => renderClickable(item, `va-${idx}`, 'block w-full', VerticalCard, idx === 0))}
+                {items.map((item, idx) => renderClickable(item, `va-${idx}`, 'block w-full', VerticalCard, idx === 0, idx))}
                 {items.map((item, idx) => renderClickable(item, `vb-${idx}`, 'block w-full', VerticalCard))}
+                {items.map((item, idx) => renderClickable(item, `vc-${idx}`, 'block w-full', VerticalCard))}
             </motion.div>
         </div>
     );

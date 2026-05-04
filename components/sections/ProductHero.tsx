@@ -174,9 +174,14 @@ export default function ProductHero() {
     return (
         <section className="product-hero-section relative h-[100svh] w-full overflow-hidden bg-bg-hero">
             {/* Background Grid - programmatic canvas with mouse trail. */}
-            <div className="product-hero-grid-wrap absolute inset-0 z-0">
+            <motion.div
+                className="product-hero-grid-wrap absolute inset-0 z-0"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.55, ease: 'easeOut' }}
+            >
                 <HeroGrid />
-            </div>
+            </motion.div>
 
             {/* ProductCanvas - Only in carousel mode */}
             {ENABLE_CAROUSEL && (

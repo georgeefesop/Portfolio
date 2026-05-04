@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import { ExternalLink, Play } from 'lucide-react';
 import FadeIn from '../motion/FadeIn';
 import CaseStudyModal from '../ui/CaseStudyModal';
@@ -98,34 +99,38 @@ function ThumbCard({ item, onOpen, priority }: { item: Item; onOpen: (id: string
             quality={90}
             priority={priority}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            className="thumb-card-image object-cover object-top transition-transform duration-700 group-hover:scale-[1.03]"
+            className="thumb-card-image object-cover object-top"
         />
     );
     if (item.kind === 'external') {
         return (
-            <a
+            <motion.a
                 href={item.externalLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={item.title}
                 className={`thumb-card thumb-card-external ${sharedClass}`}
+                whileHover={{ scale: 1.04 }}
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             >
                 {img}
                 {overlays}
-            </a>
+            </motion.a>
         );
     }
     return (
-        <button
+        <motion.button
             type="button"
             onClick={() => onOpen(item.id)}
             aria-haspopup="dialog"
             aria-label={item.title}
             className={`thumb-card thumb-card-drawer ${sharedClass}`}
+            whileHover={{ scale: 1.04 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
         >
             {img}
             {overlays}
-        </button>
+        </motion.button>
     );
 }
 
@@ -231,7 +236,7 @@ export default function CaseStudies() {
                         })}
                     </div>
 
-                    <div className="case-studies-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-4">
+                    <div className="case-studies-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
                         {visible.map((item, i) => (
                             <ThumbCard
                                 key={item.id}

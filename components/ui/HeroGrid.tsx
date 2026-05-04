@@ -13,6 +13,24 @@ export default function HeroGrid() {
     const cellsRef = useRef<Map<string, number>>(new Map());
     const isDarkRef = useRef(true);
     const rafRef = useRef<number | null>(null);
+    const visibleRef = useRef(true);
+
+    const drawGrid = useCallback((ctx: CanvasRenderingContext2D, w: number, h: number) => {
+        ctx.strokeStyle = isDarkRef.current ? 'rgba(255,255,255,0.20)' : 'rgba(42,36,29,0.18)';
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        const cols = Math.ceil(w / CELL) + 1;
+        const rows = Math.ceil(h / CELL) + 1;
+        for (let c = 0; c <= cols; c++) {
+            ctx.moveTo(c * CELL, 0);
+            ctx.lineTo(c * CELL, h);
+        }
+        for (let r = 0; r <= rows; r++) {
+            ctx.moveTo(0, r * CELL);
+            ctx.lineTo(w, r * CELL);
+        }
+        ctx.stroke();
+    }, []);
 
     const draw = useCallback(() => {
         const canvas = canvasRef.current;
@@ -29,7 +47,6 @@ export default function HeroGrid() {
 
         ctx.clearRect(0, 0, w, h);
 
-        // Decay cells and fill highlights
         const cells = cellsRef.current;
         const toDelete: string[] = [];
         cells.forEach((alpha, key) => {
@@ -44,34 +61,44 @@ export default function HeroGrid() {
         });
         toDelete.forEach(k => cells.delete(k));
 
-        // Draw grid lines on top
-        ctx.strokeStyle = isDark ? 'rgba(255,255,255,0.20)' : 'rgba(42,36,29,0.18)';
-        ctx.lineWidth = 0.5;
-        ctx.beginPath();
-        const cols = Math.ceil(w / CELL) + 1;
-        const rows = Math.ceil(h / CELL) + 1;
-        for (let c = 0; c <= cols; c++) {
-            ctx.moveTo(c * CELL, 0);
-            ctx.lineTo(c * CELL, h);
-        }
-        for (let r = 0; r <= rows; r++) {
-            ctx.moveTo(0, r * CELL);
-            ctx.lineTo(w, r * CELL);
-        }
-        ctx.stroke();
+        drawGrid(ctx, w, h);
 
-        rafRef.current = requestAnimationFrame(draw);
-    }, []);
+        // Keep looping only while there are active cells; stop when idle
+        if (cells.size > 0) {
+            rafRef.current = requestAnimationFrame(draw);
+        } else {
+            rafRef.current = null;
+        }
+    }, [drawGrid]);
+
+    const startLoop = useCallback(() => {
+        if (!rafRef.current && visibleRef.current) {
+            rafRef.current = requestAnimationFrame(draw);
+        }
+    }, [draw]);
 
     useEffect(() => {
         const canvas = canvasRef.current;
         if (!canvas) return;
+
+        const drawStaticGrid = () => {
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+            const dpr = window.devicePixelRatio || 1;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            const w = canvas.width / dpr;
+            const h = canvas.height / dpr;
+            ctx.clearRect(0, 0, w, h);
+            drawGrid(ctx, w, h);
+        };
 
         const resize = () => {
             const dpr = window.devicePixelRatio || 1;
             const rect = canvas.getBoundingClientRect();
             canvas.width = rect.width * dpr;
             canvas.height = rect.height * dpr;
+            // Redraw static grid immediately after resize
+            if (!rafRef.current) drawStaticGrid();
         };
 
         const handleMouseMove = (e: MouseEvent) => {
@@ -81,12 +108,25 @@ export default function HeroGrid() {
             if (col < 0 || row < 0) return;
             const trailMax = isDarkRef.current ? TRAIL_MAX_DARK : TRAIL_MAX_LIGHT;
             cellsRef.current.set(`${col},${row}`, trailMax);
+            startLoop();
         };
 
         const updateTheme = () => {
             const theme = document.documentElement.dataset.theme ?? '';
             isDarkRef.current = !theme.startsWith('light-');
+            if (!rafRef.current) drawStaticGrid();
         };
+
+        const io = new IntersectionObserver(([entry]) => {
+            visibleRef.current = entry.isIntersecting;
+            if (entry.isIntersecting && cellsRef.current.size > 0) {
+                startLoop();
+            } else if (!entry.isIntersecting && rafRef.current) {
+                cancelAnimationFrame(rafRef.current);
+                rafRef.current = null;
+            }
+        }, { threshold: 0 });
+        io.observe(canvas);
 
         const observer = new MutationObserver(updateTheme);
         observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
@@ -95,15 +135,17 @@ export default function HeroGrid() {
         resize();
         window.addEventListener('resize', resize);
         window.addEventListener('mousemove', handleMouseMove);
-        rafRef.current = requestAnimationFrame(draw);
+        // Draw static grid once on mount (no active loop needed)
+        drawStaticGrid();
 
         return () => {
             window.removeEventListener('resize', resize);
             window.removeEventListener('mousemove', handleMouseMove);
             observer.disconnect();
+            io.disconnect();
             if (rafRef.current) cancelAnimationFrame(rafRef.current);
         };
-    }, [draw]);
+    }, [draw, drawGrid, startLoop]);
 
     return (
         <canvas
