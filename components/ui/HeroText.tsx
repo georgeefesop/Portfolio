@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { motion, useTransform, MotionValue } from 'framer-motion';
 import { StepId } from '../sections/ProductHero';
 import ProjectEstimator from '../sections/ProjectEstimator';
+import MicroUpworkCard from './MicroUpworkCard';
 
 interface HeroTextProps {
     scrollProgress: MotionValue<number>;
@@ -79,6 +80,9 @@ export default function HeroText({ scrollProgress, headerActions }: HeroTextProp
 
                     {/* Right Side */}
                     <div className="hero-text-right hidden md:flex text-right flex-col items-end gap-3 mt-4 md:mt-0">
+                        <motion.div {...line(0.0)} className="lg:hidden">
+                            <MicroUpworkCard />
+                        </motion.div>
                         <motion.p {...line(0.0)} className="hero-text-meta-disciplines text-base md:text-xl font-medium text-text-primary">
                             Product · Web · Brand · AI
                         </motion.p>

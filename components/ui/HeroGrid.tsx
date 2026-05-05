@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 
-const CELL = 40;
+const CELL = 20;
 const DECAY = 0.91;
 const TRAIL_MAX_DARK = 0.18;
 const TRAIL_MAX_LIGHT = 0.10;
