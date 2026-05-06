@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ExternalLink, Play } from 'lucide-react';
 import FadeIn from '../motion/FadeIn';
 import CaseStudyModal from '../ui/CaseStudyModal';
+import posthog from 'posthog-js';
 import ImageWithFallback from '@/components/ui/ImageWithFallback';
 import { cases, externalCases, type CaseStudy, type ExternalCase, type CategoryId } from '@/data/case-studies';
 
@@ -241,7 +242,10 @@ export default function CaseStudies() {
                             <ThumbCard
                                 key={item.id}
                                 item={item}
-                                onOpen={(id) => setActiveId(id)}
+                                onOpen={(id) => {
+                                    posthog.capture?.('case_study_opened', { case_id: id, kind: item.kind, category: activeCategory });
+                                    setActiveId(id);
+                                }}
                                 priority={i < 4}
                             />
                         ))}

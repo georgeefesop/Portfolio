@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import posthog from 'posthog-js';
 import { Sparkles, Edit3, Send, CheckCircle2, AlertCircle, RotateCcw, ChevronDown, ChevronUp, FileText, ChevronRight } from 'lucide-react';
 import InstrumentButton from '../ui/InstrumentButton';
 
@@ -69,6 +70,8 @@ export default function ProjectEstimator({ externalIsMinimized, externalSetMinim
 
     const handleGetEstimate = async () => {
         if (input.length < 15) return;
+
+        posthog.capture?.('estimator_run', { input_length: input.length, deliverables: selectedDeliverables });
 
         setIsLoading(true);
         setError(null);
@@ -189,6 +192,7 @@ export default function ProjectEstimator({ externalIsMinimized, externalSetMinim
                 setSendStatus('error');
                 return;
             }
+            posthog.capture?.('estimator_brief_sent', { has_company: Boolean(company), has_estimate: Boolean(result && result.status === 'estimate') });
             setSendStatus('success');
         } catch {
             setSendError('Something went wrong. Please try again.');

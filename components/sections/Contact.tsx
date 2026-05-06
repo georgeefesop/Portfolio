@@ -98,6 +98,7 @@ export default function Contact() {
                             href={UPWORK_PROFILE_URL}
                             target="_blank"
                             rel="noopener noreferrer"
+                            data-ph-event="cta_upwork_clicked"
                             className="contact-cta-button mt-8 w-full flex items-center justify-center gap-2 text-white font-bold py-4 rounded-lg transition-colors group bg-[#14A800] hover:bg-[#108300]"
                         >
                             Hire me on Upwork
@@ -108,6 +109,7 @@ export default function Contact() {
                         <div className="contact-direct mt-6 pt-6 border-t border-border-subtle/50 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-text-muted">
                             <a
                                 href="mailto:george.efesop@gmail.com"
+                                data-ph-event="cta_email_clicked"
                                 className="contact-direct-link flex items-center gap-2 hover:text-text-primary transition-colors"
                             >
                                 <Mail size={14} />
@@ -117,6 +119,7 @@ export default function Contact() {
                                 href="https://wa.me/35797907137"
                                 target="_blank"
                                 rel="noopener noreferrer"
+                                data-ph-event="cta_whatsapp_clicked"
                                 className="contact-direct-link flex items-center gap-2 hover:text-text-primary transition-colors"
                             >
                                 <MessageCircle size={14} />
@@ -124,6 +127,7 @@ export default function Contact() {
                             </a>
                             <a
                                 href="tel:+35797907137"
+                                data-ph-event="cta_phone_clicked"
                                 className="contact-direct-link flex items-center gap-2 hover:text-text-primary transition-colors whitespace-nowrap"
                             >
                                 <Phone size={14} />
