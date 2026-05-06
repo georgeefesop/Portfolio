@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
       { source: '/ingest/static/:path*', destination: 'https://eu-assets.i.posthog.com/static/:path*' },
       { source: '/ingest/:path*', destination: 'https://eu.i.posthog.com/:path*' },
       { source: '/ingest/decide', destination: 'https://eu.i.posthog.com/decide' },
+      // Akti - portfolio sub-app proxied from akti-seven.vercel.app
+      { source: '/akti', destination: 'https://akti-seven.vercel.app/akti' },
+      { source: '/akti/:path*', destination: 'https://akti-seven.vercel.app/akti/:path*' },
     ];
   },
   images: {
