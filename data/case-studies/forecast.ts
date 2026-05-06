@@ -15,8 +15,6 @@ const forecast: CaseStudy = {
             audience: 'Mobile-first locals and visitors opening the site at a cafe table at 3pm, deciding what to do that evening. Not power users planning a season; people answering one question - what is on tonight - in less time than it takes their coffee to arrive.',
             what_made_it_hard: [
                 'A fragmented data picture - Facebook events, venue sites, posters, PDFs - that had to be normalised behind the scenes without leaking that mess into the surface',
-                'A small, opinionated brief from a single user (me) that needed to generalise enough to be useful to anyone else who lives here',
-                'A codebase a future contributor - or future-me in six months - would not drift away from, which meant the design system mattered more than any single screen',
             ],
         },
         decisions: [

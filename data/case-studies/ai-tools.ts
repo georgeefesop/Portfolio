@@ -16,8 +16,6 @@ const aiTools: CaseStudy = {
             audience: 'Curious-but-overwhelmed users who have heard about ten different AI tools, tried two, and want one place that tells them which one to use for the job in front of them. Not power users hunting for an obscure model - people who want a competent recommendation and a clear next step.',
             what_made_it_hard: [
                 'Open brief with no fixed audience - the strategy work had to happen before any pixels could be defended',
-                'A directory category where most competitors look identical, which made differentiation a copy-and-tone problem more than a feature problem',
-                'Single-canvas thinking: the work needed to live in Miro long enough to narrow the space, before the temptation to push pixels took over',
             ],
         },
         decisions: [

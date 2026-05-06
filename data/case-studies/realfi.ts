@@ -14,8 +14,6 @@ const realfi: CaseStudy = {
             audience: 'On one side, SME owners in East Africa applying for credit through the platform - often on patchy mobile connections, sometimes filling regulated forms in a second language. On the other, institutional and impact-focused investors in developed markets evaluating portfolios on ESG performance alongside financial return.',
             what_made_it_hard: [
                 'Digital literacy variance across a global user base meant a single onboarding flow could not serve both ends - capital seekers and capital providers needed tailored journeys, not one polished template',
-                'Low-bandwidth and offline-first requirements: progressive disclosure and form chunking became architectural constraints, not nice-to-haves',
-                'Cross-jurisdictional regulatory compliance, with KYC and risk-assessment patterns that had to remain legible across very different cultural expectations of "trust"',
             ],
         },
         decisions: [

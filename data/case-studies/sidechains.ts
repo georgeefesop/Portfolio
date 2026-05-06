@@ -14,8 +14,6 @@ const sidechains: CaseStudy = {
             audience: 'Solidity developers from the Ethereum ecosystem evaluating whether they could ship on Cardano without learning Plutus/Haskell from scratch, plus Cardano-native developers extending into specialised use cases (privacy, gaming, DeFi). Two technical audiences with different mental models, sharing the same toolkit.',
             what_made_it_hard: [
                 'Two fundamentally different blockchain architectures - Cardano\'s UTXO model versus Ethereum\'s account-based model - which meant the bridge interface had to translate the underlying difference rather than paper over it',
-                'Incompatible smart contract environments (Plutus vs Solidity) and incompatible developer tooling, all of which had to feel native to whichever ecosystem the developer arrived from',
-                'Asset transfer security between chains is the highest-stakes UX surface in crypto - any ambiguity in the bridge flow translates directly into lost funds and lost trust',
             ],
         },
         decisions: [

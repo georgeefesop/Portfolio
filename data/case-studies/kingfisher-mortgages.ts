@@ -16,8 +16,6 @@ const kingfisher: CaseStudy = {
             audience: 'Self-employed borrowers between 28 and 45 who have already been turned down by their bank or stitched up by a comparison site. Most arrive sceptical, tired of explaining contractor day rates and retained profits to algorithms, and ready to leave the second the page looks like another lead funnel.',
             what_made_it_hard: [
                 'Visitors arrive after rejection, not curiosity. The first surface has to acknowledge that, not paper over it.',
-                'Small client team needs to publish new product pages without me. One template has to cover remortgage, buy-to-let, and freelancer-specific products without turning into a kit.',
-                'Built on the free Elementor tier (no Pro, no Theme Builder), so every editorial flourish comes from CSS in a single style block, not a paid widget pack.',
             ],
         },
         decisions: [

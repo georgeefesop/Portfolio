@@ -15,8 +15,6 @@ const allsop: CaseStudy = {
             audience: 'Procurement contacts at care homes, NHS trusts, vet practices, and housing providers comparing distributors. They want to see equipment that looks like it belongs in a place like theirs - not a generic catalogue render or a smiling stock model in scrubs.',
             what_made_it_hard: [
                 'Seven target sectors by nine service lines is a matrix of scenes, not a single shoot - each cell needs its own brand-correct visual language',
-                'AI drift toward generic "commercial laundry" visuals whenever prompts loosen even slightly, which collapses the brand back into stock-catalogue territory',
-                'Final-mile finish: the AI mishandles equipment detail (machine fascia, livery, model badges) in ways that would be embarrassing in a B2B context if shipped raw',
             ],
         },
         decisions: [

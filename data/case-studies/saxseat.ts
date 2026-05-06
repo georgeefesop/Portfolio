@@ -14,8 +14,6 @@ const saxseat: CaseStudy = {
             audience: 'Saxophone players who had never seen a product like this before. Curious enough to click an ad or follow a Kickstarter link, sceptical enough to need every objection answered before committing money to a category that did not exist yesterday.',
             what_made_it_hard: [
                 'A novel product category - buyers had never seen anything like it, so the page had to teach and sell at the same time without slipping into either lecture or hard pitch',
-                'A small startup budget with no room for a second attempt - the soft-launch had to validate the page before any meaningful marketing spend got committed',
-                'Stakeholder review of every design decision in regular meetings, which meant every pattern had to be defendable against pushback rather than just visually convincing',
             ],
         },
         decisions: [

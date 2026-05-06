@@ -16,8 +16,6 @@ const instantAccessLocksmiths: CaseStudy = {
             audience: 'Two distinct visitor types with very different headspaces: someone locked out at 2am, phone in hand, needing one clear action immediately; and a homeowner researching security upgrades in daylight, comparing options, wanting to verify James is credible before committing to a call.',
             what_made_it_hard: [
                 'Trust deficit in the trade - locksmith scams have made the category notorious for inflated call-out pricing, so every visitor arrives skeptical regardless of how good the operator actually is',
-                'Long-tail local SEO requires a programmatic page structure the old template had no capacity for - "locksmith in Knowle" and "locksmith in Dorridge" are distinct queries that a single homepage cannot win',
-                'No booking system or CRM - the solution had to generate qualified enquiries without adding workflow James does not have the overhead to run',
             ],
         },
         decisions: [

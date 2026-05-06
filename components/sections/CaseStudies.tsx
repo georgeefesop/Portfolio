@@ -143,17 +143,19 @@ const allItems: Item[] = [
 const PINNED_IDS = [
     'kingfisher-mortgages',
     'akti',
-    'realfi',
     'instant-access-locksmiths',
-    'allsop-francis',
     'uk-vehicles',
-    'bank-of-cyprus',
+    'realfi',
     'ai-tools',
     'shackle',
     'saxseat',
+    'allsop-francis',
+    'bank-of-cyprus',
     'olympus-sports',
     'la-hacienda',
 ];
+
+const SHOW_MORE_THRESHOLD = 12;
 
 const TRAILING_IDS = ['figma-microinteractions'];
 
@@ -161,6 +163,7 @@ export default function CaseStudies() {
     const [activeId, setActiveId] = useState<string | null>(null);
     const [activeCategory, setActiveCategory] = useState<CategoryId | 'all'>('all');
     const [shuffledAllOrderIds, setShuffledAllOrderIds] = useState<string[] | null>(null);
+    const [showAll, setShowAll] = useState(false);
     useEffect(() => {
         const restIds = allItems
             .filter((i) => !PINNED_IDS.includes(i.id) && !TRAILING_IDS.includes(i.id))
@@ -238,24 +241,43 @@ export default function CaseStudies() {
                         })}
                     </div>
 
-                    <div className="case-studies-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
-                        {visible.map((item, i) => (
-                            <ThumbCard
-                                key={item.id}
-                                item={item}
-                                onOpen={(id) => {
-                                    posthog.capture?.('case_study_opened', { case_id: id, kind: item.kind, category: activeCategory });
-                                    setActiveId(id);
-                                }}
-                                priority={i < 4}
-                            />
-                        ))}
-                        {visible.length === 0 && (
-                            <p className="case-studies-empty text-text-muted text-center py-12 col-span-full">
-                                No projects in this category yet.
-                            </p>
-                        )}
-                    </div>
+                    {(() => {
+                        const isAllCategory = activeCategory === 'all';
+                        const displayed = isAllCategory && !showAll ? visible.slice(0, SHOW_MORE_THRESHOLD) : visible;
+                        const hiddenCount = isAllCategory && !showAll ? Math.max(0, visible.length - SHOW_MORE_THRESHOLD) : 0;
+                        return (
+                            <>
+                                <div className="case-studies-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+                                    {displayed.map((item, i) => (
+                                        <ThumbCard
+                                            key={item.id}
+                                            item={item}
+                                            onOpen={(id) => {
+                                                posthog.capture?.('case_study_opened', { case_id: id, kind: item.kind, category: activeCategory });
+                                                setActiveId(id);
+                                            }}
+                                            priority={i < 4}
+                                        />
+                                    ))}
+                                    {displayed.length === 0 && (
+                                        <p className="case-studies-empty text-text-muted text-center py-12 col-span-full">
+                                            No projects in this category yet.
+                                        </p>
+                                    )}
+                                </div>
+                                {hiddenCount > 0 && (
+                                    <div className="case-studies-show-more flex justify-center mt-10">
+                                        <button
+                                            onClick={() => setShowAll(true)}
+                                            className="text-sm font-medium text-text-secondary hover:text-text-primary border [border-color:var(--border-medium)] hover:[border-color:var(--text-primary)] px-6 py-2.5 rounded transition-colors duration-200"
+                                        >
+                                            Show {hiddenCount} more
+                                        </button>
+                                    </div>
+                                )}
+                            </>
+                        );
+                    })()}
                 </FadeIn>
             </div>
 

@@ -15,8 +15,6 @@ const laHacienda: CaseStudy = {
             audience: 'Cold traffic from Google Ads: holidaymakers looking for a Limassol stay who have never heard of the hotel and need the booking path obvious within the first scroll. A meaningful share of segmented intent, too - couples, business travellers, pet-owners - each of which deserved a tailored landing page rather than a generic homepage.',
             what_made_it_hard: [
                 'A host-managed WordPress stack with theme limitations and a tight asset pool - no fight worth picking with the infrastructure, so the work had to live within it',
-                'Cold visitors arriving from Google Ads with zero brand familiarity, which means the booking widget has to win the conversion before the prose has a chance to do anything',
-                'An ad budget that could not survive a generic "cyprus hotel" bidding war - the ads had to find long-tail intent or get crushed on cost-per-click',
             ],
         },
         decisions: [

@@ -14,8 +14,6 @@ const olympus: CaseStudy = {
             audience: 'B2B trade buyers - facility managers, independent gym owners, small chain operators - who arrive knowing what they want and have no patience for marketing storytelling. Mobile is a real surface here: site visits during walk-throughs and supplier comparisons.',
             what_made_it_hard: [
                 'Buyers who arrive knowing what they want, not browsing for inspiration - which means any "discover our story" detour is friction, not engagement',
-                'Existing brand assets that mixed consumer fitness aesthetics with B2B copy, leaving the site reading like neither one nor the other',
-                'A long product taxonomy collapsed into one giant menu on the previous build, plus mobile parity that the old template never delivered for facility managers researching on site',
             ],
         },
         decisions: [

@@ -15,8 +15,6 @@ const ukVehicles: CaseStudy = {
             audience: 'Cypriot tradespeople and small-business owners who already know what vehicle they want, who are price-sensitive at the EUR 20k+ end, and who will compare against a local Cyprus dealer before committing. Many are non-native English readers, hence Greek, Russian and German alongside English.',
             what_made_it_hard: [
                 'Communicating customs, VAT reclaim, and shipping logistics clearly enough that a buyer would commit to a EUR 20,000+ purchase without a phone call',
-                'Four languages (English, Greek, Russian, German) on a single Next.js codebase without the content architecture devolving into a translation graveyard',
-                'A savings claim that had to be specific and verifiable in the moment, not buried in marketing copy - hesitant buyers do not trust ranges',
             ],
         },
         decisions: [
@@ -44,10 +42,10 @@ const ukVehicles: CaseStudy = {
         live: 'https://ukvehiclescyprus.com/en',
     },
     images: {
-        thumbnail: '/images/uk-vehicles/hero-2.png',
-        hero: '/images/uk-vehicles/hero-2.png',
+        thumbnail: '/images/uk-vehicles/hero-3.png',
+        hero: '/images/uk-vehicles/hero-3.png',
         gallery: [
-            '/images/uk-vehicles/hero-2.png',
+            '/images/uk-vehicles/hero-3.png',
             '/images/uk-vehicles/calc.png',
             '/images/uk-vehicles/info.png',
         ],

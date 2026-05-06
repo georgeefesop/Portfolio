@@ -20,8 +20,6 @@ const akti: CaseStudy = {
             audience: 'Cold visitors arriving from Instagram, around 60% on mobile, considering a six-figure decision. They are not architecture students; they are couples, retirees, families looking for a guest house, a home office, or a starter home on family land. The brief from the (fictional) client put the success bar at "understands the product within eight seconds".',
             what_made_it_hard: [
                 'The Cypriot prefab market is dominated by shipping containers with bad windows, so the visual reference points buyers know are working against the work; the site has to look like a €150k decision in a market where it does not',
-                'Cold mobile traffic with no brand familiarity needs a single-question offer answered above the fold; that rules out the multi-CTA, nav-heavy real-estate template that every competitor uses',
-                'Five compounding configuration choices (model, style, add-ons, exterior, interior) had to feel like one continuous decision with running visual feedback, not a five-page wizard with a price reveal at the end',
             ],
         },
         decisions: [
@@ -40,6 +38,13 @@ const akti: CaseStudy = {
                 caption: 'Four models, four photographs. The catalogue is the navigation.',
             },
             {
+                title: 'Process transparency as trust, not marketing copy',
+                what: 'A section showing how units are built - workshop photography, panel construction, install sequence, resident lifestyle - appears before the pricing strip.',
+                why: 'At €150k+, the buyer\'s second concern after affordability is "will it actually show up and be what I thought it was." The fast-build market in Cyprus has burned enough buyers that a clean render and a price is not enough. Showing the workshop and a resident in a finished unit gives the "ready in 90 days" claim a physical reality. We positioned this section before the pricing strip deliberately: a buyer who has already seen the factory and a happy resident reads the prices differently than one who has only seen renders.',
+                screenshot: '/images/akti/akti__s4__how-it-works__desktop.png',
+                caption: '03 - How it works. Workshop-to-doorstep sequence placed before the pricing strip.',
+            },
+            {
                 title: 'Configurator-first conversion path',
                 what: 'One CTA across the entire site: "Configure yours." No newsletter signup, no contact form, no quote request, no "Talk to us".',
                 why: 'A hardcoded contact form would have converted faster on warm leads, but it would have produced a much worse cold-traffic funnel: the configurator turns "I am curious" into "I just spent four minutes building my house" before the form ever loads. By the time the lead form appears, the visitor is qualified, contextualised, and emotionally committed. We rejected the conventional addition of a newsletter signup or a "Talk to a specialist" button because they water down the single-path commitment. One CTA across the page is also the cleanest measurement story: every drop-off has one cause, and every step in the funnel is the one before it.',
@@ -52,6 +57,13 @@ const akti: CaseStudy = {
                 why: 'A single long form with every option visible converts faster on power users (Tesla, Apple BTO, custom-PC builders) but it overwhelms first-time buyers, which is the entire audience here. Five steps gives each decision its own moment without thirteen other knobs distracting. The render swap is the load-bearing piece: the cost of every choice is shown before the user moves on, so the price reveal at the end is never a surprise. The trade-off is more clicks; we accepted that because the model is buying €150k of building, not a t-shirt size, and the friction is doing real work in slowing the decision down to a manageable pace.',
                 screenshot: '/images/akti/akti__configurator__configurator-desktop__desktop.png',
                 caption: 'Step 1 of 5. The render reflects the selection before the user moves on.',
+            },
+            {
+                title: 'Incremental pricing per decision, not a price reveal at checkout',
+                what: 'Every configurator step shows a running subtotal that updates on each selection. Style adds €0, €8,500, or €18,000 to the base. Add-ons and extras tick in one by one. The final summary has no surprises.',
+                why: 'High-ticket purchase anxiety peaks at the moment the price appears. When buyers only see a final number, they compare it against their ceiling and often bail. Showing the same total as a running tally that builds through their own choices reframes the number as their decision - not a sticker price. The trade-off is that showing the price at every step means some buyers will exit mid-configurator when they hit their limit; we accepted that because a lead who knows they cannot afford the Akti 60 but can afford the Akti 25 is more valuable than an enquiry that goes nowhere.',
+                screenshot: '/images/akti/akti__configurator__step2-style__desktop.png',
+                caption: 'Step 2 of 5 - Style. Each option shows its delta; the subtotal updates before the user moves on.',
             },
         ],
         process: 'Started with a competitive teardown of Samara, then sketched the IA on paper before any code. Brand fiction (name, voice, market positioning, pricing) before any visual direction. Generated around 60 product renders via Nano Banana Pro, with a locked "architectural DNA" prompt block and a flat-3D register reused across every shot so the catalogue reads as one product. Static HTML prototype first to lock the design, then ported to Vite + React 18 + React Router for the production build. Lead form wired to a Vercel serverless function with Resend and an optional Attio CRM sync, both env-gated. Reserve flow built as a simulated Stripe Elements checkout, ready to swap in real Stripe with one prop change. Image pipeline runs PNG originals through JPG q85 locally and WebP for deploy, taking the shipped payload from 402MB to 6.9MB. Hosted at efesop.com/akti via a Next.js rewrite from the parent portfolio project.',
@@ -69,6 +81,8 @@ const akti: CaseStudy = {
                 '/images/akti/akti__s2__gallery-face-on-showcase__desktop.png',
                 '/images/akti/akti__s6__configure-preview__desktop.png',
                 '/images/akti/akti__configurator__configurator-desktop__desktop.png',
+                '/images/akti/akti__configurator__step2-style__desktop.png',
+                '/images/akti/akti__s4__how-it-works__desktop.png',
             ],
             tablet: [
                 '/images/akti/akti__hero__hero__tablet.png',

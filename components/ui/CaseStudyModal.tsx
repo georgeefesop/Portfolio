@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ExternalLink, X, ChevronLeft, ChevronRight, ArrowUpRight } from 'lucide-react';
 import ImageWithFallback from '@/components/ui/ImageWithFallback';
 
 interface CaseStudyBody {
@@ -218,14 +218,6 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                         <span className="case-study-modal-mobile-meta-value text-text-secondary">{project.period}</span>
                                     </div>
                                 </div>
-                                {project.body?.honest_note && (
-                                    <div className="case-study-modal-mobile-honest-note mt-4">
-                                        <SubLabel>Honest note</SubLabel>
-                                        <p className="case-study-modal-mobile-honest-note-text text-text-muted text-sm italic leading-relaxed mt-2">
-                                            {project.body.honest_note}
-                                        </p>
-                                    </div>
-                                )}
                             </div>
 
                             {project.body ? (
@@ -258,14 +250,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
 
                             {project.links.live && (
                                 <div className="case-study-modal-mobile-cta-wrap px-7 pb-5">
-                                    <a
-                                        href={project.links.live}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="case-study-modal-mobile-cta inline-flex items-center gap-2 px-4 py-2.5 [background-color:var(--cta-bg)] [color:var(--cta-fg)] hover:brightness-110 [border-color:var(--cta-bg)] border rounded-sm font-semibold uppercase tracking-[0.08em] transition-all text-sm font-karla-ui"
-                                    >
-                                        View live <ExternalLink size={12} />
-                                    </a>
+                                    <LiveSiteButton href={project.links.live} />
                                 </div>
                             )}
 
@@ -390,14 +375,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
 
                             {project.links.live && (
                                 <div className="case-study-modal-aside-cta-wrap flex-shrink-0 px-7 py-4 border-t border-border-subtle bg-bg-tertiary/30">
-                                    <a
-                                        href={project.links.live}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="case-study-modal-aside-cta inline-flex items-center gap-2 px-3.5 py-2 [background-color:var(--cta-bg)] [color:var(--cta-fg)] hover:brightness-110 [border-color:var(--cta-bg)] border rounded-sm font-semibold uppercase tracking-[0.08em] transition-all text-sm font-karla-ui"
-                                    >
-                                        View live <ExternalLink size={12} />
-                                    </a>
+                                    <LiveSiteButton href={project.links.live} />
                                 </div>
                             )}
                         </motion.aside>
@@ -549,14 +527,7 @@ function BodyIntro({ project }: { project: CaseStudyData }) {
                             ))}
                         </div>
                         {project.links.live && (
-                            <a
-                                href={project.links.live}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="body-intro-cta inline-flex items-center gap-2 px-3.5 py-2 [background-color:var(--cta-bg)] [color:var(--cta-fg)] hover:brightness-110 [border-color:var(--cta-bg)] border rounded-sm font-semibold uppercase tracking-[0.08em] transition-all text-sm font-karla-ui"
-                            >
-                                View live <ExternalLink size={12} />
-                            </a>
+                            <LiveSiteButton href={project.links.live} />
                         )}
                     </div>
                 </div>
@@ -575,15 +546,30 @@ function BodyIntro({ project }: { project: CaseStudyData }) {
                     <MetricsCircles metrics={project.body.outcome.metrics} />
                 </div>
             )}
-            {project.body?.honest_note && (
-                <div className="body-intro-honest-note mt-6 pt-5 border-t border-border-subtle">
-                    <SubLabel>Honest note</SubLabel>
-                    <p className="body-intro-honest-note-text text-text-muted text-sm italic leading-relaxed mt-2 max-w-3xl">
-                        {project.body.honest_note}
-                    </p>
-                </div>
-            )}
         </section>
+    );
+}
+
+// --- Live site button ---
+
+function LiveSiteButton({ href, className = '' }: { href: string; className?: string }) {
+    let domain = href;
+    try {
+        domain = new URL(href).hostname.replace(/^www\./, '');
+    } catch {}
+    return (
+        <a
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`live-site-cta group relative inline-flex items-center gap-3 px-4 py-2.5 bg-[#cbcdb7] hover:bg-[#bfc1ab] text-text-primary border-2 border-accent-primary/30 hover:border-accent-primary/55 rounded-sm transition-colors text-[11px] font-mono uppercase tracking-[0.2em] shadow-[0_1px_0_rgba(0,0,0,0.04),0_2px_8px_-2px_rgba(0,0,0,0.08)] ${className}`}
+        >
+            <span className="live-site-cta-dot w-1.5 h-1.5 rounded-full bg-accent-primary" aria-hidden />
+            <span className="live-site-cta-label">Open live site</span>
+            <span className="live-site-cta-divider w-px h-3 bg-border-medium" aria-hidden />
+            <span className="live-site-cta-domain normal-case tracking-normal text-text-muted">{domain}</span>
+            <ArrowUpRight size={14} className="live-site-cta-arrow text-accent-primary transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden />
+        </a>
     );
 }
 
@@ -600,18 +586,23 @@ function BodyDesktopView({ body, onScreenshotClick }: { body: CaseStudyBody; onS
                     <BriefCol label="Situation" body={body.brief.situation} />
                     <BriefCol label="Audience" body={body.brief.audience} />
                 </div>
-                <div className="body-desktop-brief-hard">
-                    <SubLabel>What made it hard</SubLabel>
-                    <ul className="body-desktop-brief-hard-list mt-3 max-w-3xl">
-                        {body.brief.what_made_it_hard.map((item, i) => (
-                            <li key={i} className="body-desktop-brief-hard-item flex gap-3 text-text-secondary text-sm leading-relaxed py-2.5 border-t border-border-subtle/60 first:border-t">
-                                <span className="body-desktop-brief-hard-index text-accent-primary/80 font-mono text-[11px] pt-1 select-none">
-                                    {String(i + 1).padStart(2, '0')}
-                                </span>
-                                <span className="body-desktop-brief-hard-text">{item}</span>
-                            </li>
-                        ))}
-                    </ul>
+                <div className="body-desktop-brief-bottom grid lg:grid-cols-2 gap-x-10 gap-y-5">
+                    {body.honest_note && (
+                        <div className="body-desktop-honest-note">
+                            <SubLabel>Honest note</SubLabel>
+                            <p className="body-desktop-honest-note-text text-text-muted text-sm italic leading-relaxed mt-1.5">{body.honest_note}</p>
+                        </div>
+                    )}
+                    <div className="body-desktop-brief-hard">
+                        <SubLabel>What made it hard</SubLabel>
+                        <ul className="body-desktop-brief-hard-list mt-1.5">
+                            {body.brief.what_made_it_hard.map((item, i) => (
+                                <li key={i} className="body-desktop-brief-hard-item text-text-secondary text-sm leading-relaxed">
+                                    {item}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 </div>
             </section>
 
@@ -690,18 +681,17 @@ function BodyMobileView({ body, onScreenshotClick }: { body: CaseStudyBody; onSc
                         <SubLabel>Audience</SubLabel>
                         <p className="body-mobile-brief-text text-text-secondary mt-1">{body.brief.audience}</p>
                     </div>
-                    <div className="body-mobile-brief-block">
-                        <SubLabel>What made it hard</SubLabel>
-                        <ul className="body-mobile-brief-hard-list mt-2 space-y-2">
-                            {body.brief.what_made_it_hard.map((item, i) => (
-                                <li key={i} className="body-mobile-brief-hard-item flex gap-2.5 text-text-secondary text-sm leading-relaxed py-1.5 border-t border-border-subtle/60">
-                                    <span className="body-mobile-brief-hard-index text-accent-primary/80 font-mono text-[11px] pt-0.5">
-                                        {String(i + 1).padStart(2, '0')}
-                                    </span>
-                                    <span className="body-mobile-brief-hard-text">{item}</span>
-                                </li>
-                            ))}
-                        </ul>
+                    <div className="body-mobile-brief-bottom grid grid-cols-2 gap-x-5 gap-y-4">
+                        {body.honest_note && (
+                            <div className="body-mobile-honest-note">
+                                <SubLabel>Honest note</SubLabel>
+                                <p className="text-text-muted text-sm italic leading-relaxed mt-1.5">{body.honest_note}</p>
+                            </div>
+                        )}
+                        <div className="body-mobile-brief-hard">
+                            <SubLabel>What made it hard</SubLabel>
+                            <p className="text-text-secondary text-sm leading-relaxed mt-1.5">{body.brief.what_made_it_hard[0]}</p>
+                        </div>
                     </div>
                 </div>
             </MobileSection>

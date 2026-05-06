@@ -16,8 +16,6 @@ const stellar: CaseStudy = {
             audience: 'People who like creative coding playgrounds - designers, generative artists, the kind of visitor who shows up via a CodePen tweet and stays because the controls actually do something interesting.',
             what_made_it_hard: [
                 'Diegetic UI - the kind of "in-world" interface that pretends to belong to a starship - usually collapses into theming once you ask it to do real interactive work, so the system had to survive being functional',
-                'Real-time parameter tuning across a generative engine without dropping frames - the render loop and the UI state had to share a heartbeat without one starving the other',
-                'A "vault" for cataloguing outputs raised the stakes from "playground" to "tool" - which meant designing a UI that could carry both states without picking a side',
             ],
         },
         decisions: [
