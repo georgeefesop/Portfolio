@@ -1,6 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  skipTrailingSlashRedirect: true,
+  async rewrites() {
+    return [
+      { source: '/ingest/static/:path*', destination: 'https://eu-assets.i.posthog.com/static/:path*' },
+      { source: '/ingest/:path*', destination: 'https://eu.i.posthog.com/:path*' },
+      { source: '/ingest/decide', destination: 'https://eu.i.posthog.com/decide' },
+    ];
+  },
   images: {
     qualities: [25, 50, 75, 90, 100],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384, 492],

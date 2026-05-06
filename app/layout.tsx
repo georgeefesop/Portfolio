@@ -4,6 +4,7 @@ import "./globals.css";
 import Navigation from "@/components/ui/Navigation";
 import CustomScrollbar from "@/components/ui/CustomScrollbar";
 import { Analytics } from "@vercel/analytics/react";
+import PostHogProvider from "@/components/analytics/PostHogProvider";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono", display: "swap" });
@@ -40,10 +41,12 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} ${jetbrainsMono.variable} ${caveat.variable} ${instrumentSans.variable} ${newsreader.variable} ${inconsolata.variable} ${karla.variable} ${fraunces.variable} font-sans bg-bg-primary text-text-primary antialiased`} suppressHydrationWarning>
-        <Navigation />
-        {children}
-        <CustomScrollbar />
-        <Analytics />
+        <PostHogProvider>
+          <Navigation />
+          {children}
+          <CustomScrollbar />
+          <Analytics />
+        </PostHogProvider>
       </body>
     </html>
   );
