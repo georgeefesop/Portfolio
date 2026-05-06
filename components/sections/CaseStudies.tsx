@@ -142,6 +142,7 @@ const allItems: Item[] = [
 
 const PINNED_IDS = [
     'kingfisher-mortgages',
+    'akti',
     'realfi',
     'instant-access-locksmiths',
     'allsop-francis',
