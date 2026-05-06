@@ -21,8 +21,8 @@ const ZOOM_IDS = new Set([
 
 const items: FeaturedItem[] = [
     { id: 'kingfisher-mortgages', title: 'Kingfisher Mortgages', tag: 'WordPress · Brand', thumbnail: '/images/kingfisher-thumb.png' },
-    { id: 'akti', title: 'Aktí', tag: 'Brand · Configurator', thumbnail: '/images/akti/akti-thumb.jpg' },
-    { id: 'uk-vehicles', title: 'UK Vehicles Cyprus', tag: 'Next.js · Commerce', thumbnail: '/images/uk-vehicles/hero-3.png' },
+    { id: 'akti', title: 'Aktí', tag: 'Brand · Configurator', thumbnail: '/images/akti/akti-thumb-2.png' },
+    { id: 'uk-vehicles', title: 'UK Vehicles Cyprus', tag: 'Next.js · Commerce', thumbnail: '/images/uk-vehicles/hero-4.png' },
     { id: 'ai-tools', title: 'AI User Tools', tag: 'UX · AI', thumbnail: '/images/ai-tools/AIUT-2.png' },
     { id: 'instant-access-locksmiths', title: 'Instant Access Locksmiths', tag: 'Local SEO · Conversion', thumbnail: '/images/instant-access-locksmiths/hero-thumb.png' },
 ];

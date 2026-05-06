@@ -11,16 +11,13 @@ const navLinks = [
     { name: 'Work', href: '#work' },
     { name: 'Services', href: '#services' },
     { name: 'How I Work', href: '#how-i-work' },
-    { name: 'Resources', href: '#resources' },
     { name: 'About', href: '#about' },
     { name: 'Contact', href: '#contact' },
 ];
 
 const ISLAND_STYLE: React.CSSProperties = {
-    background: 'rgba(232, 224, 202, 0.06)',
+    background: 'rgba(221, 213, 189, 0.91)',
     boxShadow: '0 2px 8px rgb(0 0 0 / 6%), 0 1px 0 rgba(255,255,255,0.04) inset, 0 -1px 0 rgba(0,0,0,0.12) inset',
-    backdropFilter: 'blur(3px)',
-    WebkitBackdropFilter: 'blur(3px)',
 };
 
 export default function Navigation() {

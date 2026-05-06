@@ -72,7 +72,7 @@ const akti: CaseStudy = {
         },
     },
     images: {
-        thumbnail: '/images/akti/akti-thumb.jpg',
+        thumbnail: '/images/akti/akti-thumb-2.png',
         hero: '/images/akti/akti-hero.png',
         gallery: {
             desktop: [

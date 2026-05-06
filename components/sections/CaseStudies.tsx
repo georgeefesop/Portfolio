@@ -34,7 +34,7 @@ function ThumbCard({ item, onOpen, priority }: { item: Item; onOpen: (id: string
     const sharedClass =
         'group relative block w-full overflow-hidden border bg-bg-secondary transition-colors duration-300 focus:outline-none aspect-[3/2]'
         + ' [border-color:var(--thumb-card-border)] hover:[border-color:var(--thumb-card-border)]'
-        + ' rounded-[6px_24px_6px_6px]'
+        + ' rounded-[6px]'
         + ' [box-shadow:var(--thumb-card-shadow)]';
 
     const overlays = (
