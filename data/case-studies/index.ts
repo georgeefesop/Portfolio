@@ -12,6 +12,7 @@ import laHacienda from './la-hacienda';
 import allsop from './allsop-francis';
 import saxseat from './saxseat';
 import sidechains from './sidechains';
+import akti from './akti';
 
 import { externalCases } from './external';
 
@@ -28,6 +29,7 @@ export const cases: CaseStudy[] = [
     allsop,
     saxseat,
     sidechains,
+    akti,
 ];
 
 export { externalCases };
