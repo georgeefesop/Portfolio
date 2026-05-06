@@ -96,6 +96,11 @@
   --accent-highlight: #B87333;
   --accent-coral: #ECA58D;
 
+  /* CTA button tokens. Dark mode uses the brown-coral accent; light themes
+     swap to the brighter coral so the button doesn't read as muddy brown. */
+  --cta-bg: #AB7B62;
+  --cta-fg: #FFFFFF;
+
   /* Borders */
   --border-subtle: #2A2A2A;
   --border-medium: #3A3A3A;
@@ -149,6 +154,8 @@
   --bg-elevated: #F5ECD8;
   --bg-elevated-alt: #ECE2CC;
   --accent-coral: #ECA58D;
+  --cta-bg: #ECA58D;
+  --cta-fg: #2A241D;
 
   --text-primary: #2A241D;
   --text-secondary: #3D362C;
@@ -179,6 +186,8 @@
   --bg-elevated: #F7F1E1;
   --bg-elevated-alt: #EFE9D8;
   --accent-coral: #ECA58D;
+  --cta-bg: #ECA58D;
+  --cta-fg: #3A332A;
 
   --text-primary: #3A332A;
   --text-secondary: #4A4338;
@@ -208,6 +217,8 @@
   --bg-elevated: #F0E8D2;       /* lighter than primary - cards pop above modal */
   --bg-elevated-alt: #E6DCC0;   /* zebra alternation in tables */
   --accent-coral: #ECA58D;      /* coral accent for CTA chips */
+  --cta-bg: #ECA58D;
+  --cta-fg: #3A2D18;
 
   /* Browner deep coffee. Reads as "rich dark brown" on cream rather than neutral grey. */
   --text-primary: #3A2D18;

@@ -177,6 +177,7 @@ function HorizontalStrip() {
 
     useAnimationFrame((_t, delta) => {
         if (!visibleRef.current) return;
+        if (typeof document !== 'undefined' && document.documentElement.dataset.modalOpen) return;
         if (isHover) {
             const k = 1 - Math.exp(-delta * 0.005);
             speedRef.current += (0 - speedRef.current) * k;
@@ -238,6 +239,7 @@ function VerticalStrip() {
 
     useAnimationFrame((_t, delta) => {
         if (!visibleRef.current) return;
+        if (typeof document !== 'undefined' && document.documentElement.dataset.modalOpen) return;
         const target = 35;
         const k = 1 - Math.exp(-delta * 0.003);
         speedRef.current += (target - speedRef.current) * k;

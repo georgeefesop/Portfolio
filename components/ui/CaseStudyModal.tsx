@@ -86,12 +86,16 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
 
     useEffect(() => setMounted(true), []);
 
-    // Lock body scroll while modal is open
+    // Lock body scroll + flag <html> so heavy hero animations can pause
     useEffect(() => {
         if (!project) return;
         const prev = document.body.style.overflow;
         document.body.style.overflow = 'hidden';
-        return () => { document.body.style.overflow = prev; };
+        document.documentElement.dataset.modalOpen = 'true';
+        return () => {
+            document.body.style.overflow = prev;
+            delete document.documentElement.dataset.modalOpen;
+        };
     }, [project]);
 
     // Esc to close (lightbox first, then modal)
@@ -135,7 +139,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.25 }}
-                    className="case-study-modal-root fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-6 bg-black/85 backdrop-blur-md"
+                    className="case-study-modal-root fixed inset-0 z-[110] flex items-center justify-center p-4 md:p-6 bg-black/95"
                     onClick={onClose}
                     aria-modal="true"
                     role="dialog"
@@ -149,35 +153,6 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                             backgroundSize: '48px 48px',
                         }}
                     />
-
-                    {/* Scan beam - smooth glowing sweep on open */}
-                    <motion.div
-                        initial={{ y: '-25vh', opacity: 0 }}
-                        animate={{ y: '125vh', opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{
-                            y: { duration: 0.55, ease: 'linear', delay: 0.05 },
-                            opacity: { duration: 0.15, delay: 0.05 },
-                        }}
-                        className="case-study-modal-scan-beam pointer-events-none absolute left-0 right-0 z-[5] will-change-transform"
-                        style={{ height: '220px', top: 0 }}
-                    >
-                        <div
-                            className="case-study-modal-scan-beam-gradient absolute inset-0"
-                            style={{
-                                background:
-                                    'linear-gradient(to bottom, transparent 0%, rgba(171,123,98,0.04) 35%, rgba(171,123,98,0.18) 70%, rgba(171,123,98,0.55) 92%, rgba(171,123,98,0.85) 100%)',
-                            }}
-                        />
-                        <div
-                            className="case-study-modal-scan-beam-line absolute left-0 right-0 bottom-0 h-[2px]"
-                            style={{
-                                background: 'var(--accent-primary)',
-                                boxShadow:
-                                    '0 0 8px 1px rgba(171,123,98,0.9), 0 0 22px 3px rgba(171,123,98,0.55), 0 0 50px 8px rgba(171,123,98,0.25)',
-                            }}
-                        />
-                    </motion.div>
 
                     {/* MOBILE: dedicated single-column readable layout */}
                     <motion.div
@@ -287,7 +262,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                         href={project.links.live}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="case-study-modal-mobile-cta inline-flex items-center gap-2 px-4 py-2.5 bg-bg-primary hover:bg-bg-primary/80 text-text-primary border border-border-medium rounded-sm font-medium transition-colors text-sm font-karla-ui"
+                                        className="case-study-modal-mobile-cta inline-flex items-center gap-2 px-4 py-2.5 [background-color:var(--cta-bg)] [color:var(--cta-fg)] hover:brightness-110 [border-color:var(--cta-bg)] border rounded-sm font-semibold uppercase tracking-[0.08em] transition-all text-sm font-karla-ui"
                                     >
                                         View live <ExternalLink size={12} />
                                     </a>
@@ -419,7 +394,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                         href={project.links.live}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="case-study-modal-aside-cta inline-flex items-center gap-2 px-3.5 py-2 bg-bg-primary hover:bg-bg-primary/80 text-text-primary border border-border-medium rounded-sm font-medium transition-colors text-sm font-karla-ui"
+                                        className="case-study-modal-aside-cta inline-flex items-center gap-2 px-3.5 py-2 [background-color:var(--cta-bg)] [color:var(--cta-fg)] hover:brightness-110 [border-color:var(--cta-bg)] border rounded-sm font-semibold uppercase tracking-[0.08em] transition-all text-sm font-karla-ui"
                                     >
                                         View live <ExternalLink size={12} />
                                     </a>
@@ -578,7 +553,7 @@ function BodyIntro({ project }: { project: CaseStudyData }) {
                                 href={project.links.live}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="body-intro-cta inline-flex items-center gap-2 px-3.5 py-2 bg-bg-primary hover:bg-bg-primary/80 text-text-primary border border-border-medium rounded-sm font-medium transition-colors text-sm font-karla-ui"
+                                className="body-intro-cta inline-flex items-center gap-2 px-3.5 py-2 [background-color:var(--cta-bg)] [color:var(--cta-fg)] hover:brightness-110 [border-color:var(--cta-bg)] border rounded-sm font-semibold uppercase tracking-[0.08em] transition-all text-sm font-karla-ui"
                             >
                                 View live <ExternalLink size={12} />
                             </a>
@@ -795,14 +770,13 @@ function DecisionRow({
             <figure className="decision-row-figure flex flex-col">
                 <button
                     onClick={onScreenshotClick}
-                    className="decision-row-screenshot-button group relative w-full aspect-[16/10] rounded-sm overflow-hidden bg-bg-tertiary border border-border-subtle hover:border-accent-primary/40 transition-colors cursor-zoom-in"
+                    className="decision-row-screenshot-button group relative w-full rounded-sm overflow-hidden bg-bg-tertiary border border-border-subtle hover:border-accent-primary/40 transition-colors cursor-zoom-in block"
                 >
-                    <ImageWithFallback
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
                         src={decision.screenshot}
                         alt={decision.caption || decision.title}
-                        fill
-                        sizes="(min-width: 1024px) 760px, 100vw"
-                        className="decision-row-screenshot-image object-cover group-hover:brightness-110 transition-all"
+                        className="decision-row-screenshot-image w-full h-auto block group-hover:brightness-110 transition-all"
                     />
                 </button>
                 {decision.caption && (
@@ -1029,7 +1003,7 @@ function ComparisonGrid({
                                 href={b.href}
                                 target={b.href.startsWith('http') ? '_blank' : undefined}
                                 rel={b.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                                className="comparison-card-link absolute top-5 right-5 md:top-6 md:right-6 inline-flex items-center gap-2 px-3.5 py-2 bg-bg-primary hover:bg-bg-primary/80 text-text-primary border border-border-medium rounded-sm font-medium transition-colors text-sm font-karla-ui whitespace-nowrap z-[2]"
+                                className="comparison-card-link absolute top-5 right-5 md:top-6 md:right-6 inline-flex items-center gap-2 px-3.5 py-2 [background-color:var(--cta-bg)] [color:var(--cta-fg)] hover:brightness-110 [border-color:var(--cta-bg)] border rounded-sm font-semibold uppercase tracking-[0.08em] transition-all text-sm font-karla-ui whitespace-nowrap z-[2]"
                             >
                                 View <ExternalLink size={12} />
                             </a>
