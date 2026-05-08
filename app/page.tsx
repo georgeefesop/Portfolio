@@ -1,6 +1,7 @@
 import ProductHero from "@/components/sections/ProductHero";
 import Intro from "@/components/sections/Intro";
 import CredibilityBar from "@/components/sections/CredibilityBar";
+import SpeedProof from "@/components/sections/SpeedProof";
 import CaseStudies from "@/components/sections/CaseStudies";
 import Services from "@/components/sections/Services";
 import Process from "@/components/sections/Process";
@@ -19,6 +20,7 @@ export default function Home() {
             <ProductHero />
             <CredibilityBar />
             <Intro />
+            <SpeedProof />
             <CaseStudies />
             <Services />
             <Process />

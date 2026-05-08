@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ExternalLink, X, ChevronLeft, ChevronRight, ArrowUpRight, Github } from 'lucide-react';
 import ImageWithFallback from '@/components/ui/ImageWithFallback';
 import TechLogoMark, { StackLogos } from '@/components/ui/TechLogoMark';
+import MetricsCircles, { MetricsCirclesPlain } from '@/components/ui/MetricsCircles';
 
 interface CaseStudyBody {
     brief: {
@@ -1021,65 +1022,6 @@ function BriefCol({ label, body }: { label: string; body: string }) {
         <div className="brief-col-root">
             <SubLabel>{label}</SubLabel>
             <p className="brief-col-text text-text-secondary text-sm leading-relaxed mt-1.5">{body}</p>
-        </div>
-    );
-}
-
-function MetricsCirclesPlain({ metrics }: { metrics: Array<{ label: string; value: string }> }) {
-    return <MetricsCircles metrics={metrics} bordered={false} />;
-}
-
-function MetricsCircles({ metrics, bordered = true }: { metrics: Array<{ label: string; value: string }>; bordered?: boolean }) {
-    // Treat numeric values 0-100 as a fill percentage. Anything that doesn't parse
-    // cleanly falls back to a full ring so the visual still reads.
-    const RADIUS = 38;
-    const CIRC = 2 * Math.PI * RADIUS;
-    const wrapperClass = bordered
-        ? 'metrics-circles-root grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-5 border-t border-border-subtle pt-5'
-        : 'metrics-circles-root grid grid-cols-2 sm:grid-cols-4 gap-x-3 gap-y-5';
-    return (
-        <div className={wrapperClass}>
-            {metrics.map((m, i) => {
-                const num = parseFloat(m.value);
-                const pct = Number.isFinite(num) ? Math.max(0, Math.min(100, num)) : 100;
-                const offset = CIRC * (1 - pct / 100);
-                return (
-                    <div key={i} className="metrics-circles-item flex flex-col items-center text-center gap-2.5">
-                        <div className="metrics-circles-ring relative w-[88px] h-[88px]">
-                            <svg viewBox="0 0 100 100" className="metrics-circles-svg w-full h-full -rotate-90">
-                                <circle
-                                    cx="50"
-                                    cy="50"
-                                    r={RADIUS}
-                                    fill="none"
-                                    stroke="var(--color-border-subtle, rgba(255,255,255,0.08))"
-                                    strokeWidth="6"
-                                />
-                                <motion.circle
-                                    cx="50"
-                                    cy="50"
-                                    r={RADIUS}
-                                    fill="none"
-                                    stroke="var(--color-accent-primary, #AB7B62)"
-                                    strokeWidth="6"
-                                    strokeLinecap="round"
-                                    strokeDasharray={CIRC}
-                                    initial={{ strokeDashoffset: CIRC }}
-                                    whileInView={{ strokeDashoffset: offset }}
-                                    viewport={{ once: true, margin: '-10% 0px' }}
-                                    transition={{ duration: 1.1, delay: 0.15 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
-                                />
-                            </svg>
-                            <span className="metrics-circles-value absolute inset-0 flex items-center justify-center text-text-primary text-2xl md:text-[26px] font-semibold tracking-tight tabular-nums">
-                                {m.value}
-                            </span>
-                        </div>
-                        <span className="metrics-circles-label text-[10px] md:text-[11px] font-mono font-bold uppercase tracking-[0.18em] text-text-muted leading-tight max-w-[14ch]">
-                            {m.label}
-                        </span>
-                    </div>
-                );
-            })}
         </div>
     );
 }
