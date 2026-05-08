@@ -52,7 +52,7 @@ export default function HeroText({ scrollProgress, headerActions }: HeroTextProp
                 <div className="hero-text-body flex flex-col md:flex-row justify-between items-start md:items-end w-full gap-8 md:gap-0">
 
                     {/* Left Side */}
-                    <div className="hero-text-left w-full md:max-w-[65%] lg:max-w-[720px] text-left">
+                    <div className="hero-text-left w-full md:max-w-[60%] lg:max-w-[640px] xl:max-w-[720px] text-left">
                         <motion.div {...line(0.0)} className="hero-text-signature-wrap mb-2 md:mb-4">
                             <div
                                 role="img"
@@ -67,8 +67,8 @@ export default function HeroText({ scrollProgress, headerActions }: HeroTextProp
                                 <motion.span {...line(0.14)} className="hero-text-heading-line block text-xl sm:text-2xl mt-1">Designer &amp; Developer</motion.span>
                             </span>
                             <span className="hero-text-heading-desktop hidden md:block">
-                                <motion.span {...line(0.1)} className="hero-text-heading-line block text-5xl lg:text-7xl">UX / UI PRODUCT</motion.span>
-                                <motion.span {...line(0.2)} className="hero-text-heading-line block text-3xl lg:text-5xl mt-1">DESIGNER &amp; DEVELOPER</motion.span>
+                                <motion.span {...line(0.1)} className="hero-text-heading-line block text-4xl lg:text-5xl xl:text-7xl">UX / UI PRODUCT</motion.span>
+                                <motion.span {...line(0.2)} className="hero-text-heading-line block text-2xl lg:text-3xl xl:text-5xl mt-1">DESIGNER &amp; DEVELOPER</motion.span>
                             </span>
                         </h1>
                         <motion.div {...line(0.3)} className="hero-text-subtitle-wrap mt-2 md:mt-3">
@@ -79,8 +79,8 @@ export default function HeroText({ scrollProgress, headerActions }: HeroTextProp
                     </div>
 
                     {/* Right Side */}
-                    <div className="hero-text-right hidden md:flex text-right flex-col items-end gap-3 mt-4 md:mt-0">
-                        <motion.div {...line(0.0)} className="lg:hidden">
+                    <div className="hero-text-right hidden md:flex text-right flex-col items-end gap-3 mt-4 md:mt-0 md:min-w-[300px] lg:min-w-[340px]">
+                        <motion.div {...line(0.0)} className="xl:hidden">
                             <MicroUpworkCard />
                         </motion.div>
                         <motion.p {...line(0.0)} className="hero-text-meta-disciplines text-base md:text-xl font-medium text-text-primary">

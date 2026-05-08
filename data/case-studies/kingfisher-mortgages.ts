@@ -8,6 +8,7 @@ const kingfisher: CaseStudy = {
     period: '2025',
     tags: ['WordPress', 'Elementor', 'Next.js', 'Sanity', 'Headless CMS', 'Brand', 'Schema / AEO', 'Financial services'],
     categories: ['wordpress', 'nextjs', 'design'],
+    stack: ['nextjs', 'sanity', 'wordpress', 'elementor'],
     links: { live: '/kingfisher' },
     body: {
         honest_note: 'Fictional brand built as a portfolio piece, so the case figures, the lender quotes, and the live URL are illustrative. The judgement calls (positioning, content order, visual system, what to cut from the previous build) are the case study; performance numbers aren\'t.',

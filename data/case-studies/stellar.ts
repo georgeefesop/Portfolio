@@ -8,6 +8,7 @@ const stellar: CaseStudy = {
     period: '2025',
     tags: ['Generative Art', 'React', 'Canvas', 'UI Design'],
     categories: ['design', 'nextjs'],
+    stack: ['react'],
     aiBuilt: true,
     body: {
         honest_note: 'A playground project, not a product. The brief was self-set: see how far a diegetic sci-fi UI can go while keeping a Canvas-API render loop performant enough to feel alive.',

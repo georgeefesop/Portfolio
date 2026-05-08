@@ -1,0 +1,14 @@
+Simple Icons — CC0 1.0 Universal
+Source: https://github.com/simple-icons/simple-icons
+Version used: 16.18.1
+
+CC0 1.0 Universal — Full License Text
+https://creativecommons.org/publicdomain/zero/1.0
+
+To the greatest extent permitted by, but not in contravention of, applicable
+law, the authors of Simple Icons have waived all copyright and related or
+neighboring rights to this work.
+
+No trademark or patent rights held by the respective brand owners are waived
+by this license. The logos remain trademarks of their respective owners.
+Use in compliance with each brand's trademark guidelines.

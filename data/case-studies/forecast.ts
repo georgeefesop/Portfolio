@@ -8,6 +8,7 @@ const forecast: CaseStudy = {
     period: '2026',
     tags: ['Next.js', 'Container Queries', 'Design Systems', 'Product Design'],
     categories: ['nextjs', 'design'],
+    stack: ['nextjs'],
     aiBuilt: true,
     body: {
         brief: {

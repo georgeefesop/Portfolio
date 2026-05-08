@@ -42,6 +42,16 @@ export type StackBuild = {
     extras?: Array<{ label: string; value: string }>;
 };
 
+/** Side-by-side stack comparison. Renders one column per build with Lighthouse
+ *  rings + extras, then a delta table summarising the differences. */
+export type StackComparison = {
+    heading?: string;
+    intro?: string;
+    /** Methodology footnote shown beneath the diff table, e.g. "Measured live via Google PageSpeed Insights API on 2026-05-03." */
+    methodology?: string;
+    builds: StackBuild[];
+};
+
 export type CaseStudyBody = {
     brief: {
         situation: string;
@@ -60,16 +70,11 @@ export type CaseStudyBody = {
         caption: string;
     }>;
     process?: string;
-    /** Optional side-by-side stack comparison. When present, the modal renders a section with one column per build, each showing Lighthouse rings + extras, then a delta table summarising the differences. */
-    comparison?: {
-        /** Heading shown above the comparison block. */
-        heading?: string;
-        /** Short intro paragraph. */
-        intro?: string;
-        /** Methodology footnote shown beneath the diff table, e.g. "Measured live via Google PageSpeed Insights API on 2026-05-03." */
-        methodology?: string;
-        builds: StackBuild[];
-    };
+    /** Optional comparison nested inside the body. Used by single-build cases
+     *  like Kingfisher where the comparison is part of the active narrative.
+     *  Tabbed cases prefer the top-level `CaseStudy.comparison` so the block
+     *  renders once regardless of which tab is active. */
+    comparison?: StackComparison;
     outcome: {
         summary: string;
         /** Only include if real and verifiable. Fictional / illustrative numbers belong nowhere on the site. */
@@ -87,6 +92,35 @@ export type CaseStudyImages = {
     };
 };
 
+/** Link entry with optional tech-logo id (from data/tech-logos.ts) so the
+ *  button can render a brand mark instead of the generic globe. */
+export type CaseStudyLink = {
+    href: string;
+    label?: string;
+    /** Logo id from `data/tech-logos.ts` (e.g. 'react', 'webflow'). Optional. */
+    logo?: string;
+};
+
+/** A single build within a case study. Tabs render one button per build at
+ *  the top of the modal; selecting a tab swaps the brief/decisions/process/
+ *  outcome to that build's body. */
+export type CaseStudyBuild = {
+    /** URL-safe id, e.g. 'react' or 'webflow'. Used as React key + tab anchor. */
+    id: string;
+    /** Tab button label, e.g. "Original design & build". */
+    label: string;
+    /** One-line note shown under the tab strip when this build is active. */
+    description?: string;
+    /** Build-specific links. Rendered as a row of buttons next to the tabs. */
+    links?: CaseStudyLink[];
+    /** Build-specific tech stack - logo ids from `data/tech-logos.ts`. */
+    stack?: string[];
+    /** Override for the "Brief" panel label when this build is active.
+     *  e.g. "Design Brief" vs "Site Rebuild Brief". Defaults to "Brief". */
+    briefLabel?: string;
+    body: CaseStudyBody;
+};
+
 export type CaseStudy = {
     id: string;
     title: string;
@@ -97,7 +131,20 @@ export type CaseStudy = {
     categories: CategoryId[];
     aiBuilt?: boolean;
     links: { live?: string; behance?: string; github?: string };
+    /** Tech stack logo ids for the thumbnail overlay + modal logo strip.
+     *  When `builds` is present, each build defines its own `stack`; this
+     *  top-level value is used for the work-grid thumbnail and as a default. */
+    stack?: string[];
     description?: LegacyDescription;
     body?: CaseStudyBody;
+    /** When present, the modal renders a tab strip and switches `body` per
+     *  selected build. `body` (top-level) is ignored if `builds` exists. */
+    builds?: CaseStudyBuild[];
+    /** Top-level comparison block. Shown once regardless of active build,
+     *  positioned just under the build link buttons. Use this when the
+     *  comparison is between the case's own builds (Akti React vs Webflow);
+     *  use `body.comparison` when the comparison is part of a single-body
+     *  narrative (Kingfisher's WP-vs-headless walkthrough). */
+    comparison?: StackComparison;
     images: CaseStudyImages;
 };

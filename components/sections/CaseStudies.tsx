@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ExternalLink, Play } from 'lucide-react';
 import FadeIn from '../motion/FadeIn';
 import CaseStudyModal from '../ui/CaseStudyModal';
+import { StackLogosOverlay } from '../ui/TechLogoMark';
 import posthog from 'posthog-js';
 import ImageWithFallback from '@/components/ui/ImageWithFallback';
 import { cases, externalCases, type CaseStudy, type ExternalCase, type CategoryId } from '@/data/case-studies';
@@ -30,6 +31,7 @@ const PILL = 'inline-block text-xs font-mono uppercase tracking-wider text-text-
 function ThumbCard({ item, onOpen, priority }: { item: Item; onOpen: (id: string) => void; priority: boolean }) {
     const src = item.kind === 'external' ? item.thumbnail : item.images.thumbnail;
     const isVideo = item.kind === 'external' && !!item.duration;
+    const stack = item.kind === 'drawer' ? item.stack ?? [] : [];
 
     const sharedClass =
         'group relative block w-full overflow-hidden border bg-bg-secondary transition-colors duration-300 focus:outline-none aspect-[3/2]'
@@ -87,6 +89,14 @@ function ThumbCard({ item, onOpen, priority }: { item: Item; onOpen: (id: string
             {!isVideo && item.kind === 'external' && (
                 <div className="thumb-card-external-wrap absolute top-3 right-3 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200 z-10">
                     <ExternalLink className="thumb-card-external-icon w-4 h-4 text-white drop-shadow-md" />
+                </div>
+            )}
+
+            {/* Tech-stack overlay - bottom-right, white-on-translucent. Fades
+                out on hover to give the category pill row room to breathe. */}
+            {stack.length > 0 && (
+                <div className="thumb-card-stack-wrap absolute bottom-3 right-3 z-10 opacity-100 group-hover:opacity-0 transition-opacity duration-200">
+                    <StackLogosOverlay ids={stack} size={13} />
                 </div>
             )}
         </>

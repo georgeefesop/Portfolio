@@ -8,6 +8,7 @@ const olympus: CaseStudy = {
     period: '2024',
     tags: ['WordPress', 'Elementor', 'B2B', 'E-commerce'],
     categories: ['wordpress'],
+    stack: ['wordpress', 'elementor'],
     body: {
         brief: {
             situation: 'Olympus Sports is a UK distributor of commercial gym equipment selling into facility managers, independent gyms, and small chains. The previous site was a tired template: slow on mobile, marketing-pages-first, products buried under three layers of hierarchy. The brief was a catalogue-first rebuild on WordPress that cut straight at the trade buyer\'s mental model - see the catalogue, qualify the spec, request a quote - without three forms of friction in between.',

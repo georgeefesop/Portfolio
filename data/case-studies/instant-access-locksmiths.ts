@@ -8,6 +8,7 @@ const instantAccessLocksmiths: CaseStudy = {
     period: '2025',
     tags: ['Next.js', 'Tailwind', 'Local SEO', 'Conversion'],
     categories: ['nextjs', 'design'],
+    stack: ['nextjs', 'tailwindcss'],
     aiBuilt: true,
     links: { live: 'https://www.instantaccesslocksmiths.co.uk/' },
     body: {

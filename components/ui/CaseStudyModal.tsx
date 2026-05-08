@@ -3,8 +3,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, X, ChevronLeft, ChevronRight, ArrowUpRight } from 'lucide-react';
+import { ExternalLink, X, ChevronLeft, ChevronRight, ArrowUpRight, Github } from 'lucide-react';
 import ImageWithFallback from '@/components/ui/ImageWithFallback';
+import TechLogoMark, { StackLogos } from '@/components/ui/TechLogoMark';
 
 interface CaseStudyBody {
     brief: {
@@ -44,6 +45,24 @@ interface CaseStudyBody {
     };
 }
 
+interface CaseStudyLink {
+    href: string;
+    label?: string;
+    logo?: string;
+}
+
+interface CaseStudyBuild {
+    id: string;
+    label: string;
+    description?: string;
+    links?: CaseStudyLink[];
+    stack?: string[];
+    briefLabel?: string;
+    body: CaseStudyBody;
+}
+
+type StackComparison = NonNullable<CaseStudyBody['comparison']>;
+
 interface CaseStudyData {
     id: string;
     title: string;
@@ -52,6 +71,7 @@ interface CaseStudyData {
     period: string;
     tags: string[];
     aiBuilt?: boolean;
+    stack?: string[];
     description?: {
         overview?: string;
         challenge: string;
@@ -59,6 +79,8 @@ interface CaseStudyData {
         outcome: string;
     };
     body?: CaseStudyBody;
+    builds?: CaseStudyBuild[];
+    comparison?: StackComparison;
     links: {
         live?: string;
         behance?: string;
@@ -83,8 +105,18 @@ interface CaseStudyModalProps {
 export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps) {
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
     const [mounted, setMounted] = useState(false);
+    const [activeBuildId, setActiveBuildId] = useState<string | null>(null);
 
     useEffect(() => setMounted(true), []);
+
+    // Reset to the first build whenever a new project opens.
+    useEffect(() => {
+        if (project?.builds && project.builds.length > 0) {
+            setActiveBuildId(project.builds[0].id);
+        } else {
+            setActiveBuildId(null);
+        }
+    }, [project?.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
     // Lock body scroll + flag <html> so heavy hero animations can pause
     useEffect(() => {
@@ -117,16 +149,39 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
             : project.images.gallery.desktop;
     }, [project]);
 
+    // Resolve the active build (when present) and the body / links / stack
+    // it carries. Falls back to top-level body for legacy single-build cases.
+    const activeBuild = useMemo(() => {
+        if (!project?.builds || project.builds.length === 0) return null;
+        return project.builds.find((b) => b.id === activeBuildId) ?? project.builds[0];
+    }, [project, activeBuildId]);
+
+    const resolvedBody = activeBuild?.body ?? project?.body;
+    // The intro stack always reflects the project as a whole so it stays
+    // consistent with the work-grid thumbnail overlay regardless of which
+    // build tab is active. Per-build stacks inform the tab buttons only.
+    const resolvedStack = project?.stack ?? activeBuild?.stack ?? [];
+    const resolvedLinks: CaseStudyLink[] = useMemo(() => {
+        if (!project) return [];
+        if (activeBuild?.links && activeBuild.links.length > 0) return activeBuild.links;
+        // Synthesise from legacy `links` so single-build cases still get a button.
+        const out: CaseStudyLink[] = [];
+        if (project.links.live) out.push({ href: project.links.live, label: 'Open live site' });
+        if (project.links.github) out.push({ href: project.links.github, label: 'Source', logo: 'github' });
+        if (project.links.behance) out.push({ href: project.links.behance, label: 'Behance' });
+        return out;
+    }, [project, activeBuild]);
+
     // For body-mode, the lightbox cycles through decision screenshots first,
     // then any leftover gallery shots that weren't used inline.
     const lightboxImages = useMemo(() => {
         if (!project) return [] as string[];
-        if (!project.body) return galleryImages;
-        const decisionShots = project.body.decisions.map((d) => d.screenshot);
+        if (!resolvedBody) return galleryImages;
+        const decisionShots = resolvedBody.decisions.map((d) => d.screenshot);
         const seen = new Set(decisionShots);
         const extras = galleryImages.filter((g) => !seen.has(g));
         return [...decisionShots, ...extras];
-    }, [project, galleryImages]);
+    }, [project, galleryImages, resolvedBody]);
 
     if (!mounted) return null;
 
@@ -220,8 +275,38 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                 </div>
                             </div>
 
-                            {project.body ? (
-                                <BodyMobileView body={project.body} onScreenshotClick={(i) => setLightboxIndex(i)} />
+                            {project.builds && project.builds.length > 1 && (
+                                <div className="case-study-modal-mobile-tabs px-7 pb-5">
+                                    <div className="case-study-modal-mobile-tabs-eyebrow flex items-baseline gap-2 mb-3">
+                                        <span className="block h-px w-5 bg-text-dim translate-y-[-0.3em]" />
+                                        <span className="font-serif italic font-normal text-text-primary text-base leading-none">
+                                            One website, {project.builds.length} builds
+                                        </span>
+                                    </div>
+                                    <BuildTabs
+                                        builds={project.builds}
+                                        activeId={activeBuild?.id ?? project.builds[0].id}
+                                        onChange={setActiveBuildId}
+                                    />
+                                    {activeBuild?.description && (
+                                        <p className="case-study-modal-mobile-build-description text-xs text-text-muted leading-relaxed mt-3">
+                                            {activeBuild.description}
+                                        </p>
+                                    )}
+                                    {resolvedLinks.length > 0 && (
+                                        <div className="case-study-modal-mobile-tabs-link-row mt-4">
+                                            <LinkRow links={resolvedLinks} />
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {project.comparison && project.comparison.builds.length > 0 && (
+                                <ComparisonSection comparison={project.comparison} mobile />
+                            )}
+
+                            {resolvedBody ? (
+                                <BodyMobileView body={resolvedBody} briefLabel={activeBuild?.briefLabel} onScreenshotClick={(i) => setLightboxIndex(i)} />
                             ) : project.description ? (
                                 <>
                                     {project.description.overview && (
@@ -248,14 +333,17 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                 </>
                             ) : null}
 
-                            {project.links.live && (
+                            {/* Standalone CTA row only for legacy / single-build cases.
+                                Tabbed cases render their per-build link row inside the
+                                mobile tabs section above so the buttons swap with the tab. */}
+                            {(!project.builds || project.builds.length <= 1) && resolvedLinks.length > 0 && (
                                 <div className="case-study-modal-mobile-cta-wrap px-7 pb-5">
-                                    <LiveSiteButton href={project.links.live} />
+                                    <LinkRow links={resolvedLinks} />
                                 </div>
                             )}
 
                             {/* Legacy gallery only when no body schema */}
-                            {!project.body && (
+                            {!resolvedBody && (
                                 <div className="case-study-modal-mobile-gallery border-t border-border-subtle bg-bg-tertiary/30">
                                     <div className="case-study-modal-mobile-gallery-header px-7 py-3 flex items-center gap-2 text-xs font-mono uppercase tracking-[0.2em] text-text-muted">
                                         <span className="case-study-modal-mobile-gallery-dot w-1.5 h-1.5 rounded-full bg-accent-primary" />
@@ -286,7 +374,7 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
 
                     {/* DESKTOP: body-mode renders a single full-bleed reading panel.
                         Legacy description-mode keeps the original aside + main 3-col layout. */}
-                    {project.body ? (
+                    {resolvedBody ? (
                         <motion.div
                             initial={{ clipPath: 'inset(48% 2% 48% 2% round 6px)', opacity: 0, scale: 0.97 }}
                             animate={{ clipPath: 'inset(0% 0% 0% 0% round 6px)', opacity: 1, scale: 1 }}
@@ -303,9 +391,22 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                 <X size={16} />
                             </button>
                             <div className="case-study-modal-desktop-scroll flex-1 min-h-0 overflow-y-auto hud-scroll">
-                                <BodyIntro project={project} />
+                                <BodyIntro
+                                    project={project}
+                                    links={resolvedLinks}
+                                    stack={resolvedStack}
+                                    builds={project.builds}
+                                    activeBuildId={activeBuild?.id ?? null}
+                                    onSelectBuild={setActiveBuildId}
+                                    activeBuildDescription={activeBuild?.description}
+                                    metrics={resolvedBody.outcome.metrics}
+                                />
+                                {project.comparison && project.comparison.builds.length > 0 && (
+                                    <ComparisonSection comparison={project.comparison} />
+                                )}
                                 <BodyDesktopView
-                                    body={project.body}
+                                    body={resolvedBody}
+                                    briefLabel={activeBuild?.briefLabel}
                                     onScreenshotClick={(i) => setLightboxIndex(i)}
                                 />
                             </div>
@@ -373,9 +474,9 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                 <div className="case-study-modal-aside-spacer md:flex-1 md:min-h-0" />
                             )}
 
-                            {project.links.live && (
+                            {resolvedLinks.length > 0 && (
                                 <div className="case-study-modal-aside-cta-wrap flex-shrink-0 px-7 py-4 border-t border-border-subtle bg-bg-tertiary/30">
-                                    <LiveSiteButton href={project.links.live} />
+                                    <LinkRow links={resolvedLinks} />
                                 </div>
                             )}
                         </motion.aside>
@@ -486,7 +587,26 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
 
 // --- Body schema: intro block (replaces sidebar, sits at top of single-panel layout) ---
 
-function BodyIntro({ project }: { project: CaseStudyData }) {
+function BodyIntro({
+    project,
+    links,
+    stack,
+    builds,
+    activeBuildId,
+    onSelectBuild,
+    activeBuildDescription,
+    metrics,
+}: {
+    project: CaseStudyData;
+    links: CaseStudyLink[];
+    stack: string[];
+    builds?: CaseStudyBuild[];
+    activeBuildId: string | null;
+    onSelectBuild: (id: string) => void;
+    activeBuildDescription?: string;
+    metrics?: Array<{ label: string; value: string }>;
+}) {
+    const showTabs = !!builds && builds.length > 1;
     return (
         <section className="body-intro-root px-9 pt-7 pb-7 border-b border-border-subtle">
             <div className="body-intro-eyebrow flex items-center gap-2 mb-5">
@@ -518,6 +638,14 @@ function BodyIntro({ project }: { project: CaseStudyData }) {
                             <span className="body-intro-meta-value text-text-secondary">{project.period}</span>
                         </div>
                     </div>
+                    {stack.length > 0 && (
+                        <div className="body-intro-stack flex items-center gap-3">
+                            <span className="body-intro-stack-label text-[10px] font-mono uppercase tracking-[0.22em] text-text-dim">
+                                Stack
+                            </span>
+                            <StackLogos ids={stack} size={16} showLabels />
+                        </div>
+                    )}
                     <div className="body-intro-tag-row flex flex-wrap items-center gap-x-3 gap-y-2.5 pt-1">
                         <div className="body-intro-tag-list flex flex-wrap items-center gap-1.5">
                             {project.tags.map((tag) => (
@@ -526,62 +654,154 @@ function BodyIntro({ project }: { project: CaseStudyData }) {
                                 </span>
                             ))}
                         </div>
-                        {project.links.live && (
-                            <LiveSiteButton href={project.links.live} />
-                        )}
+                        {/* Link row sits here for legacy / single-build cases.
+                            Tabbed cases render their per-build links inside the
+                            tabs panel below so the buttons swap with the tab. */}
+                        {!showTabs && links.length > 0 && <LinkRow links={links} />}
                     </div>
                 </div>
-                <div className="body-intro-hero relative w-full aspect-[16/10] rounded-sm overflow-hidden bg-bg-tertiary border border-border-subtle order-1 md:order-2">
-                    <ImageWithFallback
+                <div className="body-intro-hero relative w-full rounded-sm overflow-hidden bg-bg-tertiary border border-border-subtle order-1 md:order-2 self-start">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
                         src={project.images.hero}
                         alt={project.title}
-                        fill
-                        sizes="(min-width: 768px) 340px, 100vw"
-                        className="body-intro-hero-image object-cover"
+                        className="body-intro-hero-image block w-full h-auto"
                     />
                 </div>
             </div>
-            {project.body?.outcome?.metrics && project.body.outcome.metrics.length > 0 && (
+            {showTabs && builds && (
+                <div className="body-intro-tabs-wrap mt-6 pt-6 border-t border-border-subtle">
+                    <div className="body-intro-tabs-eyebrow flex items-baseline gap-3 mb-3">
+                        <span className="body-intro-tabs-eyebrow-rule block h-px w-6 bg-text-dim translate-y-[-0.35em]" />
+                        <span className="body-intro-tabs-eyebrow-text font-serif italic font-normal text-text-primary text-base md:text-lg leading-none">
+                            One website, {builds.length} builds
+                        </span>
+                    </div>
+                    <BuildTabs
+                        builds={builds}
+                        activeId={activeBuildId ?? builds[0].id}
+                        onChange={onSelectBuild}
+                    />
+                    {activeBuildDescription && (
+                        <p className="body-intro-build-description text-sm text-text-muted leading-relaxed mt-3 max-w-3xl">
+                            {activeBuildDescription}
+                        </p>
+                    )}
+                    {links.length > 0 && (
+                        <div className="body-intro-tabs-link-row mt-4">
+                            <LinkRow links={links} />
+                        </div>
+                    )}
+                </div>
+            )}
+            {metrics && metrics.length > 0 && (
                 <div className="body-intro-metrics mt-7">
-                    <MetricsCircles metrics={project.body.outcome.metrics} />
+                    <MetricsCircles metrics={metrics} />
                 </div>
             )}
         </section>
     );
 }
 
-// --- Live site button ---
+// --- Link buttons ---
 
-function LiveSiteButton({ href, className = '' }: { href: string; className?: string }) {
-    let domain = href;
+/** Renders one button per link. Each button shows the brand-mark logo (when
+ *  the link's `logo` matches a tech-logo id), then the label, then the domain
+ *  in muted text, then an external-link arrow. Multi-link cases (Akti React +
+ *  Webflow) wrap onto multiple lines on narrow viewports. */
+function LinkRow({ links, className = '' }: { links: CaseStudyLink[]; className?: string }) {
+    return (
+        <div className={`link-row flex flex-wrap items-center gap-2 ${className}`}>
+            {links.map((link) => (
+                <BuildLinkButton key={link.href} link={link} />
+            ))}
+        </div>
+    );
+}
+
+function BuildLinkButton({ link }: { link: CaseStudyLink }) {
+    let domain = link.href;
     try {
-        domain = new URL(href).hostname.replace(/^www\./, '');
+        domain = new URL(link.href).hostname.replace(/^www\./, '');
     } catch {}
+    const isGithub = link.logo === 'github';
     return (
         <a
-            href={href}
+            href={link.href}
             target="_blank"
             rel="noopener noreferrer"
-            className={`live-site-cta group relative inline-flex items-center gap-3 px-4 py-2.5 bg-[#cbcdb7] hover:bg-[#bfc1ab] text-text-primary border-2 border-accent-primary/30 hover:border-accent-primary/55 rounded-sm transition-colors text-[11px] font-mono uppercase tracking-[0.2em] shadow-[0_1px_0_rgba(0,0,0,0.04),0_2px_8px_-2px_rgba(0,0,0,0.08)] ${className}`}
+            className="build-link-button live-site-cta group relative inline-flex items-center gap-3 px-4 py-2.5 bg-[#cbcdb7] hover:bg-[#bfc1ab] text-text-primary border-2 border-accent-primary/30 hover:border-accent-primary/55 rounded-sm transition-colors text-[11px] font-mono uppercase tracking-[0.2em] shadow-[0_1px_0_rgba(0,0,0,0.04),0_2px_8px_-2px_rgba(0,0,0,0.08)]"
         >
-            <span className="live-site-cta-dot w-1.5 h-1.5 rounded-full bg-accent-primary" aria-hidden />
-            <span className="live-site-cta-label">Open live site</span>
-            <span className="live-site-cta-divider w-px h-3 bg-border-medium" aria-hidden />
-            <span className="live-site-cta-domain normal-case tracking-normal text-text-muted">{domain}</span>
-            <ArrowUpRight size={14} className="live-site-cta-arrow text-accent-primary transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden />
+            {link.logo && !isGithub && (
+                <span className="build-link-button-logo text-text-primary inline-flex items-center justify-center" aria-hidden>
+                    <TechLogoMark id={link.logo} size={14} />
+                </span>
+            )}
+            {isGithub && (
+                <Github size={14} className="build-link-button-github text-text-primary" aria-hidden />
+            )}
+            {!link.logo && (
+                <span className="build-link-button-dot w-1.5 h-1.5 rounded-full bg-accent-primary" aria-hidden />
+            )}
+            <span className="build-link-button-label">{link.label ?? 'Open'}</span>
+            <span className="build-link-button-divider w-px h-3 bg-border-medium" aria-hidden />
+            <span className="build-link-button-domain normal-case tracking-normal text-text-muted">{domain}</span>
+            <ArrowUpRight size={14} className="build-link-button-arrow text-accent-primary transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden />
         </a>
+    );
+}
+
+// --- Build tab strip (only shown when project has builds[]) ---
+
+function BuildTabs({
+    builds,
+    activeId,
+    onChange,
+}: {
+    builds: CaseStudyBuild[];
+    activeId: string;
+    onChange: (id: string) => void;
+}) {
+    return (
+        <div className="build-tabs-root inline-flex flex-wrap items-stretch gap-1 p-1 rounded-md bg-bg-tertiary/40 border border-border-subtle" role="tablist" aria-label="Build variants">
+            {builds.map((build) => {
+                const isActive = build.id === activeId;
+                const primaryLogo = build.stack?.[0] ?? build.links?.find((l) => l.logo)?.logo;
+                return (
+                    <button
+                        key={build.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={isActive}
+                        onClick={() => onChange(build.id)}
+                        className={`build-tabs-button inline-flex items-center gap-2 px-3.5 py-2 rounded-sm text-[12px] font-mono uppercase tracking-[0.14em] transition-colors ${
+                            isActive
+                                ? 'build-tabs-button-active bg-bg-secondary text-text-primary border border-accent-primary/45 shadow-[0_1px_0_rgba(0,0,0,0.04),0_2px_8px_-2px_rgba(0,0,0,0.08)]'
+                                : 'build-tabs-button-inactive border border-transparent text-text-muted hover:text-text-primary hover:bg-bg-secondary/60'
+                        }`}
+                    >
+                        {primaryLogo && (
+                            <span className={isActive ? 'text-accent-primary' : 'text-text-muted'} aria-hidden>
+                                <TechLogoMark id={primaryLogo} size={14} />
+                            </span>
+                        )}
+                        <span className="build-tabs-button-label">{build.label}</span>
+                    </button>
+                );
+            })}
+        </div>
     );
 }
 
 // --- Body schema desktop view ---
 
-function BodyDesktopView({ body, onScreenshotClick }: { body: CaseStudyBody; onScreenshotClick: (idx: number) => void }) {
+function BodyDesktopView({ body, briefLabel = 'Brief', onScreenshotClick }: { body: CaseStudyBody; briefLabel?: string; onScreenshotClick: (idx: number) => void }) {
     const decisions = body.decisions;
     return (
         <>
             {/* BRIEF */}
             <section className="body-desktop-brief px-9 pt-8 pb-9 border-b border-border-subtle">
-                <PanelLabel>Brief</PanelLabel>
+                <PanelLabel>{briefLabel}</PanelLabel>
                 <div className="body-desktop-brief-grid grid lg:grid-cols-2 gap-x-10 gap-y-5 mb-6">
                     <BriefCol label="Situation" body={body.brief.situation} />
                     <BriefCol label="Audience" body={body.brief.audience} />
@@ -668,10 +888,10 @@ function BodyDesktopView({ body, onScreenshotClick }: { body: CaseStudyBody; onS
     );
 }
 
-function BodyMobileView({ body, onScreenshotClick }: { body: CaseStudyBody; onScreenshotClick: (idx: number) => void }) {
+function BodyMobileView({ body, briefLabel = 'Brief', onScreenshotClick }: { body: CaseStudyBody; briefLabel?: string; onScreenshotClick: (idx: number) => void }) {
     return (
         <>
-            <MobileSection label="Brief">
+            <MobileSection label={briefLabel}>
                 <div className="body-mobile-brief space-y-4">
                     <div className="body-mobile-brief-block">
                         <SubLabel>Situation</SubLabel>
@@ -891,6 +1111,55 @@ function deltaForExtra(a: string, b: string): { display: string; better: 'a' | '
         return { display: `${(ratio < 1 ? 1 / ratio : ratio).toFixed(ratio < 0.5 || ratio > 2 ? 1 : 2)}× lighter`, better };
     }
     return { display: `${(1 / ratio).toFixed(2)}× heavier`, better };
+}
+
+/** Standalone comparison section. Used both inline in BodyDesktopView (for
+ *  cases where the comparison is part of the active narrative) and at the
+ *  top level of the modal between BodyIntro and the body view (for tabbed
+ *  cases where the comparison is between the case's own builds). */
+function ComparisonSection({ comparison, mobile = false }: { comparison: StackComparison; mobile?: boolean }) {
+    if (!comparison.builds.length) return null;
+    if (mobile) {
+        return (
+            <div className="comparison-section-mobile px-7 py-5 border-t border-border-subtle">
+                <div className="comparison-section-mobile-header flex items-baseline gap-3 mb-4">
+                    <span className="block h-px w-6 bg-text-dim translate-y-[-0.35em]" />
+                    <span className="font-serif italic font-normal text-text-primary text-lg leading-none">
+                        {comparison.heading || 'Comparison'}
+                    </span>
+                </div>
+                {comparison.intro && (
+                    <p className="comparison-section-intro text-text-secondary text-base leading-relaxed mb-5">
+                        {comparison.intro}
+                    </p>
+                )}
+                <ComparisonGrid builds={comparison.builds} stacked />
+                <ComparisonDiffTable builds={comparison.builds} />
+                {comparison.methodology && (
+                    <p className="comparison-section-methodology text-text-muted text-[12px] leading-relaxed mt-4 italic">
+                        {comparison.methodology}
+                    </p>
+                )}
+            </div>
+        );
+    }
+    return (
+        <section className="comparison-section-desktop px-9 py-8 border-b border-border-subtle">
+            <PanelLabel>{comparison.heading || 'Comparison'}</PanelLabel>
+            {comparison.intro && (
+                <p className="comparison-section-intro text-text-secondary text-[15px] leading-relaxed max-w-3xl mb-7">
+                    {comparison.intro}
+                </p>
+            )}
+            <ComparisonGrid builds={comparison.builds} />
+            <ComparisonDiffTable builds={comparison.builds} />
+            {comparison.methodology && (
+                <p className="comparison-section-methodology text-text-muted text-[12px] leading-relaxed max-w-3xl mt-4 italic">
+                    {comparison.methodology}
+                </p>
+            )}
+        </section>
+    );
 }
 
 function ComparisonDiffTable({

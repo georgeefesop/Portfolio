@@ -176,7 +176,7 @@ export default function ProductHero() {
                     transition={{ delay: 1, duration: 0.8 }}
                     className="product-hero-scroll-indicator absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 z-10"
                 >
-                    <MicroUpworkCard className="hidden lg:block" />
+                    <MicroUpworkCard className="hidden xl:block" />
                     <motion.div
                         animate={{ y: [0, 8, 0] }}
                         transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}

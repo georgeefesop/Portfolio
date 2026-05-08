@@ -8,6 +8,7 @@ const laHacienda: CaseStudy = {
     period: '2025',
     tags: ['WordPress', 'Elementor', 'Google Ads', 'Hospitality', 'Conversion'],
     categories: ['wordpress'],
+    stack: ['wordpress', 'elementor'],
     body: {
         honest_note: 'Not the prettiest site I have built. The host-managed stack and a tight asset pool capped the visual ceiling - for the next hotel I would start with brand and photography before touching the build.',
         brief: {

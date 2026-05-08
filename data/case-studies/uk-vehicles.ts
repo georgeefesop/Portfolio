@@ -8,6 +8,7 @@ const ukVehicles: CaseStudy = {
     period: '2025',
     tags: ['Next.js', 'Web Development', 'E-Commerce'],
     categories: ['nextjs', 'design'],
+    stack: ['nextjs'],
     aiBuilt: true,
     body: {
         brief: {

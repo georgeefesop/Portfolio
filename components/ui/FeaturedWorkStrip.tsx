@@ -3,6 +3,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, useMotionValue, useAnimationFrame } from 'framer-motion';
 import ImageWithFallback from './ImageWithFallback';
+import { StackLogosOverlay } from './TechLogoMark';
+import { cases } from '@/data/case-studies';
 
 type FeaturedItem = {
     id: string;
@@ -11,6 +13,12 @@ type FeaturedItem = {
     thumbnail: string;
     externalLink?: string;
 };
+
+// Pull each featured item's stack from the canonical case-study data so the
+// thumbnail overlay stays in sync when a case's tech list changes.
+const stackById: Record<string, string[]> = Object.fromEntries(
+    cases.map((c) => [c.id, c.stack ?? []])
+);
 
 const ZOOM_IDS = new Set([
     'olympus-sports',
@@ -35,6 +43,7 @@ function HorizontalCard({ item, priority }: { item: FeaturedItem; priority?: boo
     const isInstantAccess = item.id === 'instant-access-locksmiths';
     const isZoomed = ZOOM_IDS.has(item.id);
     const baseScale = isInstantAccess ? 'scale-[1.12]' : isZoomed ? 'scale-110' : '';
+    const stack = stackById[item.id] ?? [];
     return (
         <div className="featured-work-strip-card featured-work-strip-card-horizontal w-[312px] group">
             <motion.div
@@ -50,15 +59,15 @@ function HorizontalCard({ item, priority }: { item: FeaturedItem; priority?: boo
                     priority={priority}
                     className={`featured-work-strip-thumb object-cover object-top opacity-90 group-hover:opacity-100 transition-opacity duration-500 featured-strip-img ${baseScale}`}
                 />
+                {stack.length > 0 && (
+                    <div className="featured-work-strip-stack-wrap absolute bottom-3 right-3 z-10">
+                        <StackLogosOverlay ids={stack} size={12} />
+                    </div>
+                )}
             </motion.div>
             <div className="featured-work-strip-meta mt-3">
                 <div className="featured-work-strip-title text-base font-medium text-text-primary truncate group-hover:text-accent-primary transition-colors">
                     {item.title}
-                </div>
-                <div className="featured-work-strip-tag-wrap mt-1.5">
-                    <span className="featured-work-strip-tag inline-block text-xs font-mono uppercase tracking-wider text-text-secondary bg-bg-tertiary/40 border border-border-medium/60 px-2.5 py-1 rounded">
-                        {item.tag}
-                    </span>
                 </div>
             </div>
         </div>
@@ -70,6 +79,7 @@ function VerticalCard({ item, priority }: { item: FeaturedItem; priority?: boole
     const isZoomed = ZOOM_IDS.has(item.id);
     const zoomClass = isInstantAccess ? 'scale-[1.12]' : isZoomed ? 'scale-110' : '';
     const posClass = isInstantAccess ? 'object-top' : 'object-center';
+    const stack = stackById[item.id] ?? [];
     return (
         <div className="featured-work-strip-card featured-work-strip-card-vertical w-full group">
             <div className="featured-work-strip-thumb-wrap relative aspect-[3/2] rounded-lg overflow-hidden bg-bg-tertiary border-2 border-border-subtle">
@@ -81,15 +91,15 @@ function VerticalCard({ item, priority }: { item: FeaturedItem; priority?: boole
                     priority={priority}
                     className={`featured-work-strip-thumb object-cover opacity-95 transition-transform duration-500 featured-strip-img ${posClass} ${zoomClass}`}
                 />
+                {stack.length > 0 && (
+                    <div className="featured-work-strip-stack-wrap absolute bottom-3 right-3 z-10">
+                        <StackLogosOverlay ids={stack} size={12} />
+                    </div>
+                )}
             </div>
             <div className="featured-work-strip-meta mt-3">
                 <div className="featured-work-strip-title text-base font-medium text-text-primary truncate">
                     {item.title}
-                </div>
-                <div className="featured-work-strip-tag-wrap mt-1.5">
-                    <span className="featured-work-strip-tag inline-block text-xs font-mono uppercase tracking-wider text-text-secondary bg-bg-tertiary/40 border border-border-medium/60 px-2.5 py-1 rounded">
-                        {item.tag}
-                    </span>
                 </div>
             </div>
         </div>
