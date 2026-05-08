@@ -15,8 +15,14 @@ const navLinks = [
     { name: 'Contact', href: '#contact' },
 ];
 
+// Background and border come from CSS variables so the pill flips with the
+// active theme (see `--nav-island-bg` / `--nav-island-border` in globals.css).
+// Box-shadow stays inline because both inset highlights work on light AND
+// dark surfaces (4% white top highlight reads on either, 12% black bottom
+// shade just disappears on dark - acceptable rather than wrong).
 const ISLAND_STYLE: React.CSSProperties = {
-    background: 'rgba(221, 213, 189, 0.91)',
+    background: 'var(--nav-island-bg)',
+    borderColor: 'var(--nav-island-border)',
     boxShadow: '0 2px 8px rgb(0 0 0 / 6%), 0 1px 0 rgba(255,255,255,0.04) inset, 0 -1px 0 rgba(0,0,0,0.12) inset',
 };
 
@@ -74,7 +80,7 @@ export default function Navigation() {
         >
             <div
                 ref={navRef}
-                className={`nav-island pointer-events-auto w-full max-w-5xl border border-black/[0.05] transition-[border-radius] duration-300 ${isOpen ? 'rounded-t-2xl' : 'rounded-2xl'}`}
+                className={`nav-island pointer-events-auto w-full max-w-5xl border transition-[border-radius] duration-300 ${isOpen ? 'rounded-t-2xl' : 'rounded-2xl'}`}
                 style={ISLAND_STYLE}
             >
                 {/* Bar */}

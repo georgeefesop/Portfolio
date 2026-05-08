@@ -79,6 +79,12 @@
   --bg-hero: #05050A;
   --bg-primary: #0F0F0F;
   --nav-glass-bg: rgba(12, 12, 12, 0.58);
+  /* Nav island - solid-ish pill rendered in Navigation.tsx. Distinct from
+     --nav-glass-bg (which is a higher-translucency variant for any future
+     glass treatment). Tuned per theme so dark mode gets a dark pill, not the
+     cream one. */
+  --nav-island-bg: rgba(28, 28, 28, 0.88);
+  --nav-island-border: rgba(255, 255, 255, 0.06);
   --bg-secondary: #1A1A1A;
   --bg-tertiary: #242424;
   --bg-elevated: #242424;
@@ -149,6 +155,8 @@
   --bg-hero: #EFE6D6;
   --bg-primary: #EFE6D6;
   --nav-glass-bg: rgba(239, 230, 214, 0.70);
+  --nav-island-bg: rgba(229, 218, 196, 0.91);
+  --nav-island-border: rgba(0, 0, 0, 0.05);
   --bg-secondary: #E5DAC4;
   --bg-tertiary: #DCD0B6;
   --bg-elevated: #F5ECD8;
@@ -181,6 +189,8 @@
   --bg-hero: #F1EDE3;
   --bg-primary: #F1EDE3;
   --nav-glass-bg: rgba(241, 237, 227, 0.70);
+  --nav-island-bg: rgba(232, 226, 210, 0.91);
+  --nav-island-border: rgba(0, 0, 0, 0.05);
   --bg-secondary: #E8E2D2;
   --bg-tertiary: #DDD5C2;
   --bg-elevated: #F7F1E1;
@@ -212,6 +222,8 @@
   --bg-hero: #E8E0CA;
   --bg-primary: #E8E0CA;
   --nav-glass-bg: rgba(232, 224, 202, 0.70);
+  --nav-island-bg: rgba(221, 213, 189, 0.91);
+  --nav-island-border: rgba(0, 0, 0, 0.05);
   --bg-secondary: #DDD3B9;     /* subtle card surface */
   --bg-tertiary: #C5B894;       /* darker - pills + clear card hover */
   --bg-elevated: #F0E8D2;       /* lighter than primary - cards pop above modal */
