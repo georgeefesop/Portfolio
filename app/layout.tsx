@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter, JetBrains_Mono, Caveat, Instrument_Sans, Newsreader, Inconsolata, Karla, Fraunces } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/ui/Navigation";
 import CustomScrollbar from "@/components/ui/CustomScrollbar";
 import { Analytics } from "@vercel/analytics/react";
 import PostHogProvider from "@/components/analytics/PostHogProvider";
+
+const GA_MEASUREMENT_ID = "G-3NC98CZMC6";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains-mono", display: "swap" });
@@ -47,6 +50,18 @@ export default function RootLayout({
           <CustomScrollbar />
           <Analytics />
         </PostHogProvider>
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}');
+          `}
+        </Script>
       </body>
     </html>
   );
