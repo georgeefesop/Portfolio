@@ -1,242 +1,126 @@
-﻿'use client';
+'use client';
 
-import { useState, useEffect } from 'react';
-import { useScrollProgress } from '@/hooks/useScrollProgress';
-import ProductCanvas from '@/components/ui/ProductCanvas';
-import HeroText from '@/components/ui/HeroText';
-import FeaturedWorkStrip from '@/components/ui/FeaturedWorkStrip';
+import { ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 import HeroGrid from '@/components/ui/HeroGrid';
-import { ErrorBoundary } from '@/components/ui/ErrorBoundary';
-import MicroUpworkCard from '@/components/ui/MicroUpworkCard';
-import { motion, AnimatePresence } from 'framer-motion';
 
-// FEATURE FLAG: Set to true to re-enable carousel mode
-// When false: Shows simple hero with modal button
-// When true: Shows original 3-screen carousel
-const ENABLE_CAROUSEL = false;
+const UPWORK_URL = 'https://www.upwork.com/freelancers/~0192f6c9c9c1e1bf83';
+const UPWORK_GREEN = '#14A800';
 
-export type StepId = 0 | 1 | 2;
-
-// Shared audio context for background transition sound
-let sharedContext: AudioContext | null = null;
-const getSharedContext = () => {
-    if (typeof window === 'undefined') return null;
-    if (!sharedContext) {
-        sharedContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-    }
-    return sharedContext;
+const FADE_UP = {
+    hidden: { opacity: 0, y: 12 },
+    visible: (i: number) => ({
+        opacity: 1,
+        y: 0,
+        transition: { delay: 0.15 + i * 0.08, duration: 0.6, ease: [0.22, 1, 0.36, 1] as const },
+    }),
 };
 
+function scrollToWork(e: React.MouseEvent) {
+    e.preventDefault();
+    const el = document.getElementById('work');
+    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 90, behavior: 'smooth' });
+}
+
 export default function ProductHero() {
-    const scrollProgress = useScrollProgress();
-    const [step, setStep] = useState<StepId>(0);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    // Responsive state
-    const [isMobile, setIsMobile] = useState(false);
-
-    // Handle resize for responsive detection
-    useEffect(() => {
-        const checkResponsive = () => {
-            const width = window.innerWidth;
-            setIsMobile(width < 768);
-        };
-        checkResponsive();
-        window.addEventListener('resize', checkResponsive);
-        return () => window.removeEventListener('resize', checkResponsive);
-    }, []);
-
-    // Lock body scroll when modal is open
-    useEffect(() => {
-        if (isModalOpen) {
-            document.body.style.overflow = 'hidden';
-        } else {
-            document.body.style.overflow = '';
-        }
-        return () => {
-            document.body.style.overflow = '';
-        };
-    }, [isModalOpen]);
-
-    // ESC key handler for modal
-    useEffect(() => {
-        const handleEscape = (e: KeyboardEvent) => {
-            if (e.key === 'Escape' && isModalOpen) {
-                setIsModalOpen(false);
-            }
-        };
-
-        if (isModalOpen) {
-            window.addEventListener('keydown', handleEscape);
-            return () => window.removeEventListener('keydown', handleEscape);
-        }
-    }, [isModalOpen]);
-
-    // "Carbon click" - short percussive transient on prototype open.
-    // Restored from the old hero button; lives here now so any caller of
-    // the prototype:open event gets the same haptic feedback.
-    const playPrototypeSound = () => {
-        try {
-            const ctx = getSharedContext();
-            if (!ctx) return;
-            const now = ctx.currentTime;
-
-            const bufferSize = ctx.sampleRate * 0.02; // 20ms burst
-            const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-            const data = buffer.getChannelData(0);
-            for (let i = 0; i < bufferSize; i++) {
-                data[i] = Math.random() * 2 - 1;
-            }
-
-            const noise = ctx.createBufferSource();
-            noise.buffer = buffer;
-
-            const filter = ctx.createBiquadFilter();
-            filter.type = 'bandpass';
-            filter.frequency.setValueAtTime(3200, now);
-            filter.Q.setValueAtTime(10, now);
-
-            const gain = ctx.createGain();
-            gain.gain.setValueAtTime(0, now);
-            gain.gain.linearRampToValueAtTime(0.05, now + 0.001);
-            gain.gain.exponentialRampToValueAtTime(0.001, now + 0.015);
-
-            noise.connect(filter);
-            filter.connect(gain);
-            gain.connect(ctx.destination);
-
-            noise.start(now);
-            noise.stop(now + 0.02);
-        } catch (e) { }
-    };
-
-    // Listen for prototype:open from PrototypeShowcase section
-    useEffect(() => {
-        const handleOpen = () => {
-            playPrototypeSound();
-            setIsModalOpen(true);
-        };
-        window.addEventListener('prototype:open', handleOpen);
-        return () => window.removeEventListener('prototype:open', handleOpen);
-    }, []);
-
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-    };
-
     return (
-        <section className="product-hero-section relative h-[100svh] w-full overflow-hidden bg-bg-hero">
-            {/* Background Grid - programmatic canvas with mouse trail. */}
+        <section className="product-hero-section relative min-h-[100svh] w-full overflow-hidden bg-bg-hero flex items-center">
             <motion.div
-                className="product-hero-grid-wrap absolute inset-0 z-0"
+                className="absolute inset-0 z-0"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.8, delay: 0.55, ease: 'easeOut' }}
+                transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
             >
                 <HeroGrid />
             </motion.div>
 
-            {/* ProductCanvas - Only in carousel mode */}
-            {ENABLE_CAROUSEL && (
-                <div className="product-hero-canvas-wrap absolute inset-0 z-0">
-                    <ErrorBoundary>
-                        <ProductCanvas step={step} setStep={setStep} />
-                    </ErrorBoundary>
-                </div>
-            )}
-
-            {/* Featured work strip - sits in the upper-middle of the hero, behind
-                HeroText (which only occupies the bottom). md+ only. */}
-            {!ENABLE_CAROUSEL && (
-                <div className="product-hero-featured-strip product-hero-featured-strip-desktop hidden md:flex items-center absolute left-0 right-0 z-[18] pointer-events-none" style={{ top: '8%', bottom: '360px' }}>
-                    <FeaturedWorkStrip />
-                </div>
-            )}
-
-            {/* Vertical featured strip - mobile only. Cards scroll up off-screen,
-                running from the top of the hero down to just above the signature. */}
-            {!ENABLE_CAROUSEL && (
-                <div className="product-hero-featured-strip product-hero-featured-strip-mobile md:hidden absolute left-0 right-0 z-[18] pointer-events-auto" style={{ top: '6%', bottom: '24%' }}>
-                    <FeaturedWorkStrip orientation="vertical" />
-                </div>
-            )}
-
-            {/* Hero Text Overlay */}
-            <HeroText
-                scrollProgress={scrollProgress}
-                step={ENABLE_CAROUSEL ? step : undefined}
-                isMobile={isMobile}
-            />
-
-            {/* Scroll Indicator + Upwork CTA - Only visible when modal is closed */}
-            {!ENABLE_CAROUSEL && !isModalOpen && (
-                <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 1, duration: 0.8 }}
-                    className="product-hero-scroll-indicator absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-4 z-10"
-                >
-                    <MicroUpworkCard className="hidden xl:block" />
-                    <motion.div
-                        animate={{ y: [0, 8, 0] }}
-                        transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                        className="product-hero-scroll-indicator-arrow text-text-muted transition-colors duration-500 pointer-events-none"
+            <div className="relative z-10 w-full max-w-[1500px] mx-auto px-6 pt-28 pb-32 md:pt-32 md:pb-40">
+                <div className="text-left">
+                    <motion.p
+                        custom={0}
+                        initial="hidden"
+                        animate="visible"
+                        variants={FADE_UP}
+                        className="text-[11px] md:text-xs font-mono uppercase tracking-[0.18em] text-text-dim mb-6"
                     >
-                        <svg className="product-hero-scroll-indicator-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                            <path d="M12 5v14M19 12l-7 7-7-7" />
-                        </svg>
-                    </motion.div>
-                </motion.div>
-            )}
+                        Product Designer + Developer · Cyprus
+                    </motion.p>
 
-            {/* Fullscreen Demo Modal (New - only in simple mode) */}
-            {!ENABLE_CAROUSEL && (
-                <AnimatePresence>
-                    {isModalOpen && (
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.3 }}
-                            className="product-hero-modal-overlay fixed inset-0 z-[9999] flex flex-col items-center justify-center p-4 md:p-8 lg:p-12"
-                            style={{
-                                backgroundColor: 'rgba(0, 0, 0, 0.7)'
-                            }}
-                            onClick={handleCloseModal}
+                    <motion.h1
+                        custom={1}
+                        initial="hidden"
+                        animate="visible"
+                        variants={FADE_UP}
+                        className="text-4xl sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold tracking-tight leading-[1.05] text-text-primary"
+                    >
+                        <span className="block lg:whitespace-nowrap">
+                            Websites designed with{' '}
+                            <span
+                                className="italic font-normal text-accent-highlight"
+                                style={{ fontFamily: 'var(--font-serif)' }}
+                            >
+                                intent.
+                            </span>
+                        </span>
+                        <span className="block lg:whitespace-nowrap">
+                            Built to be{' '}
+                            <span
+                                className="italic font-normal text-accent-highlight"
+                                style={{ fontFamily: 'var(--font-serif)' }}
+                            >
+                                used.
+                            </span>
+                        </span>
+                    </motion.h1>
+
+                    <motion.p
+                        custom={2}
+                        initial="hidden"
+                        animate="visible"
+                        variants={FADE_UP}
+                        className="mt-6 md:mt-8 text-lg md:text-xl text-text-muted leading-relaxed max-w-xl text-balance"
+                    >
+                        Product UX, websites, and prototypes for founders and teams who want something they can actually use, change, and be proud to show off. End-to-end by one person.
+                    </motion.p>
+
+                    <motion.p
+                        custom={3}
+                        initial="hidden"
+                        animate="visible"
+                        variants={FADE_UP}
+                        className="mt-6 text-sm text-text-dim max-w-lg"
+                    >
+                        Previously lead designer on RealFi, Cardano&apos;s $80bn ecosystem · 12 years web design &amp; development
+                    </motion.p>
+
+                    <motion.div
+                        custom={4}
+                        initial="hidden"
+                        animate="visible"
+                        variants={FADE_UP}
+                        className="mt-10 md:mt-12 flex flex-wrap items-center gap-5"
+                    >
+                        <a
+                            href={UPWORK_URL}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group inline-flex items-center gap-2 rounded-xl px-7 py-4 text-base font-semibold text-white shadow-sm transition-[filter,transform] duration-200 hover:brightness-110 hover:-translate-y-0.5"
+                            style={{ backgroundColor: UPWORK_GREEN }}
                         >
-                            {/* Modal Content - Maximized for fullscreen use */}
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0.95 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.95 }}
-                                transition={{ duration: 0.3, delay: 0.1 }}
-                                className="product-hero-modal-content relative w-full max-w-[95vw] lg:max-w-[1400px] flex-1 max-h-[88vh] flex items-center justify-center p-0"
-                                onClick={(e) => e.stopPropagation()}
-                            >
-                                {/* POS Demo - Fills container */}
-                                <div className="product-hero-modal-canvas-wrap w-full h-full flex items-center justify-center overflow-visible">
-                                    <ErrorBoundary>
-                                        <ProductCanvas step={2} setStep={setStep} isModalMode={true} />
-                                    </ErrorBoundary>
-                                </div>
-                            </motion.div>
+                            Hire me on Upwork
+                            <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
+                        </a>
 
-                            {/* Close Button - Reduced top margin to pull closer to terminal */}
-                            <motion.button
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, y: 10 }}
-                                transition={{ duration: 0.3, delay: 0.2 }}
-                                onClick={handleCloseModal}
-                                className="product-hero-modal-close mt-2 px-8 py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors backdrop-blur-md border border-white/20 font-medium z-50 shrink-0"
-                            >
-                                Close Prototype
-                            </motion.button>
-                        </motion.div>
-                    )
-                    }
-                </AnimatePresence >
-            )}
-        </section >
+                        <a
+                            href="#work"
+                            onClick={scrollToWork}
+                            className="text-sm text-text-dim hover:text-text-primary transition-colors"
+                        >
+                            or see selected work ↓
+                        </a>
+                    </motion.div>
+                </div>
+            </div>
+        </section>
     );
 }

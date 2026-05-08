@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { motion, useTransform, MotionValue } from 'framer-motion';
-import { StepId } from '../sections/ProductHero';
+import { StepId } from '../sections/ProductHeroSlider';
 import ProjectEstimator from '../sections/ProjectEstimator';
 import MicroUpworkCard from './MicroUpworkCard';
 
