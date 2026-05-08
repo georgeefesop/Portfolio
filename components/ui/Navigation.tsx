@@ -3,9 +3,20 @@
 import { useState, useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ThemePreviewToggle from './ThemePreviewToggle';
+import WorkDropdown from './WorkDropdown';
+import { cases } from '@/data/case-studies';
+
+const FEATURED_IDS = [
+    'kingfisher-mortgages',
+    'akti',
+    'instant-access-locksmiths',
+    'uk-vehicles',
+    'realfi',
+    'ai-tools',
+];
 
 const navLinks = [
     { name: 'Work', href: '#work' },
@@ -30,7 +41,19 @@ export default function Navigation() {
     const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const [activeSection, setActiveSection] = useState('');
+    const [workOpen, setWorkOpen] = useState(false);
+    const [mobileWorkExpanded, setMobileWorkExpanded] = useState(false);
+    const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
     const navRef = useRef<HTMLDivElement>(null);
+
+    const openWork = () => {
+        if (closeTimer.current) clearTimeout(closeTimer.current);
+        setWorkOpen(true);
+    };
+    const scheduleCloseWork = () => {
+        if (closeTimer.current) clearTimeout(closeTimer.current);
+        closeTimer.current = setTimeout(() => setWorkOpen(false), 120);
+    };
 
     if (pathname?.startsWith('/kingfisher')) return null;
 
@@ -94,19 +117,55 @@ export default function Navigation() {
 
                     {/* Desktop links */}
                     <div className="nav-desktop hidden md:flex items-center gap-7">
-                        {navLinks.map((link) => (
-                            <a
-                                key={link.name}
-                                href={link.href}
-                                onClick={(e) => scrollToSection(e, link.href)}
-                                className={`nav-link relative text-sm font-medium transition-colors duration-200 after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:bg-accent-primary after:transition-[width] after:duration-200 after:ease-out ${activeSection === link.href.substring(1)
-                                    ? 'nav-link-active text-accent-primary after:w-full'
-                                    : 'text-text-secondary hover:text-text-primary after:w-0 hover:after:w-full'
-                                    }`}
-                            >
-                                {link.name}
-                            </a>
-                        ))}
+                        {navLinks.map((link) => {
+                            const isActive = activeSection === link.href.substring(1);
+                            const baseLinkClass = `nav-link relative text-sm font-medium transition-colors duration-200 after:absolute after:bottom-[-3px] after:left-0 after:h-[1.5px] after:bg-accent-primary after:transition-[width] after:duration-200 after:ease-out ${isActive
+                                ? 'nav-link-active text-accent-primary after:w-full'
+                                : 'text-text-secondary hover:text-text-primary after:w-0 hover:after:w-full'
+                                }`;
+
+                            if (link.name === 'Work') {
+                                return (
+                                    <div
+                                        key={link.name}
+                                        className="relative"
+                                        onMouseEnter={openWork}
+                                        onMouseLeave={scheduleCloseWork}
+                                    >
+                                        <a
+                                            href={link.href}
+                                            onClick={(e) => scrollToSection(e, link.href)}
+                                            className={`${baseLinkClass} inline-flex items-center gap-1`}
+                                            aria-haspopup="menu"
+                                            aria-expanded={workOpen}
+                                        >
+                                            {link.name}
+                                            <ChevronDown
+                                                size={14}
+                                                className={`transition-transform duration-200 ${workOpen ? 'rotate-180' : ''}`}
+                                            />
+                                        </a>
+                                        <WorkDropdown
+                                            open={workOpen}
+                                            onClose={() => setWorkOpen(false)}
+                                            onMouseEnter={openWork}
+                                            onMouseLeave={scheduleCloseWork}
+                                        />
+                                    </div>
+                                );
+                            }
+
+                            return (
+                                <a
+                                    key={link.name}
+                                    href={link.href}
+                                    onClick={(e) => scrollToSection(e, link.href)}
+                                    className={baseLinkClass}
+                                >
+                                    {link.name}
+                                </a>
+                            );
+                        })}
                         <ThemePreviewToggle />
                     </div>
 
@@ -135,26 +194,101 @@ export default function Navigation() {
                             className="nav-mobile-drawer md:hidden overflow-hidden rounded-b-2xl border-t border-white/[0.07]"
                         >
                             <div className="nav-mobile-list px-4 pt-2 pb-5 space-y-1">
-                                {navLinks.map((link) => (
-                                    <a
-                                        key={link.name}
-                                        href={link.href}
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            setIsOpen(false);
-                                            setTimeout(() => {
-                                                const el = document.querySelector(link.href);
-                                                if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
-                                            }, 300);
-                                        }}
-                                        className={`nav-mobile-link block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${activeSection === link.href.substring(1)
-                                            ? 'nav-mobile-link-active text-accent-primary bg-bg-secondary/60'
-                                            : 'text-text-secondary hover:text-text-primary hover:bg-bg-secondary/40'
-                                            }`}
-                                    >
-                                        {link.name}
-                                    </a>
-                                ))}
+                                {navLinks.map((link) => {
+                                    const isActive = activeSection === link.href.substring(1);
+                                    const baseClass = `nav-mobile-link block px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${isActive
+                                        ? 'nav-mobile-link-active text-accent-primary bg-bg-secondary/60'
+                                        : 'text-text-secondary hover:text-text-primary hover:bg-bg-secondary/40'
+                                        }`;
+
+                                    if (link.name === 'Work') {
+                                        const featured = FEATURED_IDS
+                                            .map((id) => cases.find((c) => c.id === id))
+                                            .filter(Boolean) as typeof cases;
+                                        return (
+                                            <div key={link.name}>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setMobileWorkExpanded((v) => !v)}
+                                                    className={`${baseClass} w-full flex items-center justify-between`}
+                                                    aria-expanded={mobileWorkExpanded}
+                                                >
+                                                    {link.name}
+                                                    <ChevronDown
+                                                        size={16}
+                                                        className={`transition-transform duration-200 ${mobileWorkExpanded ? 'rotate-180' : ''}`}
+                                                    />
+                                                </button>
+                                                <AnimatePresence initial={false}>
+                                                    {mobileWorkExpanded && (
+                                                        <motion.div
+                                                            key="mobile-work-sub"
+                                                            initial={{ opacity: 0, height: 0 }}
+                                                            animate={{ opacity: 1, height: 'auto' }}
+                                                            exit={{ opacity: 0, height: 0 }}
+                                                            transition={{ duration: 0.2, ease: 'easeInOut' }}
+                                                            className="overflow-hidden"
+                                                        >
+                                                            <div className="pl-3 pr-1 py-1 space-y-0.5">
+                                                                {featured.map((c) => (
+                                                                    <button
+                                                                        key={c.id}
+                                                                        type="button"
+                                                                        onClick={() => {
+                                                                            setIsOpen(false);
+                                                                            setMobileWorkExpanded(false);
+                                                                            const work = document.getElementById('work');
+                                                                            if (work) window.scrollTo({ top: work.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
+                                                                            setTimeout(() => {
+                                                                                window.dispatchEvent(new CustomEvent('featured:open', { detail: { id: c.id } }));
+                                                                            }, 350);
+                                                                        }}
+                                                                        className="w-full text-left block px-3 py-2 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-bg-secondary/40 transition-colors"
+                                                                    >
+                                                                        {c.title}
+                                                                    </button>
+                                                                ))}
+                                                                <a
+                                                                    href="#work"
+                                                                    onClick={(e) => {
+                                                                        e.preventDefault();
+                                                                        setIsOpen(false);
+                                                                        setMobileWorkExpanded(false);
+                                                                        setTimeout(() => {
+                                                                            const work = document.getElementById('work');
+                                                                            if (work) window.scrollTo({ top: work.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
+                                                                        }, 300);
+                                                                    }}
+                                                                    className="block px-3 py-2 rounded-lg text-sm font-medium text-accent-primary hover:bg-bg-secondary/40 transition-colors"
+                                                                >
+                                                                    View all {cases.length}+ projects →
+                                                                </a>
+                                                            </div>
+                                                        </motion.div>
+                                                    )}
+                                                </AnimatePresence>
+                                            </div>
+                                        );
+                                    }
+
+                                    return (
+                                        <a
+                                            key={link.name}
+                                            href={link.href}
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                setIsOpen(false);
+                                                setTimeout(() => {
+                                                    const el = document.querySelector(link.href);
+                                                    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
+                                                }, 300);
+                                            }}
+                                            className={baseClass}
+                                        >
+                                            {link.name}
+                                        </a>
+                                    );
+                                })}
                             </div>
                         </motion.div>
                     )}
