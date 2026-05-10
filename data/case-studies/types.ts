@@ -56,7 +56,7 @@ export type CaseStudyBody = {
     brief: {
         situation: string;
         audience: string;
-        what_made_it_hard: string[]; // exactly 3 points; the modal renders them as a vertical numbered list
+        what_made_it_hard: string[]; // 2-3 short points; the modal renders them as a vertical numbered list
     };
     /** Honest constraint or caveat. Renders at the top of the modal under the tag pills. */
     honest_note?: string;

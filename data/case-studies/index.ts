@@ -8,6 +8,7 @@ import instantAccess from './instant-access-locksmiths';
 import laHacienda from './la-hacienda';
 import allsop from './allsop-francis';
 import saxseat from './saxseat';
+import shackle from './shackle';
 import sidechains from './sidechains';
 import akti from './akti';
 
@@ -22,6 +23,7 @@ export const cases: CaseStudy[] = [
     laHacienda,
     allsop,
     saxseat,
+    shackle,
     sidechains,
     akti,
 ];

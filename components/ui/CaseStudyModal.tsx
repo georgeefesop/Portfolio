@@ -229,16 +229,39 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
 
                         <div className="case-study-modal-mobile-scroll overflow-y-auto hud-scroll flex-1">
                             {/* Hero image */}
-                            <div className="case-study-modal-mobile-hero relative aspect-[16/10] w-full bg-bg-secondary">
-                                <ImageWithFallback
-                                    src={project.images.hero}
-                                    alt={project.title}
-                                    fill
-                                    sizes="100vw"
-                                    className="case-study-modal-mobile-hero-image object-cover"
-                                />
-                                <div className="case-study-modal-mobile-hero-gradient absolute inset-0 bg-gradient-to-t from-bg-secondary via-bg-secondary/40 to-transparent" />
-                            </div>
+                            {project.links.live ? (
+                                <a
+                                    href={project.links.live}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="case-study-modal-mobile-hero relative aspect-[16/10] w-full bg-bg-secondary block"
+                                    aria-label={`View ${project.title} live`}
+                                >
+                                    <ImageWithFallback
+                                        src={project.images.hero}
+                                        alt={project.title}
+                                        fill
+                                        sizes="100vw"
+                                        className="case-study-modal-mobile-hero-image object-cover"
+                                    />
+                                    <div className="case-study-modal-mobile-hero-gradient absolute inset-0 bg-gradient-to-t from-bg-secondary via-bg-secondary/40 to-transparent" />
+                                    <span className="absolute top-3 right-3 px-2 py-1 text-[10px] font-mono uppercase tracking-[0.18em] bg-bg-tertiary/80 backdrop-blur-sm border border-border-subtle text-text-muted rounded-sm flex items-center gap-1">
+                                        <span>Visit live</span>
+                                        <span aria-hidden>↗</span>
+                                    </span>
+                                </a>
+                            ) : (
+                                <div className="case-study-modal-mobile-hero relative aspect-[16/10] w-full bg-bg-secondary">
+                                    <ImageWithFallback
+                                        src={project.images.hero}
+                                        alt={project.title}
+                                        fill
+                                        sizes="100vw"
+                                        className="case-study-modal-mobile-hero-image object-cover"
+                                    />
+                                    <div className="case-study-modal-mobile-hero-gradient absolute inset-0 bg-gradient-to-t from-bg-secondary via-bg-secondary/40 to-transparent" />
+                                </div>
+                            )}
 
                             {/* Title block */}
                             <div className="case-study-modal-mobile-title-block px-7 -mt-10 pb-5 relative z-10">
@@ -661,14 +684,35 @@ function BodyIntro({
                         {!showTabs && links.length > 0 && <LinkRow links={links} />}
                     </div>
                 </div>
-                <div className="body-intro-hero relative w-full rounded-sm overflow-hidden bg-bg-tertiary border border-border-subtle order-1 md:order-2 self-start">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                        src={project.images.hero}
-                        alt={project.title}
-                        className="body-intro-hero-image block w-full h-auto"
-                    />
-                </div>
+                {project.links.live ? (
+                    <a
+                        href={project.links.live}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="body-intro-hero relative w-full rounded-sm overflow-hidden bg-bg-tertiary border border-border-subtle order-1 md:order-2 self-start group block hover:opacity-95 transition-opacity"
+                        aria-label={`View ${project.title} live`}
+                    >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                            src={project.images.hero}
+                            alt={project.title}
+                            className="body-intro-hero-image block w-full h-auto"
+                        />
+                        <span className="absolute top-2 right-2 px-2 py-1 text-[10px] font-mono uppercase tracking-[0.18em] bg-bg-tertiary/80 backdrop-blur-sm border border-border-subtle text-text-muted rounded-sm flex items-center gap-1 opacity-60 group-hover:opacity-100 transition-opacity">
+                            <span>Visit live</span>
+                            <span aria-hidden>↗</span>
+                        </span>
+                    </a>
+                ) : (
+                    <div className="body-intro-hero relative w-full rounded-sm overflow-hidden bg-bg-tertiary border border-border-subtle order-1 md:order-2 self-start">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                            src={project.images.hero}
+                            alt={project.title}
+                            className="body-intro-hero-image block w-full h-auto"
+                        />
+                    </div>
+                )}
             </div>
             {showTabs && builds && (
                 <div className="body-intro-tabs-wrap mt-6 pt-6 border-t border-border-subtle">

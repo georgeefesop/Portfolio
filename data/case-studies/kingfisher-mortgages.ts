@@ -3,7 +3,7 @@ import type { CaseStudy } from './types';
 const kingfisher: CaseStudy = {
     id: 'kingfisher-mortgages',
     title: 'Kingfisher Mortgages',
-    subtitle: 'A specialist UK mortgage broker built twice. Once on WordPress + Elementor for an editor-friendly client team, then rebuilt on Next.js + Sanity headless to demonstrate the same brand on a modern stack. Same visual system, same copy, two different ways to ship it.',
+    subtitle: 'A specialist UK mortgage broker, built twice. Same brand and copy on WordPress + Elementor and Next.js + Sanity, so the choice between editor autonomy and headless performance is visible, not theoretical.',
     role: 'Brand, design, build (WordPress and Next.js)',
     period: '2025',
     tags: ['WordPress', 'Elementor', 'Next.js', 'Sanity', 'Headless CMS', 'Brand', 'Schema / AEO', 'Financial services'],
@@ -16,21 +16,22 @@ const kingfisher: CaseStudy = {
             situation: 'Reposition Kingfisher as the specialist UK mortgage broker for self-employed borrowers (freelancers, contractors, limited company directors) and rebuild the site to match. The previous build leaned on comparison-site cliche: rate tables, generic CTAs, stock keys-on-doormat photography. The remit was to make the site read as considered as a wealth manager and as direct as a friend who knows which lenders actually read accounts.',
             audience: 'Self-employed borrowers between 28 and 45 who have already been turned down by their bank or stitched up by a comparison site. Most arrive sceptical, tired of explaining contractor day rates and retained profits to algorithms, and ready to leave the second the page looks like another lead funnel.',
             what_made_it_hard: [
-                'Visitors arrive after rejection, not curiosity. The first surface has to acknowledge that, not paper over it.',
+                'Visitors arrive after rejection, not curiosity. The first surface has to acknowledge that.',
+                'One homepage had to ship on two stacks without one feeling like a runner-up.',
             ],
         },
         decisions: [
             {
                 title: 'Lead with rejection, not features',
                 what: 'The hero splits one sentence across two type styles. Fraunces 380 in Ink reads "The bank said no.", italic Fraunces in Accent Deep coral reads "So we said fine." The same italic-coral motif paints the audience pain words underneath: self-employed, contractors, limited company directors. One coral pill CTA reads "Book a 15-min chat" with a sub-line: "Fifteen minutes. No application forms. No sales pressure."',
-                why: 'Self-employed visitors arrive carrying rejection, not curiosity. Naming it in the hero lets the rest of the page do its job before any product feature has to be read. Italic-coral on the visitor\'s own job titles is the tell that the site was written for them, not at them. A generic "Specialist mortgages, made simple" headline above three USP icons is what every comparison site already does, and what the audience scrolled past before they landed here.',
+                why: 'The audience arrives carrying rejection, not curiosity. Naming it in the first three seconds clears the air before any product feature has to do work. Italic-coral on the visitor\'s own job titles is the tell that the page was written for them, not at them. The generic "Specialist mortgages, made simple" headline is what every comparison site already does, and what they scrolled past before landing here.',
                 screenshot: '/images/kingfisher-mortgages/kingfisher-mortgages__s1__the-bank-said-no__desktop.png',
                 caption: 'Hero pairs Fraunces serif with italic-coral on the audience pain words, naming rejection in the first three seconds.',
             },
             {
                 title: 'Indicative number before email gate',
                 what: 'A static "What could you actually afford?" preview, italic-coral on "actually". A cream Paper 3 panel sits on the right with three labelled rows (Annual income / Deposit / Term) and an italic-coral 44px "Indicative borrowing GBP 284,000" beneath. One coral pill CTA, one disclaimer line. No sliders, no email field, no multi-step.',
-                why: 'The previous build collected three answers in an interactive calculator, then asked for an email before the number appeared. The audience has been email-trapped before. A static preview is a credibility surface, not a conversion mechanic. It shows the broker can give a realistic figure from self-employed inputs and trusts the visitor with it before asking anything in return. The CTA below is for a 15-minute chat, not a "see your full result" gate.',
+                why: 'The previous build gated the borrowing figure behind an email field, and this audience has been email-trapped before. A static preview is a credibility surface, not a conversion mechanic. It shows the broker can give a realistic figure from self-employed inputs and trusts the visitor with it before asking for anything in return. The CTA below is for a 15-minute chat, not a "see your full result" gate.',
                 screenshot: '/images/kingfisher-mortgages/kingfisher-mortgages__s3__what-could-you-actually-afford__desktop.png',
                 caption: 'Static preview shows a realistic indicative figure without an email gate or multi-step form.',
             },
@@ -49,7 +50,7 @@ const kingfisher: CaseStudy = {
                 caption: 'Case format with hard numbers in a four-column row, quote dropped to a subdued cream card below.',
             },
         ],
-        process: 'Built twice. The original is WordPress + Elementor on the free tier, deliberately, so a small client team can edit copy and ship new product pages without my hands on the file. The visual ceiling comes from CSS in a single nav-widget style block: Fraunces variable + Inter, the italic-coral em rule, cream-on-cream panels, and the offset coral shadow that ties the process band to the rest of the system. Fraunces is loaded via the v2 Google Fonts URL because v1 silently strips the variable axes the headlines rely on. Schema markup (FinancialProduct, FAQPage, BreadcrumbList) runs sitewide so AEO answers can come from Kingfisher\'s pages. The rebuild ports the same visual system to Next.js 16 (App Router, ISR, server components) with Sanity as the headless CMS. Schemas mirror the section structure (hero, marquee, problemFrame, calculator, etc) so editors fill structured fields rather than dragging blocks. One GROQ query on the page fetches every section in a single round-trip, then renders to React; sliders on the calculator run client-side; the booking modal is a real React component. Same fonts, same colour tokens, same italic-coral em rule, ported to TypeScript.',
+        process: 'WordPress + Elementor on the free tier so a small client team can ship product pages without my hands on the file. The visual ceiling lives in one CSS block: Fraunces + Inter, italic-coral em rule, cream-on-cream panels, offset coral shadow. Schema markup (FinancialProduct, FAQPage, BreadcrumbList) runs sitewide so AEO answers can come from Kingfisher\'s pages. The rebuild ports the same system to Next.js 16 with Sanity, schemas mirroring the section structure so editors fill structured fields rather than dragging blocks. One GROQ query per page, server-rendered, sliders client-side. Same fonts, tokens, italic-coral rule, in TypeScript.',
         comparison: {
             heading: 'Same brand, two stacks',
             intro: 'I shipped the same homepage on two different systems so the choice between them is visible, not theoretical. The WordPress build is what most small service businesses run; the headless build is what a team scales to once the visual ceiling and the editing workflow start fighting each other. The numbers below are real Lighthouse scores measured on production; click "View" on either card to load that build in a new tab and confirm. Headline differences: page weight drops from 7.2 MB to 860 KB, desktop performance climbs from 78 to 96, mobile performance from 56 to 67.',
@@ -83,6 +84,11 @@ const kingfisher: CaseStudy = {
         },
         outcome: {
             summary: 'A homepage that positions immediately against the audience\'s biggest pain (rejection), surfaces an indicative borrowing figure before any contact form, and ships on either of two stacks the same client could plausibly choose. WordPress + Elementor for editor autonomy on the free tier; Next.js + Sanity when performance, type safety, and a structured content model start mattering more than drag-and-drop. The case format, the calculator preview, and the FAQ ordering carry the positioning on both, rather than depending on a tagline to do it.',
+            metrics: [
+                { label: 'Headless perf', value: '96' },
+                { label: 'Page weight cut', value: '88%' },
+                { label: 'Mobile perf', value: '67' },
+            ],
         },
     },
     images: {
