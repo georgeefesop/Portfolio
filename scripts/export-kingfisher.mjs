@@ -258,6 +258,26 @@ async function main() {
     await downloadAsset(url);
   }
 
+  // Mirror Elementor webpack chunks (lazy-loaded at runtime by widget handlers,
+  // so they're invisible to the static <script src=...> crawl above).
+  const webpackRuntimePath = path.join(
+    OUTPUT_DIR,
+    'wp-content/plugins/elementor/assets/js/webpack.runtime.min.js'
+  );
+  if (fs.existsSync(webpackRuntimePath)) {
+    const runtimeJs = fs.readFileSync(webpackRuntimePath, 'utf-8');
+    const chunkNames = new Set();
+    const chunkRe = /"([a-z0-9\-]+\.[a-f0-9]+\.bundle\.min\.js)"/gi;
+    let cm;
+    while ((cm = chunkRe.exec(runtimeJs)) !== null) chunkNames.add(cm[1]);
+    if (chunkNames.size > 0) {
+      console.log(`\nMirroring ${chunkNames.size} Elementor webpack chunks...\n`);
+      for (const name of chunkNames) {
+        await downloadAsset(`${BASE_URL}/wp-content/plugins/elementor/assets/js/${name}`);
+      }
+    }
+  }
+
   // Rewrite HTML
   const htmlFinal = rewriteHtml(htmlRaw);
 
