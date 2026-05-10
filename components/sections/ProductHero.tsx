@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import HeroGrid from '@/components/ui/HeroGrid';
@@ -35,62 +36,88 @@ export default function ProductHero() {
             </motion.div>
 
             <div className="relative z-10 w-full max-w-[1500px] mx-auto px-6 pt-28 pb-32 md:pt-32 md:pb-40">
+                <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-12 xl:gap-16 items-center">
                 <div className="text-left">
-                    <motion.p
+                    <motion.div
                         custom={0}
+                        initial="hidden"
+                        animate="visible"
+                        variants={FADE_UP}
+                        className="hero-signature mb-5"
+                    >
+                        <div
+                            role="img"
+                            aria-label="George Efesopoulos"
+                            className="theme-signature h-[60px] w-full max-w-[280px]"
+                            style={{ aspectRatio: '375 / 73' }}
+                        />
+                    </motion.div>
+
+                    <motion.p
+                        custom={1}
                         initial="hidden"
                         animate="visible"
                         variants={FADE_UP}
                         className="text-[11px] md:text-xs font-mono uppercase tracking-[0.18em] text-text-dim mb-6"
                     >
-                        Product Designer + Developer · Cyprus
+                        UI / UX Product Designer &amp; Developer · Cyprus
                     </motion.p>
 
-                    <motion.h1
-                        custom={1}
+                    <motion.div
+                        custom={1.5}
                         initial="hidden"
                         animate="visible"
                         variants={FADE_UP}
-                        className="text-4xl sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold tracking-tight leading-[1.05] text-text-primary"
+                        className="hero-feature-image-mobile xl:hidden mb-8"
                     >
-                        <span className="block lg:whitespace-nowrap">
-                            Websites designed with{' '}
-                            <span
-                                className="italic font-normal text-accent-highlight"
-                                style={{ fontFamily: 'var(--font-serif)' }}
-                            >
-                                intent.
-                            </span>
-                        </span>
-                        <span className="block lg:whitespace-nowrap">
-                            Built to be{' '}
-                            <span
-                                className="italic font-normal text-accent-highlight"
-                                style={{ fontFamily: 'var(--font-serif)' }}
-                            >
-                                used.
-                            </span>
-                        </span>
-                    </motion.h1>
+                        <div className="hero-feature-image-frame relative rounded-xl overflow-hidden border border-border-subtle bg-bg-secondary shadow-xl">
+                            <Image
+                                src="/images/kingfisher/hero.png"
+                                alt="Kingfisher Mortgages homepage"
+                                width={1903}
+                                height={1123}
+                                sizes="100vw"
+                                className="w-full h-auto block"
+                                priority
+                            />
+                        </div>
+                    </motion.div>
 
-                    <motion.p
+                    <motion.h1
                         custom={2}
                         initial="hidden"
                         animate="visible"
                         variants={FADE_UP}
-                        className="mt-6 md:mt-8 text-lg md:text-xl text-text-muted leading-relaxed max-w-xl text-balance"
+                        className="text-4xl sm:text-5xl md:text-6xl lg:text-[68px] font-bold tracking-tight leading-[1.05] text-text-primary"
                     >
-                        Product UX, websites, and prototypes for founders and teams who want something they can actually use, change, and be proud to show off. End-to-end by one person.
-                    </motion.p>
+                        <span className="block lg:whitespace-nowrap">
+                            Websites with{' '}
+                            <span
+                                className="italic font-normal text-accent-highlight lg:text-[80px]"
+                                style={{ fontFamily: 'var(--font-serif)' }}
+                            >
+                                purpose.
+                            </span>
+                        </span>
+                        <span className="block lg:whitespace-nowrap">
+                            Built to work for{' '}
+                            <span
+                                className="italic font-normal text-accent-highlight lg:text-[80px]"
+                                style={{ fontFamily: 'var(--font-serif)' }}
+                            >
+                                you.
+                            </span>
+                        </span>
+                    </motion.h1>
 
                     <motion.p
                         custom={3}
                         initial="hidden"
                         animate="visible"
                         variants={FADE_UP}
-                        className="mt-6 text-sm text-text-dim max-w-lg"
+                        className="mt-6 md:mt-8 text-lg md:text-xl text-text-muted leading-relaxed max-w-xl text-balance"
                     >
-                        Previously lead designer on RealFi, Cardano&apos;s $80bn ecosystem · 12 years web design &amp; development
+                        Product UX, sites, and prototypes for founders and teams who want something they can actually use, change, and be proud to show off. End-to-end by one person.
                     </motion.p>
 
                     <motion.div
@@ -119,6 +146,36 @@ export default function ProductHero() {
                             or see selected work ↓
                         </a>
                     </motion.div>
+
+                    <motion.p
+                        custom={5}
+                        initial="hidden"
+                        animate="visible"
+                        variants={FADE_UP}
+                        className="mt-6 text-sm text-text-dim max-w-lg"
+                    >
+                        Previously lead designer on RealFi, Cardano&apos;s $80bn ecosystem · 12 years web design &amp; development
+                    </motion.p>
+                </div>
+
+                <motion.div
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.5, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                    className="hero-feature-image hidden xl:block relative w-full"
+                >
+                    <div className="hero-feature-image-frame relative rounded-xl overflow-hidden border border-border-subtle bg-bg-secondary shadow-xl">
+                        <Image
+                            src="/images/kingfisher/hero.png"
+                            alt="Kingfisher Mortgages homepage"
+                            width={1903}
+                            height={1123}
+                            sizes="(max-width: 1024px) 90vw, 720px"
+                            className="w-full h-auto block"
+                            priority
+                        />
+                    </div>
+                </motion.div>
                 </div>
             </div>
         </section>

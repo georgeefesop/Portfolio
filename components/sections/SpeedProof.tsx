@@ -106,7 +106,7 @@ export default function SpeedProof() {
                             </p>
                         </header>
 
-                        <div className="speed-proof-builds-grid grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-6 md:divide-x md:divide-border-subtle">
+                        <div className="speed-proof-builds-grid grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-6">
                             {reactBuild && <BuildCard build={reactBuild} />}
                             {webflowBuild && <BuildCard build={webflowBuild} />}
                         </div>

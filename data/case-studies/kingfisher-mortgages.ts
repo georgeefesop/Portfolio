@@ -86,8 +86,8 @@ const kingfisher: CaseStudy = {
         },
     },
     images: {
-        thumbnail: '/images/kingfisher-thumb.png',
-        hero: '/images/kingfisher-thumb.png',
+        thumbnail: '/images/kingfisher-thumb.jpg',
+        hero: '/images/kingfisher-thumb.jpg',
         gallery: {
             desktop: [
                 '/images/kingfisher-mortgages/kingfisher-mortgages__s1__the-bank-said-no__desktop.png',

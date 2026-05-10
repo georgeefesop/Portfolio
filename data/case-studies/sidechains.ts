@@ -21,7 +21,7 @@ const sidechains: CaseStudy = {
                 title: 'Bridge UX over feature parity',
                 what: 'A cross-chain bridge interface focused on making asset transfers feel deterministic and unambiguous, prioritised above any clever feature work elsewhere in the toolkit.',
                 why: 'In bridge UX, ambiguity is a wallet-drain. The first time a Solidity developer moves real funds across a chain boundary, they need every step to read as obviously safe and obviously reversible up to the point where it is not. Spending the design time on that surface, rather than on more impressive but lower-stakes features, is what makes the toolkit credible to a sceptical audience that has been burned by other bridges.',
-                screenshot: '/images/sidechains/sidechain-thumbnail.png',
+                screenshot: '/images/sidechains/sidechain-thumbnail-v2.png',
                 caption: 'Bridge interface designed for deterministic, unambiguous asset transfers.',
             },
             {
@@ -39,7 +39,7 @@ const sidechains: CaseStudy = {
     },
     links: {},
     images: {
-        thumbnail: '/images/sidechains/sidechain-thumbnail.png',
+        thumbnail: '/images/sidechains/sidechain-thumbnail-v2.png',
         hero: '/images/sidechains/hero.png',
         gallery: ['/images/sidechains/sidechain-thumbnail.png'],
     },

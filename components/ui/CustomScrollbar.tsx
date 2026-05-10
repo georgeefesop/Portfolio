@@ -29,7 +29,10 @@ export default function CustomScrollbar() {
 
         updateDimensions();
         window.addEventListener('resize', updateDimensions);
-        window.addEventListener('scroll', updateDimensions);
+
+        const ro = new ResizeObserver(updateDimensions);
+        ro.observe(document.documentElement);
+        ro.observe(document.body);
 
         // Check vibrant mode
         const checkVibrant = () => {
@@ -42,7 +45,7 @@ export default function CustomScrollbar() {
 
         return () => {
             window.removeEventListener('resize', updateDimensions);
-            window.removeEventListener('scroll', updateDimensions);
+            ro.disconnect();
             observer.disconnect();
         };
     }, []);

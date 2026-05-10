@@ -68,21 +68,32 @@ export default function Navigation() {
     }, [isOpen]);
 
     useEffect(() => {
-        const handleScroll = () => {
-            const sections = navLinks.map(link => link.href.substring(1));
-            const current = sections.find(section => {
-                const el = document.getElementById(section);
-                if (el) {
-                    const rect = el.getBoundingClientRect();
-                    return rect.top <= 300 && rect.bottom > 300;
+        const sections = navLinks
+            .map(link => document.getElementById(link.href.substring(1)))
+            .filter((el): el is HTMLElement => !!el);
+        if (sections.length === 0) return;
+
+        const visible = new Map<Element, number>();
+        const io = new IntersectionObserver(
+            (entries) => {
+                for (const entry of entries) {
+                    if (entry.isIntersecting) visible.set(entry.target, entry.intersectionRatio);
+                    else visible.delete(entry.target);
                 }
-                return false;
-            });
-            setActiveSection(current || '');
-        };
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        handleScroll();
-        return () => window.removeEventListener('scroll', handleScroll);
+                let bestId = '';
+                let bestRatio = 0;
+                for (const [el, ratio] of visible) {
+                    if (ratio > bestRatio) {
+                        bestRatio = ratio;
+                        bestId = el.id;
+                    }
+                }
+                setActiveSection(bestId);
+            },
+            { rootMargin: '-30% 0px -60% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] }
+        );
+        sections.forEach(el => io.observe(el));
+        return () => io.disconnect();
     }, []);
 
     const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {

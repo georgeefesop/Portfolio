@@ -2,12 +2,9 @@ import type { CaseStudy } from './types';
 
 import realfi from './realfi';
 import aiTools from './ai-tools';
-import stellar from './stellar';
 import ukVehicles from './uk-vehicles';
 import kingfisher from './kingfisher-mortgages';
-import olympus from './olympus-sports';
 import instantAccess from './instant-access-locksmiths';
-import forecast from './forecast';
 import laHacienda from './la-hacienda';
 import allsop from './allsop-francis';
 import saxseat from './saxseat';
@@ -22,9 +19,6 @@ export const cases: CaseStudy[] = [
     instantAccess,
     ukVehicles,
     kingfisher,
-    olympus,
-    stellar,
-    forecast,
     laHacienda,
     allsop,
     saxseat,

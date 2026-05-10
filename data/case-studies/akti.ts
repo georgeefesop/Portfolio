@@ -66,7 +66,7 @@ const akti: CaseStudy = {
                         title: 'Editorial register, not real-estate listing',
                         what: 'One photograph, one sentence, one CTA. No floor plans, no agent phone, no "starting from" chip, no spec sheet above the fold.',
                         why: 'A €150k purchase has to feel like a furniture choice, not a property listing. Samara is the obvious reference and it earned that position by treating the homepage as a magazine cover, not an inventory page. The rejected default was a real-estate hero with prices, three CTAs, and a "Get in touch" sticky bar; we cut all of it. The cost is that anyone who wants a spec sheet within four seconds bounces, which is the right cost because that visitor is not buying. Editorial register also gives the photography room to do the persuading; in this market the renders are what makes the difference, and crowding them with copy weakens the only argument the homepage actually has.',
-                        screenshot: '/images/akti/akti-hero.png',
+                        screenshot: '/images/akti/akti-hero.jpg',
                         caption: 'Hero: one photograph, one sentence, one CTA. The catalogue starts on the second scroll.',
                     },
                     {
@@ -169,11 +169,11 @@ const akti: CaseStudy = {
         },
     ],
     images: {
-        thumbnail: '/images/akti/akti-thumb-2.png',
-        hero: '/images/akti/akti-hero.png',
+        thumbnail: '/images/akti/akti-hero.jpg',
+        hero: '/images/akti/akti-hero.jpg',
         gallery: {
             desktop: [
-                '/images/akti/akti-hero.png',
+                '/images/akti/akti-hero.jpg',
                 '/images/akti/akti__s1__product-grid-four-models__desktop.png',
                 '/images/akti/akti__s2__gallery-face-on-showcase__desktop.png',
                 '/images/akti/akti__s6__configure-preview__desktop.png',

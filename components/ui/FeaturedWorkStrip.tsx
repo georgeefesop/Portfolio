@@ -21,18 +21,17 @@ const stackById: Record<string, string[]> = Object.fromEntries(
 );
 
 const ZOOM_IDS = new Set([
-    'olympus-sports',
     'la-hacienda',
     'instant-access-locksmiths',
     'saxseat',
 ]);
 
 const items: FeaturedItem[] = [
-    { id: 'kingfisher-mortgages', title: 'Kingfisher Mortgages', tag: 'WordPress · Brand', thumbnail: '/images/kingfisher-thumb.png' },
-    { id: 'akti', title: 'Aktí', tag: 'Brand · Configurator', thumbnail: '/images/akti/akti-thumb-2.png' },
-    { id: 'uk-vehicles', title: 'UK Vehicles Cyprus', tag: 'Next.js · Commerce', thumbnail: '/images/uk-vehicles/hero-4.png' },
+    { id: 'kingfisher-mortgages', title: 'Kingfisher Mortgages', tag: 'WordPress · Brand', thumbnail: '/images/kingfisher-thumb.jpg' },
+    { id: 'akti', title: 'Aktí', tag: 'Brand · Configurator', thumbnail: '/images/akti/akti-hero.jpg' },
+    { id: 'uk-vehicles', title: 'UK Vehicles Cyprus', tag: 'Next.js · Commerce', thumbnail: '/images/uk-vehicles/hero-4.jpg' },
     { id: 'ai-tools', title: 'AI User Tools', tag: 'UX · AI', thumbnail: '/images/ai-tools/AIUT-2.png' },
-    { id: 'instant-access-locksmiths', title: 'Instant Access Locksmiths', tag: 'Local SEO · Conversion', thumbnail: '/images/instant-access-locksmiths/hero-thumb.png' },
+    { id: 'instant-access-locksmiths', title: 'Instant Access Locksmiths', tag: 'Local SEO · Conversion', thumbnail: '/images/instant-access-locksmiths/hero-thumb.jpg' },
 ];
 
 function dispatchOpen(item: FeaturedItem) {

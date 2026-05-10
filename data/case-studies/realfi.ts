@@ -41,7 +41,7 @@ const realfi: CaseStudy = {
         live: 'https://realfi.co',
     },
     images: {
-        thumbnail: '/images/realfi/realfi-hero-2026-05-02.png',
+        thumbnail: '/images/realfi/realfithumb-v2.png',
         hero: '/images/realfi/hero.png',
         gallery: [
             '/images/realfi/hero.png',

@@ -28,10 +28,13 @@ const CATEGORY_LABEL: Record<string, string> = Object.fromEntries(
 
 const PILL = 'inline-block text-xs font-mono uppercase tracking-wider text-text-secondary bg-bg-tertiary/40 border border-border-medium/60 px-2.5 py-1 rounded';
 
+const ZOOM_IDS = new Set(['la-hacienda', 'saxseat']);
+
 function ThumbCard({ item, onOpen, priority }: { item: Item; onOpen: (id: string) => void; priority: boolean }) {
     const src = item.kind === 'external' ? item.thumbnail : item.images.thumbnail;
     const isVideo = item.kind === 'external' && !!item.duration;
     const stack = item.kind === 'drawer' ? item.stack ?? [] : [];
+    const isZoomed = ZOOM_IDS.has(item.id);
 
     const sharedClass =
         'group relative block w-full overflow-hidden border bg-bg-secondary transition-colors duration-300 focus:outline-none aspect-[3/2]'
@@ -110,7 +113,7 @@ function ThumbCard({ item, onOpen, priority }: { item: Item; onOpen: (id: string
             quality={90}
             priority={priority}
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            className="thumb-card-image object-cover object-top"
+            className={`thumb-card-image object-cover object-top ${isZoomed ? 'scale-110' : ''}`}
         />
     );
     if (item.kind === 'external') {
@@ -161,7 +164,6 @@ const PINNED_IDS = [
     'saxseat',
     'allsop-francis',
     'bank-of-cyprus',
-    'olympus-sports',
     'la-hacienda',
 ];
 

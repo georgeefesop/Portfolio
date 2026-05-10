@@ -43,7 +43,7 @@ const ukVehicles: CaseStudy = {
         live: 'https://ukvehiclescyprus.com/en',
     },
     images: {
-        thumbnail: '/images/uk-vehicles/hero-4.png',
+        thumbnail: '/images/uk-vehicles/hero-4.jpg',
         hero: '/images/uk-vehicles/hero-3.png',
         gallery: [
             '/images/uk-vehicles/hero-3.png',

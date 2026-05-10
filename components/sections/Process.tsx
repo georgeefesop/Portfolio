@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useRef, useState, useEffect } from 'react';
-import { motion, useMotionValue, useTransform, MotionValue } from 'framer-motion';
+import { motion, MotionValue } from 'framer-motion';
 import { Lightbulb, Users, Filter, GitMerge, Rocket, BarChart3, Repeat, Layers, Search } from 'lucide-react';
 import FadeIn from '../motion/FadeIn';
+import HeroGrid from '../ui/HeroGrid';
 
 // 4 Core Steps - Personal/Founder focus
 const processSteps = [
@@ -36,13 +37,9 @@ const processSteps = [
 export default function Process() {
     return (
         <section id="how-i-work" className="process-section bg-bg-primary py-16 md:py-32 overflow-hidden relative border-b border-border-subtle select-none scroll-mt-20">
-            {/* Background Grid */}
-            <div className="process-background-grid absolute inset-0 opacity-[0.03]"
-                style={{
-                    backgroundImage: 'linear-gradient(#ffffff 1px, transparent 1px), linear-gradient(90deg, #ffffff 1px, transparent 1px)',
-                    backgroundSize: '40px 40px'
-                }}
-            />
+            <div className="process-background-grid absolute inset-0 z-0">
+                <HeroGrid />
+            </div>
 
             <div className="process-container max-w-7xl mx-auto px-4 relative z-10">
                 <FadeIn>
@@ -96,8 +93,11 @@ function InteractiveCanvas({ steps }: { steps: typeof processSteps }) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [size, setSize] = useState({ w: 0, h: 0 });
     const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-    const isTablet = typeof window !== 'undefined' && window.innerWidth >= 768 && window.innerWidth < 1024;
-    const isSmallDesktop = typeof window !== 'undefined' && window.innerWidth >= 1024 && window.innerWidth < 1280;
+    // 2x2 grid covers everything up to xl (1279). The zigzag layout below is
+    // 1100px wide and clips on container widths under ~1140, so we only switch
+    // to it once the viewport is at least 1280.
+    const isTablet = typeof window !== 'undefined' && window.innerWidth >= 768 && window.innerWidth < 1280;
+    const isSmallDesktop = typeof window !== 'undefined' && window.innerWidth >= 1280 && window.innerWidth < 1440;
 
     useEffect(() => {
         if (!containerRef.current) return;
@@ -140,32 +140,8 @@ function CanvasNodes({ steps, size, containerRef, isMobile, isTablet, isSmallDes
         });
     }, [layoutKey]); // Single stable string dependency
 
-    // Jiggle fix for line attachment
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            steps.forEach((_, i) => {
-                const prev = motionValues[i].x.get();
-                motionValues[i].x.set(prev + 0.01);
-            });
-        }, 100);
-        return () => clearTimeout(timer);
-    }, [layoutKey]); // Same stable key
-
     return (
         <>
-            <svg className="canvas-nodes-connections absolute inset-0 w-full h-full pointer-events-none overflow-visible" style={{ zIndex: 0 }}>
-                {steps.map((_, i) => {
-                    if (i === steps.length - 1 || isMobile || isTablet) return null;
-                    return (
-                        <SmartConnection
-                            key={`line-${i}`}
-                            from={motionValues[i]}
-                            to={motionValues[i + 1]}
-                        />
-                    );
-                })}
-            </svg>
-
             {steps.map((step, i) => (
                 <ProcessNode
                     key={step.id}
@@ -177,64 +153,6 @@ function CanvasNodes({ steps, size, containerRef, isMobile, isTablet, isSmallDes
             ))}
         </>
     )
-}
-
-function SmartConnection({ from, to }: { from: { x: any, y: any }, to: { x: any, y: any } }) {
-    const pathD = useTransform([from.x, from.y, to.x, to.y], ([x1, y1, x2, y2]: any[]) => {
-        const CARD_W = 260; // Increased width
-        const CARD_H_MID = 75;
-
-        const c1 = { x: x1 + CARD_W / 2, y: y1 + CARD_H_MID };
-        const c2 = { x: x2 + CARD_W / 2, y: y2 + CARD_H_MID };
-
-        const isRight = c2.x > c1.x;
-        // Check if strictly vertical stack (roughly same X, Target Below Source)
-        const isVerticalStack = Math.abs(c2.x - c1.x) < 50 && c2.y > c1.y;
-
-        let start = { x: 0, y: 0 };
-        let end = { x: 0, y: 0 };
-        let cp1 = { x: 0, y: 0 };
-        let cp2 = { x: 0, y: 0 };
-
-        if (isVerticalStack) {
-            // Mobile/Vertical: Connect Right to Right with a loop
-            start = { x: x1 + CARD_W + 5, y: y1 + CARD_H_MID };
-            end = { x: x2 + CARD_W + 5, y: y2 + CARD_H_MID };
-
-            const loopSize = 80;
-            cp1 = { x: start.x + loopSize, y: start.y };
-            cp2 = { x: end.x + loopSize, y: end.y };
-        } else {
-            // Desktop/Horizontal: Simple Right to Left
-
-            if (isRight) {
-                start = { x: x1 + CARD_W + 5, y: y1 + CARD_H_MID };
-                end = { x: x2 - 5, y: y2 + CARD_H_MID };
-            } else {
-                // Dragged backwards
-                start = { x: x1 - 5, y: y1 + CARD_H_MID };
-                end = { x: x2 + CARD_W + 5, y: y2 + CARD_H_MID };
-            }
-
-            const dist = Math.abs(end.x - start.x);
-            const controlDist = Math.max(dist * 0.5, 50);
-            cp1 = { x: isRight ? start.x + controlDist : start.x - controlDist, y: start.y };
-            cp2 = { x: isRight ? end.x - controlDist : end.x + controlDist, y: end.y };
-        }
-
-        return `M ${start.x} ${start.y} C ${cp1.x} ${cp1.y}, ${cp2.x} ${cp2.y}, ${end.x} ${end.y}`;
-    });
-
-    return (
-        <motion.path
-            d={pathD}
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="3"
-            strokeDasharray="4 4"
-            className="smart-connection-path text-accent-primary/40 transition-colors duration-500"
-        />
-    );
 }
 
 function ProcessNode({ step, index, x, y }: any) {
