@@ -9,7 +9,7 @@ const shackle: CaseStudy = {
     tags: ['UX/UI', 'B2B', 'SaaS', 'Marketing site', 'Hospitality'],
     categories: ['design'],
     body: {
-        honest_note: 'Freelance work from 2020-2021 on Shackle\'s pre-launch marketing site. The company\'s status beyond the version documented here is outside what this case claims; the design choices and the partner-credibility positioning shipped to a public site at the time.',
+        honest_note: 'Freelance work from 2020-2021 on Shackle\'s pre-launch marketing site.',
         brief: {
             situation: 'Shackle is a hotel-tech SaaS pitching a single integrated guest-facing app: keyless check-in/out, in-app food and beverage ordering, on-demand room upgrades, and PMS integration on the back end. The freelance brief was a marketing website for the pre-launch period, with one job: convince hospitality decision-makers that one integration could replace a stack of five, and seed a waiting list of qualified leads while the product itself was still being built.',
             audience: 'Hospitality industry buyers: hotel general managers, owners, and operations directors who already manage a sprawl of legacy systems (PMS, F&B ordering, housekeeping, reception software). The audience is sceptical of yet another platform pitch but receptive to one that promises to consolidate the integration mess rather than add to it.',
@@ -43,7 +43,7 @@ const shackle: CaseStudy = {
         ],
         process: 'Visual identity work first (logo, teal accent, brand voice), then marketing-site IA: hero (positioning), introduction (problem framing as integration fatigue), founder video and partners (credibility row), what-we-do (problem in plainer terms with illustrated guest scenes), the-solution (four feature pillars), Welcome to the Lobby (blog and podcast for industry-side thought leadership), and a waiting-list capture in the footer. Brand boundaries set early so the partner badges, feature illustrations and product mockups all share the same visual register. Built and shipped during 2020, with the founder running parallel content marketing through the podcast.',
         outcome: {
-            summary: 'Marketing site shipped with a working waiting-list capture, a partner-credibility row standing in for the customer logos a pre-launch SaaS does not have, a founder Vimeo above the fold, and a blog and podcast doing parallel industry credibility work. The positioning bet ("last integration, not first") anchors the site against the buyer\'s prior of integration fatigue. What happened to Shackle beyond the version documented here is outside what this case claims; the design itself shipped to a public site that ran during 2020-2021.',
+            summary: 'Marketing site shipped with a working waiting-list capture, a partner-credibility row standing in for the customer logos a pre-launch SaaS does not have, a founder Vimeo above the fold, and a blog and podcast doing parallel industry credibility work. The positioning bet ("last integration, not first") anchors the site against the buyer\'s prior of integration fatigue.',
         },
     },
     links: {},

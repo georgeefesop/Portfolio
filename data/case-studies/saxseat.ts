@@ -9,7 +9,6 @@ const saxseat: CaseStudy = {
     tags: ['UX/UI', 'E-commerce', 'Conversion', 'HotJar', 'Kickstarter'],
     categories: ['design'],
     body: {
-        honest_note: 'Five-year-old work, originally documented on Behance as a sequential image case. This version reframes it to match the rest of the portfolio; the design choices and the soft-launch loop are unchanged.',
         brief: {
             situation: 'SaxSeat is a Kickstarter-launched startup with a single niche product: a seat that supports both saxophone player and instrument while practising, the first of its kind. As the sole UX/UI designer on a limited startup budget, I owned the direction of the launch site and the responsibility for whether it converted. The brief was not "design a beautiful page," it was "turn a curious sax player into a paying customer on a single page," with every decision defended in front of management and shareholders before the build.',
             audience: 'Mostly men 45+ with a saxophone interest, going off the Facebook ad data. A second segment: women 40+ buying it as a gift for a saxophonist relative, which changed the copy register on parts of the page. Both groups had never seen a product like this before, and pre-orders meant they had to commit money before the seat existed.',

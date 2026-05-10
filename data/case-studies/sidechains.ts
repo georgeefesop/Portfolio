@@ -9,7 +9,7 @@ const sidechains: CaseStudy = {
     tags: ['Product Design', 'Dev Tools', 'Cardano', 'Bridge UX', 'Infrastructure'],
     categories: ['design'],
     body: {
-        honest_note: 'Two-year engagement at Input Output across multiple sidechain surfaces, EVM-first. I contributed to the bridge UX and the Solidity-first developer onboarding alongside a wider team of engineers, blockchain architects and product. This case credits the surfaces and decisions I owned end to end.',
+        honest_note: 'Two-year engagement at Input Output across multiple sidechain surfaces, EVM-first. I contributed to the bridge UX and the Solidity-first developer onboarding alongside a wider team of engineers, blockchain architects and product.',
         brief: {
             situation: 'Input Output\'s sidechain toolkit lets developers build custom sidechains connected to the Cardano mainnet without compromising the main chain\'s security. My piece of the work was the developer experience for the EVM sidechain: the bridge between Cardano and Ethereum that lets Solidity developers ship on Cardano using the tools they already know. The strategic prize the project bet on was the Ethereum developer pool, not the Cardano-native one. The design had to make Cardano feel native to a Solidity audience without watering down the underlying differences.',
             audience: 'Solidity developers from the Ethereum ecosystem evaluating whether they could ship on Cardano without learning Plutus or Haskell, plus Cardano-native developers extending into specialised sidechains (privacy, gaming, DeFi). Two technical audiences with different mental models on the same toolkit.',

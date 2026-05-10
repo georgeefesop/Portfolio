@@ -9,7 +9,7 @@ const realfi: CaseStudy = {
     tags: ['Product Design', 'Fintech', 'Dual journey', 'Emerging markets', 'Cardano'],
     categories: ['design'],
     body: {
-        honest_note: 'I led product design on the dual-journey surfaces below for a year; the platform itself shipped behind a much larger team of engineers, blockchain architects, compliance, and research. This case credits the decisions I owned end to end.',
+        honest_note: 'I led product design on the dual-journey surfaces below for a year. The platform itself shipped behind a much larger team of engineers, blockchain architects, compliance, and research.',
         brief: {
             situation: 'RealFi connects East African SMEs raising capital with impact-focused investors in developed markets, sitting inside Cardano\'s ecosystem at Input Output. My job was to design the product around two completely different users without watering either down: a Nairobi small-business owner applying for credit on a patchy mobile connection, and a London impact fund evaluating ESG performance alongside financial return. The starting brief assumed one polished onboarding template could serve both. The first thing I argued out was the assumption.',
             audience: 'On one side, SME owners in East Africa applying for credit on patchy mobile connections, sometimes filling regulated forms in a second language. On the other, institutional and impact-focused investors in developed markets evaluating portfolios on ESG performance alongside financial return. Both decisions are high-stakes; neither user looks anything like the other.',
