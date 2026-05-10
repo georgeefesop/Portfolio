@@ -23,6 +23,7 @@ export default function KfNav({ siteName, logoDark, navLinks }: KfNavProps) {
         right: 0,
         zIndex: 100,
         background: 'transparent',
+        padding: '0 32px',
       }}
     >
       <nav
@@ -30,7 +31,7 @@ export default function KfNav({ siteName, logoDark, navLinks }: KfNavProps) {
           maxWidth: 1200,
           margin: '0 auto',
           width: '100%',
-          padding: '20px 24px',
+          padding: '20px 0',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
