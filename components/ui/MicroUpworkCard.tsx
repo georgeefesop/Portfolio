@@ -1,6 +1,7 @@
 'use client';
 
 import { ArrowRight } from 'lucide-react';
+import CtaLink from '@/components/analytics/CtaLink';
 
 const UPWORK_URL = 'https://www.upwork.com/freelancers/~0192f6c9c9c1e1bf83';
 const UPWORK_GREEN = '#14A800';
@@ -19,7 +20,9 @@ function UpworkWordmark({ className, style }: { className?: string; style?: Reac
 
 export default function MicroUpworkCard({ className }: { className?: string }) {
     return (
-        <a
+        <CtaLink
+            destination="upwork"
+            ctaLocation="micro_upwork_card"
             href={UPWORK_URL}
             target="_blank"
             rel="noopener noreferrer"
@@ -45,6 +48,6 @@ export default function MicroUpworkCard({ className }: { className?: string }) {
                 Hire me on Upwork
                 <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" />
             </div>
-        </a>
+        </CtaLink>
     );
 }

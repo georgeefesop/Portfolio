@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import HeroGrid from '@/components/ui/HeroGrid';
+import CtaLink from '@/components/analytics/CtaLink';
 
 const UPWORK_URL = 'https://www.upwork.com/freelancers/~0192f6c9c9c1e1bf83';
 const UPWORK_GREEN = '#14A800';
@@ -127,7 +128,9 @@ export default function ProductHero() {
                         variants={FADE_UP}
                         className="mt-10 md:mt-12 flex flex-wrap items-center gap-5"
                     >
-                        <a
+                        <CtaLink
+                            destination="upwork"
+                            ctaLocation="hero"
                             href={UPWORK_URL}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -136,7 +139,7 @@ export default function ProductHero() {
                         >
                             Hire me on Upwork
                             <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
-                        </a>
+                        </CtaLink>
 
                         <a
                             href="#work"

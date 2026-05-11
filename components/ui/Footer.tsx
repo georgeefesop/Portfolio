@@ -2,14 +2,15 @@
 
 import Link from 'next/link';
 import { Linkedin, Mail, Youtube, ExternalLink, Phone } from 'lucide-react';
+import CtaLink, { type CtaDestination } from '../analytics/CtaLink';
 
-const socialLinks = [
-    { name: 'LinkedIn', href: 'https://linkedin.com/in/giorgoe', icon: Linkedin },
-    { name: 'TikTok', href: 'https://www.tiktok.com/@georgeefesop', icon: ExternalLink }, // Lucide doesn't have TikTok, utilizing generic or custom if needed
-    { name: 'YouTube', href: 'https://www.youtube.com/@georgeefesop', icon: Youtube },
-    { name: 'Behance', href: 'https://www.behance.net/giorgo', icon: ExternalLink },
-    { name: 'Email', href: 'mailto:george.efesop@gmail.com', icon: Mail },
-    { name: 'Phone', href: 'tel:+35797907137', icon: Phone },
+const socialLinks: { name: string; href: string; icon: typeof Linkedin; destination: CtaDestination }[] = [
+    { name: 'LinkedIn', href: 'https://linkedin.com/in/giorgoe', icon: Linkedin, destination: 'linkedin' },
+    { name: 'TikTok', href: 'https://www.tiktok.com/@georgeefesop', icon: ExternalLink, destination: 'tiktok' },
+    { name: 'YouTube', href: 'https://www.youtube.com/@georgeefesop', icon: Youtube, destination: 'youtube' },
+    { name: 'Behance', href: 'https://www.behance.net/giorgo', icon: ExternalLink, destination: 'behance' },
+    { name: 'Email', href: 'mailto:george.efesop@gmail.com', icon: Mail, destination: 'email' },
+    { name: 'Phone', href: 'tel:+35797907137', icon: Phone, destination: 'phone' },
 ];
 
 export default function Footer() {
@@ -69,7 +70,9 @@ export default function Footer() {
                         <ul className="footer-social-list space-y-3">
                             {socialLinks.map((link) => (
                                 <li key={link.name} className="footer-social-item">
-                                    <a
+                                    <CtaLink
+                                        destination={link.destination}
+                                        ctaLocation="footer"
                                         href={link.href}
                                         target="_blank"
                                         rel="noopener noreferrer"
@@ -77,7 +80,7 @@ export default function Footer() {
                                     >
                                         <link.icon size={18} className="footer-social-icon group-hover:scale-110 transition-transform" />
                                         {link.name}
-                                    </a>
+                                    </CtaLink>
                                 </li>
                             ))}
                         </ul>

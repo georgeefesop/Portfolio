@@ -1,4 +1,6 @@
 import FadeIn from '../motion/FadeIn';
+import CtaLink from '../analytics/CtaLink';
+import ContactViewTracker from '../analytics/ContactViewTracker';
 import { Shield, Star, Zap, Mail, MessageCircle, Phone, ArrowRight } from 'lucide-react';
 
 const UPWORK_PROFILE_URL = 'https://www.upwork.com/freelancers/~0192f6c9c9c1e1bf83';
@@ -26,6 +28,7 @@ function UpworkWordmark({ className, style }: { className?: string; style?: Reac
 export default function Contact() {
     return (
         <section id="contact" className="contact-section bg-bg-primary py-16 md:py-24 scroll-mt-20">
+            <ContactViewTracker targetId="contact" threshold={0.5} />
             <div className="contact-container max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
                 <FadeIn>
                     <div className="contact-header text-center mb-10">
@@ -94,45 +97,49 @@ export default function Contact() {
                         </div>
 
                         {/* Primary CTA */}
-                        <a
+                        <CtaLink
+                            destination="upwork"
+                            ctaLocation="contact_section"
                             href={UPWORK_PROFILE_URL}
                             target="_blank"
                             rel="noopener noreferrer"
-                            data-ph-event="cta_upwork_clicked"
                             className="contact-cta-button mt-8 w-full flex items-center justify-center gap-2 text-white font-bold py-4 rounded-lg transition-colors group bg-[#14A800] hover:bg-[#108300]"
                         >
                             Hire me on Upwork
                             <ArrowRight size={18} className="contact-cta-icon group-hover:translate-x-0.5 transition-transform" />
-                        </a>
+                        </CtaLink>
 
                         {/* Direct-contact strip */}
                         <div className="contact-direct mt-6 pt-6 border-t border-border-subtle/50 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-text-muted">
-                            <a
+                            <CtaLink
+                                destination="email"
+                                ctaLocation="contact_section"
                                 href="mailto:george.efesop@gmail.com"
-                                data-ph-event="cta_email_clicked"
                                 className="contact-direct-link flex items-center gap-2 hover:text-text-primary transition-colors"
                             >
                                 <Mail size={14} />
                                 george.efesop@gmail.com
-                            </a>
-                            <a
+                            </CtaLink>
+                            <CtaLink
+                                destination="whatsapp"
+                                ctaLocation="contact_section"
                                 href="https://wa.me/35797907137"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                data-ph-event="cta_whatsapp_clicked"
                                 className="contact-direct-link flex items-center gap-2 hover:text-text-primary transition-colors"
                             >
                                 <MessageCircle size={14} />
                                 WhatsApp
-                            </a>
-                            <a
+                            </CtaLink>
+                            <CtaLink
+                                destination="phone"
+                                ctaLocation="contact_section"
                                 href="tel:+35797907137"
-                                data-ph-event="cta_phone_clicked"
                                 className="contact-direct-link flex items-center gap-2 hover:text-text-primary transition-colors whitespace-nowrap"
                             >
                                 <Phone size={14} />
                                 +357 97 907 137
-                            </a>
+                            </CtaLink>
                         </div>
                     </div>
                 </FadeIn>
