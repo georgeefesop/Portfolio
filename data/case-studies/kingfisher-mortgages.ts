@@ -102,11 +102,6 @@ const kingfisher: CaseStudy = {
                 process: 'Brand fiction (name, voice, market positioning) before any visual direction. Visual ceiling defined in one CSS block: Fraunces variable + Inter, italic-coral em rule, cream-on-cream panels, offset coral shadow. Then built via Elementor MCP: pages loaded as JSON, sections defined as widget trees, edits applied as batch transactions with computed-style verification on the rendered output. Fraunces loaded via the v2 Google Fonts URL because v1 silently strips the variable axes the headlines rely on. Schema markup (FinancialProduct, FAQPage, BreadcrumbList) runs sitewide so AEO answers can come from Kingfisher\'s pages.',
                 outcome: {
                     summary: 'A homepage that positions immediately against the audience\'s biggest pain (rejection), surfaces an indicative borrowing figure before any contact form, and ships on a stack a small client team can edit without me in the loop. Built end-to-end via Elementor MCP on the free Elementor tier, with no Pro plugins or third-party builder bridges. Proof that AI-driven page building works at production fidelity on a real visual builder.',
-                    metrics: [
-                        { value: '78', label: 'Desktop perf' },
-                        { value: '93', label: 'Accessibility' },
-                        { value: '96', label: 'Best practices' },
-                    ],
                 },
             },
         },
@@ -154,11 +149,6 @@ const kingfisher: CaseStudy = {
                 process: 'The rebuild ports the WordPress visual system to Next.js 16 (App Router, ISR, server components) with Sanity as the headless CMS. Schemas mirror the section structure (hero, marquee, problemFrame, calculator, caseStudy, faq) so editors fill structured fields rather than dragging blocks. One GROQ query on the page fetches every section in a single round-trip, then renders to React; sliders on the calculator run client-side; the booking modal is a real React component. Same fonts, same colour tokens, same italic-coral rule, ported to TypeScript.',
                 outcome: {
                     summary: 'A headless rebuild that lands the same homepage at 96 desktop Lighthouse performance (vs 78 on the WordPress build), with page weight dropping from 7.2 MB to 860 KB and DOM nodes from 729 to 430. The visual system survives the port intact; the editing workflow changes shape entirely from drag-and-drop to structured-content. Whether that trade is worth it depends on whether the client team prefers editor autonomy or developer-shipped quality; the comparison block above makes that choice visible rather than theoretical.',
-                    metrics: [
-                        { value: '96', label: 'Desktop perf' },
-                        { value: '100', label: 'Best practices' },
-                        { value: '100', label: 'SEO' },
-                    ],
                 },
             },
         },

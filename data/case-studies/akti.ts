@@ -109,11 +109,6 @@ const akti: CaseStudy = {
                 process: 'Started with a Samara teardown, then sketched the IA on paper before any code. Brand fiction (name, voice, market positioning, pricing) before any visual direction. Generated around 60 product renders via Nano Banana Pro, with a locked "architectural DNA" prompt block reused across every shot so the catalogue reads as one product. Static HTML prototype first to lock the design, then ported to Vite + React 18 for the production build. Lead form wired to a Vercel serverless function with Resend and an optional Attio CRM sync, both env-gated. Image pipeline runs PNG originals through JPG q85 locally and WebP for deploy, taking the shipped payload from 402 MB to 6.9 MB. Hosted at efesop.com/akti via a Next.js rewrite from the parent portfolio.',
                 outcome: {
                     summary: 'Live at efesop.com/akti as a working two-page site with a real lead capture path, a simulated reserve flow, and GA4 funnel events ready to read. The brand reads as a single product across photography, copy and pacing, rather than a prefab listing site, which was the bar set in the brief. Lead capture, CRM sync and email confirmation are wired but dormant; flipping them on is an env-var change, not a build.',
-                    metrics: [
-                        { value: '99', label: 'Desktop perf' },
-                        { value: '100', label: 'SEO' },
-                        { value: '88', label: 'Mobile perf' },
-                    ],
                 },
             },
         },
@@ -169,11 +164,6 @@ const akti: CaseStudy = {
                 process: 'The hardest part of the port was not the build, it was the editorial triage of which interactions to reproduce in Webflow vs which to leave in the React app. The original is interaction-heavy (Framer Motion, drag-momentum gallery, custom lightbox, real-time-pricing configurator) and a 1:1 visual port does not mean a 1:1 behavioural port, especially when the brief is a maintainable site for a non-technical team. Modern coding tools accelerated the structural work; every "should we keep this interaction" call was a design judgment. The decisions documented above are the artefacts of that triage. Variables-bound design tokens, CMS-backed posts and editable section copy in Designer mean the marketing team can run it without me in the loop.',
                 outcome: {
                     summary: '13 sections, 3 CMS posts and 1 collection page template shipped to a live *.webflow.io preview. The marketing team can re-skin the entire site from one Variables panel, publish posts from the CMS, and edit any section copy directly in Designer. The original React app stays live alongside it as the configurator host: two builds, one brand, two sources of truth for two parts of the funnel. Editorial in Webflow, conversion in React.',
-                    metrics: [
-                        { value: '97', label: 'Desktop perf' },
-                        { value: '100', label: 'Best practices' },
-                        { value: '79', label: 'Mobile perf' },
-                    ],
                 },
             },
         },
