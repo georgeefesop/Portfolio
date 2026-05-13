@@ -17,7 +17,7 @@
 
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
-import { agoraStripe, AGORA_PRICES, type AgoraTier } from "@/lib/agora/stripe";
+import { getAgoraStripe, AGORA_PRICES, type AgoraTier } from "@/lib/agora/stripe";
 import {
   findLeadByEmail,
   insertLead,
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
 
   let event: Stripe.Event;
   try {
-    event = agoraStripe.webhooks.constructEvent(rawBody, signature, webhookSecret);
+    event = getAgoraStripe().webhooks.constructEvent(rawBody, signature, webhookSecret);
   } catch (err) {
     const msg = err instanceof Error ? err.message : "unknown";
     console.error("[agora/stripe-webhook] signature verification failed", msg);
@@ -186,7 +186,7 @@ async function handleSubscriptionCanceled(sub: Stripe.Subscription) {
   if (!customer) return;
 
   // Retrieve customer's email to find the lead.
-  const customerObj = await agoraStripe.customers.retrieve(customer);
+  const customerObj = await getAgoraStripe().customers.retrieve(customer);
   if (customerObj.deleted) return;
   const email = customerObj.email ?? null;
   if (!email) return;
@@ -243,7 +243,7 @@ async function resolveTierFromSession(
   session: Stripe.Checkout.Session
 ): Promise<AgoraTier | null> {
   // Walk the line items, match the first price ID we recognise.
-  const lineItems = await agoraStripe.checkout.sessions.listLineItems(session.id, {
+  const lineItems = await getAgoraStripe().checkout.sessions.listLineItems(session.id, {
     limit: 5,
   });
   for (const item of lineItems.data) {

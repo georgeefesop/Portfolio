@@ -13,20 +13,21 @@
 import "server-only";
 import Stripe from "stripe";
 
-const secretKey = process.env.STRIPE_AGORA_SECRET_KEY;
-if (!secretKey) {
-  throw new Error("STRIPE_AGORA_SECRET_KEY is not set");
-}
+let cached: Stripe | null = null;
 
-export const agoraStripe = new Stripe(secretKey, {
-  // Pin the API version so behavior is stable across SDK upgrades.
-  // Bump deliberately when we want new Stripe features.
-  apiVersion: "2026-04-22.dahlia",
-  appInfo: {
-    name: "agora-kitchens",
-    version: "0.1.0",
-  },
-});
+export function getAgoraStripe(): Stripe {
+  if (cached) return cached;
+  const secretKey = process.env.STRIPE_AGORA_SECRET_KEY;
+  if (!secretKey) throw new Error("STRIPE_AGORA_SECRET_KEY is not set");
+  cached = new Stripe(secretKey, {
+    apiVersion: "2026-04-22.dahlia",
+    appInfo: {
+      name: "agora-kitchens",
+      version: "0.1.0",
+    },
+  });
+  return cached;
+}
 
 /** Test-mode price IDs. Update from stripe-config.live.json once we go live. */
 export const AGORA_PRICES = {
