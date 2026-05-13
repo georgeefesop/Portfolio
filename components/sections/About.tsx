@@ -12,10 +12,10 @@ export default function About() {
                         <div className="about-v2-content lg:col-span-7 order-2 lg:order-1">
                             <h2 className="about-v2-heading font-serif text-h1 leading-[0.95] tracking-tight mb-8 text-text-primary">
                                 Big-tech{' '}
-                                <span className="italic font-normal text-accent-highlight">rigor.</span>
+                                <span className="italic font-normal text-accent-primary">rigor.</span>
                                 <br />
                                 Small-biz{' '}
-                                <span className="italic font-normal text-accent-highlight">focus.</span>
+                                <span className="italic font-normal text-accent-primary">focus.</span>
                             </h2>
                             <div className="about-v2-body space-y-6 text-base md:text-lg text-text-secondary leading-relaxed max-w-2xl">
                                 <p>

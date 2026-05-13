@@ -8,43 +8,46 @@ const shackle: CaseStudy = {
     period: '2020-2021',
     tags: ['UX/UI', 'B2B', 'SaaS', 'Marketing site', 'Hospitality'],
     categories: ['design'],
-    body: {
-        honest_note: 'Freelance work from 2020-2021 on Shackle\'s pre-launch marketing site.',
-        brief: {
-            situation: 'Shackle is a hotel-tech SaaS pitching a single integrated guest-facing app: keyless check-in/out, in-app food and beverage ordering, on-demand room upgrades, and PMS integration on the back end. The freelance brief was a marketing website for the pre-launch period, with one job: convince hospitality decision-makers that one integration could replace a stack of five, and seed a waiting list of qualified leads while the product itself was still being built.',
-            audience: 'Hospitality industry buyers: hotel general managers, owners, and operations directors who already manage a sprawl of legacy systems (PMS, F&B ordering, housekeeping, reception software). The audience is sceptical of yet another platform pitch but receptive to one that promises to consolidate the integration mess rather than add to it.',
-            what_made_it_hard: [
-                'Pre-launch B2B SaaS sites have to look credible without a customer base to point to.',
-                'Hotel buyers are sceptical of platform promises after years of integration sprawl; the page had to position Shackle as relief from that fatigue, not another addition to it.',
-            ],
-        },
-        decisions: [
+    visual: {
+        situation: 'Pre-launch hotel-tech SaaS. One integration replacing five: keyless check-in/out, in-app F&B ordering, room upgrades, and PMS sync. Brief was a marketing site with one job: convince hospitality decision-makers and seed a waiting list before the product shipped.',
+        audience: 'Hotel GMs, owners, and operations directors managing a sprawl of legacy systems. Sceptical of another platform pitch, receptive to one that promises to consolidate the mess rather than add to it.',
+        what_made_it_hard: 'Pre-launch B2B SaaS has no customer logos to point to, and hotel buyers carry a prior of integration fatigue - the page had to position Shackle as relief from that fatigue, not another addition to it.',
+        honest_note: 'Freelance work from 2020-2021. The site is no longer live.',
+        process: 'Visual identity first (logo, teal accent, brand voice), then IA: hero, introduction, founder video and partners, what-we-do, the solution, Welcome to the Lobby blog and podcast, waiting-list capture in the footer.',
+        outcome: 'Marketing site shipped with a working waiting-list capture, partner-credibility row standing in for customer logos, founder Vimeo above the fold, and a blog and podcast doing parallel industry credibility work.',
+        links: [],
+        gallery: [
             {
-                title: 'Partner credibility instead of customer logos',
-                what: 'Oracle Gold Partner badge, Park Regis hotel logo, London & Partners business growth programme, and Local Enterprise Office shown prominently on the page, alongside a founder Vimeo video. No customer logos because there were none yet.',
-                why: 'B2B SaaS marketing sites typically lean on a customer logo row for trust. A pre-launch product has no such row, so the partner-and-accreditation set has to do that work instead. Oracle Gold Partner specifically anchors the technical credibility (PMS integration claims become believable when Oracle has signed off on the technology partnership), the hotel partner gives industry credibility, and the public-sector growth programme gives institutional credibility. Three different kinds of trust signal stacked, none of which require a customer base.',
-                screenshot: '/images/shackle/03.jpg',
-                caption: 'Founder Vimeo + partner row. Oracle Gold, Park Regis, London & Partners, Local Enterprise Office doing the work a customer logo row would normally do.',
+                image: '/images/shackle/02.jpg',
+                title: 'The last integration your hotel will ever need.',
+                description: 'Lead positioning line inverting the buyer\'s prior of integration fatigue, paired with four-pillar icons: keyless check-in, F&B ordering, room upgrades, PMS integration.',
             },
             {
-                title: 'Position as the last integration, not another one',
-                what: '"Shackle is the last integration your hotel will ever need" as the lead positioning line, paired with a four-pillar feature row showing what one integration unlocks: keyless check-in/out, in-app F&B, room upgrades, and seamless integration to existing systems.',
-                why: 'A hotel buyer\'s prior, after years of platform-stack fatigue, is "another thing to integrate." Inverting that frame in the lead headline is the whole positioning bet of the site: Shackle as relief from integration sprawl rather than an addition to it. The four-pillar grid does the consolidation case visually: one app replacing what the buyer currently runs across multiple vendor relationships. Without this frame, the page reads as Yet Another Hotel SaaS; with it, the page reads as a category answer.',
-                screenshot: '/images/shackle/02.jpg',
-                caption: '"The last integration your hotel will ever need" + four-pillar feature row, doing the consolidation case visually.',
+                image: '/images/shackle/03.jpg',
+                title: 'Founder video + partner row in place of customer logos.',
+                description: 'Oracle Gold Partner, Park Regis, London & Partners, Local Enterprise Office stacking three kinds of trust (technical, industry, institutional) without a single customer reference.',
             },
             {
-                title: 'Industry content marketing as parallel credibility',
-                what: 'A "Welcome to the Lobby" blog and podcast section with hospitality industry guests (Robin Sheppard, Robert Richardson FIH, Nick Naunov, James Lemon) and a topical NHS gratitude post during COVID. Visible thought leadership baked into the marketing site, not parked on a separate domain.',
-                why: 'Pre-launch SaaS founders are unknown by definition, but their guests and conversations can borrow industry credibility. Having a published podcast with FIH-credentialled hospitality figures inside the site means a sceptical hotel GM scrolling the page sees Shackle\'s leadership inside the industry conversation, not pitching to it from outside. The COVID NHS post is timely-correct: hospitality was hammered by lockdown, and a small public gesture from a hotel-tech company reads as in-the-room rather than tone-deaf.',
-                screenshot: '/images/shackle/06.png',
-                caption: '"Welcome to the Lobby" blog and podcast grid. Industry guests doing the credibility work pre-launch SaaS founders cannot do alone.',
+                image: '/images/shackle/04.jpg',
+                title: 'Guest satisfaction framed as the product argument.',
+                description: '"We increase guest satisfaction through technology" above illustrated airport scenes, then an in-app F&B mockup showing room service ordered from a phone.',
+            },
+            {
+                image: '/images/shackle/05.jpg',
+                title: 'Four pillars, one app.',
+                description: 'The Solution section: automated check-in/out, revenue generation, data analytics, and F&B laid around a centred product screenshot - consolidation made visual.',
+            },
+            {
+                image: '/images/shackle/06.png',
+                title: 'Welcome to the Lobby: industry guests doing the credibility work.',
+                description: 'Blog and podcast grid with FIH-credentialled hospitality figures (Robin Sheppard, Robert Richardson FIH) inside the site, not parked on a separate domain.',
+            },
+            {
+                image: '/images/shackle/07.jpg',
+                title: 'Waiting-list capture capturing qualified leads pre-launch.',
+                description: 'Name, email, company, job title form on a dark panel. Company and job title fields qualify the lead at point of sign-up, not at first sales call.',
             },
         ],
-        process: 'Visual identity work first (logo, teal accent, brand voice), then marketing-site IA: hero (positioning), introduction (problem framing as integration fatigue), founder video and partners (credibility row), what-we-do (problem in plainer terms with illustrated guest scenes), the-solution (four feature pillars), Welcome to the Lobby (blog and podcast for industry-side thought leadership), and a waiting-list capture in the footer. Brand boundaries set early so the partner badges, feature illustrations and product mockups all share the same visual register. Built and shipped during 2020, with the founder running parallel content marketing through the podcast.',
-        outcome: {
-            summary: 'Marketing site shipped with a working waiting-list capture, a partner-credibility row standing in for the customer logos a pre-launch SaaS does not have, a founder Vimeo above the fold, and a blog and podcast doing parallel industry credibility work. The positioning bet ("last integration, not first") anchors the site against the buyer\'s prior of integration fatigue.',
-        },
     },
     links: {},
     images: {

@@ -64,6 +64,18 @@ interface CaseStudyBuild {
 
 type StackComparison = NonNullable<CaseStudyBody['comparison']>;
 
+interface CaseStudyVisual {
+    situation: string;
+    audience: string;
+    what_made_it_hard: string;
+    honest_note?: string;
+    process?: string;
+    outcome?: string;
+    links: CaseStudyLink[];
+    stack?: string[];
+    gallery: Array<{ image: string; title: string; description: string }>;
+}
+
 interface CaseStudyData {
     id: string;
     title: string;
@@ -82,6 +94,7 @@ interface CaseStudyData {
     body?: CaseStudyBody;
     builds?: CaseStudyBuild[];
     comparison?: StackComparison;
+    visual?: CaseStudyVisual;
     links: {
         live?: string;
         behance?: string;
@@ -174,9 +187,13 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
     }, [project, activeBuild]);
 
     // For body-mode, the lightbox cycles through decision screenshots first,
-    // then any leftover gallery shots that weren't used inline.
+    // then any leftover gallery shots that weren't used inline. Visual-mode
+    // puts the hero image first, then every gallery item in declared order.
     const lightboxImages = useMemo(() => {
         if (!project) return [] as string[];
+        if (project.visual) {
+            return [project.images.hero, ...project.visual.gallery.map((g) => g.image)];
+        }
         if (!resolvedBody) return galleryImages;
         const decisionShots = resolvedBody.decisions.map((d) => d.screenshot);
         const seen = new Set(decisionShots);
@@ -210,6 +227,37 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                         }}
                     />
 
+                    {project.visual ? (
+                        <motion.div
+                            initial={{ clipPath: 'inset(48% 2% 48% 2% round 6px)', opacity: 0, scale: 0.97 }}
+                            animate={{ clipPath: 'inset(0% 0% 0% 0% round 6px)', opacity: 1, scale: 1 }}
+                            exit={{ clipPath: 'inset(48% 2% 48% 2% round 6px)', opacity: 0, scale: 0.98 }}
+                            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                            className="case-study-modal-visual-panel relative z-[10] w-full max-w-[1280px] max-h-[92vh] lg:max-h-[88vh] flex flex-col bg-bg-secondary border border-border-subtle rounded-md overflow-hidden shadow-[0_24px_70px_-15px_rgba(0,0,0,0.7),0_0_50px_-15px_rgba(171,123,98,0.4)]"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <button
+                                onClick={onClose}
+                                className="case-study-modal-visual-close absolute top-3 right-3 z-30 p-2 rounded-sm text-text-muted hover:text-text-primary bg-bg-tertiary/50 hover:bg-bg-tertiary/70 backdrop-blur-md border border-border-subtle transition-colors"
+                                aria-label="Close"
+                            >
+                                <X size={16} />
+                            </button>
+                            <div className="case-study-modal-visual-scroll flex-1 min-h-0 overflow-y-auto hud-scroll">
+                                <VisualIntro project={project} visual={project.visual} />
+                                {project.comparison && project.comparison.builds.length > 0 && (
+                                    <CompactComparison comparison={project.comparison} />
+                                )}
+                                <VisualGallery
+                                    heroImage={project.images.hero}
+                                    heroAlt={project.title}
+                                    items={project.visual.gallery}
+                                    onImageClick={(i) => setLightboxIndex(i)}
+                                />
+                            </div>
+                        </motion.div>
+                    ) : (
+                    <>
                     {/* MOBILE: dedicated single-column readable layout */}
                     <motion.div
                         initial={{ opacity: 0, scale: 0.97 }}
@@ -280,13 +328,14 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                 <p className="case-study-modal-mobile-subtitle text-text-muted text-base font-light leading-snug pt-3 pb-[7px] mb-4">
                                     {project.subtitle}
                                 </p>
-                                <div className="case-study-modal-mobile-tag-list flex flex-wrap items-center gap-1.5 mb-4">
-                                    {project.tags.map((tag) => (
-                                        <span key={tag} className="case-study-modal-mobile-tag bg-bg-primary px-2 py-0.5 rounded text-[12px] font-karla-ui text-text-muted border border-bg-primary">
-                                            {tag}
+                                {resolvedStack.length > 0 && (
+                                    <div className="case-study-modal-mobile-stack flex items-center gap-3 flex-wrap mb-4">
+                                        <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-text-dim">
+                                            Stack
                                         </span>
-                                    ))}
-                                </div>
+                                        <StackLogos ids={resolvedStack} size={16} showLabels />
+                                    </div>
+                                )}
                                 <div className="case-study-modal-mobile-meta-grid grid grid-cols-2 gap-3 font-mono text-xs text-text-muted pb-4 border-b border-border-subtle">
                                     <div className="case-study-modal-mobile-meta-cell">
                                         <span className="case-study-modal-mobile-meta-label block text-text-dim text-[10px] uppercase tracking-widest mb-1">Role</span>
@@ -465,13 +514,14 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                                 <p className="case-study-modal-aside-subtitle text-text-muted text-base font-light leading-snug pt-3 pb-[7px] mb-4">
                                     {project.subtitle}
                                 </p>
-                                <div className="case-study-modal-aside-tag-list flex flex-wrap items-center gap-1.5 mb-5">
-                                    {project.tags.map((tag) => (
-                                        <span key={tag} className="case-study-modal-aside-tag bg-bg-primary px-2 py-0.5 rounded text-[12px] font-karla-ui text-text-muted border border-bg-primary">
-                                            {tag}
+                                {resolvedStack.length > 0 && (
+                                    <div className="case-study-modal-aside-stack flex items-center gap-3 flex-wrap mb-5">
+                                        <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-text-dim">
+                                            Stack
                                         </span>
-                                    ))}
-                                </div>
+                                        <StackLogos ids={resolvedStack} size={16} showLabels />
+                                    </div>
+                                )}
                                 <div className="case-study-modal-aside-meta-grid grid grid-cols-2 gap-3 font-mono text-xs text-text-muted pb-4 border-b border-border-subtle">
                                     <div className="case-study-modal-aside-meta-cell">
                                         <span className="case-study-modal-aside-meta-label block text-text-dim text-[10px] uppercase tracking-widest mb-1">Role</span>
@@ -589,6 +639,8 @@ export default function CaseStudyModal({ project, onClose }: CaseStudyModalProps
                         </motion.div>
                     </div>
                     )}
+                    </>
+                    )}
 
                     <AnimatePresence>
                         {lightboxIndex !== null && project && (
@@ -670,19 +722,11 @@ function BodyIntro({
                             <StackLogos ids={stack} size={16} showLabels />
                         </div>
                     )}
-                    <div className="body-intro-tag-row flex flex-wrap items-center gap-x-3 gap-y-2.5 pt-1">
-                        <div className="body-intro-tag-list flex flex-wrap items-center gap-1.5">
-                            {project.tags.map((tag) => (
-                                <span key={tag} className="body-intro-tag bg-bg-primary px-2 py-0.5 rounded text-[12px] font-karla-ui text-text-muted border border-bg-primary">
-                                    {tag}
-                                </span>
-                            ))}
+                    {!showTabs && links.length > 0 && (
+                        <div className="body-intro-link-row pt-1">
+                            <LinkRow links={links} />
                         </div>
-                        {/* Link row sits here for legacy / single-build cases.
-                            Tabbed cases render their per-build links inside the
-                            tabs panel below so the buttons swap with the tab. */}
-                        {!showTabs && links.length > 0 && <LinkRow links={links} />}
-                    </div>
+                    )}
                 </div>
                 {project.links.live ? (
                     <a
@@ -775,23 +819,23 @@ function BuildLinkButton({ link }: { link: CaseStudyLink }) {
             href={link.href}
             target="_blank"
             rel="noopener noreferrer"
-            className="build-link-button live-site-cta group relative inline-flex items-center gap-3 px-4 py-2.5 bg-[#cbcdb7] hover:bg-[#bfc1ab] text-text-primary border-2 border-accent-primary/30 hover:border-accent-primary/55 rounded-sm transition-colors text-[11px] font-mono uppercase tracking-[0.2em] shadow-[0_1px_0_rgba(0,0,0,0.04),0_2px_8px_-2px_rgba(0,0,0,0.08)]"
+            className="build-link-button live-site-cta group relative inline-flex items-center gap-3 px-4 py-2.5 [background-color:var(--cta-bg)] [color:var(--cta-fg)] hover:brightness-110 [border-color:var(--cta-bg)] border-2 rounded-sm transition-all text-[11px] font-mono uppercase tracking-[0.2em] shadow-[0_1px_0_rgba(0,0,0,0.04),0_2px_8px_-2px_rgba(0,0,0,0.08)]"
         >
             {link.logo && !isGithub && (
-                <span className="build-link-button-logo text-text-primary inline-flex items-center justify-center" aria-hidden>
+                <span className="build-link-button-logo inline-flex items-center justify-center" aria-hidden>
                     <TechLogoMark id={link.logo} size={14} />
                 </span>
             )}
             {isGithub && (
-                <Github size={14} className="build-link-button-github text-text-primary" aria-hidden />
+                <Github size={14} className="build-link-button-github" aria-hidden />
             )}
             {!link.logo && (
-                <span className="build-link-button-dot w-1.5 h-1.5 rounded-full bg-accent-primary" aria-hidden />
+                <span className="build-link-button-dot w-1.5 h-1.5 rounded-full opacity-70 [background-color:var(--cta-fg)]" aria-hidden />
             )}
             <span className="build-link-button-label">{link.label ?? 'Open'}</span>
-            <span className="build-link-button-divider w-px h-3 bg-border-medium" aria-hidden />
-            <span className="build-link-button-domain normal-case tracking-normal text-text-muted">{domain}</span>
-            <ArrowUpRight size={14} className="build-link-button-arrow text-accent-primary transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden />
+            <span className="build-link-button-divider w-px h-3 opacity-30 [background-color:var(--cta-fg)]" aria-hidden />
+            <span className="build-link-button-domain normal-case tracking-normal opacity-70">{domain}</span>
+            <ArrowUpRight size={14} className="build-link-button-arrow opacity-90 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" aria-hidden />
         </a>
     );
 }
@@ -1478,5 +1522,214 @@ function Lightbox({
                 </div>
             </motion.div>
         </motion.div>
+    );
+}
+
+// --- Visual-led layout (image-first case studies) ---
+
+function VisualIntro({ project, visual }: { project: CaseStudyData; visual: CaseStudyVisual }) {
+    const briefCells: Array<{ label: string; value: string }> = [
+        { label: 'Situation', value: visual.situation },
+        { label: 'Audience', value: visual.audience },
+        { label: 'What made it hard', value: visual.what_made_it_hard },
+    ];
+    if (visual.honest_note) briefCells.push({ label: 'Honest note', value: visual.honest_note });
+    if (visual.process) briefCells.push({ label: 'Process', value: visual.process });
+    if (visual.outcome) briefCells.push({ label: 'Outcome', value: visual.outcome });
+    const stack = visual.stack ?? project.stack ?? [];
+
+    return (
+        <section className="visual-intro-root px-7 md:px-9 pt-7 pb-7 border-b border-border-subtle">
+            <div className="visual-intro-eyebrow flex items-center gap-2 mb-5">
+                <span className="visual-intro-eyebrow-dot relative inline-flex w-1.5 h-1.5 flex-shrink-0">
+                    <span className="absolute inset-0 rounded-full bg-accent-primary animate-ping opacity-60" />
+                    <span className="relative inline-block w-1.5 h-1.5 rounded-full bg-accent-primary" />
+                </span>
+                <span className="visual-intro-eyebrow-text text-[11px] font-mono uppercase tracking-[0.22em] text-accent-primary truncate">
+                    Case File · {project.id.toUpperCase().replace(/-/g, '_')}
+                </span>
+            </div>
+
+            <div className="visual-intro-identity grid md:grid-cols-[minmax(0,1fr)_minmax(0,360px)] gap-x-8 gap-y-6 items-start mb-7">
+                <div className="visual-intro-text-col flex flex-col gap-5 order-2 md:order-1">
+                    <div className="visual-intro-headline">
+                        <h3 className="visual-intro-title text-3xl md:text-[36px] font-fraunces-display font-medium text-text-primary tracking-tight leading-[1.1] mb-3">
+                            {project.title}
+                        </h3>
+                        <p className="visual-intro-subtitle text-text-muted text-base font-light leading-relaxed pt-1 max-w-2xl">
+                            {project.subtitle}
+                        </p>
+                    </div>
+                    <div className="visual-intro-meta-grid grid grid-cols-2 gap-x-5 gap-y-3 max-w-md">
+                        <div className="visual-intro-meta-cell">
+                            <SubLabel>Role</SubLabel>
+                            <span className="text-text-secondary text-sm mt-1.5 block">{project.role}</span>
+                        </div>
+                        <div className="visual-intro-meta-cell">
+                            <SubLabel>Period</SubLabel>
+                            <span className="text-text-secondary text-sm mt-1.5 block">{project.period}</span>
+                        </div>
+                    </div>
+                    {stack.length > 0 && (
+                        <div className="visual-intro-stack flex items-center gap-3 flex-wrap">
+                            <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-text-dim">Stack</span>
+                            <StackLogos ids={stack} size={16} showLabels />
+                        </div>
+                    )}
+                </div>
+                {project.images.hero && (
+                    <div className="visual-intro-hero relative w-full rounded-sm overflow-hidden bg-bg-tertiary border border-border-subtle order-1 md:order-2 self-start">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                            src={project.images.hero}
+                            alt={project.title}
+                            className="visual-intro-hero-image block w-full h-auto"
+                        />
+                    </div>
+                )}
+            </div>
+
+            <div className="visual-intro-brief grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-5">
+                {briefCells.map((cell) => (
+                    <div key={cell.label} className="visual-intro-brief-cell">
+                        <SubLabel>{cell.label}</SubLabel>
+                        <p className="visual-intro-brief-text text-text-secondary text-sm leading-relaxed mt-1.5">
+                            {cell.value}
+                        </p>
+                    </div>
+                ))}
+            </div>
+
+            {visual.links.length > 0 && (
+                <div className="visual-intro-link-row mt-7">
+                    <LinkRow links={visual.links} />
+                </div>
+            )}
+        </section>
+    );
+}
+
+function CompactComparison({ comparison }: { comparison: StackComparison }) {
+    if (!comparison.builds.length) return null;
+    return (
+        <section className="compact-comparison-root px-7 md:px-9 py-7 border-b border-border-subtle">
+            <div className="compact-comparison-header flex items-baseline gap-3 mb-5">
+                <span className="block h-px w-6 bg-text-dim translate-y-[-0.35em]" />
+                <span className="compact-comparison-heading font-serif italic font-normal text-text-primary text-xl leading-none">
+                    {comparison.heading || 'Comparison'}
+                </span>
+            </div>
+            <div className="compact-comparison-grid grid grid-cols-1 md:grid-cols-2 gap-4">
+                {comparison.builds.map((b, i) => {
+                    const lh = [
+                        { label: 'Performance', value: String(b.lighthouse.performance) },
+                        { label: 'Accessibility', value: String(b.lighthouse.accessibility) },
+                        { label: 'Best Practices', value: String(b.lighthouse.bestPractices) },
+                        { label: 'SEO', value: String(b.lighthouse.seo) },
+                    ];
+                    return (
+                        <div key={i} className="compact-comparison-card relative border border-border-subtle rounded-xl bg-bg-elevated overflow-hidden">
+                            {b.href && (
+                                <a
+                                    href={b.href}
+                                    target={b.href.startsWith('http') ? '_blank' : undefined}
+                                    rel={b.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                                    className="compact-comparison-card-link absolute top-3 right-3 inline-flex items-center gap-1.5 px-2.5 py-1.5 [background-color:var(--cta-bg)] [color:var(--cta-fg)] hover:brightness-110 [border-color:var(--cta-bg)] border rounded-sm font-semibold uppercase tracking-[0.08em] transition-all text-[11px] font-karla-ui z-[2]"
+                                >
+                                    View <ExternalLink size={11} />
+                                </a>
+                            )}
+                            <header className="compact-comparison-card-head px-4 pt-4 pb-3 pr-20">
+                                <h4 className="compact-comparison-card-label text-text-primary text-sm font-semibold tracking-tight">
+                                    {b.label}
+                                </h4>
+                            </header>
+                            <div className="compact-comparison-card-body px-4 py-3 bg-bg-elevated-alt/60">
+                                <MetricsCirclesPlain metrics={lh} />
+                            </div>
+                            {b.extras && b.extras.length > 0 && (
+                                <footer className="compact-comparison-card-foot px-4 py-3 border-t border-border-subtle">
+                                    <dl className="grid grid-cols-2 gap-x-3 gap-y-1.5">
+                                        {b.extras.slice(0, 4).map((e, j) => (
+                                            <div key={j} className="flex items-baseline justify-between gap-2">
+                                                <dt className="text-text-muted text-[10px] font-mono uppercase tracking-[0.14em]">
+                                                    {e.label}
+                                                </dt>
+                                                <dd className="text-text-primary text-[12px] font-medium tabular-nums">
+                                                    {e.value}
+                                                </dd>
+                                            </div>
+                                        ))}
+                                    </dl>
+                                </footer>
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+            {comparison.methodology && (
+                <p className="compact-comparison-methodology text-text-muted text-[11px] leading-relaxed mt-3 italic max-w-3xl">
+                    {comparison.methodology}
+                </p>
+            )}
+        </section>
+    );
+}
+
+function VisualGallery({
+    heroImage,
+    heroAlt,
+    items,
+    onImageClick,
+}: {
+    heroImage: string;
+    heroAlt: string;
+    items: CaseStudyVisual['gallery'];
+    onImageClick: (idx: number) => void;
+}) {
+    return (
+        <section className="visual-gallery-root px-7 md:px-9 py-8 flex flex-col gap-10">
+            <button
+                onClick={() => onImageClick(0)}
+                className="visual-gallery-hero group relative w-full rounded-sm overflow-hidden bg-bg-tertiary border border-border-subtle hover:border-accent-primary/40 transition-colors cursor-zoom-in block"
+            >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                    src={heroImage}
+                    alt={heroAlt}
+                    className="visual-gallery-hero-image block w-full h-auto group-hover:brightness-105 transition-all"
+                />
+            </button>
+            {items.map((item, i) => {
+                const idx = i + 1;
+                const num = String(i + 1).padStart(2, '0');
+                return (
+                    <article key={i} className="visual-gallery-item flex flex-col gap-3">
+                        <button
+                            onClick={() => onImageClick(idx)}
+                            className="visual-gallery-item-button group relative w-full rounded-sm overflow-hidden bg-bg-tertiary border border-border-subtle hover:border-accent-primary/40 transition-colors cursor-zoom-in block"
+                        >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img
+                                src={item.image}
+                                alt={item.title}
+                                className="visual-gallery-item-image block w-full h-auto group-hover:brightness-105 transition-all"
+                            />
+                        </button>
+                        <div className="visual-gallery-item-meta flex flex-col gap-1.5">
+                            <div className="visual-gallery-item-title-row flex items-baseline gap-2.5">
+                                <span className="visual-gallery-item-index text-[11px] font-mono text-accent-primary/70 tabular-nums">{num}</span>
+                                <h4 className="visual-gallery-item-title text-base md:text-lg font-semibold text-text-primary tracking-tight leading-snug">
+                                    {item.title}
+                                </h4>
+                            </div>
+                            <p className="visual-gallery-item-description text-text-muted text-sm leading-relaxed pl-7">
+                                {item.description}
+                            </p>
+                        </div>
+                    </article>
+                );
+            })}
+        </section>
     );
 }

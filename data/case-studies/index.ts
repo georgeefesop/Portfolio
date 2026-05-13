@@ -11,10 +11,12 @@ import saxseat from './saxseat';
 import shackle from './shackle';
 import sidechains from './sidechains';
 import akti from './akti';
+import estiaKitchens from './estia-kitchens';
 
 import { externalCases } from './external';
 
 export const cases: CaseStudy[] = [
+    estiaKitchens,
     realfi,
     aiTools,
     instantAccess,

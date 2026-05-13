@@ -15,18 +15,38 @@ const FILTER_PILLS: { id: CategoryId | 'all'; label: string }[] = [
     { id: 'design', label: 'Design' },
     { id: 'wordpress', label: 'WordPress' },
     { id: 'nextjs', label: 'Next.js' },
+    { id: 'react', label: 'React' },
+    { id: 'webflow', label: 'Webflow' },
+    { id: 'tailwind', label: 'Tailwind' },
+    { id: 'sanity', label: 'Sanity' },
     { id: 'ai-image', label: 'AI Image & Video' },
 ];
+
+const STACK_TO_CATEGORY: Record<string, CategoryId> = {
+    react: 'react',
+    webflow: 'webflow',
+    tailwindcss: 'tailwind',
+    sanity: 'sanity',
+    nextjs: 'nextjs',
+    wordpress: 'wordpress',
+};
 
 type DrawerItem = CaseStudy & { kind: 'drawer' };
 type ExternalItem = ExternalCase & { kind: 'external' };
 type Item = DrawerItem | ExternalItem;
 
-const CATEGORY_LABEL: Record<string, string> = Object.fromEntries(
-    FILTER_PILLS.filter((p) => p.id !== 'all').map((p) => [p.id, p.label])
-);
-
-const PILL = 'inline-block text-xs font-mono uppercase tracking-wider text-text-secondary bg-bg-tertiary/40 border border-border-medium/60 px-2.5 py-1 rounded';
+function getEffectiveCategories(item: Item): Set<CategoryId> {
+    const set = new Set<CategoryId>(item.categories);
+    if (item.kind === 'drawer') {
+        const stacks: string[] = [...(item.stack ?? [])];
+        item.builds?.forEach((b) => { if (b.stack) stacks.push(...b.stack); });
+        for (const s of stacks) {
+            const c = STACK_TO_CATEGORY[s];
+            if (c) set.add(c);
+        }
+    }
+    return set;
+}
 
 const ZOOM_IDS = new Set(['la-hacienda', 'saxseat']);
 
@@ -44,36 +64,6 @@ function ThumbCard({ item, onOpen, priority }: { item: Item; onOpen: (id: string
 
     const overlays = (
         <>
-            {/* Title + category pills - bottom left.
-                Title takes priority and is never truncated; if there isn't enough
-                room for the pills alongside it, the pill row fades out toward the
-                right edge of the card via a CSS mask. */}
-            <div className="thumb-card-overlay absolute bottom-0 left-0 right-0 p-3 flex flex-row items-end gap-2 pointer-events-none">
-                <span
-                    className={
-                        'thumb-card-title shrink-0 text-base font-medium tracking-[0.2px] border px-[14px] pt-1 pb-[5px] whitespace-nowrap'
-                        + ' [background-color:var(--thumb-card-title-bg)]'
-                        + ' [border-color:var(--thumb-card-title-border)]'
-                        + ' [color:var(--thumb-card-title-color)]'
-                        + ' rounded-[12px_12px_12px_3px]'
-                        + ' [box-shadow:var(--thumb-card-title-shadow)]'
-                    }
-                >
-                    {item.title}
-                </span>
-                <div
-                    className="thumb-card-tag-list flex flex-row flex-nowrap gap-1 min-w-0 flex-1 overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                    style={{
-                        maskImage: 'linear-gradient(to right, black 0%, black 60%, transparent 100%)',
-                        WebkitMaskImage: 'linear-gradient(to right, black 0%, black 60%, transparent 100%)',
-                    }}
-                >
-                    {item.categories.map((cat) => (
-                        <span key={cat} className={`thumb-card-tag ${PILL} !font-medium !tracking-[1.4px] !leading-[1.2] shrink-0`}>{CATEGORY_LABEL[cat] ?? cat}</span>
-                    ))}
-                </div>
-            </div>
-
             {/* Play button + duration badge - video tiles */}
             {isVideo && (
                 <>
@@ -95,10 +85,8 @@ function ThumbCard({ item, onOpen, priority }: { item: Item; onOpen: (id: string
                 </div>
             )}
 
-            {/* Tech-stack overlay - bottom-right, white-on-translucent. Fades
-                out on hover to give the category pill row room to breathe. */}
             {stack.length > 0 && (
-                <div className="thumb-card-stack-wrap absolute bottom-3 right-3 z-10 opacity-100 group-hover:opacity-0 transition-opacity duration-200">
+                <div className="thumb-card-stack-wrap absolute bottom-3 right-3 z-10">
                     <StackLogosOverlay ids={stack} size={13} />
                 </div>
             )}
@@ -154,6 +142,7 @@ const allItems: Item[] = [
 ];
 
 const PINNED_IDS = [
+    'estia-kitchens',
     'kingfisher-mortgages',
     'akti',
     'instant-access-locksmiths',
@@ -212,13 +201,13 @@ export default function CaseStudies() {
             const rest = allItems.filter((i) => !PINNED_IDS.includes(i.id) && !TRAILING_IDS.includes(i.id));
             return [...pinned, ...rest, ...trailing];
         }
-        const drawer = allItems.filter((i) => i.kind === 'drawer' && i.categories.includes(activeCategory));
-        const ext = allItems.filter((i) => i.kind === 'external' && i.categories.includes(activeCategory));
+        const drawer = allItems.filter((i) => i.kind === 'drawer' && getEffectiveCategories(i).has(activeCategory));
+        const ext = allItems.filter((i) => i.kind === 'external' && getEffectiveCategories(i).has(activeCategory));
         return [...drawer, ...ext];
     }, [activeCategory, shuffledAllOrderIds]);
 
     const getCount = (id: CategoryId | 'all') =>
-        id === 'all' ? allItems.length : allItems.filter((i) => i.categories.includes(id as CategoryId)).length;
+        id === 'all' ? allItems.length : allItems.filter((i) => getEffectiveCategories(i).has(id as CategoryId)).length;
 
     return (
         <section id="work" className="case-studies-section bg-bg-primary py-12 md:py-32 scroll-mt-20">
@@ -247,7 +236,7 @@ export default function CaseStudies() {
                                     aria-pressed={isActive}
                                 >
                                     {pill.label}{' '}
-                                    <span className="case-studies-filter-count opacity-40 font-normal tabular-nums text-sm">({count})</span>
+                                    <span className="case-studies-filter-count font-normal tabular-nums text-sm text-accent-primary">({count})</span>
                                 </button>
                             );
                         })}

@@ -73,10 +73,10 @@ export default function ProductHero() {
                     >
                         <div className="hero-feature-image-frame relative rounded-xl overflow-hidden border border-border-subtle bg-bg-secondary shadow-xl">
                             <Image
-                                src="/images/kingfisher/hero.png"
-                                alt="Kingfisher Mortgages homepage"
-                                width={1903}
-                                height={1123}
+                                src="/images/estia-kitchens/estia-kitchens-thumb-v4.jpg"
+                                alt="Estia Kitchens homepage"
+                                width={1200}
+                                height={745}
                                 sizes="100vw"
                                 className="w-full h-auto block"
                                 priority
@@ -94,7 +94,7 @@ export default function ProductHero() {
                         <span className="block lg:whitespace-nowrap">
                             Websites with{' '}
                             <span
-                                className="italic font-normal text-accent-highlight lg:text-[80px]"
+                                className="italic font-normal text-accent-primary lg:text-[80px]"
                                 style={{ fontFamily: 'var(--font-serif)' }}
                             >
                                 purpose.
@@ -103,7 +103,7 @@ export default function ProductHero() {
                         <span className="block lg:whitespace-nowrap">
                             Built to work for{' '}
                             <span
-                                className="italic font-normal text-accent-highlight lg:text-[80px]"
+                                className="italic font-normal text-accent-primary lg:text-[80px]"
                                 style={{ fontFamily: 'var(--font-serif)' }}
                             >
                                 you.
@@ -169,10 +169,10 @@ export default function ProductHero() {
                 >
                     <div className="hero-feature-image-frame relative rounded-xl overflow-hidden border border-border-subtle bg-bg-secondary shadow-xl">
                         <Image
-                            src="/images/kingfisher/hero.png"
-                            alt="Kingfisher Mortgages homepage"
-                            width={1903}
-                            height={1123}
+                            src="/images/estia-kitchens/estia-kitchens-thumb-v4.jpg"
+                            alt="Estia Kitchens homepage"
+                            width={1200}
+                            height={745}
                             sizes="(max-width: 1024px) 90vw, 720px"
                             className="w-full h-auto block"
                             priority

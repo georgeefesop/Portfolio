@@ -9,45 +9,50 @@ const allsop: CaseStudy = {
     tags: ['AI', 'Art Direction', 'Photography', 'Brand', 'B2B'],
     categories: ['ai-image'],
     aiBuilt: true,
-    body: {
-        brief: {
-            situation: 'Allsop & Francis distribute commercial laundry equipment into UK care homes, healthcare, schools, vet, equestrian, housing and charity sectors. Real product imagery in this niche either does not exist or looks like a stock catalogue from 2008. The brief was to art-direct and generate a custom image library covering every sector-by-service combination they sell into, without commissioning a shoot in every NHS laundry in the country.',
-            audience: 'Procurement contacts at care homes, NHS trusts, vet practices and housing providers comparing distributors. They want to see equipment that looks like it belongs in a place like theirs, not a generic catalogue render or a smiling stock model in scrubs.',
-            what_made_it_hard: [
-                'Seven target sectors by nine service lines is a matrix of scenes, not a single shoot.',
-                'B2B AI imagery defaults to "stock laundry," not "Allsop & Francis"; the brand-correctness lift is the work.',
-            ],
-        },
-        decisions: [
-            {
-                title: 'Reference plates, not loose prompts',
-                what: 'Every prompt anchored to reference plates from the client\'s real installations - colour, livery, machine make and model - so the AI rendered the brand world rather than a generic one.',
-                why: 'The default failure mode of AI image generation in a B2B niche is the slot-machine output: close-enough scenes that read as "stock laundry," not as Allsop & Francis. Reference plates from real installs force the model into the client\'s visual world: the right machine on the right wall in the right uniform. Without them, every fifth render drifts into generic and the library loses coherence.',
-                screenshot: '/images/allsop-francis/1.png',
-                caption: 'Sector-specific scene anchored to client reference plates, not a loose prompt.',
-            },
-            {
-                title: 'Treat each prompt as a brief',
-                what: 'Location, lighting, framing, brand artefacts - written into every prompt. Never "a laundry room". Brand boundaries (van livery, uniform) set from reference PDFs so even peripheral shots stayed on-brand.',
-                why: 'A prompt is just a creative brief written in plainer language. Treating it that way (location, lighting, framing, brand artefacts) is how the output graduates from "AI image" to "art direction with AI as the medium." The brand-boundary documents matter because the staff-in-a-van shots are exactly where AI default-renders would have undermined the rest of the library.',
-                screenshot: '/images/allsop-francis/3.png',
-                caption: 'Brief-led prompt with explicit framing and brand artefacts, not a generic descriptor.',
-            },
-            {
-                title: 'Generate heavy, prune light',
-                what: 'Each cell in the matrix generated dozens of variants; only the takes that survived selection went into the Sectors and Services folders. Final images cleaned in Photoshop where the AI mishandled equipment detail.',
-                why: 'AI image generation is a casting process, not a delivery process. Any single render is one of thirty plausible versions; the work is in the selection, not the prompt. Photoshop cleanup on the equipment detail is the final mile that turns a "good enough" render into something a B2B client can actually use on their site without flinching at the machine fascia.',
-                screenshot: '/images/allsop-francis/5.png',
-                caption: 'Final, retouched image - one of many variants that survived selection.',
-            },
-        ],
-        process: 'Built a sectors-by-services matrix and worked it cell by cell. Reference plates from real installations anchored every prompt; brand-boundary PDFs (livery, uniform) set the rules even for peripheral scenes. Generated heavy, kept light: the delivered library is the surviving cut, not the raw output. Final images cleaned in Photoshop where the AI mishandled equipment detail. Each prompt treated as a brief with location, lighting, framing and brand artefacts written explicitly, never the loose "a laundry room" type that produces generic output.',
-        outcome: {
-            summary: 'Custom image library delivered, mapped to every sector and service line the client sells into. The imagery reads as Allsop & Francis (not as generic AI stock) and replaces a niche where real photography would have meant booking shoots across a dozen industries the client does not control access to.',
-        },
-    },
     links: {
         live: 'https://www.allsopandfrancis.com/',
+    },
+    visual: {
+        situation: 'Allsop & Francis distribute commercial laundry equipment across UK care homes, healthcare, schools, vet, equestrian, housing and charity sectors. Real product imagery in this niche either does not exist or looks like a stock catalogue from 2008.',
+        audience: 'Procurement contacts at care homes, NHS trusts, vet practices and housing providers comparing distributors. They want to see equipment that looks like it belongs in a place like theirs, not a generic catalogue render.',
+        what_made_it_hard: 'Seven target sectors by nine service lines is a matrix of scenes, not a single shoot. B2B AI imagery defaults to "stock laundry," not "Allsop & Francis" - the brand-correctness lift is the whole job.',
+        process: 'Built a sectors-by-services matrix and worked it cell by cell. Reference plates from real installations anchored every prompt; brand-boundary PDFs (livery, uniform) set the rules even for peripheral scenes. Generated heavy, kept light: the delivered library is the surviving cut, not the raw output. Final images cleaned in Photoshop where the AI mishandled equipment detail.',
+        outcome: 'Custom image library delivered, mapped to every sector and service line the client sells into. The imagery reads as Allsop & Francis (not as generic AI stock) and replaces a niche where real photography would have meant booking shoots across a dozen industries the client does not control access to.',
+        links: [
+            { href: 'https://www.allsopandfrancis.com/', label: 'Live site' },
+        ],
+        gallery: [
+            {
+                image: '/images/allsop-francis/1.png',
+                title: 'Reference plates, not loose prompts.',
+                description: 'Every prompt anchored to client installs - colour, livery, machine make and model - so the AI rendered the brand world rather than a generic one.',
+            },
+            {
+                image: '/images/allsop-francis/2.png',
+                title: 'Sector-specific scene, care home context.',
+                description: 'The right machine on the right wall in the right uniform. Without reference anchoring, every fifth render drifts into generic.',
+            },
+            {
+                image: '/images/allsop-francis/3.png',
+                title: 'Treat each prompt as a brief.',
+                description: 'Location, lighting, framing and brand artefacts written into every prompt. Brand-boundary documents kept even peripheral shots on-brand.',
+            },
+            {
+                image: '/images/allsop-francis/4.png',
+                title: 'Healthcare sector scene.',
+                description: 'NHS-appropriate environment, correct equipment livery. The sector brief dictates the scene; the reference plates dictate the brand layer.',
+            },
+            {
+                image: '/images/allsop-francis/5.png',
+                title: 'Generate heavy, prune light.',
+                description: 'Each matrix cell produced dozens of variants; only takes that survived selection went into the library. Photoshop cleanup on equipment detail is the final mile.',
+            },
+            {
+                image: '/images/allsop-francis/6.png',
+                title: 'Final library - sector coverage complete.',
+                description: 'Delivered library covers every sector-by-service combination. Coherent across the matrix because the selection standard never moved.',
+            },
+        ],
     },
     images: {
         thumbnail: '/images/allsop-francis/2.png',

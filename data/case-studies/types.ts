@@ -4,7 +4,15 @@
 // - New entries (from case-study-generator skill) use the rich `body` block.
 // - At least one of `description` or `body` must be present.
 
-export type CategoryId = 'design' | 'wordpress' | 'nextjs' | 'ai-image';
+export type CategoryId =
+    | 'design'
+    | 'wordpress'
+    | 'nextjs'
+    | 'ai-image'
+    | 'react'
+    | 'webflow'
+    | 'tailwind'
+    | 'sanity';
 
 export type ExternalCase = {
     id: string;
@@ -82,6 +90,32 @@ export type CaseStudyBody = {
     };
 };
 
+/** Visual-led layout. Replaces body/builds for cases that want the new
+ *  image-first treatment: tight one-liner brief at the top, then the
+ *  gallery (one row per screenshot) below. When present on a CaseStudy,
+ *  the modal ignores `body` and `builds`. */
+export type CaseStudyVisualGalleryItem = {
+    image: string;
+    title: string;
+    description: string;
+};
+
+export type CaseStudyVisual = {
+    situation: string;
+    audience: string;
+    what_made_it_hard: string;
+    honest_note?: string;
+    process?: string;
+    outcome?: string;
+    /** Live-site CTAs shown under the brief one-liners. */
+    links: CaseStudyLink[];
+    /** Stack logos rendered with labels under the title block. */
+    stack?: string[];
+    /** Gallery items, rendered full-width in order. Hero image is rendered
+     *  separately above this list, so don't repeat it here. */
+    gallery: CaseStudyVisualGalleryItem[];
+};
+
 export type CaseStudyImages = {
     thumbnail: string;
     hero: string;
@@ -146,5 +180,8 @@ export type CaseStudy = {
      *  use `body.comparison` when the comparison is part of a single-body
      *  narrative (Kingfisher's WP-vs-headless walkthrough). */
     comparison?: StackComparison;
+    /** Visual-led layout. When set, takes precedence over `builds` / `body`
+     *  / `description` in the modal. */
+    visual?: CaseStudyVisual;
     images: CaseStudyImages;
 };
