@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import FadeIn from '../motion/FadeIn';
 import MetricsCircles from '../ui/MetricsCircles';
 import TechLogoMark from '../ui/TechLogoMark';
@@ -36,11 +37,6 @@ function buildToMetrics(b: Build): Array<{ label: string; value: string }> {
         { label: 'Performance', value: String(b.lighthouse.performance) },
         { label: 'SEO', value: String(b.lighthouse.seo) },
     ];
-}
-
-function openCase(id: string) {
-    if (typeof window === 'undefined') return;
-    window.dispatchEvent(new CustomEvent('featured:open', { detail: { id } }));
 }
 
 function BuildCard({ build }: { build: Build }) {
@@ -112,13 +108,12 @@ export default function SpeedProof() {
                         </div>
 
                         <div className="speed-proof-actions flex flex-wrap items-center justify-center gap-x-6 gap-y-4 mt-12 md:mt-14">
-                            <button
-                                type="button"
-                                onClick={() => openCase('akti')}
+                            <Link
+                                href="/case-studies/akti"
                                 className="speed-proof-cta-primary inline-flex items-center gap-2 px-5 py-2.5 border border-accent-primary text-accent-primary hover:bg-accent-primary hover:text-bg-primary text-xs md:text-sm font-mono uppercase tracking-[0.18em] transition-colors rounded"
                             >
                                 View case study →
-                            </button>
+                            </Link>
                             {reactBuild?.href && (
                                 <a
                                     href={reactBuild.href}

@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { cases } from '@/data/case-studies';
@@ -13,15 +14,6 @@ const FEATURED_IDS = [
     'realfi',
     'ai-tools',
 ];
-
-function openProject(id: string, onClose: () => void) {
-    onClose();
-    const work = document.getElementById('work');
-    if (work) window.scrollTo({ top: work.getBoundingClientRect().top + window.scrollY - 90, behavior: 'smooth' });
-    setTimeout(() => {
-        window.dispatchEvent(new CustomEvent('featured:open', { detail: { id } }));
-    }, 350);
-}
 
 function viewAll(e: React.MouseEvent, onClose: () => void) {
     e.preventDefault();
@@ -62,10 +54,10 @@ export default function WorkDropdown({ open, onClose, onMouseEnter, onMouseLeave
                 >
                     <div className="work-dropdown-grid grid grid-cols-2 gap-2">
                         {featured.map((c) => (
-                            <button
+                            <Link
                                 key={c.id}
-                                type="button"
-                                onClick={() => openProject(c.id, onClose)}
+                                href={`/case-studies/${c.id}`}
+                                onClick={onClose}
                                 className="work-dropdown-item group flex items-center gap-3 rounded-xl p-2 text-left transition-colors hover:bg-bg-secondary/60"
                             >
                                 <div className="work-dropdown-thumb relative h-12 w-16 shrink-0 overflow-hidden rounded-md ring-1 ring-border-subtle/50 bg-bg-secondary">
@@ -85,7 +77,7 @@ export default function WorkDropdown({ open, onClose, onMouseEnter, onMouseLeave
                                         {c.subtitle}
                                     </div>
                                 </div>
-                            </button>
+                            </Link>
                         ))}
                     </div>
 

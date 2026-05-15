@@ -242,22 +242,17 @@ export default function Navigation() {
                                                         >
                                                             <div className="pl-3 pr-1 py-1 space-y-0.5">
                                                                 {featured.map((c) => (
-                                                                    <button
+                                                                    <Link
                                                                         key={c.id}
-                                                                        type="button"
+                                                                        href={`/case-studies/${c.id}`}
                                                                         onClick={() => {
                                                                             setIsOpen(false);
                                                                             setMobileWorkExpanded(false);
-                                                                            const work = document.getElementById('work');
-                                                                            if (work) window.scrollTo({ top: work.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
-                                                                            setTimeout(() => {
-                                                                                window.dispatchEvent(new CustomEvent('featured:open', { detail: { id: c.id } }));
-                                                                            }, 350);
                                                                         }}
                                                                         className="w-full text-left block px-3 py-2 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-bg-secondary/40 transition-colors"
                                                                     >
                                                                         {c.title}
-                                                                    </button>
+                                                                    </Link>
                                                                 ))}
                                                                 <a
                                                                     href="#work"

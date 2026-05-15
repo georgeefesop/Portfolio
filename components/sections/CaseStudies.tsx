@@ -1,14 +1,16 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ExternalLink, Play } from 'lucide-react';
 import FadeIn from '../motion/FadeIn';
-import CaseStudyModal from '../ui/CaseStudyModal';
 import { StackLogosOverlay } from '../ui/TechLogoMark';
 import posthog from 'posthog-js';
 import ImageWithFallback from '@/components/ui/ImageWithFallback';
 import { cases, externalCases, type CaseStudy, type ExternalCase, type CategoryId } from '@/data/case-studies';
+
+const MotionLink = motion.create(Link);
 
 const FILTER_PILLS: { id: CategoryId | 'all'; label: string }[] = [
     { id: 'all', label: 'All' },
@@ -121,10 +123,9 @@ function ThumbCard({ item, onOpen, priority }: { item: Item; onOpen: (id: string
         );
     }
     return (
-        <motion.button
-            type="button"
+        <MotionLink
+            href={`/case-studies/${item.id}`}
             onClick={() => onOpen(item.id)}
-            aria-haspopup="dialog"
             aria-label={item.title}
             className={`thumb-card thumb-card-drawer ${sharedClass}`}
             whileHover={{ scale: 1.04 }}
@@ -132,7 +133,7 @@ function ThumbCard({ item, onOpen, priority }: { item: Item; onOpen: (id: string
         >
             {img}
             {overlays}
-        </motion.button>
+        </MotionLink>
     );
 }
 
@@ -161,7 +162,6 @@ const SHOW_MORE_THRESHOLD = 12;
 const TRAILING_IDS = ['figma-microinteractions'];
 
 export default function CaseStudies() {
-    const [activeId, setActiveId] = useState<string | null>(null);
     const [activeCategory, setActiveCategory] = useState<CategoryId | 'all'>('all');
     const [shuffledAllOrderIds, setShuffledAllOrderIds] = useState<string[] | null>(null);
     const [showAll, setShowAll] = useState(false);
@@ -175,19 +175,6 @@ export default function CaseStudies() {
         }
         setShuffledAllOrderIds([...PINNED_IDS, ...restIds, ...TRAILING_IDS]);
     }, []);
-
-    useEffect(() => {
-        const handler = (e: Event) => {
-            const id = (e as CustomEvent<{ id?: string }>).detail?.id;
-            if (!id) return;
-            setActiveCategory('all');
-            setActiveId(id);
-        };
-        window.addEventListener('featured:open', handler);
-        return () => window.removeEventListener('featured:open', handler);
-    }, []);
-
-    const activeProject = activeId ? cases.find((c) => c.id === activeId) ?? null : null;
 
     const visible = useMemo<Item[]>(() => {
         if (activeCategory === 'all') {
@@ -255,7 +242,6 @@ export default function CaseStudies() {
                                             item={item}
                                             onOpen={(id) => {
                                                 posthog.capture?.('case_study_opened', { case_id: id, kind: item.kind, category: activeCategory });
-                                                setActiveId(id);
                                             }}
                                             priority={i < 4}
                                         />
@@ -281,8 +267,6 @@ export default function CaseStudies() {
                     })()}
                 </FadeIn>
             </div>
-
-            <CaseStudyModal project={activeProject} onClose={() => setActiveId(null)} />
         </section>
     );
 }

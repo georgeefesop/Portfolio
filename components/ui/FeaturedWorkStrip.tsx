@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 import { motion, useMotionValue, useAnimationFrame } from 'framer-motion';
 import ImageWithFallback from './ImageWithFallback';
 import { StackLogosOverlay } from './TechLogoMark';
@@ -34,9 +35,6 @@ const items: FeaturedItem[] = [
     { id: 'instant-access-locksmiths', title: 'Instant Access Locksmiths', tag: 'Local SEO · Conversion', thumbnail: '/images/instant-access-locksmiths/hero-thumb.jpg' },
 ];
 
-function dispatchOpen(item: FeaturedItem) {
-    window.dispatchEvent(new CustomEvent('featured:open', { detail: { id: item.id } }));
-}
 
 function HorizontalCard({ item, priority }: { item: FeaturedItem; priority?: boolean }) {
     const isInstantAccess = item.id === 'instant-access-locksmiths';
@@ -123,13 +121,12 @@ function renderClickable(
             <Inner item={item} priority={priority} />
         </a>
     ) : (
-        <button
-            type="button"
-            onClick={() => dispatchOpen(item)}
-            className={`featured-work-strip-item featured-work-strip-item-button block shrink-0 pointer-events-auto text-left ${extraClass}`}
+        <Link
+            href={`/case-studies/${item.id}`}
+            className={`featured-work-strip-item featured-work-strip-item-link block shrink-0 pointer-events-auto text-left ${extraClass}`}
         >
             <Inner item={item} priority={priority} />
-        </button>
+        </Link>
     );
 
     if (animIndex !== undefined) {
