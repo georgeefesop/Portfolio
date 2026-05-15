@@ -22,6 +22,7 @@ export type CtaLocation =
     | 'contact_section'
     | 'footer'
     | 'case_study_modal'
+    | 'case_study_page'
     | 'micro_upwork_card';
 
 type CtaLinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
