@@ -15,11 +15,11 @@ const estiaKitchens: CaseStudy = {
     },
     visual: {
         situation: 'Fictional mid-market kitchen studio in Limassol. Seven pages, one primary action, fixed price floor of 4,500 euro and a 14-day install promise. Brand, copy, design, build, AI photography and the full lead pipeline shipped end to end.',
-        audience: '38-year-old Cypriot homeowner renovating a 1995 flat. Fixed budget, gets three quotes before signing, trusts WhatsApp over Google reviews. 70% of sessions land on mobile, so every page has to clear a 3-second test on a phone.',
+        audience: '38-year-old Cypriot homeowner renovating a 1995 flat. Fixed budget, gets three quotes before signing, trusts WhatsApp over Google reviews. Mobile-first persona - the majority of sessions land on phone, so every page has to clear a 3-second test on a phone.',
         what_made_it_hard: 'Cyprus kitchen sites bury price and reply in days, but the trust ceiling is set by a 25,000 euro Italian importer. The buyer prefers WhatsApp to email, and AI renders kill credibility on a six-figure purchase if their provenance is hidden.',
         honest_note: 'Fictional brand. Phone, WhatsApp and Google review counts are placeholders that swap in on a real client deploy. The lead pipeline (Resend auto-reply, Attio sync, PostHog + GA4 + Meta events) is live and tested against the demo URL.',
         process: 'Brand, persona and copy locked in three markdown files before any code shipped. Hand-rolled CSS tokens keyed off a per-brand file (no Tailwind, no shadcn); a serverless handler validates the payload and fans out to Resend, Attio, PostHog, GA4 and Meta in one round-trip.',
-        outcome: 'Seven pages live at estia-kitchens.vercel.app. Lighthouse mobile 88, accessibility 100, best practices 100, SEO 100. Lead pipeline (form to Resend to Attio to PostHog) runs end-to-end against the demo URL and is the asset most directly portable to a real Cyprus kitchen client.',
+        outcome: 'Seven pages live at estia-kitchens.vercel.app. Lighthouse audited at launch - mobile 90+, accessibility 100, best practices 100, SEO 100. Lead pipeline (form to Resend to Attio to PostHog) runs end-to-end against the demo URL and is the asset most directly portable to a real Cyprus kitchen client.',
         stack: ['react', 'vite'],
         links: [
             { href: 'https://estia-kitchens.vercel.app', label: 'Live site', logo: 'react' },
@@ -38,7 +38,7 @@ const estiaKitchens: CaseStudy = {
             {
                 image: '/images/estia-kitchens/estia__s07__reviews__desktop.png',
                 title: 'What people post when nobody asks.',
-                description: '4.9 across 180 Google reviews, three pulled in verbatim. Proof from a channel Cypriot buyers trust over a curated testimonial wall.',
+                description: 'Placeholder: 4.9 across 180 Google reviews at build time, three pulled in verbatim. Proof from a channel Cypriot buyers trust over a curated testimonial wall.',
             },
             {
                 image: '/images/estia-kitchens/estia__s10__calculator-cta__desktop.png',
