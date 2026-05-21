@@ -50,13 +50,6 @@ export default function OfferingCard({ offering, featured }: OfferingCardProps) 
           : 'border-border-subtle bg-bg-secondary hover:border-accent-primary/45 hover:shadow-lg hover:shadow-accent-primary/5'
       }`}
     >
-      {/* Featured ribbon */}
-      {featured && (
-        <span className="offering-card-ribbon absolute -top-2.5 right-6 rounded-full bg-accent-primary px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-bg-primary">
-          Flagship
-        </span>
-      )}
-
       {/* Status chip */}
       <div className="offering-card-meta mb-4 flex items-center justify-between gap-3">
         <span
@@ -133,7 +126,7 @@ export default function OfferingCard({ offering, featured }: OfferingCardProps) 
             type="button"
             onClick={startCheckout}
             disabled={loading}
-            className="offering-card-cta mt-1 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border-medium bg-bg-tertiary py-3.5 font-semibold text-text-primary transition-colors hover:border-accent-primary/50 hover:text-accent-primary disabled:cursor-not-allowed disabled:opacity-70"
+            className="offering-card-cta mt-1 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-accent-primary py-3.5 font-semibold text-bg-primary transition-colors hover:bg-accent-primary/90 disabled:cursor-not-allowed disabled:opacity-70"
           >
             {loading ? (
               <>

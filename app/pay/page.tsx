@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { ArrowLeft, ShieldCheck, Mail } from 'lucide-react';
 import { offerings } from '@/data/offerings';
 import OfferingCard from '@/components/pay/OfferingCard';
+import CustomPaymentCard from '@/components/pay/CustomPaymentCard';
 import PayNotices from '@/components/pay/PayNotices';
 import Footer from '@/components/ui/Footer';
 
@@ -96,32 +97,17 @@ export default function PayPage() {
           </p>
         </header>
 
-        <Suspense fallback={null}>
-          <PayNotices />
-        </Suspense>
-
-        {/* Catalogue grid */}
-        <div className="pay-grid grid grid-cols-1 gap-6 md:grid-cols-2">
-          {ordered.map((offering) => (
-            <OfferingCard
-              key={offering.slug}
-              offering={offering}
-              featured={offering.status === 'live'}
-            />
-          ))}
-        </div>
-
         {/* Trust + contact strip */}
-        <section className="pay-trust mt-20 rounded-2xl border border-border-subtle bg-bg-secondary p-6 md:p-8">
+        <section className="pay-trust mb-16 rounded-2xl border border-border-subtle bg-bg-secondary p-6 md:p-8">
           <div className="pay-trust-inner flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div className="pay-trust-text">
               <div className="pay-trust-badge mb-2 inline-flex flex-wrap items-center gap-2 text-lg font-semibold text-text-primary">
                 <ShieldCheck size={18} className="text-accent-primary" aria-hidden />
-                <span>Secure checkout, powered by Stripe</span>
+                <span>Secure checkout</span>
                 <img
-                  src="/stripe.svg"
-                  alt="Stripe"
-                  className="pay-trust-stripe-logo h-6 w-auto"
+                  src="/powered-by-stripe.png"
+                  alt="Powered by Stripe"
+                  className="pay-trust-stripe-logo h-[2.4rem] w-auto"
                 />
               </div>
               <p className="pay-trust-blurb max-w-xl text-sm leading-relaxed text-text-secondary">
@@ -139,6 +125,24 @@ export default function PayPage() {
             </a>
           </div>
         </section>
+
+        <Suspense fallback={null}>
+          <PayNotices />
+        </Suspense>
+
+        {/* Flagship: name-your-amount custom payment */}
+        <CustomPaymentCard />
+
+        {/* Catalogue grid */}
+        <div className="pay-grid grid grid-cols-1 gap-6 md:grid-cols-2">
+          {ordered.map((offering) => (
+            <OfferingCard
+              key={offering.slug}
+              offering={offering}
+              featured={offering.status === 'live'}
+            />
+          ))}
+        </div>
       </div>
 
       <Footer />
