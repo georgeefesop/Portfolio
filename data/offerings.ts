@@ -44,7 +44,7 @@ export interface Offering {
 
 export const offerings: Offering[] = [
   {
-    slug: 'video-ad',
+    slug: 'custom-video',
     name: 'Custom AI-Generated Video Ad',
     description:
       'A bespoke 30-50 second video advertisement for your product or brand. Scripted, directed, and rendered with AI - not slot-machined.',

@@ -1,7 +1,7 @@
 /**
  * Server-only Stripe client for the efesop.com/pay storefront.
  *
- * Uses the LIVE Stripe account (acct_1Qw1q1GHt7cesuhE / George Efesop).
+ * Uses the LIVE Stripe account (acct_1Qw1q1GHt7cesuhE / George Efesopoulos).
  * The key lives in STRIPE_PAY_SECRET_KEY - set it to the LIVE secret key
  * (sk_live_...) in .env.local and in Vercel project env vars.
  */

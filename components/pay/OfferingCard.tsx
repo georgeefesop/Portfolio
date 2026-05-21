@@ -133,7 +133,7 @@ export default function OfferingCard({ offering, featured }: OfferingCardProps) 
             type="button"
             onClick={startCheckout}
             disabled={loading}
-            className="offering-card-cta mt-1 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-cta-bg py-3.5 font-bold text-cta-fg transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-70"
+            className="offering-card-cta mt-1 inline-flex w-full items-center justify-center gap-2 rounded-lg border border-border-medium bg-bg-tertiary py-3.5 font-semibold text-text-primary transition-colors hover:border-accent-primary/50 hover:text-accent-primary disabled:cursor-not-allowed disabled:opacity-70"
           >
             {loading ? (
               <>
@@ -141,14 +141,7 @@ export default function OfferingCard({ offering, featured }: OfferingCardProps) 
                 Redirecting to checkout
               </>
             ) : (
-              <>
-                {offering.ctaLabel ?? 'Buy now'}
-                <ArrowRight
-                  size={18}
-                  className="transition-transform group-hover:translate-x-0.5"
-                  aria-hidden
-                />
-              </>
+              offering.ctaLabel ?? 'Buy now'
             )}
           </button>
         ) : (

@@ -9,7 +9,7 @@ import Footer from '@/components/ui/Footer';
 
 const SITE_URL = 'https://efesop.com';
 const UPWORK_PROFILE_URL = 'https://www.upwork.com/freelancers/~0192f6c9c9c1e1bf83';
-const AUTHOR_NAME = 'George Efesop';
+const AUTHOR_NAME = 'George Efesopoulos';
 
 export async function generateStaticParams() {
     return cases.map((c) => ({ slug: c.id }));

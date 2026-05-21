@@ -97,6 +97,8 @@ export default function Navigation() {
     }, []);
 
     const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+        // Off the homepage, let the <a href="/#..."> navigate to the homepage section.
+        if (pathname !== '/') return;
         e.preventDefault();
         const el = document.querySelector(href);
         if (el) {
@@ -144,7 +146,7 @@ export default function Navigation() {
                                         onMouseLeave={scheduleCloseWork}
                                     >
                                         <a
-                                            href={link.href}
+                                            href={`/${link.href}`}
                                             onClick={(e) => scrollToSection(e, link.href)}
                                             className={`${baseLinkClass} inline-flex items-center gap-1`}
                                             aria-haspopup="menu"
@@ -169,7 +171,7 @@ export default function Navigation() {
                             return (
                                 <a
                                     key={link.name}
-                                    href={link.href}
+                                    href={`/${link.href}`}
                                     onClick={(e) => scrollToSection(e, link.href)}
                                     className={baseLinkClass}
                                 >
@@ -255,9 +257,9 @@ export default function Navigation() {
                                                                     </Link>
                                                                 ))}
                                                                 <a
-                                                                    href="#work"
+                                                                    href="/#work"
                                                                     onClick={(e) => {
-                                                                        e.preventDefault();
+                                                                        if (pathname === '/') e.preventDefault();
                                                                         setIsOpen(false);
                                                                         setMobileWorkExpanded(false);
                                                                         setTimeout(() => {
@@ -280,10 +282,11 @@ export default function Navigation() {
                                     return (
                                         <a
                                             key={link.name}
-                                            href={link.href}
+                                            href={`/${link.href}`}
                                             onClick={(e) => {
-                                                e.preventDefault();
                                                 setIsOpen(false);
+                                                if (pathname !== '/') return;
+                                                e.preventDefault();
                                                 setTimeout(() => {
                                                     const el = document.querySelector(link.href);
                                                     if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });

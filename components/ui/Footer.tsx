@@ -44,11 +44,12 @@ export default function Footer() {
                         </h3>
                         <ul className="footer-link-list space-y-3">
                             {[
-                                { label: 'Work', href: '#work' },
-                                { label: 'Services', href: '#services' },
-                                { label: 'Resources', href: '#resources' },
-                                { label: 'About', href: '#about' },
-                                { label: 'Hire on Upwork', href: '#contact' },
+                                { label: 'Work', href: '/#work' },
+                                { label: 'Services', href: '/#services' },
+                                { label: 'Resources', href: '/#resources' },
+                                { label: 'About', href: '/#about' },
+                                { label: 'Hire on Upwork', href: '/#contact' },
+                                { label: 'Pay Online', href: '/pay' },
                             ].map((item) => (
                                 <li key={item.label} className="footer-link-item">
                                     <a

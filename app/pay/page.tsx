@@ -8,16 +8,16 @@ import PayNotices from '@/components/pay/PayNotices';
 import Footer from '@/components/ui/Footer';
 
 const SITE_URL = 'https://efesop.com';
-const AUTHOR_NAME = 'George Efesop';
+const AUTHOR_NAME = 'George Efesopoulos';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: 'Hire George Efesop - Services & Pricing',
+  title: 'Hire George Efesopoulos - Services & Pricing',
   description:
     'Pay for AI-built digital work: custom video ads, website builds, care plans, and product design. Branded, secure Stripe checkout.',
   alternates: { canonical: `${SITE_URL}/pay` },
   openGraph: {
-    title: 'Hire George Efesop - Services & Pricing',
+    title: 'Hire George Efesopoulos - Services & Pricing',
     description:
       'Pay for AI-built digital work: custom video ads, website builds, care plans, and product design.',
     url: `${SITE_URL}/pay`,
@@ -62,7 +62,7 @@ export default function PayPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="pay-page-shell mx-auto w-full max-w-6xl px-4 pb-16 pt-28 sm:px-6 lg:px-8">
+      <div className="pay-page-shell mx-auto w-full max-w-6xl px-4 pb-28 pt-32 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <nav
           aria-label="Breadcrumb"
@@ -82,7 +82,7 @@ export default function PayPage() {
         </nav>
 
         {/* Header */}
-        <header className="pay-header mb-12 max-w-2xl">
+        <header className="pay-header mb-16 max-w-2xl">
           <p className="pay-eyebrow font-serif text-lg italic text-text-muted md:text-xl">
             Work with me, the simple way
           </p>
@@ -101,7 +101,7 @@ export default function PayPage() {
         </Suspense>
 
         {/* Catalogue grid */}
-        <div className="pay-grid grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="pay-grid grid grid-cols-1 gap-6 md:grid-cols-2">
           {ordered.map((offering) => (
             <OfferingCard
               key={offering.slug}
@@ -112,12 +112,17 @@ export default function PayPage() {
         </div>
 
         {/* Trust + contact strip */}
-        <section className="pay-trust mt-10 rounded-2xl border border-border-subtle bg-bg-secondary p-6 md:p-8">
+        <section className="pay-trust mt-20 rounded-2xl border border-border-subtle bg-bg-secondary p-6 md:p-8">
           <div className="pay-trust-inner flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div className="pay-trust-text">
-              <div className="pay-trust-badge mb-2 inline-flex items-center gap-2 text-sm font-semibold text-text-primary">
+              <div className="pay-trust-badge mb-2 inline-flex flex-wrap items-center gap-2 text-lg font-semibold text-text-primary">
                 <ShieldCheck size={18} className="text-accent-primary" aria-hidden />
-                Secure checkout, powered by Stripe
+                <span>Secure checkout, powered by Stripe</span>
+                <img
+                  src="/stripe.svg"
+                  alt="Stripe"
+                  className="pay-trust-stripe-logo h-6 w-auto"
+                />
               </div>
               <p className="pay-trust-blurb max-w-xl text-sm leading-relaxed text-text-secondary">
                 Payments are processed by Stripe and charged in EUR. You get an

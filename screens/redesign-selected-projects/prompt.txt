@@ -1,4 +1,4 @@
-Editorial web design mockup of a "Selected Projects" portfolio grid section for George Efesop, a UX/UI product designer & developer. Goal: showcase 4-6 case study cards with visual hierarchy that signals craft and makes the work itself the centrepiece.
+Editorial web design mockup of a "Selected Projects" portfolio grid section for George Efesopoulos, a UX/UI product designer & developer. Goal: showcase 4-6 case study cards with visual hierarchy that signals craft and makes the work itself the centrepiece.
 
 Brand: Background warm olive cream #E8E0CA. Card surface #DDD3B9. Text primary deep coffee brown #3A2D18. Muted text #6F6852. Accent espresso #2A1B08. Border hairlines #CDC4A8. Primary font Inter sans. Display/heading font Instrument Sans (variable width, slightly condensed). Style: editorial, considered, restrained whitespace. Reference: It's Nice That meets Monocle.
 

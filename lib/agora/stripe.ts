@@ -1,6 +1,6 @@
 /**
  * Server-only Stripe client for the agora account
- * (acct_1Qw1q1GHt7cesuhE / "George Efesop"). TEST mode for now.
+ * (acct_1Qw1q1GHt7cesuhE / "George Efesopoulos"). TEST mode for now.
  *
  * Test-mode IDs:
  *   Buy   €2,497 one-time  - price_1TVyglGHt7cesuhEqnDHcNRZ
