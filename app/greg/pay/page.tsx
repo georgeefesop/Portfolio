@@ -1,0 +1,69 @@
+import type { Metadata } from 'next';
+import RenderProduct from '@/components/greg/pay/RenderProduct';
+import CustomPaymentCard from '@/components/greg/pay/CustomPaymentCard';
+import OfferingCard from '@/components/greg/pay/OfferingCard';
+import { WhatsAppButton } from '@/components/greg/WhatsApp';
+import { getContent } from '@/lib/greg/content-store';
+import {
+  payContent,
+  services as defaultServices,
+  type GregService,
+} from '@/data/greg/content';
+import { GREG, WHATSAPP_DEFAULT_MESSAGE } from '@/lib/greg/site';
+
+export const metadata: Metadata = {
+  title: 'Pay online',
+  description:
+    'Order a same-day design render of your project, or pay G.E. Revamp Services securely by card.',
+  alternates: { canonical: `${GREG.siteUrl}/pay` },
+};
+
+export default async function GregPayPage() {
+  const uploadsEnabled = Boolean(
+    process.env.GREG_SUPABASE_URL && process.env.GREG_SUPABASE_SERVICE_KEY,
+  );
+  const services = await getContent<GregService[]>(
+    'services',
+    defaultServices,
+  );
+
+  return (
+    <main className="mx-auto w-full max-w-3xl px-4 pb-24 pt-28 sm:px-6 md:pt-36">
+      <header className="mb-10">
+        <p className="eyebrow mb-2">{payContent.eyebrow}</p>
+        <h1 className="font-serif text-h1 leading-[0.98] tracking-tight text-text-primary">
+          {payContent.heading}
+        </h1>
+        <p className="mt-4 text-base leading-relaxed text-text-secondary md:text-lg">
+          {payContent.intro}
+        </p>
+      </header>
+
+      {/* Pay an agreed amount - primary action, kept at the top */}
+      <CustomPaymentCard />
+
+      {/* Product grid - single column: the render product then the services */}
+      <div className="mt-14 flex flex-col gap-6">
+        <RenderProduct uploadsEnabled={uploadsEnabled} />
+        {services.map((service) => (
+          <OfferingCard key={service.id} service={service} />
+        ))}
+      </div>
+
+      <section className="mt-12 rounded-2xl border border-border-subtle bg-bg-secondary p-6 text-center md:p-8">
+        <h2 className="text-lg font-bold text-text-primary">
+          Not sure what to pay yet?
+        </h2>
+        <p className="mx-auto mt-2 max-w-md text-sm text-text-secondary">
+          Message us on WhatsApp and Gregory will visit, look at the job, and
+          give you a clear quote with no obligation.
+        </p>
+        <div className="mt-5 flex justify-center">
+          <WhatsAppButton location="pay_footer" message={WHATSAPP_DEFAULT_MESSAGE}>
+            Get a free quote
+          </WhatsAppButton>
+        </div>
+      </section>
+    </main>
+  );
+}

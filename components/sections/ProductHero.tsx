@@ -72,7 +72,7 @@ export default function ProductHero() {
                         variants={FADE_UP}
                         className="hero-feature-image-mobile xl:hidden mb-8"
                     >
-                        <div className="hero-feature-image-frame relative rounded-xl overflow-hidden border border-border-subtle bg-bg-secondary shadow-xl">
+                        <div className="hero-feature-image-frame relative rounded-xl overflow-hidden border-[10px] border-white bg-bg-secondary shadow-xl">
                             <Image
                                 src="/images/estia-kitchens/estia-kitchens-thumb-v4.jpg"
                                 alt="Estia Kitchens homepage"
@@ -174,7 +174,7 @@ export default function ProductHero() {
                     transition={{ delay: 0.5, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                     className="hero-feature-image hidden xl:block relative w-full"
                 >
-                    <div className="hero-feature-image-frame relative rounded-xl overflow-hidden border border-border-subtle bg-bg-secondary shadow-xl">
+                    <div className="hero-feature-image-frame relative rounded-xl overflow-hidden border-[10px] border-white bg-bg-secondary shadow-xl">
                         <Image
                             src="/images/estia-kitchens/estia-kitchens-thumb-v4.jpg"
                             alt="Estia Kitchens homepage"

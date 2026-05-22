@@ -55,7 +55,9 @@ export default function Navigation() {
         closeTimer.current = setTimeout(() => setWorkOpen(false), 120);
     };
 
-    if (pathname?.startsWith('/kingfisher')) return null;
+    // greg.efesop.com (rewritten to /greg/*) and the kingfisher sub-app both
+    // render their own navigation - hide the portfolio nav there.
+    if (pathname?.startsWith('/kingfisher') || pathname?.startsWith('/greg')) return null;
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {

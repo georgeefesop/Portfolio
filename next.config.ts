@@ -43,6 +43,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'cdn.sanity.io',
       },
+      {
+        protocol: 'https',
+        hostname: 'ygyeyprogpawmjzjyrew.supabase.co',
+      },
     ],
   },
 };

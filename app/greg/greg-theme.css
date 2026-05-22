@@ -1,0 +1,165 @@
+/* ============================================================
+   greg.efesop.com - theme
+   The contractor site for G.E. Revamp Services Limited.
+
+   greg shares all structure, fonts and components with efesop.com but
+   renders its own colour palette. Every greg page is wrapped in
+   <div data-site="greg"> (see app/greg/layout.tsx).
+
+   globals.css registers the Tailwind colour tokens with @theme, e.g.
+   --color-bg-primary: var(--bg-primary). That var() is resolved once at
+   :root, so a subtree cannot re-point a token just by overriding
+   --bg-primary. greg therefore overrides the --color-* names directly.
+
+   TO RESTYLE: edit the two knobs (--greg-bg and --greg-accent) in each
+   block. Every surface, border and accent derives from them.
+   ============================================================ */
+
+/* ---------- DARK MODE (default) ---------- */
+[data-site='greg'] {
+  --greg-bg: #141210; /* EDIT: page background */
+  --greg-accent: #EDA220; /* EDIT: brand accent + buttons (DeWalt yellow) */
+
+  /* greg's display font is Figtree; efesop.com keeps Newsreader. */
+  --font-serif: var(--font-figtree), system-ui, sans-serif;
+
+  color-scheme: dark;
+
+  /* Derived palette - the two knobs above drive everything. */
+  --bg-hero: color-mix(in srgb, var(--greg-bg), #000 35%);
+  --bg-primary: var(--greg-bg);
+  --bg-secondary: color-mix(in srgb, var(--greg-bg), #fff 5%);
+  --bg-tertiary: color-mix(in srgb, var(--greg-bg), #fff 10%);
+  --bg-elevated: color-mix(in srgb, var(--greg-bg), #fff 9%);
+  --bg-elevated-alt: color-mix(in srgb, var(--greg-bg), #fff 7%);
+
+  --text-primary: #faf7f2;
+  --text-secondary: #d8d1c5;
+  --text-muted: #a49c8d;
+  --text-dim: #8a8273;
+
+  --accent-primary: var(--greg-accent);
+  --accent-secondary: color-mix(in srgb, var(--greg-accent), #fff 22%);
+  --accent-highlight: color-mix(in srgb, var(--greg-accent), #fff 14%);
+  --accent-coral: color-mix(in srgb, var(--greg-accent), #fff 28%);
+
+  --cta-bg: var(--greg-accent);
+  --cta-fg: #1a1308;
+
+  --border-subtle: color-mix(in srgb, var(--greg-bg), #fff 9%);
+  --border-medium: color-mix(in srgb, var(--greg-bg), #fff 16%);
+  --border-strong: color-mix(in srgb, var(--greg-bg), #fff 24%);
+
+  /* Nav is a DeWalt-yellow strip in dark mode: dark logo + links,
+     dark CTA button with yellow text. */
+  --nav-island-bg: var(--greg-accent);
+  --nav-island-border: rgba(0, 0, 0, 0.14);
+  --nav-fg: #1a1308;
+  --nav-link: #000000;
+  --nav-btn-bg: #1a1308;
+  --nav-btn-fg: var(--greg-accent);
+
+  /* Re-point the Tailwind @theme colour tokens onto the greg palette. */
+  --color-bg-hero: var(--bg-hero);
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-tertiary: var(--bg-tertiary);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-bg-elevated-alt: var(--bg-elevated-alt);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-dim: var(--text-dim);
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-accent-highlight: var(--accent-highlight);
+  --color-accent-coral: var(--accent-coral);
+  --color-cta-bg: var(--cta-bg);
+  --color-cta-fg: var(--cta-fg);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-medium: var(--border-medium);
+  --color-border-strong: var(--border-strong);
+}
+
+/* ---------- ANGULAR STYLING ---------- */
+/* Sharp, industrial corners. Cap all corner rounding at 4px sitewide;
+   true circles (rounded-full: avatars, the floating WhatsApp button,
+   the slider handle) keep their shape - a circle has no corners. */
+[data-site='greg'] [class*='rounded-']:not([class*='rounded-full']) {
+  border-radius: 4px;
+}
+
+/* Parallelogram clip: angled left/right edges, level top and bottom,
+   content stays horizontal. Used on the nav island and CTA buttons.
+   --para-slant is the horizontal offset; set it per element to keep a
+   constant ~13deg angle across differing heights (taller element =
+   larger slant). */
+[data-site='greg'] .greg-para {
+  clip-path: polygon(
+    var(--para-slant, 12px) 0,
+    100% 0,
+    calc(100% - var(--para-slant, 12px)) 100%,
+    0 100%
+  );
+}
+
+/* ---------- LIGHT MODE ---------- */
+/* The shared theme toggle sets data-theme="light-greg" on <html>;
+   greg only needs the value to start with "light-". */
+[data-theme^='light-'] [data-site='greg'] {
+  --greg-bg: #f6f2e9; /* EDIT: page background */
+  --greg-accent: #A06D12; /* EDIT: brand accent + buttons (darkened DeWalt yellow for cream bg) */
+
+  color-scheme: light;
+
+  --bg-hero: color-mix(in srgb, var(--greg-bg), #000 3%);
+  --bg-primary: var(--greg-bg);
+  --bg-secondary: color-mix(in srgb, var(--greg-bg), #000 5%);
+  --bg-tertiary: color-mix(in srgb, var(--greg-bg), #000 11%);
+  --bg-elevated: color-mix(in srgb, var(--greg-bg), #fff 55%);
+  --bg-elevated-alt: color-mix(in srgb, var(--greg-bg), #000 3%);
+
+  --text-primary: #221c14;
+  --text-secondary: #3d3527;
+  --text-muted: #5e5647;
+  --text-dim: #786e5c;
+
+  --accent-primary: var(--greg-accent);
+  --accent-secondary: color-mix(in srgb, var(--greg-accent), #000 18%);
+  --accent-highlight: color-mix(in srgb, var(--greg-accent), #000 10%);
+  --accent-coral: color-mix(in srgb, var(--greg-accent), #fff 12%);
+
+  --cta-bg: var(--greg-accent);
+  --cta-fg: #ffffff;
+
+  --border-subtle: color-mix(in srgb, var(--greg-bg), #000 11%);
+  --border-medium: color-mix(in srgb, var(--greg-bg), #000 19%);
+  --border-strong: color-mix(in srgb, var(--greg-bg), #000 30%);
+
+  --nav-island-bg: color-mix(in srgb, var(--greg-bg), #fff 35%);
+  --nav-island-border: rgba(0, 0, 0, 0.06);
+  --nav-fg: var(--text-primary);
+  --nav-link: var(--text-secondary);
+  --nav-btn-bg: var(--cta-bg);
+  --nav-btn-fg: var(--cta-fg);
+
+  --color-bg-hero: var(--bg-hero);
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-bg-tertiary: var(--bg-tertiary);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-bg-elevated-alt: var(--bg-elevated-alt);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-text-dim: var(--text-dim);
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-accent-highlight: var(--accent-highlight);
+  --color-accent-coral: var(--accent-coral);
+  --color-cta-bg: var(--cta-bg);
+  --color-cta-fg: var(--cta-fg);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-medium: var(--border-medium);
+  --color-border-strong: var(--border-strong);
+}

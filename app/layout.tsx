@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Inter, JetBrains_Mono, Caveat, Instrument_Sans, Newsreader, Inconsolata, Karla, Fraunces } from "next/font/google";
+import { Inter, JetBrains_Mono, Caveat, Instrument_Sans, Newsreader, Inconsolata, Karla, Fraunces, Figtree } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/ui/Navigation";
 import CustomScrollbar from "@/components/ui/CustomScrollbar";
@@ -16,6 +16,8 @@ const caveat = Caveat({ subsets: ["latin"], variable: "--font-caveat", display: 
 const instrumentSans = Instrument_Sans({ subsets: ["latin"], weight: ["700"], variable: "--font-instrument", display: "swap", preload: false });
 // Display serif for headings, eyebrows, and editorial italic accents.
 const newsreader = Newsreader({ subsets: ["latin"], weight: ["400", "500", "600"], style: ["normal", "italic"], variable: "--font-newsreader", display: "swap" });
+// Display font for the greg.efesop.com subtree only; efesop.com keeps Newsreader.
+const figtree = Figtree({ subsets: ["latin"], variable: "--font-figtree", display: "swap" });
 const inconsolata = Inconsolata({ subsets: ["latin"], weight: ["400", "500", "600"], variable: "--font-inconsolata", display: "swap", preload: false });
 const karla = Karla({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-karla", display: "swap", preload: false });
 const fraunces = Fraunces({ subsets: ["latin"], weight: ["400", "500", "600"], style: ["normal", "italic"], variable: "--font-fraunces", display: "swap", preload: false });
@@ -36,14 +38,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('theme-preview');if(t&&t!=='dark'){document.documentElement.setAttribute('data-theme',t);}}catch(e){}})();`,
-          }}
-        />
-      </head>
-      <body className={`${inter.variable} ${jetbrainsMono.variable} ${caveat.variable} ${instrumentSans.variable} ${newsreader.variable} ${inconsolata.variable} ${karla.variable} ${fraunces.variable} font-sans bg-bg-primary text-text-primary antialiased`} suppressHydrationWarning>
+      <body className={`${inter.variable} ${jetbrainsMono.variable} ${caveat.variable} ${instrumentSans.variable} ${newsreader.variable} ${figtree.variable} ${inconsolata.variable} ${karla.variable} ${fraunces.variable} font-sans bg-bg-primary text-text-primary antialiased`} suppressHydrationWarning>
+        <script src="/theme-init.js" />
         <PostHogProvider>
           <Navigation />
           {children}
