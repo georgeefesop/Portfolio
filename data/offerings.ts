@@ -48,11 +48,11 @@ export const offerings: Offering[] = [
     name: 'Custom AI-Generated Video Ad',
     description:
       'A bespoke 30-50 second video advertisement for your product or brand. Scripted, directed, and rendered with AI - not slot-machined.',
-    priceLabel: 'EUR 250',
-    priceAmount: 250,
+    priceLabel: 'EUR 215',
+    priceAmount: 215,
     billing: 'one_off',
     status: 'live',
-    priceId: 'price_1TZZWZGHt7cesuhECfTLTdvy',
+    priceId: 'price_1TZqLwGHt7cesuhEhlotl8eL',
     ctaLabel: 'Buy now',
     turnaround: 'Delivered in 5-7 days',
     includes: [

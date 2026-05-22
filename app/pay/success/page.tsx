@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { ArrowRight, CheckCircle2, Mail } from 'lucide-react';
 import { getPayStripe } from '@/lib/pay/stripe';
 import Footer from '@/components/ui/Footer';
+import PayCompletedTracker from '@/components/pay/PayCompletedTracker';
 
 export const metadata: Metadata = {
   title: 'Payment confirmed - efesop',
@@ -18,14 +19,23 @@ interface SuccessPageProps {
 async function loadSession(sessionId: string) {
   try {
     const session = await getPayStripe().checkout.sessions.retrieve(sessionId);
+    const offeringSlug =
+      (session.metadata?.offering_slug as string | undefined) ?? null;
     return {
       paid: session.payment_status === 'paid' || session.status === 'complete',
       email: session.customer_details?.email ?? null,
       name: session.customer_details?.name ?? null,
       amount: session.amount_total,
       currency: session.currency,
+      offeringSlug,
       offeringName:
         (session.metadata?.offering_name as string | undefined) ?? null,
+      /** A name-your-amount payment, not a fixed catalogue offering. */
+      isCustom: offeringSlug === 'custom',
+      /** What a custom payment was for (free text the buyer entered). */
+      customReason:
+        (session.metadata?.custom_reason as string | undefined) ?? null,
+      invoiceRequested: session.metadata?.invoice_requested === 'yes',
     };
   } catch {
     return null;
@@ -45,9 +55,26 @@ export default async function PaySuccessPage({ searchParams }: SuccessPageProps)
       : null;
 
   const confirmed = Boolean(session?.paid);
+  const isCustom = Boolean(session?.isCustom);
+
+  // What was bought: the custom payment's free-text reason, or the catalogue
+  // offering name. Used to re-state the purchase in both copy variants.
+  const purchaseLabel = isCustom
+    ? session?.customReason ?? 'Custom payment'
+    : session?.offeringName ?? null;
 
   return (
     <main className="pay-success-page flex min-h-screen flex-col bg-bg-primary">
+      {confirmed && session_id && (
+        <PayCompletedTracker
+          sessionId={session_id}
+          amount={session?.amount != null ? session.amount / 100 : null}
+          currency={session?.currency ?? null}
+          offering={session?.offeringSlug ?? null}
+          invoiceRequested={Boolean(session?.invoiceRequested)}
+          email={session?.email ?? null}
+        />
+      )}
       <div className="pay-success-shell mx-auto flex w-full max-w-2xl flex-1 flex-col px-4 pb-16 pt-32 sm:px-6">
         <div className="pay-success-card rounded-2xl border border-border-subtle bg-bg-secondary p-8 text-center md:p-12">
           <div className="pay-success-icon mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-accent-primary/15">
@@ -62,16 +89,15 @@ export default async function PaySuccessPage({ searchParams }: SuccessPageProps)
           </h1>
 
           <p className="pay-success-body mx-auto mt-5 max-w-md text-base leading-relaxed text-text-secondary">
-            {session?.offeringName ? (
+            {purchaseLabel ? (
               <>
-                Thanks for buying{' '}
-                <strong className="text-text-primary">
-                  {session.offeringName}
-                </strong>
-                {amountLabel ? <> ({amountLabel})</> : null}.{' '}
+                {isCustom ? 'Thanks, your payment for ' : 'Thanks for buying '}
+                <strong className="text-text-primary">{purchaseLabel}</strong>
+                {amountLabel ? <> ({amountLabel})</> : null}
+                {isCustom ? ' has gone through' : ''}.{' '}
               </>
             ) : (
-              <>Thanks for your purchase. </>
+              <>Thanks for your payment. </>
             )}
             A receipt is on its way to
             {session?.email ? (
@@ -82,30 +108,62 @@ export default async function PaySuccessPage({ searchParams }: SuccessPageProps)
             ) : (
               <> your inbox</>
             )}
-            . I&apos;ll be in touch shortly to kick things off.
+            .{' '}
+            {isCustom
+              ? "I'll follow up by email to confirm what this covers."
+              : "I'll be in touch shortly to kick things off."}
           </p>
 
-          {/* What happens next */}
+          {/* What happens next - copy branches by purchase type */}
           <div className="pay-success-next mt-8 rounded-xl border border-border-subtle/70 bg-bg-tertiary/50 p-5 text-left">
             <p className="pay-success-next-title mb-2 text-sm font-semibold text-text-primary">
               What happens next
             </p>
             <ol className="pay-success-next-list space-y-1.5 text-sm text-text-secondary">
-              <li>1. You&apos;ll get a Stripe receipt by email.</li>
-              <li>
-                2. I&apos;ll email you within one working day to gather the brief.
-              </li>
-              <li>3. Work starts as soon as the brief is confirmed.</li>
+              {purchaseLabel && (
+                <li className="pay-success-next-item-summary text-text-primary">
+                  Paid:{' '}
+                  <strong className="text-text-primary">{purchaseLabel}</strong>
+                  {amountLabel ? <>, {amountLabel}</> : null}
+                </li>
+              )}
+              {isCustom ? (
+                <>
+                  <li>
+                    1. You&apos;ll get a Stripe receipt by email
+                    {session?.invoiceRequested
+                      ? ', with a full invoice attached'
+                      : ''}
+                    .
+                  </li>
+                  <li>
+                    2. I&apos;ll email you to confirm what this payment is for.
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>1. You&apos;ll get a Stripe receipt by email.</li>
+                  <li>
+                    2. I&apos;ll email you within one working day to gather the
+                    brief.
+                  </li>
+                  <li>3. Work starts as soon as the brief is confirmed.</li>
+                </>
+              )}
             </ol>
           </div>
 
           <div className="pay-success-actions mt-8 flex flex-col items-center gap-3">
             <a
-              href="mailto:george.efesop@gmail.com?subject=My%20order%20-%20brief"
+              href={
+                isCustom
+                  ? 'mailto:george.efesop@gmail.com?subject=My%20payment'
+                  : 'mailto:george.efesop@gmail.com?subject=My%20order%20-%20brief'
+              }
               className="pay-success-cta inline-flex w-full items-center justify-center gap-2 rounded-lg bg-cta-bg py-3.5 font-bold text-cta-fg transition-all hover:brightness-95 sm:w-auto sm:px-7"
             >
               <Mail size={18} aria-hidden />
-              Send me your brief
+              {isCustom ? 'Email George' : 'Send me your brief'}
             </a>
             <Link
               href="/"
