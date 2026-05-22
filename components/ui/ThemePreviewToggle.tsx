@@ -26,7 +26,7 @@ function applyTheme(id: ThemeId) {
 }
 
 export default function ThemePreviewToggle() {
-    const [active, setActive] = useState<ThemeId>('light-olive');
+    const [active, setActive] = useState<ThemeId>('dark');
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -37,7 +37,7 @@ export default function ThemePreviewToggle() {
                 setActive(saved);
                 applyTheme(saved);
             } else {
-                applyTheme('light-olive');
+                applyTheme('dark');
             }
         } catch { }
     }, []);
