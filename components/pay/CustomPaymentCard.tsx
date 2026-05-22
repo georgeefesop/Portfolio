@@ -2,7 +2,13 @@
 
 import { useState } from 'react';
 import { usePostHog } from 'posthog-js/react';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ShieldCheck } from 'lucide-react';
+import {
+  FaCcVisa,
+  FaCcMastercard,
+  FaCcAmex,
+  FaCcDiscover,
+} from 'react-icons/fa';
 
 /** Keep in sync with app/api/pay/custom-checkout/route.ts. */
 const MIN_EUR = 5;
@@ -183,35 +189,53 @@ export default function CustomPaymentCard() {
         </div>
 
         {/* Invoice opt-in + submit */}
-        <div className="custom-pay-actions mt-1 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <label
-            htmlFor="custom-pay-invoice"
-            className="custom-pay-invoice flex cursor-pointer select-none items-center gap-2.5 text-sm text-text-secondary"
-          >
-            <input
-              id="custom-pay-invoice"
-              type="checkbox"
-              checked={invoice}
-              onChange={(e) => setInvoice(e.target.checked)}
-              className="custom-pay-checkbox h-4 w-4 shrink-0 cursor-pointer accent-accent-primary"
-            />
-            I need an invoice (for business or tax)
-          </label>
-          <button
-            type="button"
-            onClick={startCheckout}
-            disabled={!canSubmit}
-            className="custom-pay-cta inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-accent-primary px-6 py-3 font-semibold text-bg-primary transition-colors hover:bg-accent-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {loading ? (
-              <>
-                <Loader2 size={18} className="animate-spin" aria-hidden />
-                Redirecting
-              </>
-            ) : (
-              'Pay securely'
-            )}
-          </button>
+        <div className="custom-pay-actions mt-1 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="custom-pay-aside flex flex-col gap-2.5">
+            <label
+              htmlFor="custom-pay-invoice"
+              className="custom-pay-invoice flex cursor-pointer select-none items-center gap-2.5 text-sm text-text-secondary"
+            >
+              <input
+                id="custom-pay-invoice"
+                type="checkbox"
+                checked={invoice}
+                onChange={(e) => setInvoice(e.target.checked)}
+                className="custom-pay-checkbox h-4 w-4 shrink-0 cursor-pointer accent-accent-primary"
+              />
+              I need an invoice (for business or tax)
+            </label>
+            <p className="custom-pay-secure inline-flex items-center gap-2 text-xs text-text-muted">
+              <ShieldCheck size={14} className="text-accent-primary" aria-hidden />
+              Secure checkout by Stripe. Payments are charged in EUR.
+            </p>
+          </div>
+          <div className="custom-pay-submit flex shrink-0 flex-col items-center gap-2.5">
+            <button
+              type="button"
+              onClick={startCheckout}
+              disabled={!canSubmit}
+              className="custom-pay-cta inline-flex items-center justify-center gap-2 rounded-lg bg-accent-primary px-6 py-3 font-semibold text-bg-primary transition-colors hover:bg-accent-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {loading ? (
+                <>
+                  <Loader2 size={18} className="animate-spin" aria-hidden />
+                  Redirecting
+                </>
+              ) : (
+                'Pay securely'
+              )}
+            </button>
+            <div
+              role="img"
+              aria-label="Accepted cards: Visa, Mastercard, American Express, Discover"
+              className="custom-pay-cards flex items-center justify-center gap-2 text-text-dim"
+            >
+              <FaCcVisa className="h-6 w-auto" aria-hidden />
+              <FaCcMastercard className="h-6 w-auto" aria-hidden />
+              <FaCcAmex className="h-6 w-auto" aria-hidden />
+              <FaCcDiscover className="h-6 w-auto" aria-hidden />
+            </div>
+          </div>
         </div>
       </div>
 

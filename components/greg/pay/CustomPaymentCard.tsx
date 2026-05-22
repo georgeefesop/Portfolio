@@ -3,6 +3,12 @@
 import { useState } from 'react';
 import { usePostHog } from 'posthog-js/react';
 import { Loader2, ShieldCheck } from 'lucide-react';
+import {
+  FaCcVisa,
+  FaCcMastercard,
+  FaCcAmex,
+  FaCcDiscover,
+} from 'react-icons/fa';
 import { payContent } from '@/data/greg/content';
 
 /** Keep in sync with app/api/greg/pay/custom-checkout/route.ts. */
@@ -157,35 +163,53 @@ export default function CustomPaymentCard() {
           </div>
         </div>
 
-        <div className="mt-1 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <label
-            htmlFor="greg-pay-invoice"
-            className="flex cursor-pointer select-none items-center gap-2.5 text-sm text-text-secondary"
-          >
-            <input
-              id="greg-pay-invoice"
-              type="checkbox"
-              checked={invoice}
-              onChange={(e) => setInvoice(e.target.checked)}
-              className="h-4 w-4 shrink-0 cursor-pointer accent-accent-primary"
-            />
-            I need an invoice
-          </label>
-          <button
-            type="button"
-            onClick={startCheckout}
-            disabled={!canSubmit}
-            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-lg bg-cta-bg px-6 py-3 font-semibold text-cta-fg transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {loading ? (
-              <>
-                <Loader2 size={18} className="animate-spin" aria-hidden />
-                Redirecting
-              </>
-            ) : (
-              'Pay securely'
-            )}
-          </button>
+        <div className="mt-1 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex flex-col gap-2.5">
+            <label
+              htmlFor="greg-pay-invoice"
+              className="flex cursor-pointer select-none items-center gap-2.5 text-sm text-text-secondary"
+            >
+              <input
+                id="greg-pay-invoice"
+                type="checkbox"
+                checked={invoice}
+                onChange={(e) => setInvoice(e.target.checked)}
+                className="h-4 w-4 shrink-0 cursor-pointer accent-accent-primary"
+              />
+              I need an invoice
+            </label>
+            <p className="inline-flex items-center gap-2 text-xs text-text-muted">
+              <ShieldCheck size={14} className="text-accent-primary" aria-hidden />
+              Secure checkout by Stripe. Payments are charged in EUR.
+            </p>
+          </div>
+          <div className="flex shrink-0 flex-col items-center gap-2.5">
+            <button
+              type="button"
+              onClick={startCheckout}
+              disabled={!canSubmit}
+              className="inline-flex items-center justify-center gap-2 rounded-lg bg-cta-bg px-6 py-3 font-semibold text-cta-fg transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {loading ? (
+                <>
+                  <Loader2 size={18} className="animate-spin" aria-hidden />
+                  Redirecting
+                </>
+              ) : (
+                'Pay securely'
+              )}
+            </button>
+            <div
+              role="img"
+              aria-label="Accepted cards: Visa, Mastercard, American Express, Discover"
+              className="flex items-center justify-center gap-2 text-text-dim"
+            >
+              <FaCcVisa className="h-6 w-auto" aria-hidden />
+              <FaCcMastercard className="h-6 w-auto" aria-hidden />
+              <FaCcAmex className="h-6 w-auto" aria-hidden />
+              <FaCcDiscover className="h-6 w-auto" aria-hidden />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -194,11 +218,6 @@ export default function CustomPaymentCard() {
           {error ?? hint}
         </p>
       )}
-
-      <p className="mt-4 inline-flex items-center gap-2 text-xs text-text-muted">
-        <ShieldCheck size={14} className="text-accent-primary" aria-hidden />
-        Secure checkout by Stripe. Payments are charged in EUR.
-      </p>
     </section>
   );
 }

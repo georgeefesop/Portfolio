@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { ShieldCheck } from 'lucide-react';
 import RenderProduct from '@/components/greg/pay/RenderProduct';
 import CustomPaymentCard from '@/components/greg/pay/CustomPaymentCard';
 import OfferingCard from '@/components/greg/pay/OfferingCard';
@@ -41,6 +42,39 @@ export default async function GregPayPage() {
 
       {/* Pay an agreed amount - primary action, kept at the top */}
       <CustomPaymentCard />
+
+      {/* Secure checkout / Powered by Stripe */}
+      <section className="mt-8 rounded-2xl border border-border-subtle bg-bg-secondary p-6 md:p-8">
+        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          <div>
+            <div className="mb-2 inline-flex flex-wrap items-center gap-2 text-lg font-semibold text-text-primary">
+              <ShieldCheck
+                size={18}
+                className="text-accent-primary"
+                aria-hidden
+              />
+              <span>Secure checkout</span>
+              <img
+                src="/powered-by-stripe.png"
+                alt="Powered by Stripe"
+                className="h-[2.4rem] w-auto"
+              />
+            </div>
+            <p className="max-w-xl text-sm leading-relaxed text-text-secondary">
+              Card payments are processed by Stripe and charged in EUR. A
+              receipt is emailed to you the moment payment clears.
+            </p>
+          </div>
+          <WhatsAppButton
+            location="pay_secure_box"
+            message={WHATSAPP_DEFAULT_MESSAGE}
+            variant="outline"
+            className="shrink-0"
+          >
+            Ask a question
+          </WhatsAppButton>
+        </div>
+      </section>
 
       {/* Product grid - single column: the render product then the services */}
       <div className="mt-14 flex flex-col gap-6">

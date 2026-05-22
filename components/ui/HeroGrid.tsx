@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 
-const CELL = 20;
+const CELL = 40;
 
 export default function HeroGrid() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -10,7 +10,7 @@ export default function HeroGrid() {
 
     const drawGrid = useCallback((ctx: CanvasRenderingContext2D, w: number, h: number) => {
         ctx.clearRect(0, 0, w, h);
-        ctx.strokeStyle = isDarkRef.current ? 'rgba(255,255,255,0.20)' : 'rgba(42,36,29,0.18)';
+        ctx.strokeStyle = isDarkRef.current ? 'rgba(255,255,255,0.17)' : 'rgba(42,36,29,0.153)';
         ctx.lineWidth = 0.5;
         ctx.beginPath();
         const cols = Math.ceil(w / CELL) + 1;

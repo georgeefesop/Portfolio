@@ -63,7 +63,7 @@ export default function PayPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="pay-page-shell mx-auto w-full max-w-6xl px-4 pb-28 pt-32 sm:px-6 lg:px-8">
+      <div className="pay-page-shell mx-auto w-full max-w-4xl px-4 pb-28 pt-32 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
         <nav
           aria-label="Breadcrumb"
