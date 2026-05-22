@@ -18,7 +18,7 @@
 /* ---------- DARK MODE (default) ---------- */
 [data-site='greg'] {
   --greg-bg: #141210; /* EDIT: page background */
-  --greg-accent: #EDA220; /* EDIT: brand accent + buttons (DeWalt yellow) */
+  --greg-accent: #b1572c; /* EDIT: brand accent + buttons (burnt orange) */
 
   /* greg's display font is Figtree; efesop.com keeps Newsreader. */
   --font-serif: var(--font-figtree), system-ui, sans-serif;
@@ -50,8 +50,8 @@
   --border-medium: color-mix(in srgb, var(--greg-bg), #fff 16%);
   --border-strong: color-mix(in srgb, var(--greg-bg), #fff 24%);
 
-  /* Nav is a DeWalt-yellow strip in dark mode: dark logo + links,
-     dark CTA button with yellow text. */
+  /* Nav is a burnt-orange strip in dark mode: dark logo + links,
+     dark CTA button with accent-coloured text. */
   --nav-island-bg: var(--greg-accent);
   --nav-island-border: rgba(0, 0, 0, 0.14);
   --nav-fg: #1a1308;
@@ -108,7 +108,7 @@
    greg only needs the value to start with "light-". */
 [data-theme^='light-'] [data-site='greg'] {
   --greg-bg: #f6f2e9; /* EDIT: page background */
-  --greg-accent: #A06D12; /* EDIT: brand accent + buttons (darkened DeWalt yellow for cream bg) */
+  --greg-accent: #b1572c; /* EDIT: brand accent + buttons (burnt orange) */
 
   color-scheme: light;
 
