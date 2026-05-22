@@ -1,6 +1,7 @@
 import FadeIn from '../motion/FadeIn';
 import CtaLink from '../analytics/CtaLink';
 import ContactViewTracker from '../analytics/ContactViewTracker';
+import TopRatedBadge from '../ui/TopRatedBadge';
 import { Shield, Star, Zap, Mail, MessageCircle, Phone, ArrowRight } from 'lucide-react';
 
 const UPWORK_PROFILE_URL = 'https://www.upwork.com/freelancers/~0192f6c9c9c1e1bf83';
@@ -49,11 +50,9 @@ export default function Contact() {
                         {/* Identity strip */}
                         <div className="contact-identity flex flex-wrap items-center gap-3 pb-6 border-b border-border-subtle/50">
                             <UpworkWordmark className="contact-identity-logo h-7 w-auto" style={{ color: UPWORK_GREEN }} />
-                            <span
-                                className="contact-identity-badge px-2 py-0.5 text-[10px] font-bold tracking-wider text-white rounded-full"
-                                style={{ backgroundColor: UPWORK_GREEN }}
-                            >
-                                PRO
+                            <span className="inline-flex items-center gap-1.5">
+                                <TopRatedBadge className="h-6 w-6" />
+                                <span className="text-xs font-bold tracking-wide text-text-primary">Top Rated</span>
                             </span>
                         </div>
 
@@ -103,7 +102,7 @@ export default function Contact() {
                             href={UPWORK_PROFILE_URL}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="contact-cta-button mt-8 w-full flex items-center justify-center gap-2 text-white font-bold py-4 rounded-lg transition-colors group bg-[#14A800] hover:bg-[#108300]"
+                            className="contact-cta-button mt-8 w-full flex items-center justify-center gap-2 text-white font-bold py-4 rounded-lg transition-colors group bg-[#1F57C3] hover:bg-[#19469C]"
                         >
                             Hire me on Upwork
                             <ArrowRight size={18} className="contact-cta-icon group-hover:translate-x-0.5 transition-transform" />

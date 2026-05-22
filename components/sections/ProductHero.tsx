@@ -5,9 +5,10 @@ import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import HeroGrid from '@/components/ui/HeroGrid';
 import CtaLink from '@/components/analytics/CtaLink';
+import TopRatedBadge from '@/components/ui/TopRatedBadge';
 
 const UPWORK_URL = 'https://www.upwork.com/freelancers/~0192f6c9c9c1e1bf83';
-const UPWORK_GREEN = '#14A800';
+const TOP_RATED_BLUE = '#1F57C3';
 
 const FADE_UP = {
     hidden: { opacity: 0, y: 12 },
@@ -91,7 +92,7 @@ export default function ProductHero() {
                         variants={FADE_UP}
                         className="text-4xl sm:text-5xl md:text-6xl lg:text-[68px] font-bold tracking-tight leading-[1.05] text-text-primary"
                     >
-                        <span className="block lg:whitespace-nowrap">
+                        <span className="block min-[1440px]:whitespace-nowrap">
                             Websites with{' '}
                             <span
                                 className="italic font-normal text-accent-primary lg:text-[80px]"
@@ -100,7 +101,7 @@ export default function ProductHero() {
                                 purpose.
                             </span>
                         </span>
-                        <span className="block lg:whitespace-nowrap">
+                        <span className="block min-[1440px]:whitespace-nowrap">
                             Built to work for{' '}
                             <span
                                 className="italic font-normal text-accent-primary lg:text-[80px]"
@@ -135,19 +136,25 @@ export default function ProductHero() {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="group inline-flex items-center gap-2 rounded-xl px-7 py-4 text-base font-semibold text-white shadow-sm transition-[filter,transform] duration-200 hover:brightness-110 hover:-translate-y-0.5"
-                            style={{ backgroundColor: UPWORK_GREEN }}
+                            style={{ backgroundColor: TOP_RATED_BLUE }}
                         >
                             Hire me on Upwork
                             <ArrowRight size={18} className="transition-transform group-hover:translate-x-1" />
                         </CtaLink>
 
-                        <a
-                            href="#work"
-                            onClick={scrollToWork}
-                            className="text-sm text-text-dim hover:text-text-primary transition-colors"
-                        >
-                            or see selected work ↓
-                        </a>
+                        <div className="flex flex-col items-start gap-2">
+                            <span className="inline-flex items-center gap-1.5">
+                                <TopRatedBadge className="h-5 w-5" />
+                                <span className="text-sm font-semibold tracking-wide text-text-primary">Top Rated</span>
+                            </span>
+                            <a
+                                href="#work"
+                                onClick={scrollToWork}
+                                className="text-sm text-text-dim hover:text-text-primary transition-colors"
+                            >
+                                or see selected work ↓
+                            </a>
+                        </div>
                     </motion.div>
 
                     <motion.p

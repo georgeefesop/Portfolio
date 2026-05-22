@@ -2,6 +2,7 @@
 
 import { ArrowRight } from 'lucide-react';
 import CtaLink from '@/components/analytics/CtaLink';
+import TopRatedBadge from './TopRatedBadge';
 
 const UPWORK_URL = 'https://www.upwork.com/freelancers/~0192f6c9c9c1e1bf83';
 const UPWORK_GREEN = '#14A800';
@@ -30,8 +31,9 @@ export default function MicroUpworkCard({ className }: { className?: string }) {
         >
             <div className="flex items-center gap-2 mb-2.5">
                 <UpworkWordmark className="h-4 w-auto" style={{ color: UPWORK_GREEN }} />
-                <span className="text-[9px] font-bold tracking-wider text-white rounded-full px-1.5 py-0.5" style={{ backgroundColor: UPWORK_GREEN }}>
-                    PRO
+                <span className="inline-flex items-center gap-1">
+                    <TopRatedBadge className="h-5 w-5" />
+                    <span className="text-[10px] font-bold tracking-wide text-black/70">Top Rated</span>
                 </span>
             </div>
             <div className="flex items-center gap-3 mb-3 text-[11px] font-mono text-black/40">
@@ -43,7 +45,7 @@ export default function MicroUpworkCard({ className }: { className?: string }) {
             </div>
             <div
                 className="flex items-center justify-center gap-1.5 rounded-lg px-4 py-2 text-xs font-bold text-white transition-[filter] duration-200 group-hover:brightness-110"
-                style={{ backgroundColor: UPWORK_GREEN }}
+                style={{ backgroundColor: '#1F57C3' }}
             >
                 Hire me on Upwork
                 <ArrowRight size={12} className="group-hover:translate-x-0.5 transition-transform" />

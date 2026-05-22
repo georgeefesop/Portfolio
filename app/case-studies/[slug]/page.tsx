@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, Shield, Star, Zap } from 'lucide-react';
 import { cases } from '@/data/case-studies';
 import CaseStudyContent from '@/components/case-studies/CaseStudyContent';
 import CtaLink from '@/components/analytics/CtaLink';
+import TopRatedBadge from '@/components/ui/TopRatedBadge';
 import Footer from '@/components/ui/Footer';
 
 const SITE_URL = 'https://efesop.com';
@@ -154,13 +155,17 @@ function CaseStudyUpworkCta() {
                     </ul>
                 </div>
                 <div className="case-study-upwork-cta-actions flex flex-col gap-2 md:items-end md:shrink-0">
+                    <span className="inline-flex items-center gap-1.5">
+                        <TopRatedBadge className="h-6 w-6" />
+                        <span className="text-xs font-bold tracking-wide text-text-primary">Top Rated</span>
+                    </span>
                     <CtaLink
                         destination="upwork"
                         ctaLocation="case_study_page"
                         href={UPWORK_PROFILE_URL}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="case-study-upwork-cta-button inline-flex items-center justify-center gap-2 text-white font-bold px-6 py-4 rounded-lg transition-colors bg-[#14A800] hover:bg-[#108300] text-sm md:text-base"
+                        className="case-study-upwork-cta-button inline-flex items-center justify-center gap-2 text-white font-bold px-6 py-4 rounded-lg transition-colors bg-[#1F57C3] hover:bg-[#19469C] text-sm md:text-base"
                     >
                         Hire me on Upwork
                         <ArrowRight size={18} aria-hidden />
