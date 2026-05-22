@@ -20,6 +20,7 @@ export const metadata: Metadata = {
   description:
     'G.E. Revamp Services is a Limassol building company. Over 30 years of renovations, extensions, additional floors and property maintenance across Cyprus. Free quotes on WhatsApp.',
   alternates: { canonical: GREG.siteUrl },
+  icons: { icon: '/greg/icon.svg' },
   openGraph: {
     title: 'G.E. Revamp Services | Renovations & Extensions in Cyprus',
     description:
