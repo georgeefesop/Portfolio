@@ -46,8 +46,8 @@ type JobRow = {
 
 type Quota = { used: number; cap: number; remaining: number };
 
-/** Prompt-craft guidance fed to Claude so it writes vivid, specific prompts. */
-const SYSTEM_PROMPT = `You are a prompt engineer for an architectural visualisation tool. A Cyprus building contractor describes, in plain words, a renovation or new-build he wants to show a client. Your job is to turn each request into ONE richly detailed image-generation prompt for the Nano Banana Pro model.
+/** Prompt-craft guidance: writes from-scratch architectural prose. Used when no reference photo is supplied. */
+const SCRATCH_SYSTEM_PROMPT = `You are a prompt engineer for an architectural visualisation tool. A Cyprus building contractor describes, in plain words, a renovation or new-build he wants to show a client. Your job is to turn each request into ONE richly detailed image-generation prompt for the Nano Banana Pro model.
 
 Write each prompt as flowing natural prose (not comma-soup keywords), stacking these layers in order:
 1. Subject - the building, extension, room or outdoor structure, with concrete architectural detail.
@@ -65,6 +65,42 @@ Rules:
 - If the contractor asked for multiple renders, vary the angle, time of day or framing between them so the set feels like a real shoot.
 
 Return ONLY a JSON array of prompt strings - exactly the number requested, nothing else. No markdown fences, no commentary.`;
+
+/** Prompt-craft guidance for edit mode: the contractor uploaded photo(s) of an existing space; the model edits them. */
+const EDIT_SYSTEM_PROMPT = `You are a prompt engineer for an architectural visualisation tool. A Cyprus building contractor has uploaded photograph(s) of an existing space (a room, an exterior, a yard) and described the renovation he wants. Your job is to turn each request into ONE image-EDITING prompt for the Nano Banana Pro model, which will modify the reference photograph(s) to show the proposed result.
+
+You can see the reference photograph(s) in this conversation. Look at them carefully. Write each prompt as a clear, specific edit instruction in flowing prose, stacking these layers:
+1. Frame the task as an EDIT, not a from-scratch generation. Open with "Edit this photograph:" or "Modify this space:" so the model preserves the scene.
+2. PRESERVE - explicitly call out what must stay: the room geometry, the viewing angle, the window/door positions, the structural elements you can actually see in the reference. Name them ("keep the existing window on the left wall", "preserve the stone arch", "same camera angle").
+3. CHANGE - name the specific surfaces, fittings, finishes, fixtures or structures to add, remove or replace. Use real material names (white render, local limestone, anthracite aluminium frames, oak veneer, terracotta tile, matte black handleless cabinets, honed marble).
+4. Lighting - keep the existing light direction visible in the photo; describe natural Mediterranean daylight if the scene is dim.
+5. Realism - the edit must remain photorealistic; same camera perspective, same colour treatment as the source photo.
+
+Rules:
+- The output must look like a believable photograph of the SAME location after renovation, not a brand-new scene.
+- Be specific about what to keep AND what to change. Reference details you can actually see in the photo.
+- If the brief is vague, invent sensible architectural detail that matches the style of the existing space.
+- No people, no text, no watermarks, no logos.
+- For multiple renders, vary the materials or styling between them while keeping the same room geometry and angle.
+
+Return ONLY a JSON array of prompt strings - exactly the number requested. No markdown fences, no commentary.`;
+
+type RefBuffer = { buffer: Buffer; mime: 'image/jpeg' | 'image/png' | 'image/webp' | 'image/gif' };
+
+function normaliseMime(raw: string): RefBuffer['mime'] {
+  const m = raw.toLowerCase();
+  if (m === 'image/png') return 'image/png';
+  if (m === 'image/webp') return 'image/webp';
+  if (m === 'image/gif') return 'image/gif';
+  return 'image/jpeg';
+}
+
+async function fileToRef(file: File): Promise<RefBuffer> {
+  return {
+    buffer: Buffer.from(await file.arrayBuffer()),
+    mime: normaliseMime(file.type),
+  };
+}
 
 function quotaFrom(used: number): Quota {
   return { used, cap: WEEKLY_CAP, remaining: Math.max(0, WEEKLY_CAP - used) };
@@ -88,10 +124,50 @@ async function weeklyUsed(
   return count ?? 0;
 }
 
-/** Ask Claude to turn the brief into `count` image-generation prompts. */
-async function buildPrompts(brief: string, count: number): Promise<string[]> {
+/**
+ * Ask Claude to turn the brief into `count` image-generation prompts.
+ * When `refs` is non-empty, Claude sees the reference photos and writes edit-mode
+ * prompts that preserve the scene; otherwise it writes from-scratch architectural prose.
+ */
+async function buildPrompts(
+  brief: string,
+  count: number,
+  refs: RefBuffer[],
+): Promise<string[]> {
   const key = process.env.ANTHROPIC_API_KEY;
   if (!key) throw new Error('render_unavailable');
+
+  const hasRefs = refs.length > 0;
+  const system = hasRefs ? EDIT_SYSTEM_PROMPT : SCRATCH_SYSTEM_PROMPT;
+
+  type TextBlock = { type: 'text'; text: string };
+  type ImageBlock = {
+    type: 'image';
+    source: { type: 'base64'; media_type: RefBuffer['mime']; data: string };
+  };
+  const userContent: (TextBlock | ImageBlock)[] = [];
+
+  if (hasRefs) {
+    userContent.push({
+      type: 'text',
+      text: `Reference photo${refs.length > 1 ? 's' : ''} of the existing space (these will also be passed to the image model as the source to edit):`,
+    });
+    for (const ref of refs) {
+      userContent.push({
+        type: 'image',
+        source: {
+          type: 'base64',
+          media_type: ref.mime,
+          data: ref.buffer.toString('base64'),
+        },
+      });
+    }
+  }
+
+  userContent.push({
+    type: 'text',
+    text: `Contractor's brief:\n"""${brief}"""\n\nReturn a JSON array of exactly ${count} ${hasRefs ? 'image-editing' : 'image-generation'} prompt string${count > 1 ? 's' : ''}.`,
+  });
 
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -103,13 +179,8 @@ async function buildPrompts(brief: string, count: number): Promise<string[]> {
     body: JSON.stringify({
       model: 'claude-opus-4-7',
       max_tokens: 2048,
-      system: SYSTEM_PROMPT,
-      messages: [
-        {
-          role: 'user',
-          content: `Contractor's brief:\n"""${brief}"""\n\nReturn a JSON array of exactly ${count} image-generation prompt string${count > 1 ? 's' : ''}.`,
-        },
-      ],
+      system,
+      messages: [{ role: 'user', content: userContent }],
     }),
   });
 
@@ -154,8 +225,53 @@ async function buildPrompts(brief: string, count: number): Promise<string[]> {
 
 type RunwareResult = { imageURL: string; cost: number | null };
 
-/** Generate one image per prompt on Runware. Order matches `prompts`. */
-async function runwareGenerate(prompts: string[]): Promise<RunwareResult[]> {
+/**
+ * Upload a reference photo to Runware so it can be passed by UUID into
+ * subsequent imageInference calls as `referenceImages`. Returns the imageUUID.
+ */
+async function runwareUpload(ref: RefBuffer): Promise<string> {
+  const key = process.env.RUNWARE_API_KEY;
+  if (!key) throw new Error('render_unavailable');
+
+  const dataUri = `data:${ref.mime};base64,${ref.buffer.toString('base64')}`;
+  const res = await fetch('https://api.runware.ai/v1', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${key}`,
+    },
+    body: JSON.stringify([
+      {
+        taskType: 'imageUpload',
+        taskUUID: crypto.randomUUID(),
+        image: dataUri,
+      },
+    ]),
+  });
+
+  if (!res.ok) {
+    console.error('[render-studio] runware upload http', res.status);
+    throw new Error('ref_upload_failed');
+  }
+
+  const data = (await res.json()) as { data?: { imageUUID?: string }[] };
+  const uuid = data.data?.[0]?.imageUUID;
+  if (!uuid) {
+    console.error('[render-studio] runware upload returned no imageUUID');
+    throw new Error('ref_upload_failed');
+  }
+  return uuid;
+}
+
+/**
+ * Generate one image per prompt on Runware. Order matches `prompts`.
+ * When `refUuids` is non-empty, every render is anchored to those reference
+ * images so Nano Banana Pro edits them instead of generating from scratch.
+ */
+async function runwareGenerate(
+  prompts: string[],
+  refUuids: string[],
+): Promise<RunwareResult[]> {
   const key = process.env.RUNWARE_API_KEY;
   if (!key) throw new Error('render_unavailable');
 
@@ -169,6 +285,7 @@ async function runwareGenerate(prompts: string[]): Promise<RunwareResult[]> {
     numberResults: 1,
     includeCost: true,
     outputFormat: 'JPEG',
+    ...(refUuids.length ? { referenceImages: refUuids } : {}),
   }));
 
   const res = await fetch('https://api.runware.ai/v1', {
@@ -220,23 +337,22 @@ async function rehost(
   return data.publicUrl;
 }
 
-/** Store reference photos under render-studio/refs/ so the brief keeps its context. */
+/** Archive reference photos under render-studio/refs/ so the brief keeps its context. */
 async function storeRefs(
   supabase: NonNullable<ReturnType<typeof getGregSupabase>>,
   batchId: string,
-  refs: File[],
+  refs: RefBuffer[],
 ): Promise<void> {
   for (let i = 0; i < refs.length; i++) {
     try {
-      const buffer = Buffer.from(await refs[i].arrayBuffer());
       const path = `render-studio/refs/${batchId}/${i + 1}.jpg`;
-      await supabase.storage.from(BUCKET).upload(path, buffer, {
-        contentType: refs[i].type || 'image/jpeg',
+      await supabase.storage.from(BUCKET).upload(path, refs[i].buffer, {
+        contentType: refs[i].mime,
         upsert: true,
       });
     } catch (err) {
       console.error(
-        '[render-studio] ref upload failed',
+        '[render-studio] ref archive failed',
         err instanceof Error ? err.message : err,
       );
     }
@@ -295,17 +411,38 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const refs = form
+  const refFiles = form
     .getAll('refs')
     .filter((f): f is File => f instanceof File && f.size > 0)
     .slice(0, MAX_REFS);
 
+  // Pre-read each ref File into a Buffer once; reused by Runware upload,
+  // Claude vision input and the Supabase archive.
+  const refs: RefBuffer[] = refFiles.length
+    ? await Promise.all(refFiles.map(fileToRef))
+    : [];
+
   const batchId = crypto.randomUUID();
 
-  // Step 1 - brief -> prompts via Claude.
+  // Step 1 - upload refs to Runware FIRST so we can pass UUIDs into the
+  // inference call. Done before Claude so we don't burn tokens if uploads fail.
+  let refUuids: string[] = [];
+  if (refs.length) {
+    try {
+      refUuids = await Promise.all(refs.map(runwareUpload));
+    } catch (err) {
+      const code = err instanceof Error ? err.message : 'ref_upload_failed';
+      return NextResponse.json(
+        { error: code === 'render_unavailable' ? code : 'ref_upload_failed' },
+        { status: code === 'render_unavailable' ? 503 : 502 },
+      );
+    }
+  }
+
+  // Step 2 - brief + refs -> prompts via Claude (vision when refs present).
   let prompts: string[];
   try {
-    prompts = await buildPrompts(brief, count);
+    prompts = await buildPrompts(brief, count, refs);
   } catch (err) {
     const code = err instanceof Error ? err.message : 'prompt_failed';
     return NextResponse.json(
@@ -314,10 +451,10 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Reference photos are stored for the record; non-fatal if they fail.
+  // Reference photos are archived for the record; non-fatal if it fails.
   if (refs.length) await storeRefs(supabase, batchId, refs);
 
-  // Step 2 - insert one job row per prompt, status 'generating'.
+  // Step 3 - insert one job row per prompt, status 'generating'.
   const seedRows = prompts.map((prompt) => ({
     batch_id: batchId,
     status: 'generating',
@@ -337,10 +474,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'render_failed' }, { status: 502 });
   }
 
-  // Step 3 - generate on Runware. On a whole-batch failure, mark every row failed.
+  // Step 4 - generate on Runware. On a whole-batch failure, mark every row failed.
   let results: RunwareResult[];
   try {
-    results = await runwareGenerate(prompts);
+    results = await runwareGenerate(prompts, refUuids);
   } catch {
     await supabase
       .from('greg_render_jobs')
@@ -356,7 +493,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Step 4 - re-host each image and finalise its row.
+  // Step 5 - re-host each image and finalise its row.
   await Promise.all(
     inserted.map(async (row, i) => {
       const id = row.id as string;

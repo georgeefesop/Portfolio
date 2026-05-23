@@ -536,6 +536,8 @@ function messageFor(code: string | undefined): string {
       return 'Could not understand the brief well enough. Try describing it with a bit more detail.';
     case 'render_failed':
       return 'The images could not be generated. Please try again in a moment.';
+    case 'ref_upload_failed':
+      return 'Your reference photos could not be processed. Try smaller images, or remove them and describe the project in the brief instead.';
     case 'invalid_form':
       return 'Something went wrong with the upload. Please try again.';
     case undefined:
