@@ -5,13 +5,23 @@
  * Verifies signature, maps the event back to a lead (by email),
  * upserts a deal, and writes an activity record.
  *
- * Stripe dashboard → Developers → Webhooks → "+ Add endpoint":
- *   URL:      https://kitchens.efesop.com/api/agora/stripe-webhook
+ * Deployed at: https://efesop.com/api/agora/stripe-webhook
+ *   (Agora's marketing sites are separate deploys - the kitchens demo lives at
+ *   agora-work/spec-master-estia/ - but ALL payment callbacks land here on
+ *   efesop.com per the agora repo README.)
+ *
+ * Stripe dashboard → Developers → Webhooks (one endpoint per mode, both already
+ * registered as of 2026-05-23):
+ *   URL:      https://efesop.com/api/agora/stripe-webhook
  *   Events:   checkout.session.completed
  *             invoice.payment_succeeded
  *             invoice.payment_failed
  *             customer.subscription.deleted
  *             payment_intent.payment_failed
+ *   Test:     we_1TaGORGHt7cesuhEIryT4rOj
+ *   Live:     we_1TaGOQGHt7cesuhExY6LB45R (signing secret parked in
+ *             secrets.json -> stripe_agora.webhook_signing_secret_live;
+ *             promote when AGORA_PRICES in lib/agora/stripe.ts is swapped to live IDs)
  *   Secret:   set STRIPE_AGORA_WEBHOOK_SECRET in .env.local + Vercel env
  */
 
