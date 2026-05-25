@@ -8,9 +8,13 @@ import {
   services as defaultServices,
   testimonials as defaultTestimonials,
   defaultBusiness,
+  heroContent as defaultHero,
+  aboutContent as defaultAbout,
   type GregService,
   type GregTestimonial,
   type BusinessDetails,
+  type HeroContent,
+  type AboutContent,
 } from '@/data/greg/content';
 import {
   galleryItems as defaultGallery,
@@ -34,12 +38,15 @@ export default async function AdminContentPage() {
     );
   }
 
-  const [gallery, services, testimonials, business] = await Promise.all([
-    getContent<GalleryItem[]>('gallery', defaultGallery),
-    getContent<GregService[]>('services', defaultServices),
-    getContent<GregTestimonial[]>('testimonials', defaultTestimonials),
-    getContent<BusinessDetails>('business', defaultBusiness),
-  ]);
+  const [gallery, services, testimonials, business, hero, about] =
+    await Promise.all([
+      getContent<GalleryItem[]>('gallery', defaultGallery),
+      getContent<GregService[]>('services', defaultServices),
+      getContent<GregTestimonial[]>('testimonials', defaultTestimonials),
+      getContent<BusinessDetails>('business', defaultBusiness),
+      getContent<HeroContent>('hero', defaultHero),
+      getContent<AboutContent>('about', defaultAbout),
+    ]);
 
   return (
     <AdminShell
@@ -51,6 +58,8 @@ export default async function AdminContentPage() {
         services={services}
         testimonials={testimonials}
         business={business}
+        hero={hero}
+        about={about}
       />
     </AdminShell>
   );

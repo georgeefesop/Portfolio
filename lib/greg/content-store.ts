@@ -8,7 +8,13 @@
 import 'server-only';
 import { getGregSupabase } from './supabase';
 
-export type ContentKey = 'gallery' | 'services' | 'testimonials' | 'business';
+export type ContentKey =
+  | 'gallery'
+  | 'services'
+  | 'testimonials'
+  | 'business'
+  | 'hero'
+  | 'about';
 
 export async function getContent<T>(key: ContentKey, fallback: T): Promise<T> {
   const supabase = getGregSupabase();

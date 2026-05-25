@@ -4,8 +4,13 @@
  * SINGLE SOURCE OF TRUTH for the site's words. Editing copy here updates
  * the site - the section components are presentational and render from this.
  *
- * Voice: a Cyprus building contractor. Plain-spoken, confident, trustworthy.
- * No jargon, no em dashes.
+ * Voice: G.E. Revamp is an owner-run COMPANY (registered as G.E. Revamp
+ * Services Limited) with trades/teams. Default to first-person plural
+ * "we/our" for the company doing the work, and "Gregory" by name for
+ * personal-accountability beats (he runs the site, he quotes the job, he
+ * is on site). NEVER first-person singular "I" - it shrinks a company
+ * down to a sole trader. Plain-spoken, confident, trustworthy. No jargon.
+ * No em dashes.
  */
 
 import {
@@ -26,7 +31,25 @@ import { GREG } from '@/lib/greg/site';
 
 /* ----------------------------- Hero ----------------------------- */
 
-export const heroContent = {
+/**
+ * Hero copy + before/after image pair. The CTAs and trustLine stay static
+ * (out of v1 admin editing) because they drive layout + WhatsApp links.
+ * The admin tab edits: eyebrow, titleLead, titleAccent, body, beforeImage,
+ * afterImage.
+ */
+export interface HeroContent {
+  eyebrow: string;
+  titleLead: string;
+  titleAccent: string;
+  body: string;
+  primaryCta: string;
+  secondaryCta: string;
+  trustLine: string;
+  beforeImage: string;
+  afterImage: string;
+}
+
+export const heroContent: HeroContent = {
   eyebrow: 'Owner-run building company · Limassol, Cyprus',
   titleLead: 'Home ',
   titleAccent: 'Improvements',
@@ -212,7 +235,19 @@ export const testimonials: GregTestimonial[] = [
 
 /* ---------------------------- About ----------------------------- */
 
-export const aboutContent = {
+/**
+ * About-section copy + a single editable photo of Gregory on a site.
+ * `image` is optional; the section falls back to /greg/greg-about.jpg
+ * when blank, so the site renders fine before Gregory uploads his own.
+ */
+export interface AboutContent {
+  heading: string;
+  headingAccent: string;
+  paragraphs: string[];
+  image?: string;
+}
+
+export const aboutContent: AboutContent = {
   heading: 'Three decades of building, ',
   headingAccent: 'now one company.',
   paragraphs: [

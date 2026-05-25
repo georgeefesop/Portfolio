@@ -1,7 +1,21 @@
+import Image from 'next/image';
 import FadeIn from '@/components/motion/FadeIn';
-import { aboutContent } from '@/data/greg/content';
+import {
+  aboutContent as defaultAbout,
+  type AboutContent,
+} from '@/data/greg/content';
 
-export default function About() {
+const FALLBACK_IMAGE = '/greg/greg-about.jpg';
+
+export default function About({
+  about = defaultAbout,
+}: {
+  about?: AboutContent;
+}) {
+  const imageSrc = about.image && about.image.trim() !== ''
+    ? about.image
+    : FALLBACK_IMAGE;
+
   return (
     <section id="about" className="scroll-mt-24 bg-bg-primary py-14 md:py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -10,25 +24,28 @@ export default function About() {
             {/* Copy */}
             <div className="lg:col-span-7">
               <h2 className="font-serif text-h1 leading-[0.98] tracking-tight text-text-primary">
-                {aboutContent.heading}
+                {about.heading}
                 <span className="italic font-normal text-accent-primary">
-                  {aboutContent.headingAccent}
+                  {about.headingAccent}
                 </span>
               </h2>
               <div className="mt-6 space-y-5 text-base leading-relaxed text-text-secondary md:text-lg">
-                {aboutContent.paragraphs.map((p, i) => (
+                {about.paragraphs.map((p, i) => (
                   <p key={i}>{p}</p>
                 ))}
               </div>
             </div>
 
             {/* Photo */}
-            <div
-              className="min-h-[280px] rounded-2xl border border-border-subtle bg-cover bg-center lg:col-span-5"
-              style={{ backgroundImage: "url('/greg/greg-about.jpg')" }}
-              role="img"
-              aria-label="Gregory Efesopoulos on a building site"
-            />
+            <div className="relative min-h-[280px] overflow-hidden rounded-2xl border border-border-subtle lg:col-span-5">
+              <Image
+                src={imageSrc}
+                alt="Gregory Efesopoulos on a building site"
+                fill
+                sizes="(max-width: 1024px) 100vw, 480px"
+                className="object-cover"
+              />
+            </div>
           </div>
         </FadeIn>
       </div>

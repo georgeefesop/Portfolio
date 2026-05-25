@@ -16,6 +16,8 @@ import type {
   GregService,
   GregTestimonial,
   BusinessDetails,
+  HeroContent,
+  AboutContent,
 } from '@/data/greg/content';
 import {
   GALLERY_FILTERS,
@@ -23,9 +25,17 @@ import {
   type GalleryCategory,
 } from '@/data/greg/gallery';
 
-type Tab = 'gallery' | 'services' | 'testimonials' | 'business';
+type Tab =
+  | 'hero'
+  | 'about'
+  | 'gallery'
+  | 'services'
+  | 'testimonials'
+  | 'business';
 
 const TABS: { id: Tab; label: string }[] = [
+  { id: 'hero', label: 'Home page hero' },
+  { id: 'about', label: 'About section' },
   { id: 'gallery', label: 'Photo gallery' },
   { id: 'services', label: 'Services' },
   { id: 'testimonials', label: 'Testimonials' },
@@ -53,17 +63,23 @@ export default function ContentEditor({
   services: s0,
   testimonials: t0,
   business: b0,
+  hero: h0,
+  about: a0,
 }: {
   gallery: GalleryItem[];
   services: GregService[];
   testimonials: GregTestimonial[];
   business: BusinessDetails;
+  hero: HeroContent;
+  about: AboutContent;
 }) {
-  const [tab, setTab] = useState<Tab>('gallery');
+  const [tab, setTab] = useState<Tab>('hero');
   const [gallery, setGallery] = useState<GalleryItem[]>(g0);
   const [services, setServices] = useState<GregService[]>(s0);
   const [testimonials, setTestimonials] = useState<GregTestimonial[]>(t0);
   const [business, setBusiness] = useState<BusinessDetails>(b0);
+  const [hero, setHero] = useState<HeroContent>(h0);
+  const [about, setAbout] = useState<AboutContent>(a0);
 
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -163,6 +179,39 @@ export default function ContentEditor({
     );
   }
 
+  /* ---- hero ---- */
+  function patchHero(patch: Partial<HeroContent>) {
+    setHero((h) => ({ ...h, ...patch }));
+  }
+  async function onHeroImageFile(
+    slot: 'beforeImage' | 'afterImage',
+    file: File,
+  ) {
+    setUploading(`hero:${slot}`);
+    setError(null);
+    const url = await uploadImage(file);
+    if (url) patchHero({ [slot]: url } as Partial<HeroContent>);
+    setUploading(null);
+  }
+
+  /* ---- about ---- */
+  function patchAbout(patch: Partial<AboutContent>) {
+    setAbout((a) => ({ ...a, ...patch }));
+  }
+  function patchAboutParagraph(pi: number, value: string) {
+    setAbout((a) => ({
+      ...a,
+      paragraphs: a.paragraphs.map((p, i) => (i === pi ? value : p)),
+    }));
+  }
+  async function onAboutImageFile(file: File) {
+    setUploading('about:image');
+    setError(null);
+    const url = await uploadImage(file);
+    if (url) patchAbout({ image: url });
+    setUploading(null);
+  }
+
   function saveBar(key: Tab, data: unknown, noun: string) {
     return (
       <div className="flex flex-wrap items-center gap-3 border-t border-border-subtle pt-4">
@@ -215,6 +264,272 @@ export default function ContentEditor({
           </button>
         ))}
       </div>
+
+      {/* Hero */}
+      {tab === 'hero' && (
+        <div className="flex flex-col gap-5">
+          <p className="text-sm text-text-secondary">
+            The first thing visitors see. Edit the headline, intro text, and
+            the before/after photo pair that appears next to it.
+          </p>
+
+          {/* Before / after image pair */}
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {(['beforeImage', 'afterImage'] as const).map((slot) => {
+              const url = hero[slot];
+              const isUploading = uploading === `hero:${slot}`;
+              const label = slot === 'beforeImage' ? 'Before photo' : 'After photo';
+              const subLabel =
+                slot === 'beforeImage'
+                  ? 'How the space looked before the work.'
+                  : 'How it looked once finished.';
+              return (
+                <div
+                  key={slot}
+                  className="flex flex-col gap-3 rounded-xl border border-border-subtle bg-bg-secondary p-4"
+                >
+                  <div>
+                    <span className={labelCls}>{label}</span>
+                    <p className="text-xs text-text-dim">{subLabel}</p>
+                  </div>
+                  <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg bg-bg-tertiary">
+                    {url ? (
+                      <Image
+                        src={url}
+                        alt={label}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 640px) 100vw, 320px"
+                      />
+                    ) : (
+                      <span className="flex h-full items-center justify-center text-xs text-text-dim">
+                        No photo yet
+                      </span>
+                    )}
+                  </div>
+                  <label className="inline-flex w-fit cursor-pointer items-center gap-1.5 rounded-lg border border-border-medium px-3 py-2 text-xs font-medium text-text-muted transition-colors hover:border-accent-primary hover:text-accent-primary">
+                    {isUploading ? (
+                      <Loader2 size={13} className="animate-spin" aria-hidden />
+                    ) : (
+                      <ImagePlus size={13} aria-hidden />
+                    )}
+                    {url ? 'Replace photo' : 'Upload photo'}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const f = e.target.files?.[0];
+                        e.target.value = '';
+                        if (f) onHeroImageFile(slot, f);
+                      }}
+                    />
+                  </label>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Copy */}
+          <div className="flex flex-col gap-4">
+            <div>
+              <span className={labelCls}>Eyebrow (small line above the headline)</span>
+              <input
+                type="text"
+                value={hero.eyebrow}
+                onChange={(e) => patchHero({ eyebrow: e.target.value })}
+                placeholder="Owner-run building company · Limassol, Cyprus"
+                className={field}
+              />
+            </div>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div>
+                <span className={labelCls}>Headline</span>
+                <input
+                  type="text"
+                  value={hero.titleLead}
+                  onChange={(e) => patchHero({ titleLead: e.target.value })}
+                  placeholder="Home "
+                  className={field}
+                />
+              </div>
+              <div>
+                <span className={labelCls}>Highlighted ending (shown in italic colour)</span>
+                <input
+                  type="text"
+                  value={hero.titleAccent}
+                  onChange={(e) => patchHero({ titleAccent: e.target.value })}
+                  placeholder="Improvements"
+                  className={field}
+                />
+              </div>
+            </div>
+            <p className="text-xs text-text-dim">
+              The headline reads as one sentence on the page: the plain text,
+              then the highlighted ending. Mind the space at the end of the
+              first part if you want a gap.
+            </p>
+            <div>
+              <span className={labelCls}>Intro paragraph</span>
+              <textarea
+                value={hero.body}
+                onChange={(e) => patchHero({ body: e.target.value })}
+                rows={3}
+                placeholder="Short paragraph that sits under the headline."
+                className={field}
+              />
+            </div>
+          </div>
+
+          {saveBar('hero', hero, 'home page hero')}
+        </div>
+      )}
+
+      {/* About */}
+      {tab === 'about' && (
+        <div className="flex flex-col gap-5">
+          <p className="text-sm text-text-secondary">
+            The About section further down the homepage. Edit the photo of
+            Gregory on site and the wording around it.
+          </p>
+
+          {/* Image */}
+          <div className="flex flex-col gap-3 rounded-xl border border-border-subtle bg-bg-secondary p-4 sm:flex-row sm:items-start">
+            <div className="relative h-40 w-full shrink-0 overflow-hidden rounded-lg bg-bg-tertiary sm:h-32 sm:w-48">
+              {about.image ? (
+                <Image
+                  src={about.image}
+                  alt="Photo of Gregory on a building site"
+                  fill
+                  className="object-cover"
+                  sizes="192px"
+                />
+              ) : (
+                <Image
+                  src="/greg/greg-about.jpg"
+                  alt="Default photo of Gregory on a building site"
+                  fill
+                  className="object-cover opacity-90"
+                  sizes="192px"
+                />
+              )}
+            </div>
+            <div className="flex flex-1 flex-col gap-2">
+              <span className={labelCls}>Photo of Gregory</span>
+              <p className="text-xs text-text-dim">
+                A landscape photo works best. Leave it as is to use the
+                default photo already on the site.
+              </p>
+              <label className="inline-flex w-fit cursor-pointer items-center gap-1.5 rounded-lg border border-border-medium px-3 py-2 text-xs font-medium text-text-muted transition-colors hover:border-accent-primary hover:text-accent-primary">
+                {uploading === 'about:image' ? (
+                  <Loader2 size={13} className="animate-spin" aria-hidden />
+                ) : (
+                  <ImagePlus size={13} aria-hidden />
+                )}
+                {about.image ? 'Replace photo' : 'Upload photo'}
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0];
+                    e.target.value = '';
+                    if (f) onAboutImageFile(f);
+                  }}
+                />
+              </label>
+              {about.image && (
+                <button
+                  type="button"
+                  onClick={() => patchAbout({ image: '' })}
+                  className="w-fit text-xs font-medium text-text-muted hover:text-accent-coral"
+                >
+                  Reset to default photo
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Copy */}
+          <div className="flex flex-col gap-4">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div>
+                <span className={labelCls}>Heading</span>
+                <input
+                  type="text"
+                  value={about.heading}
+                  onChange={(e) => patchAbout({ heading: e.target.value })}
+                  placeholder="Three decades of building, "
+                  className={field}
+                />
+              </div>
+              <div>
+                <span className={labelCls}>Highlighted ending (shown in italic colour)</span>
+                <input
+                  type="text"
+                  value={about.headingAccent}
+                  onChange={(e) => patchAbout({ headingAccent: e.target.value })}
+                  placeholder="now one company."
+                  className={field}
+                />
+              </div>
+            </div>
+            <p className="text-xs text-text-dim">
+              The heading reads as one sentence: the plain text then the
+              highlighted ending. Include the trailing space on the first
+              part if you want a gap.
+            </p>
+            <div>
+              <span className={labelCls}>Paragraphs</span>
+              <div className="flex flex-col gap-2">
+                {about.paragraphs.map((p, pi) => (
+                  <div key={pi} className="flex gap-2">
+                    <textarea
+                      value={p}
+                      onChange={(e) => patchAboutParagraph(pi, e.target.value)}
+                      placeholder="A paragraph about the company."
+                      rows={3}
+                      className={field}
+                    />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        patchAbout({
+                          paragraphs: about.paragraphs.filter(
+                            (_, i) => i !== pi,
+                          ),
+                        })
+                      }
+                      aria-label="Remove paragraph"
+                      className={`${iconBtn} shrink-0`}
+                    >
+                      <Trash2 size={13} aria-hidden />
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={() =>
+                  patchAbout({ paragraphs: [...about.paragraphs, ''] })
+                }
+                className="mt-2 text-xs font-medium text-accent-primary hover:underline"
+              >
+                + Add paragraph
+              </button>
+            </div>
+          </div>
+
+          {saveBar(
+            'about',
+            {
+              ...about,
+              paragraphs: about.paragraphs.filter((p) => p.trim() !== ''),
+            },
+            'about section',
+          )}
+        </div>
+      )}
 
       {/* Gallery */}
       {tab === 'gallery' && (

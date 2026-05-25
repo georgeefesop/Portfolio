@@ -11,14 +11,20 @@ import { getContent } from '@/lib/greg/content-store';
 import {
   services as defaultServices,
   testimonials as defaultTestimonials,
+  heroContent as defaultHero,
+  aboutContent as defaultAbout,
   type GregService,
   type GregTestimonial,
+  type HeroContent,
+  type AboutContent,
 } from '@/data/greg/content';
 import { galleryItems as defaultGallery } from '@/data/greg/gallery';
 import type { GalleryItem } from '@/data/greg/gallery';
 
 export default async function GregHomePage() {
-  const [services, testimonials, gallery] = await Promise.all([
+  const [hero, about, services, testimonials, gallery] = await Promise.all([
+    getContent<HeroContent>('hero', defaultHero),
+    getContent<AboutContent>('about', defaultAbout),
     getContent<GregService[]>('services', defaultServices),
     getContent<GregTestimonial[]>('testimonials', defaultTestimonials),
     getContent<GalleryItem[]>('gallery', defaultGallery),
@@ -26,13 +32,13 @@ export default async function GregHomePage() {
 
   return (
     <main>
-      <Hero />
+      <Hero hero={hero} />
       <Credentials />
       <Services services={services} />
       <Process />
       <Gallery items={gallery} />
       <Testimonials testimonials={testimonials} />
-      <About />
+      <About about={about} />
       <Areas />
       <FinalCta />
     </main>

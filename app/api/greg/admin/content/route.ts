@@ -9,7 +9,14 @@ import { setContent, type ContentKey } from '@/lib/greg/content-store';
 
 export const runtime = 'nodejs';
 
-const KEYS: ContentKey[] = ['gallery', 'services', 'testimonials', 'business'];
+const KEYS: ContentKey[] = [
+  'gallery',
+  'services',
+  'testimonials',
+  'business',
+  'hero',
+  'about',
+];
 
 export async function POST(request: NextRequest) {
   if (!cookieValid(request.cookies.get(ADMIN_COOKIE)?.value)) {

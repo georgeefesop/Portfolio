@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { headers } from "next/headers";
 import { Inter, JetBrains_Mono, Caveat, Instrument_Sans, Newsreader, Inconsolata, Karla, Fraunces, Figtree } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/ui/Navigation";
@@ -31,17 +32,26 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // greg.efesop.com renders its own GregNav and uses a separate theme token
+  // (`light-greg`) that the portfolio's ThemePreviewToggle does not recognise.
+  // If Navigation rendered here it would paint a dark pill behind GregNav's
+  // parallelogram clip-path AND its ThemePreviewToggle would strip the
+  // light-greg data-theme on mount, snapping greg back to dark mode on
+  // sub-page loads. Skip it entirely on the greg subdomain.
+  const host = (await headers()).get('host') ?? '';
+  const isGregHost = host.toLowerCase().startsWith('greg.');
+
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <body className={`${inter.variable} ${jetbrainsMono.variable} ${caveat.variable} ${instrumentSans.variable} ${newsreader.variable} ${figtree.variable} ${inconsolata.variable} ${karla.variable} ${fraunces.variable} font-sans bg-bg-primary text-text-primary antialiased`} suppressHydrationWarning>
         <script src="/theme-init.js" />
         <PostHogProvider>
-          <Navigation />
+          {!isGregHost && <Navigation />}
           {children}
           <CustomScrollbar />
           <Analytics />
