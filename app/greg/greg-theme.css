@@ -103,6 +103,24 @@
   );
 }
 
+/* ---------- BROWSER AUTOFILL ---------- */
+/* WebKit/Blink apply their own dark autofill styling once a typed value
+   matches a saved credential, which overrides our bg-bg-tertiary inputs
+   (looks like the field flipped to dark mode mid-type). Mask the autofill
+   surface back to our token colours; using var() so this works in both
+   the dark and light greg palettes. */
+[data-site='greg'] input:-webkit-autofill,
+[data-site='greg'] input:-webkit-autofill:hover,
+[data-site='greg'] input:-webkit-autofill:focus,
+[data-site='greg'] input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--text-primary);
+  -webkit-box-shadow: 0 0 0 1000px var(--bg-tertiary) inset;
+  caret-color: var(--text-primary);
+  transition:
+    background-color 100000s ease-in-out 0s,
+    color 100000s ease-in-out 0s;
+}
+
 /* ---------- LIGHT MODE ---------- */
 /* The shared theme toggle sets data-theme="light-greg" on <html>;
    greg only needs the value to start with "light-". */
