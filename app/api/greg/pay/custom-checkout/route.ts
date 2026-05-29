@@ -107,7 +107,8 @@ export async function POST(request: Request) {
       ],
       success_url: `${origin}/pay/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/pay?canceled=1`,
-      billing_address_collection: 'auto',
+      billing_address_collection: wantInvoice ? 'required' : 'auto',
+      tax_id_collection: { enabled: wantInvoice },
       invoice_creation: { enabled: wantInvoice },
       metadata: {
         source: 'greg_custom_pay',

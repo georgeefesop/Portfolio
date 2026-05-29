@@ -118,7 +118,10 @@ export async function POST(request: Request) {
       ],
       success_url: `${origin}/pay/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/pay?canceled=custom`,
-      billing_address_collection: 'auto',
+      // Business invoices need a full billing address; personal payments don't.
+      billing_address_collection: wantInvoice ? 'required' : 'auto',
+      // Surface the VAT / Tax ID input on Checkout when an invoice is requested.
+      tax_id_collection: { enabled: wantInvoice },
       // Opt-in: generate + email a proper invoice PDF.
       invoice_creation: { enabled: wantInvoice },
       metadata: {
