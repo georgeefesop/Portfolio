@@ -143,14 +143,16 @@ const allItems: Item[] = [
 ];
 
 const PINNED_IDS = [
+    'la-hacienda-rebrand',
+    'realfi',
     'estia-kitchens',
     'kingfisher-mortgages',
     'akti',
     'instant-access-locksmiths',
     'uk-vehicles',
-    'realfi',
     'ai-tools',
     'shackle',
+    'sidechains',
     'saxseat',
     'allsop-francis',
     'bank-of-cyprus',
