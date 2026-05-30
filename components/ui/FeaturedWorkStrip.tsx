@@ -28,6 +28,7 @@ const ZOOM_IDS = new Set([
 ]);
 
 const items: FeaturedItem[] = [
+    { id: 'ai-visual-production', title: 'AI Visual Production', tag: 'AI Image · Art Direction', thumbnail: '/images/ai-visual-production/living-form-cube-ivy-hands.webp' },
     { id: 'kingfisher-mortgages', title: 'Kingfisher Mortgages', tag: 'WordPress · Brand', thumbnail: '/images/kingfisher-thumb.jpg' },
     { id: 'akti', title: 'Aktí', tag: 'Brand · Configurator', thumbnail: '/images/akti/akti-hero.jpg' },
     { id: 'uk-vehicles', title: 'UK Vehicles Cyprus', tag: 'Next.js · Commerce', thumbnail: '/images/uk-vehicles/hero-4.jpg' },

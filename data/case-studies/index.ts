@@ -13,10 +13,12 @@ import shackle from './shackle';
 import sidechains from './sidechains';
 import akti from './akti';
 import estiaKitchens from './estia-kitchens';
+import aiVisualProduction from './ai-visual-production';
 
 import { externalCases } from './external';
 
 export const cases: CaseStudy[] = [
+    aiVisualProduction,
     laHaciendaRebrand,
     realfi,
     estiaKitchens,

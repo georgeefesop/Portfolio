@@ -74,10 +74,10 @@ export default function ProductHero() {
                     >
                         <div className="hero-feature-image-frame relative rounded-xl overflow-hidden border-[10px] border-white bg-bg-secondary shadow-xl">
                             <Image
-                                src="/images/estia-kitchens/estia-kitchens-thumb-v4.jpg"
-                                alt="Estia Kitchens homepage"
-                                width={1200}
-                                height={745}
+                                src="/images/ai-visual-production/living-form-hero.jpg"
+                                alt="Living Form hand-cast concrete planter"
+                                width={1198}
+                                height={918}
                                 sizes="100vw"
                                 className="w-full h-auto block"
                                 priority
@@ -176,10 +176,10 @@ export default function ProductHero() {
                 >
                     <div className="hero-feature-image-frame relative rounded-xl overflow-hidden border-[10px] border-white bg-bg-secondary shadow-xl">
                         <Image
-                            src="/images/estia-kitchens/estia-kitchens-thumb-v4.jpg"
-                            alt="Estia Kitchens homepage"
-                            width={1200}
-                            height={745}
+                            src="/images/ai-visual-production/living-form-hero.jpg"
+                            alt="Living Form hand-cast concrete planter"
+                            width={1198}
+                            height={918}
                             sizes="(max-width: 1024px) 90vw, 720px"
                             className="w-full h-auto block"
                             priority

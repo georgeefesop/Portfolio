@@ -143,6 +143,7 @@ const allItems: Item[] = [
 ];
 
 const PINNED_IDS = [
+    'ai-visual-production',
     'la-hacienda-rebrand',
     'realfi',
     'estia-kitchens',
