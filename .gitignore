@@ -57,3 +57,6 @@ _export/thumbnails/
 
 # Python bytecode (guard against accidental commits)
 __pycache__/
+
+# case study staging - raw generated images for review, not for deploy
+/_case-study-assets/
