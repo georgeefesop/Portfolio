@@ -34,7 +34,7 @@
 | `test/crop-thumbnail.test.mjs` | Smoke test for `crop-thumbnail.mjs` |
 | `test/emit.test.mjs` | Smoke test for `emit.mjs` |
 
-**Portfolio repo:** `C:\Users\georg\Documents\GitHub\GE-Portfolio\`
+**Portfolio repo:** `C:\Users\georg\Projects\ge-portfolio\`
 
 | File | Responsibility |
 |---|---|
@@ -625,12 +625,12 @@ Expected: 4 tests pass (recon, capture, 2× crop).
 ## Task 6: Portfolio repo - `data/case-studies/types.ts`
 
 **Files:**
-- Create: `C:\Users\georg\Documents\GitHub\GE-Portfolio\data\case-studies\types.ts`
+- Create: `C:\Users\georg\Projects\ge-portfolio\data\case-studies\types.ts`
 
 - [ ] **Step 1: Verify directory**
 
-Run: `ls C:/Users/georg/Documents/GitHub/GE-Portfolio/data/`
-Expected: directory exists. If `case-studies/` doesn't exist, create it: `mkdir C:/Users/georg/Documents/GitHub/GE-Portfolio/data/case-studies`.
+Run: `ls C:/Users/georg/Projects/ge-portfolio/data/`
+Expected: directory exists. If `case-studies/` doesn't exist, create it: `mkdir C:/Users/georg/Projects/ge-portfolio/data/case-studies`.
 
 - [ ] **Step 2: Write `types.ts`**
 
@@ -710,13 +710,13 @@ export type CaseStudy = {
 
 - [ ] **Step 3: Type-check**
 
-Run: `cd C:/Users/georg/Documents/GitHub/GE-Portfolio && npx tsc --noEmit`
+Run: `cd C:/Users/georg/Projects/ge-portfolio && npx tsc --noEmit`
 Expected: zero errors. (If unrelated existing errors appear, fix only the ones touching the new file.)
 
 - [ ] **Step 4: Commit**
 
 ```bash
-cd C:/Users/georg/Documents/GitHub/GE-Portfolio
+cd C:/Users/georg/Projects/ge-portfolio
 git add data/case-studies/types.ts
 git commit -m "feat(case-studies): add type schema for richer case study body"
 ```
@@ -890,7 +890,7 @@ const allItems: Item[] = [
 
 - [ ] **Step 5: Type-check**
 
-Run: `cd C:/Users/georg/Documents/GitHub/GE-Portfolio && npx tsc --noEmit`
+Run: `cd C:/Users/georg/Projects/ge-portfolio && npx tsc --noEmit`
 Expected: zero new errors. Common gotchas:
 - Missing import: `CaseStudyModal` expects a `CaseStudyData` shape - verify that the modal still type-checks against the imported `CaseStudy`. If they differ, add a small adapter inline in `CaseStudies.tsx` for now (full modal redesign comes later).
 
@@ -1537,7 +1537,7 @@ The skill should:
 - [ ] **Step 2: Verify outputs**
 
 ```bash
-cd C:/Users/georg/Documents/GitHub/GE-Portfolio
+cd C:/Users/georg/Projects/ge-portfolio
 ls public/images/uk-vehicles/
 ls data/case-studies/uk-vehicles.ts
 ls docs/case-studies/uk-vehicles.md
@@ -1592,7 +1592,7 @@ If all items were addressed, delete. If some are deferred, leave with explicit "
 
 - [ ] **Step 1: Audit root**
 
-Run: `ls C:/Users/georg/Documents/GitHub/GE-Portfolio/ | grep -v -E "^(app|components|data|docs|hooks|lib|node_modules|public|scripts|.next|.git|.claude)$"`
+Run: `ls C:/Users/georg/Projects/ge-portfolio/ | grep -v -E "^(app|components|data|docs|hooks|lib|node_modules|public|scripts|.next|.git|.claude)$"`
 
 Likely loose files: `ESTIMATOR_AMENDMENT.md`, `ESTIMATOR_PROMPT_FOR_DEV.md`, `GOOGLE_SHEETS_SETUP.md`, `GOOGLE_SHEET_WEBHOOK.md`, `Screenshots/`, `download_assets.ps1`, `tailwind.config.ts.bak`, `__pycache__/`.
 
@@ -1628,7 +1628,7 @@ git commit -m "chore: tidy repo root - archive estimator+sheets docs, drop backu
 ## Task 15: Companion - hand-written `ONBOARDING.md`
 
 **Files:**
-- Create: `C:\Users\georg\Documents\GitHub\GE-Portfolio\ONBOARDING.md`
+- Create: `C:\Users\georg\Projects\ge-portfolio\ONBOARDING.md`
 
 - [ ] **Step 1: Read the kingfisher onboarding doc as reference**
 
