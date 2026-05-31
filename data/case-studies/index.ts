@@ -1,6 +1,7 @@
 import type { CaseStudy } from './types';
 
 import realfi from './realfi';
+import pmuProfitSystem from './pmu-profit-system';
 import aiTools from './ai-tools';
 import ukVehicles from './uk-vehicles';
 import kingfisher from './kingfisher-mortgages';
@@ -21,6 +22,7 @@ export const cases: CaseStudy[] = [
     aiVisualProduction,
     laHaciendaRebrand,
     realfi,
+    pmuProfitSystem,
     estiaKitchens,
     aiTools,
     instantAccess,

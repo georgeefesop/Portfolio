@@ -60,3 +60,6 @@ __pycache__/
 
 # case study staging - raw generated images for review, not for deploy
 /_case-study-assets/
+
+# PMU case-study PNGs are Upwork-upload copies; the site uses the webp versions
+public/images/pmu-profit-system/deck/*.png
