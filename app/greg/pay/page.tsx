@@ -1,6 +1,9 @@
 import type { Metadata } from 'next';
 import { ShieldCheck } from 'lucide-react';
-import RenderProduct from '@/components/greg/pay/RenderProduct';
+// Temporarily disabled: design-render upsell not working properly yet.
+// Reactivate by restoring this import, the uploadsEnabled computation, and
+// the <RenderProduct /> line in the product grid below.
+// import RenderProduct from '@/components/greg/pay/RenderProduct';
 import CustomPaymentCard from '@/components/greg/pay/CustomPaymentCard';
 import OfferingCard from '@/components/greg/pay/OfferingCard';
 import { WhatsAppButton } from '@/components/greg/WhatsApp';
@@ -14,15 +17,15 @@ import { GREG, WHATSAPP_DEFAULT_MESSAGE } from '@/lib/greg/site';
 
 export const metadata: Metadata = {
   title: 'Pay online',
-  description:
-    'Order a same-day design render of your project, or pay G.E. Revamp Services securely by card.',
+  description: 'Pay G.E. Revamp Services securely by card.',
   alternates: { canonical: `${GREG.siteUrl}/pay` },
 };
 
 export default async function GregPayPage() {
-  const uploadsEnabled = Boolean(
-    process.env.GREG_SUPABASE_URL && process.env.GREG_SUPABASE_SERVICE_KEY,
-  );
+  // Render product temporarily disabled - see note on the import above.
+  // const uploadsEnabled = Boolean(
+  //   process.env.GREG_SUPABASE_URL && process.env.GREG_SUPABASE_SERVICE_KEY,
+  // );
   const services = await getContent<GregService[]>(
     'services',
     defaultServices,
@@ -76,9 +79,11 @@ export default async function GregPayPage() {
         </div>
       </section>
 
-      {/* Product grid - single column: the render product then the services */}
+      {/* Product grid - the service offerings. Render product temporarily
+          disabled (not working properly yet); reactivate by uncommenting the
+          <RenderProduct /> line below and its import + uploadsEnabled above. */}
       <div className="mt-14 flex flex-col gap-6">
-        <RenderProduct uploadsEnabled={uploadsEnabled} />
+        {/* <RenderProduct uploadsEnabled={uploadsEnabled} /> */}
         {services.map((service) => (
           <OfferingCard key={service.id} service={service} />
         ))}

@@ -279,7 +279,7 @@ export const payContent = {
   eyebrow: 'Payments',
   heading: 'Pay G.E. Revamp',
   intro:
-    'Pay an agreed amount securely by card, or order a same-day design render of your project. For a quote on a new job, message us on WhatsApp.',
+    'Pay an agreed amount securely by card. For a quote on a new job, message us on WhatsApp.',
   customTitle: 'Make a payment',
   customBlurb:
     'Enter your details and the agreed amount, then check out securely. Card payments are processed by Stripe and a receipt is emailed to you straight away.',
