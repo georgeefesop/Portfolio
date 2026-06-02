@@ -43,24 +43,26 @@ export interface Offering {
 }
 
 export const offerings: Offering[] = [
-  {
-    slug: 'custom-video',
-    name: 'Custom AI-Generated Video Ad',
-    description:
-      'A bespoke 30-50 second video advertisement for your product or brand. Scripted, directed, and rendered with AI - not slot-machined.',
-    priceLabel: 'EUR 215',
-    priceAmount: 215,
-    billing: 'one_off',
-    status: 'live',
-    priceId: 'price_1TZqLwGHt7cesuhEhlotl8eL',
-    ctaLabel: 'Buy now',
-    turnaround: 'Delivered in 5-7 days',
-    includes: [
-      '30-50s finished video, ready to post',
-      'Script + direction included',
-      'One round of revisions',
-    ],
-  },
+  // Hidden 2026-06-02: Custom AI-Generated Video Ad pulled from /pay.
+  // Uncomment to re-list - Stripe price + full config preserved below.
+  // {
+  //   slug: 'custom-video',
+  //   name: 'Custom AI-Generated Video Ad',
+  //   description:
+  //     'A bespoke 30-50 second video advertisement for your product or brand. Scripted, directed, and rendered with AI - not slot-machined.',
+  //   priceLabel: 'EUR 215',
+  //   priceAmount: 215,
+  //   billing: 'one_off',
+  //   status: 'live',
+  //   priceId: 'price_1TZqLwGHt7cesuhEhlotl8eL',
+  //   ctaLabel: 'Buy now',
+  //   turnaround: 'Delivered in 5-7 days',
+  //   includes: [
+  //     '30-50s finished video, ready to post',
+  //     'Script + direction included',
+  //     'One round of revisions',
+  //   ],
+  // },
   {
     slug: 'website-build',
     name: 'Website Build',
