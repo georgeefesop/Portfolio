@@ -60,6 +60,16 @@ export type UpsertTimeEntryArgs = {
   ticketRefs?: unknown[];
 };
 
+/** One row from `billing.rate_history` (the `billing_set_rate` return). */
+export type RateRow = {
+  id: string;
+  client_id: string;
+  hourly_rate_cents: number;
+  currency: string;
+  effective_from: string;
+  effective_to: string | null;
+};
+
 // --- RPC wrappers (each throws on error) ---
 
 function client() {
@@ -80,6 +90,23 @@ export async function resolveRate(clientId: string, date: string): Promise<numbe
   });
   if (error) throw new Error(error.message);
   return (data as number | null) ?? null;
+}
+
+/** Set a new hourly rate (cents) effective from a date; closes the prior open rate. */
+export async function setRate(
+  clientId: string,
+  hourlyRateCents: number,
+  effectiveFrom: string,
+  currency = 'EUR',
+): Promise<RateRow> {
+  const { data, error } = await client().rpc('billing_set_rate', {
+    p_client_id: clientId,
+    p_hourly_rate_cents: hourlyRateCents,
+    p_effective_from: effectiveFrom,
+    p_currency: currency,
+  });
+  if (error) throw new Error(error.message);
+  return data as RateRow;
 }
 
 /** Insert or update a time entry; returns the persisted row. */

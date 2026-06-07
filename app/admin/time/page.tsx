@@ -10,10 +10,12 @@ import {
   weekRange,
   listTimeEntries,
   weekSummary,
+  resolveRate,
   type TimeEntryRow,
   type WeekSummary,
 } from '@/lib/admin/billing';
-import { eur } from '@/lib/admin/time';
+import RateCard from '@/components/admin/RateCard';
+import { eur, defaultWorkDate } from '@/lib/admin/time';
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
@@ -35,6 +37,7 @@ export default async function AdminTimePage() {
 
   const week = currentBillingWeek();
   const { from, to } = weekRange(week);
+  const today = defaultWorkDate();
 
   let entries: TimeEntryRow[] = [];
   let summary: WeekSummary = {
@@ -43,13 +46,15 @@ export default async function AdminTimePage() {
     billable_hours: 0,
     billable_cents: 0,
   };
+  let currentRateCents: number | null = null;
   let loadError: string | null = null;
 
   try {
     const clientId = await getClientId(CLIENT_NAME);
-    [entries, summary] = await Promise.all([
+    [entries, summary, currentRateCents] = await Promise.all([
       listTimeEntries(clientId, from, to),
       weekSummary(clientId, week),
+      resolveRate(clientId, today),
     ]);
   } catch (err) {
     loadError = err instanceof Error ? err.message : 'Could not load time entries.';
@@ -71,6 +76,10 @@ export default async function AdminTimePage() {
         <p className="mt-1.5 text-sm text-text-secondary">
           {CLIENT_NAME} &middot; week {week}
         </p>
+      </div>
+
+      <div className="mb-6">
+        <RateCard currentRateCents={currentRateCents} defaultDate={today} />
       </div>
 
       <div className="mb-8">
