@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Loader2, Save, Trash2, Lock } from 'lucide-react';
+import { Loader2, Save, Trash2, Lock, RotateCcw } from 'lucide-react';
 import type { TimeEntryRow } from '@/lib/admin/billing';
 import {
   eur,
@@ -10,23 +10,24 @@ import {
   composeStamp,
   clockToMinutes,
   stampToClock,
+  stampToLabel,
   minsToHours,
   fmtHours,
+  weekdayShort,
+  formatDMY,
+  BREAK_OPTIONS,
 } from '@/lib/admin/time';
 
-const BREAK_OPTIONS = [0, 0.25, 0.5, 0.75, 1, 1.5, 2];
-
 const cellInput =
-  'w-full rounded-md border border-border-subtle bg-bg-tertiary px-2 py-1 text-sm text-text-primary outline-none transition-colors focus:border-accent-primary disabled:opacity-60';
+  'w-full rounded-md border border-border-subtle bg-bg-tertiary px-2 py-1 text-sm text-text-primary outline-none transition-colors focus:border-accent-primary disabled:opacity-60 [&::-webkit-calendar-picker-indicator]:hidden';
 
 type Draft = {
   id: string;
   work_date: string;
-  mode: 'clock' | 'hours';
-  start: string; // HH:MM (clock mode)
-  end: string; // HH:MM (clock mode)
+  start: string; // HH:MM, blank until set
+  end: string; // HH:MM, blank until set
   break_hours: number;
-  hours_manual: number; // net hours (hours mode)
+  hours_manual: number; // net hours, used when start/end are not both set
   work_done: string;
   comment: string;
   billable: boolean;
@@ -38,7 +39,6 @@ function toDraft(e: TimeEntryRow): Draft {
   return {
     id: e.id,
     work_date: e.work_date,
-    mode: e.started_at && e.ended_at ? 'clock' : 'hours',
     start: stampToClock(e.started_at),
     end: stampToClock(e.ended_at),
     break_hours: minsToHours(e.break_minutes),
@@ -51,19 +51,36 @@ function toDraft(e: TimeEntryRow): Draft {
   };
 }
 
-// Net worked minutes for a draft, per its entry mode.
+// A row is in clock mode once it has both a start and an end time.
+function hasClock(d: Draft): boolean {
+  return Boolean(d.start && d.end);
+}
+
+// Net worked minutes for a draft: derived from start/end when both are set,
+// otherwise the manually entered hours.
 function draftNetMinutes(d: Draft): number {
-  if (d.mode === 'clock') {
+  if (hasClock(d)) {
     return netMinutes(d.start, d.end, (Number(d.break_hours) || 0) * 60) ?? 0;
   }
   return Math.max(0, Math.round((Number(d.hours_manual) || 0) * 60));
+}
+
+// Gross clock span in minutes (end - start, overnight-aware), or null when
+// either time is missing.
+function grossMinutes(d: Draft): number | null {
+  if (!(d.start && d.end)) return null;
+  const s = clockToMinutes(d.start);
+  const e = clockToMinutes(d.end);
+  if (s === null || e === null) return null;
+  let span = e - s;
+  if (span <= 0) span += 24 * 60;
+  return span;
 }
 
 // The subset that matters for dirty-tracking + saving.
 function fingerprint(d: Draft): string {
   return JSON.stringify([
     d.work_date,
-    d.mode,
     d.start,
     d.end,
     d.break_hours,
@@ -81,11 +98,47 @@ export default function TimeTable({ entries }: { entries: TimeEntryRow[] }) {
   const [saving, setSaving] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [history, setHistory] = useState<Draft[][]>([]);
+
+  // Refs so the keyboard-undo handler always sees the latest state.
+  const draftsRef = useRef(drafts);
+  const historyRef = useRef(history);
+  useEffect(() => {
+    draftsRef.current = drafts;
+  }, [drafts]);
+  useEffect(() => {
+    historyRef.current = history;
+  }, [history]);
+
+  // Undo the last cell edit (Ctrl/Cmd+Z), stepping back through the history.
+  const undo = useCallback(() => {
+    const h = historyRef.current;
+    if (!h.length) return;
+    setDrafts(h[h.length - 1]);
+    setHistory((cur) => cur.slice(0, -1));
+  }, []);
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        !e.shiftKey &&
+        e.key.toLowerCase() === 'z' &&
+        historyRef.current.length
+      ) {
+        e.preventDefault();
+        undo();
+      }
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [undo]);
 
   // Re-seed drafts whenever the server data changes (after a save/delete
-  // triggers router.refresh()).
+  // triggers router.refresh()); fresh server state clears the undo history.
   useEffect(() => {
     setDrafts(entries.map(toDraft));
+    setHistory([]);
   }, [entries]);
 
   const originals = useMemo(() => {
@@ -103,6 +156,8 @@ export default function TimeTable({ entries }: { entries: TimeEntryRow[] }) {
   );
 
   function patch<K extends keyof Draft>(id: string, key: K, value: Draft[K]) {
+    const snapshot = draftsRef.current;
+    setHistory((h) => [...h.slice(-99), snapshot]);
     setDrafts((prev) =>
       prev.map((d) => (d.id === id ? ({ ...d, [key]: value } as Draft) : d)),
     );
@@ -120,12 +175,10 @@ export default function TimeTable({ entries }: { entries: TimeEntryRow[] }) {
       return {
         id: d.id,
         work_date: d.work_date,
-        started_at:
-          d.mode === 'clock' ? composeStamp(d.work_date, d.start) : null,
-        ended_at:
-          d.mode === 'clock'
-            ? composeStamp(d.work_date, d.end, overnight)
-            : null,
+        started_at: d.start ? composeStamp(d.work_date, d.start) : null,
+        ended_at: d.end
+          ? composeStamp(d.work_date, d.end, overnight && Boolean(d.start))
+          : null,
         break_minutes: Math.round((Number(d.break_hours) || 0) * 60),
         duration_minutes: duration,
         work_done: d.work_done,
@@ -156,6 +209,18 @@ export default function TimeTable({ entries }: { entries: TimeEntryRow[] }) {
     } finally {
       setSaving(false);
     }
+  }
+
+  function discardAll() {
+    if (
+      dirtyIds.length &&
+      !window.confirm(`Discard ${dirtyIds.length} unsaved change(s)?`)
+    ) {
+      return;
+    }
+    setDrafts(entries.map(toDraft));
+    setHistory([]);
+    setError(null);
   }
 
   async function remove(id: string) {
@@ -195,22 +260,73 @@ export default function TimeTable({ entries }: { entries: TimeEntryRow[] }) {
     return { hours: minsToHours(mins), cents };
   }, [entries]);
 
-  // Merge-by-day grouping (read-only preview of 1-line-per-day invoicing).
+  // Merge-by-day aggregation (read-only preview of 1-line-per-day invoicing).
+  // Numbers aggregate each day's BILLABLE entries (what an invoice line bills);
+  // `count` tracks every entry so the Bill column can show billable / total.
+  type DayAgg = {
+    date: string;
+    startIso: string | null;
+    endIso: string | null;
+    startMs: number | null;
+    endMs: number | null;
+    grossMin: number;
+    hasTimes: boolean;
+    breakMin: number;
+    billedMin: number;
+    cents: number;
+    rateCents: number;
+    billable: number;
+    count: number;
+    work: string[];
+    notes: string[];
+  };
   const byDay = useMemo(() => {
-    const map = new Map<
-      string,
-      { date: string; mins: number; cents: number; notes: string[]; count: number }
-    >();
+    const map = new Map<string, DayAgg>();
     entries.forEach((e) => {
-      const g =
-        map.get(e.work_date) ??
-        { date: e.work_date, mins: 0, cents: 0, notes: [], count: 0 };
-      if (e.billable) {
-        g.mins += e.duration_minutes;
-        g.cents += e.amount_cents;
-      }
-      if (e.work_done && !g.notes.includes(e.work_done)) g.notes.push(e.work_done);
+      const g: DayAgg =
+        map.get(e.work_date) ?? {
+          date: e.work_date,
+          startIso: null,
+          endIso: null,
+          startMs: null,
+          endMs: null,
+          grossMin: 0,
+          hasTimes: false,
+          breakMin: 0,
+          billedMin: 0,
+          cents: 0,
+          rateCents: 0,
+          billable: 0,
+          count: 0,
+          work: [],
+          notes: [],
+        };
       g.count += 1;
+      if (e.billable) {
+        g.billable += 1;
+        if (e.started_at && e.ended_at) {
+          const s = new Date(e.started_at).getTime();
+          const en = new Date(e.ended_at).getTime();
+          if (!Number.isNaN(s) && !Number.isNaN(en)) {
+            g.grossMin += Math.round((en - s) / 60000);
+            g.hasTimes = true;
+            if (g.startMs === null || s < g.startMs) {
+              g.startMs = s;
+              g.startIso = e.started_at;
+            }
+            if (g.endMs === null || en > g.endMs) {
+              g.endMs = en;
+              g.endIso = e.ended_at;
+            }
+          }
+        }
+        g.breakMin += e.break_minutes;
+        g.billedMin += e.duration_minutes;
+        g.cents += e.amount_cents;
+        if (e.rate_cents_applied) g.rateCents = e.rate_cents_applied;
+        if (e.work_done && !g.work.includes(e.work_done)) g.work.push(e.work_done);
+        if (e.comment && !g.notes.includes(e.comment)) g.notes.push(e.comment);
+      }
       map.set(e.work_date, g);
     });
     return [...map.values()].sort((a, b) => (a.date < b.date ? 1 : -1));
@@ -236,9 +352,18 @@ export default function TimeTable({ entries }: { entries: TimeEntryRow[] }) {
         <div className="flex items-center gap-3">
           {dirtyIds.length > 0 && !merge && (
             <span className="text-xs text-text-muted">
-              {dirtyIds.length} unsaved
+              {dirtyIds.length} unsaved &middot; Ctrl+Z to undo
             </span>
           )}
+          <button
+            type="button"
+            onClick={discardAll}
+            disabled={saving || merge || dirtyIds.length === 0}
+            className="inline-flex items-center gap-2 rounded-lg border border-border-medium px-4 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-bg-tertiary hover:text-text-primary disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <RotateCcw size={15} aria-hidden />
+            Discard
+          </button>
           <button
             type="button"
             onClick={saveAll}
@@ -263,36 +388,66 @@ export default function TimeTable({ entries }: { entries: TimeEntryRow[] }) {
 
       <div className="overflow-x-auto rounded-2xl border border-border-subtle bg-bg-secondary">
         {merge ? (
-          <table className="w-full min-w-[640px] text-left text-sm">
+          <table className="w-full min-w-[1100px] text-left text-sm">
             <thead className="border-b border-border-subtle text-xs uppercase tracking-wide text-text-muted">
               <tr>
-                <th className="px-4 py-3 font-medium sm:px-6">Date</th>
-                <th className="px-4 py-3 font-medium">Entries</th>
-                <th className="px-4 py-3 text-right font-medium tabular-nums">Hours</th>
-                <th className="px-4 py-3 font-medium">Work done</th>
-                <th className="px-4 py-3 text-right font-medium tabular-nums sm:px-6">EUR</th>
+                <th className="px-3 py-3 font-medium sm:pl-6">Day</th>
+                <th className="px-3 py-3 font-medium">Date</th>
+                <th className="px-3 py-3 font-medium">Start</th>
+                <th className="px-3 py-3 font-medium">End</th>
+                <th className="px-3 py-3 text-right font-medium">Hours</th>
+                <th className="px-3 py-3 text-right font-medium">Break</th>
+                <th className="px-3 py-3 text-right font-medium">Billed</th>
+                <th className="px-3 py-3 text-right font-medium">Rate</th>
+                <th className="px-3 py-3 text-right font-medium">Total</th>
+                <th className="px-3 py-3 font-medium">Work done</th>
+                <th className="px-3 py-3 font-medium">Comment</th>
+                <th className="px-3 py-3 text-center font-medium sm:pr-6">Bill</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border-subtle">
               {byDay.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-text-muted sm:px-6">
-                    No entries this week yet.
+                  <td colSpan={12} className="px-4 py-8 text-center text-text-muted sm:px-6">
+                    No entries in view yet.
                   </td>
                 </tr>
               ) : (
                 byDay.map((g) => (
-                  <tr key={g.date} className="text-text-secondary">
-                    <td className="whitespace-nowrap px-4 py-3 sm:px-6">{g.date}</td>
-                    <td className="whitespace-nowrap px-4 py-3 tabular-nums">{g.count}</td>
-                    <td className="whitespace-nowrap px-4 py-3 text-right tabular-nums">
-                      {fmtHours(minsToHours(g.mins))}
+                  <tr key={g.date} className="align-middle text-text-secondary">
+                    <td className="whitespace-nowrap px-3 py-3 text-text-muted sm:pl-6">
+                      {weekdayShort(g.date)}
                     </td>
-                    <td className="px-4 py-3 text-text-primary">
+                    <td className="whitespace-nowrap px-3 py-3">{formatDMY(g.date)}</td>
+                    <td className="whitespace-nowrap px-3 py-3 text-text-muted">
+                      {g.startIso ? stampToLabel(g.startIso) : '--'}
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-3 text-text-muted">
+                      {g.endIso ? stampToLabel(g.endIso) : '--'}
+                    </td>
+                    <td className="px-3 py-3 text-right tabular-nums text-text-secondary">
+                      {g.hasTimes ? fmtHours(minsToHours(g.grossMin)) : '--'}
+                    </td>
+                    <td className="px-3 py-3 text-right tabular-nums text-text-muted">
+                      {g.breakMin ? fmtHours(minsToHours(g.breakMin)) : '--'}
+                    </td>
+                    <td className="px-3 py-3 text-right tabular-nums font-medium text-text-primary">
+                      {fmtHours(minsToHours(g.billedMin))}
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-3 text-right tabular-nums text-text-muted">
+                      {g.rateCents ? `${eur(g.rateCents)}/h` : '--'}
+                    </td>
+                    <td className="whitespace-nowrap px-3 py-3 text-right tabular-nums text-text-primary">
+                      {eur(g.cents)}
+                    </td>
+                    <td className="min-w-[12rem] px-3 py-3 text-text-primary">
+                      {g.work.join('; ') || <span className="text-text-dim">--</span>}
+                    </td>
+                    <td className="min-w-[10rem] px-3 py-3">
                       {g.notes.join('; ') || <span className="text-text-dim">--</span>}
                     </td>
-                    <td className="whitespace-nowrap px-4 py-3 text-right tabular-nums sm:px-6">
-                      {eur(g.cents)}
+                    <td className="whitespace-nowrap px-3 py-3 text-center tabular-nums text-text-muted sm:pr-6">
+                      {g.billable}/{g.count}
                     </td>
                   </tr>
                 ))
@@ -300,17 +455,20 @@ export default function TimeTable({ entries }: { entries: TimeEntryRow[] }) {
             </tbody>
           </table>
         ) : (
-          <table className="w-full min-w-[980px] text-left text-sm">
+          <table className="w-full min-w-[1200px] text-left text-sm">
             <thead className="border-b border-border-subtle text-xs uppercase tracking-wide text-text-muted">
               <tr>
-                <th className="px-3 py-3 font-medium sm:pl-6">Date</th>
+                <th className="px-3 py-3 font-medium sm:pl-6">Day</th>
+                <th className="px-3 py-3 font-medium">Date</th>
                 <th className="px-3 py-3 font-medium">Start</th>
                 <th className="px-3 py-3 font-medium">End</th>
                 <th className="px-3 py-3 text-right font-medium">Hours</th>
                 <th className="px-3 py-3 font-medium">Break</th>
+                <th className="px-3 py-3 text-right font-medium">Billed</th>
+                <th className="px-3 py-3 text-right font-medium">Rate</th>
+                <th className="px-3 py-3 text-right font-medium">Total</th>
                 <th className="px-3 py-3 font-medium">Work done</th>
                 <th className="px-3 py-3 font-medium">Comment</th>
-                <th className="px-3 py-3 text-right font-medium">Rate</th>
                 <th className="px-3 py-3 text-center font-medium">Bill</th>
                 <th className="px-3 py-3 sm:pr-6" />
               </tr>
@@ -318,17 +476,23 @@ export default function TimeTable({ entries }: { entries: TimeEntryRow[] }) {
             <tbody className="divide-y divide-border-subtle">
               {drafts.length === 0 ? (
                 <tr>
-                  <td colSpan={10} className="px-4 py-8 text-center text-text-muted sm:px-6">
+                  <td colSpan={13} className="px-4 py-8 text-center text-text-muted sm:px-6">
                     No entries this week yet.
                   </td>
                 </tr>
               ) : (
                 drafts.map((d) => {
                   const locked = !!d.invoice_id;
-                  const net = draftNetMinutes(d);
+                  const gross = grossMinutes(d);
+                  const billed = draftNetMinutes(d);
+                  const rateCents = d.rate_cents_applied ?? 0;
+                  const amountCents = Math.round(minsToHours(billed) * rateCents);
                   return (
                     <tr key={d.id} className="align-middle text-text-secondary">
-                      <td className="px-3 py-2 sm:pl-6">
+                      <td className="whitespace-nowrap px-3 py-2 text-text-muted sm:pl-6">
+                        {weekdayShort(d.work_date)}
+                      </td>
+                      <td className="px-3 py-2">
                         <input
                           type="date"
                           value={d.work_date}
@@ -338,48 +502,28 @@ export default function TimeTable({ entries }: { entries: TimeEntryRow[] }) {
                         />
                       </td>
                       <td className="px-3 py-2">
-                        {d.mode === 'clock' ? (
-                          <input
-                            type="time"
-                            value={d.start}
-                            disabled={locked}
-                            onChange={(e) => patch(d.id, 'start', e.target.value)}
-                            className={`${cellInput} w-[7rem]`}
-                          />
-                        ) : (
-                          <span className="text-text-dim">--</span>
-                        )}
+                        <input
+                          type="time"
+                          value={d.start}
+                          disabled={locked}
+                          onChange={(e) => patch(d.id, 'start', e.target.value)}
+                          className={`${cellInput} w-[7rem]`}
+                        />
                       </td>
                       <td className="px-3 py-2">
-                        {d.mode === 'clock' ? (
-                          <input
-                            type="time"
-                            value={d.end}
-                            disabled={locked}
-                            onChange={(e) => patch(d.id, 'end', e.target.value)}
-                            className={`${cellInput} w-[7rem]`}
-                          />
-                        ) : (
-                          <span className="text-text-dim">--</span>
-                        )}
+                        <input
+                          type="time"
+                          value={d.end}
+                          disabled={locked}
+                          onChange={(e) => patch(d.id, 'end', e.target.value)}
+                          className={`${cellInput} w-[7rem]`}
+                        />
                       </td>
-                      <td className="px-3 py-2 text-right">
-                        {d.mode === 'hours' ? (
-                          <input
-                            type="number"
-                            min={0}
-                            step={0.25}
-                            value={d.hours_manual}
-                            disabled={locked}
-                            onChange={(e) =>
-                              patch(d.id, 'hours_manual', Number(e.target.value))
-                            }
-                            className={`${cellInput} w-[5rem] text-right tabular-nums`}
-                          />
+                      <td className="w-16 px-3 py-2 text-right tabular-nums text-text-secondary">
+                        {gross === null ? (
+                          <span className="text-text-dim">--</span>
                         ) : (
-                          <span className="tabular-nums text-text-primary">
-                            {fmtHours(minsToHours(net))}
-                          </span>
+                          fmtHours(minsToHours(gross))
                         )}
                       </td>
                       <td className="px-3 py-2">
@@ -398,7 +542,16 @@ export default function TimeTable({ entries }: { entries: TimeEntryRow[] }) {
                           ))}
                         </select>
                       </td>
-                      <td className="px-3 py-2 min-w-[12rem]">
+                      <td className="w-16 px-3 py-2 text-right tabular-nums font-medium text-text-primary">
+                        {fmtHours(minsToHours(billed))}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-2 text-right tabular-nums text-text-muted">
+                        {rateCents ? `${eur(rateCents)}/h` : '--'}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-2 text-right tabular-nums text-text-primary">
+                        {eur(d.billable ? amountCents : 0)}
+                      </td>
+                      <td className="px-3 py-2 min-w-[11rem]">
                         <input
                           type="text"
                           value={d.work_done}
@@ -415,11 +568,6 @@ export default function TimeTable({ entries }: { entries: TimeEntryRow[] }) {
                           onChange={(e) => patch(d.id, 'comment', e.target.value)}
                           className={cellInput}
                         />
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-2 text-right tabular-nums text-text-muted">
-                        {d.rate_cents_applied
-                          ? `${eur(d.rate_cents_applied)}/h`
-                          : '--'}
                       </td>
                       <td className="px-3 py-2 text-center">
                         <input
@@ -463,7 +611,7 @@ export default function TimeTable({ entries }: { entries: TimeEntryRow[] }) {
         )}
 
         <div className="flex items-center justify-between border-t border-border-subtle px-4 py-4 text-sm sm:px-6">
-          <span className="text-text-muted">Billable this week</span>
+          <span className="text-text-muted">Billable (in view)</span>
           <span className="font-semibold tabular-nums text-text-primary">
             {fmtHours(totals.hours)}h / EUR {eur(totals.cents)}
           </span>

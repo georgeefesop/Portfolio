@@ -11,14 +11,12 @@ import {
   clockToMinutes,
   minsToHours,
   fmtHours,
+  BREAK_OPTIONS,
 } from '@/lib/admin/time';
 
 const field =
-  'w-full rounded-lg border border-border-medium bg-bg-tertiary px-3.5 py-2.5 text-sm text-text-primary outline-none transition-colors placeholder:text-text-dim focus:border-accent-primary';
+  'w-full rounded-lg border border-border-medium bg-bg-tertiary px-3.5 py-2.5 text-sm text-text-primary outline-none transition-colors placeholder:text-text-dim focus:border-accent-primary [&::-webkit-calendar-picker-indicator]:hidden';
 const labelClass = 'mb-1.5 block text-xs font-medium text-text-muted';
-
-// Break choices, in hours. George expects 0.5 / 1, occasionally 0.25.
-const BREAK_OPTIONS = [0, 0.25, 0.5, 0.75, 1, 1.5, 2];
 
 type FormValues = {
   work_date: string;

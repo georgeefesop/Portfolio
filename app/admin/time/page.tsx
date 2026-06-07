@@ -7,14 +7,12 @@ import QuickAddForm from '@/components/admin/QuickAddForm';
 import TimeTable from '@/components/admin/TimeTable';
 import {
   getClientId,
-  currentBillingWeek,
-  weekRange,
   listTimeEntries,
   resolveRate,
   type TimeEntryRow,
 } from '@/lib/admin/billing';
 import RateCard from '@/components/admin/RateCard';
-import { defaultWorkDate } from '@/lib/admin/time';
+import { defaultWorkDate, addDays } from '@/lib/admin/time';
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
@@ -34,9 +32,9 @@ export default async function AdminTimePage() {
     );
   }
 
-  const week = currentBillingWeek();
-  const { from, to } = weekRange(week);
   const today = defaultWorkDate();
+  const from = addDays(today, -30);
+  const to = today;
 
   let entries: TimeEntryRow[] = [];
   let currentRateCents: number | null = null;
@@ -67,7 +65,7 @@ export default async function AdminTimePage() {
             Time tracking
           </h1>
           <p className="mt-1.5 text-sm text-text-secondary">
-            {CLIENT_NAME} &middot; week {week}
+            {CLIENT_NAME} &middot; recent entries (last 30 days)
           </p>
         </div>
 

@@ -59,8 +59,8 @@ export function netMinutes(
   return Math.max(0, span - Math.max(0, breakMin || 0));
 }
 
-/** Add whole days to an ISO date "YYYY-MM-DD" (UTC). */
-function addIsoDays(iso: string, days: number): string {
+/** Add whole days to an ISO date "YYYY-MM-DD" (UTC). Negative subtracts. */
+export function addDays(iso: string, days: number): string {
   const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
   if (!m) return iso;
   const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3] + days));
@@ -78,7 +78,7 @@ export function composeStamp(
 ): string | null {
   const min = clockToMinutes(hhmm);
   if (min === null) return null;
-  const date = nextDay ? addIsoDays(workDate, 1) : workDate;
+  const date = nextDay ? addDays(workDate, 1) : workDate;
   const [h, m] = hhmm.split(':');
   return `${date}T${h.padStart(2, '0')}:${m}:00.000Z`;
 }
@@ -116,4 +116,24 @@ export function minsToHours(min: number): number {
 /** Format hours compactly: 1.5 -> "1.5", 8 -> "8", 0.25 -> "0.25". */
 export function fmtHours(hours: number): string {
   return Number(hours.toFixed(2)).toString();
+}
+
+const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+/** Short weekday name for an ISO date "YYYY-MM-DD" (e.g. "Mon"), or ''. */
+export function weekdayShort(iso: string): string {
+  const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return '';
+  const d = new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
+  return WEEKDAYS[d.getUTCDay()] ?? '';
+}
+
+/** Break-length choices in hours (0 to 4), for the add form and table editor. */
+export const BREAK_OPTIONS = [0, 0.25, 0.5, 0.75, 1, 1.5, 2, 2.5, 3, 3.5, 4];
+
+/** ISO date "YYYY-MM-DD" -> "DD/MM/YYYY", matching the date input's display. */
+export function formatDMY(iso: string): string {
+  const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return iso;
+  return `${m[3]}/${m[2]}/${m[1]}`;
 }

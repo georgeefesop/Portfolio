@@ -77,6 +77,50 @@ function periodLabel(from: string | null, to: string | null): string {
   return '';
 }
 
+const round2 = (n: number): number => Math.round((Number(n) || 0) * 100) / 100;
+
+// Join distinct, non-empty description fragments for a day.
+function joinDescriptions(parts: string[]): string {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const p of parts) {
+    const t = String(p ?? '').trim();
+    if (t && !seen.has(t)) {
+      seen.add(t);
+      out.push(t);
+    }
+  }
+  return out.join('; ') || '(work)';
+}
+
+// Roll up stored per-entry line items into one invoice line per work_date
+// (TKT-436: merge-by-day invoicing). Storage stays granular; presentation is
+// one row per day. Amounts sum from cents (cent-exact); a day's rate is its
+// single applied rate, or the blended amount/hours when a day mixes rates.
+function rollupLinesByDay(lines: InvoiceLineRow[]): InvoiceItem[] {
+  type Day = { date: string; hours: number; amountCents: number; rates: Set<number>; descs: string[] };
+  const byDay = new Map<string, Day>();
+  for (const l of lines) {
+    const date = l.work_date;
+    if (!date) continue;
+    if (!byDay.has(date)) byDay.set(date, { date, hours: 0, amountCents: 0, rates: new Set(), descs: [] });
+    const d = byDay.get(date)!;
+    d.hours += Number(l.hours) || 0;
+    d.amountCents += Number(l.amount_cents) || 0;
+    const rate = centsToEuros(l.rate_cents);
+    if (rate) d.rates.add(rate);
+    d.descs.push(l.description);
+  }
+  return [...byDay.values()]
+    .sort((a, b) => a.date.localeCompare(b.date))
+    .map((d) => {
+      const hours = round2(d.hours);
+      const amount = d.amountCents / 100;
+      const rate = d.rates.size === 1 ? [...d.rates][0] : round2(hours ? amount / hours : 0);
+      return { date: longDate(d.date), description: joinDescriptions(d.descs), hours, rate, amount };
+    });
+}
+
 export function buildInvoiceModel(
   invoice: InvoiceRow,
   lines: InvoiceLineRow[],
@@ -105,13 +149,8 @@ export function buildInvoiceModel(
     periodLabel: periodLabel(invoice.period_from, invoice.period_to),
   };
 
-  const items: InvoiceItem[] = lines.map((l) => ({
-    date: longDate(l.work_date),
-    description: l.description,
-    hours: Number(l.hours) || 0,
-    rate: centsToEuros(l.rate_cents),
-    amount: centsToEuros(l.amount_cents),
-  }));
+  // One row per day (TKT-436): storage stays per-entry, presentation rolls up.
+  const items: InvoiceItem[] = rollupLinesByDay(lines);
 
   const vatRate = Number(invoice.vat_rate) || 0;
   const totals: InvoiceTotals = {

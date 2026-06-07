@@ -1,15 +1,18 @@
 // PORT of toolbelt/lib/invoice-template.mjs - keep in sync (see ADR 5).
 //
-// invoice-template.ts - branded efesop A4 invoice HTML.
+// invoice-template.ts - branded efesop A4 invoice HTML (direction B).
 //
 // Pure function: takes the structured invoice model assembled by
-// commands/invoice.mjs and returns a single HTML string ready for
-// Playwright's page.setContent + page.pdf({ format: 'A4' }).
+// commands/invoice.mjs (CLI) or buildInvoiceModel (web) and returns a single
+// HTML string ready for Playwright's page.setContent + page.pdf({ format: 'A4' }).
 //
-// Design: printable financial document. White paper, dark ink (#2A241D),
-// one copper accent (#AB7B62 - efesop --accent-primary), serif headings
-// (Georgia, mirroring the site's Newsreader), system sans body. No webfonts
-// so it renders identically offline. Restraint over flourish.
+// Design (efesop.com homage, light mode): solid tan/sand left rail with a
+// huge serif "George Efesopoulos." running bottom-up the spine, and the
+// payment-by-bank-transfer block pinned at the bottom. White right panel
+// with a faint blueprint grid behind the content: Invoice headline + number
+// at top, From + Bill to (two columns), line-items table (rolled up to one
+// row per day by the caller), totals, then a cursive signature inverted
+// in-template from a white-ink PNG.
 
 const BRAND = {
   ink: '#2A241D',        // efesop --text-primary (light theme)
@@ -18,6 +21,7 @@ const BRAND = {
   accent: '#AB7B62',     // --accent-primary (copper)
   line: '#D4C8AE',       // --border-subtle (light theme)
   lineSoft: '#ECE2CC',   // very light rule / zebra
+  rail: '#E8E0CA',       // tan/sand left rail (efesop hero cream)
   paper: '#FFFFFF',
 };
 
@@ -47,7 +51,6 @@ function hrs(n: number): string {
 function identityLines(identity: InvoiceIdentity): string[] {
   const lines: string[] = [];
   if (identity.tic_number) lines.push(`Tax ID (TIC): ${esc(identity.tic_number)}`);
-  if (identity.social_insurance_number) lines.push(`Social Insurance No: ${esc(identity.social_insurance_number)}`);
   if (identity.tax_residency) lines.push(`Tax residency: ${esc(identity.tax_residency)}`);
   return lines;
 }
@@ -55,7 +58,7 @@ function identityLines(identity: InvoiceIdentity): string[] {
 // One bank row; shows the visible placeholder marker when unfilled.
 function bankRow(label: string, value: string | undefined, { placeholder = false }: { placeholder?: boolean } = {}): string {
   const v = placeholder
-    ? `<span style="color:${BRAND.accent};font-style:italic">&lt;fill efesop_bank in secrets.json&gt;</span>`
+    ? `<span style="color:${BRAND.accent};font-style:italic">&lt;fill efesop_bank&gt;</span>`
     : esc(value);
   return `<tr><td class="bk-label">${esc(label)}</td><td class="bk-value">${v}</td></tr>`;
 }
@@ -71,6 +74,8 @@ export interface InvoiceFrom {
   role: string;
   location?: string;
   identity: InvoiceIdentity;
+  /** White-ink signature PNG as a data URI; inverted to dark in-template. */
+  signatureDataUri?: string;
 }
 
 export interface InvoiceClient {
@@ -128,27 +133,17 @@ export interface InvoiceModel {
   bank: InvoiceBank;
 }
 
-/**
- * @param {object} inv
- * @param {object} inv.from         { name, role, location, identity: {...} }
- * @param {object} inv.client       { name, org, addressLines: [] }
- * @param {object} inv.meta         { number, issueDate, dueDate, weekLabel, periodLabel }
- * @param {Array}  inv.items        [{ date, description, hours, rate, amount }]
- * @param {object} inv.totals       { subtotal, vatRate, vatLabel, vatAmount, total }
- * @param {object} inv.bank         { account_name, iban, bic, bank, reference, filled }
- * @returns {string} full HTML document
- */
 export function renderInvoiceHtml(inv: InvoiceModel): string {
   const { from, client, meta, items, totals, bank } = inv;
 
   const rows = items.map((it, i) => `
-        <tr class="${i % 2 ? 'zebra' : ''}">
-          <td class="c-date">${esc(it.date)}</td>
-          <td class="c-desc">${esc(it.description)}</td>
-          <td class="c-num">${hrs(it.hours)}</td>
-          <td class="c-num">&euro;${eur(it.rate)}</td>
-          <td class="c-num c-amt">&euro;${eur(it.amount)}</td>
-        </tr>`).join('');
+          <tr class="${i % 2 ? 'zebra' : ''}">
+            <td class="c-date">${esc(it.date)}</td>
+            <td class="c-desc">${esc(it.description)}</td>
+            <td class="c-num">${hrs(it.hours)}</td>
+            <td class="c-num">&euro;${eur(it.rate)}</td>
+            <td class="c-num c-amt">&euro;${eur(it.amount)}</td>
+          </tr>`).join('');
 
   const idLines = identityLines(from.identity);
   const clientAddr = (client.addressLines || []).filter(Boolean)
@@ -156,26 +151,41 @@ export function renderInvoiceHtml(inv: InvoiceModel): string {
 
   // VAT row: 0% now ("Not VAT registered"), one flag flips it to 19%.
   const vatRow = `
-        <tr>
-          <td class="t-label">${esc(totals.vatLabel)}</td>
-          <td class="t-value">&euro;${eur(totals.vatAmount)}</td>
-        </tr>`;
+          <tr>
+            <td class="t-label">${esc(totals.vatLabel)}</td>
+            <td class="t-value">&euro;${eur(totals.vatAmount)}</td>
+          </tr>`;
 
   const bankFilled = bank.filled;
   const bankRows = [
-    bankRow('Account name', bank.account_name, { placeholder: !bankFilled.account_name }),
+    bankRow('Account', bank.account_name, { placeholder: !bankFilled.account_name }),
     bankRow('IBAN', bank.iban, { placeholder: !bankFilled.iban }),
     bankRow('BIC / SWIFT', bank.bic, { placeholder: !bankFilled.bic }),
     bankRow('Bank', bank.bank, { placeholder: !bankFilled.bank }),
     bankRow('Reference', bank.reference || meta.number, { placeholder: false }),
   ].join('');
 
+  // Rail: rotated signature (white-ink PNG inverted in-template); when no
+  // signature is available, fall back to the serif wordmark text.
+  const railContent = from.signatureDataUri
+    ? `<img class="rail-sig" src="${from.signatureDataUri}" alt="${esc(from.name)}">`
+    : `<div class="rail-name-area"><div class="rail-name">${esc(from.name)}<span class="dot">.</span></div></div>`;
+
   return `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap">
 <style>
-  @page { size: A4; margin: 0; }
+  /* Fraunces (variable serif) for display: Invoice. headline, EFE number,
+     and Total due. Body / table / labels stay system sans. The CLI render
+     waits for networkidle so the font load resolves; offline -> falls back
+     to Georgia silently via the stack below. */
+  /* 10mm printable margin all around so a home printer's no-print zone
+     doesn't eat the rail, the bank info, or the right edge of the totals. */
+  @page { size: A4; margin: 10mm; }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
   body {
@@ -187,163 +197,219 @@ export function renderInvoiceHtml(inv: InvoiceModel): string {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
-  .page { padding: 48px 52px 40px; }
+  /* A4 minus 10mm margin both sides = 190 x 277mm printable area. */
+  .sheet { display: flex; height: 277mm; }
 
-  /* Header */
-  .head { display: flex; justify-content: space-between; align-items: flex-start; }
-  .brand { font-family: Georgia, "Times New Roman", serif; }
-  .brand .mark {
-    font-size: 26px; font-weight: 600; letter-spacing: -0.01em; color: ${BRAND.ink};
+  /* ---- Left rail: plain white. Holds only the rotated signature. */
+  .rail {
+    flex: 0 0 56mm;
+    background: ${BRAND.paper};
+    border-right: 1px solid rgba(212, 200, 174, 0.8); /* BRAND.line @ 80% */
+    position: relative;
+    overflow: hidden;
   }
-  .brand .mark .dot { color: ${BRAND.accent}; }
-  .brand .tagline { font-size: 10px; color: ${BRAND.inkSoft}; margin-top: 3px; }
-  .doc-title {
-    text-align: right; font-family: Georgia, serif; font-size: 30px; font-weight: 600;
-    letter-spacing: 0.04em; color: ${BRAND.accent}; line-height: 1;
+  /* Rotated signature: anchored at the rail's center, rotated -90deg so the
+     cursive reads bottom-up the spine. The source PNG is white ink on a
+     transparent background; filter:invert(1) flips it to dark ink, and the
+     transparency keeps the tan rail showing through.
+     Intrinsic width 200mm with auto height preserves the signature's natural
+     aspect (~2048:401), so the rotated extent is ~200mm tall, ~39mm wide -
+     fits in the 56mm rail with breathing room. */
+  .rail-sig {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 120mm; height: auto;
+    transform: translate(-50%, -50%) rotate(-90deg);
+    filter: invert(1);
+    opacity: 0.92;
   }
-  .doc-meta { text-align: right; margin-top: 10px; font-size: 10.5px; color: ${BRAND.inkSoft}; }
-  .doc-meta b { color: ${BRAND.ink}; font-weight: 600; }
+  /* Fallback wordmark (text), shown when no signatureDataUri is supplied. */
+  .rail-name-area {
+    position: absolute; inset: 14mm 6mm 8mm;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .rail-name {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    white-space: nowrap;
+    font-family: "Fraunces", Georgia, "Times New Roman", serif;
+    font-size: 58px; font-weight: 600;
+    letter-spacing: -0.018em; line-height: 1;
+    color: ${BRAND.ink};
+  }
+  .rail-name .dot { color: ${BRAND.accent}; }
 
-  .rule { height: 2px; background: ${BRAND.accent}; margin: 18px 0 22px; }
-
-  /* From / Bill-to blocks */
-  .parties { display: flex; justify-content: space-between; gap: 40px; margin-bottom: 26px; }
-  .party { width: 48%; }
-  .party .eyebrow {
-    text-transform: uppercase; letter-spacing: 0.12em; font-size: 8.5px;
-    color: ${BRAND.inkFaint}; font-weight: 700; margin-bottom: 6px;
+  .eyebrow {
+    text-transform: uppercase; letter-spacing: 0.14em; font-size: 8px;
+    color: ${BRAND.inkFaint}; font-weight: 700; margin-bottom: 8px;
   }
+
+  /* ---- Right panel: plain white. */
+  .body {
+    flex: 1; min-width: 0;
+    background-color: ${BRAND.paper};
+    padding: 10mm 10mm 8mm;
+    display: flex; flex-direction: column;
+  }
+  .invhead { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 22px; }
+  .invhead .title {
+    font-family: "Fraunces", Georgia, serif; font-size: 44px; font-weight: 600;
+    letter-spacing: -0.02em; color: ${BRAND.ink}; line-height: 0.9;
+  }
+  .invhead .title .dot { color: ${BRAND.accent}; }
+  .invhead .meta { text-align: right; font-size: 10px; color: ${BRAND.inkSoft}; line-height: 1.6; }
+  .invhead .meta .num {
+    font-family: "Fraunces", Georgia, serif; font-size: 15px; font-weight: 600;
+    color: ${BRAND.accent}; margin-bottom: 4px; letter-spacing: 0.01em;
+  }
+  .invhead .meta b { color: ${BRAND.ink}; font-weight: 600; }
+
+  /* From / Bill-to two-column block under the headline */
+  .parties { display: flex; gap: 36px; margin-bottom: 18px; }
+  .party { flex: 1; min-width: 0; }
   .party .name { font-size: 13px; font-weight: 600; color: ${BRAND.ink}; }
   .party .sub { font-size: 10.5px; color: ${BRAND.inkSoft}; margin-top: 1px; }
-  .party .lines { margin-top: 6px; font-size: 10px; color: ${BRAND.inkSoft}; line-height: 1.55; }
-  .party .lines div { white-space: nowrap; }
+  .party .lines { margin-top: 6px; font-size: 10px; color: ${BRAND.inkSoft}; line-height: 1.6; }
+  .party .period { font-size: 9.5px; color: ${BRAND.inkSoft}; margin-top: 8px; }
 
-  /* Line-items table */
-  table.items { width: 100%; border-collapse: collapse; margin-bottom: 4px; }
+  table.items { width: 100%; border-collapse: collapse; background: ${BRAND.paper}; }
   table.items thead th {
-    text-align: left; font-size: 8.5px; text-transform: uppercase; letter-spacing: 0.1em;
-    color: ${BRAND.inkFaint}; font-weight: 700; padding: 0 8px 7px; border-bottom: 1.5px solid ${BRAND.accent};
+    text-align: left; font-size: 8px; text-transform: uppercase; letter-spacing: 0.11em;
+    color: ${BRAND.inkFaint}; font-weight: 700; padding: 0 8px 8px;
+    border-bottom: 1.5px solid ${BRAND.accent}; background: ${BRAND.paper};
   }
   table.items tbody td {
-    padding: 8px; font-size: 10.5px; color: ${BRAND.ink}; vertical-align: top;
-    border-bottom: 1px solid ${BRAND.line};
+    padding: 6px 8px; font-size: 10px; line-height: 1.4; color: ${BRAND.ink}; vertical-align: top;
+    border-bottom: 1px solid ${BRAND.line}; background: ${BRAND.paper};
   }
-  table.items tbody tr.zebra td { background: ${BRAND.lineSoft}; }
+  table.items tbody tr.zebra td { background: rgba(236,226,204,0.22); }
   .c-num { text-align: right; white-space: nowrap; }
   th.c-num { text-align: right; }
-  .c-date { white-space: nowrap; width: 78px; color: ${BRAND.inkSoft}; }
+  .c-date { white-space: nowrap; width: 84px; color: ${BRAND.inkSoft}; }
   .c-desc { width: auto; }
   .c-amt { font-weight: 600; }
 
-  /* Totals */
-  .totals { display: flex; justify-content: flex-end; margin-top: 14px; }
-  table.totals-t { width: 280px; border-collapse: collapse; }
+  .totals { display: flex; justify-content: flex-end; margin-top: 10px; }
+  table.totals-t { width: 268px; border-collapse: collapse; background: ${BRAND.paper}; }
   table.totals-t td { padding: 5px 8px; font-size: 11px; }
   table.totals-t .t-label { color: ${BRAND.inkSoft}; }
   table.totals-t .t-value { text-align: right; color: ${BRAND.ink}; font-variant-numeric: tabular-nums; }
   table.totals-t tr.grand td {
-    border-top: 2px solid ${BRAND.accent}; padding-top: 9px; font-size: 14px; font-weight: 700;
+    border-top: 2px solid ${BRAND.accent}; padding-top: 10px; font-size: 16px; font-weight: 700;
   }
   table.totals-t tr.grand .t-label { color: ${BRAND.ink}; }
-  table.totals-t tr.grand .t-value { color: ${BRAND.accent}; }
+  table.totals-t tr.grand .t-value {
+    color: ${BRAND.accent};
+    font-family: "Fraunces", Georgia, serif;
+    font-size: 20px; letter-spacing: -0.01em; font-weight: 500;
+  }
 
-  /* Bank-transfer block */
-  .pay {
-    margin-top: 30px; border: 1px solid ${BRAND.line}; border-radius: 8px;
-    padding: 16px 18px; background: #FCFAF5;
+  /* Payment block: the due-by sentence, then the bank-transfer details. */
+  .payment-section {
+    margin-top: 22px; padding-top: 16px;
+    border-top: 1px solid ${BRAND.line};
   }
-  .pay .eyebrow {
-    text-transform: uppercase; letter-spacing: 0.12em; font-size: 8.5px;
-    color: ${BRAND.inkFaint}; font-weight: 700; margin-bottom: 9px;
+  .payment-due {
+    margin: 0 0 12px; font-size: 10px; line-height: 1.55; color: ${BRAND.inkSoft};
   }
+  .payment-due b { color: ${BRAND.ink}; font-weight: 600; }
+  .bank-block {
+    display: inline-block; min-width: 60%;
+  }
+  /* padding-top/bottom (not shorthand!) so the per-cell horizontal padding
+     below isn't reset by specificity. */
   table.bank { border-collapse: collapse; }
-  table.bank td { padding: 2.5px 0; font-size: 10.5px; vertical-align: top; }
-  td.bk-label { color: ${BRAND.inkSoft}; padding-right: 18px; white-space: nowrap; }
-  td.bk-value { color: ${BRAND.ink}; font-weight: 600; font-variant-numeric: tabular-nums; }
+  table.bank td { padding-top: 3px; padding-bottom: 3px; font-size: 10px; vertical-align: top; line-height: 1.5; }
+  td.bk-label {
+    color: ${BRAND.inkSoft}; padding-right: 18px; white-space: nowrap;
+    text-transform: uppercase; letter-spacing: 0.08em; font-size: 8.5px; font-weight: 700;
+  }
+  td.bk-value {
+    color: ${BRAND.ink}; font-weight: 600; font-variant-numeric: tabular-nums;
+    padding-left: 4px;
+  }
 
-  .note { margin-top: 14px; font-size: 9.5px; color: ${BRAND.inkFaint}; }
-
-  /* Footer */
   .foot {
-    margin-top: 34px; padding-top: 12px; border-top: 1px solid ${BRAND.line};
-    display: flex; justify-content: space-between; font-size: 9px; color: ${BRAND.inkFaint};
+    margin-top: auto; padding-top: 10px; border-top: 1px solid ${BRAND.line};
+    display: flex; justify-content: space-between; font-size: 8.5px; color: ${BRAND.inkFaint};
   }
 </style>
 </head>
 <body>
-  <div class="page">
-    <div class="head">
-      <div class="brand">
-        <div class="mark">${esc(from.name)}<span class="dot">.</span></div>
-        <div class="tagline">${esc(from.role)}${from.location ? ' &middot; ' + esc(from.location) : ''}</div>
-      </div>
-      <div>
-        <div class="doc-title">INVOICE</div>
-        <div class="doc-meta">
-          <div><b>${esc(meta.number)}</b></div>
-          <div>Issued: ${esc(meta.issueDate)}</div>
-          <div>Due: ${esc(meta.dueDate)}</div>
+  <div class="sheet">
+
+    <aside class="rail">
+      ${railContent}
+    </aside>
+
+    <main class="body">
+      <div class="invhead">
+        <div class="title">Invoice<span class="dot">.</span></div>
+        <div class="meta">
+          <div class="num">${esc(meta.number)}</div>
+          <div>Issued: <b>${esc(meta.issueDate)}</b></div>
+          <div>Due: <b>${esc(meta.dueDate)}</b></div>
         </div>
       </div>
-    </div>
 
-    <div class="rule"></div>
-
-    <div class="parties">
-      <div class="party">
-        <div class="eyebrow">From</div>
-        <div class="name">${esc(from.name)}</div>
-        <div class="sub">${esc(from.role)}${from.location ? ', ' + esc(from.location) : ''}</div>
-        <div class="lines">${idLines.map(l => `<div>${l}</div>`).join('')}</div>
+      <div class="parties">
+        <div class="party">
+          <div class="eyebrow">From</div>
+          <div class="name">${esc(from.name)}</div>
+          <div class="sub">${esc(from.role)}${from.location ? ', ' + esc(from.location) : ''}</div>
+          <div class="lines">${idLines.map(l => `<div>${l}</div>`).join('')}</div>
+        </div>
+        <div class="party">
+          <div class="eyebrow">Bill to</div>
+          <div class="name">${esc(client.name)}</div>
+          ${client.org ? `<div class="sub">${esc(client.org)}</div>` : ''}
+          ${clientAddr ? `<div class="lines">${clientAddr}</div>` : ''}
+          <div class="period">Billing period &middot; ${esc(meta.periodLabel)}</div>
+        </div>
       </div>
-      <div class="party">
-        <div class="eyebrow">Bill to</div>
-        <div class="name">${esc(client.name)}</div>
-        ${client.org ? `<div class="sub">${esc(client.org)}</div>` : ''}
-        <div class="lines">${clientAddr}</div>
-        <div class="lines" style="margin-top:8px"><div>Billing period: ${esc(meta.periodLabel)}</div></div>
-      </div>
-    </div>
 
-    <table class="items">
-      <thead>
-        <tr>
-          <th class="c-date">Date</th>
-          <th class="c-desc">Description</th>
-          <th class="c-num">Hours</th>
-          <th class="c-num">Rate</th>
-          <th class="c-num">Amount</th>
-        </tr>
-      </thead>
-      <tbody>${rows}
-      </tbody>
-    </table>
-
-    <div class="totals">
-      <table class="totals-t">
-        <tr>
-          <td class="t-label">Subtotal</td>
-          <td class="t-value">&euro;${eur(totals.subtotal)}</td>
-        </tr>
-        ${vatRow}
-        <tr class="grand">
-          <td class="t-label">Total due</td>
-          <td class="t-value">&euro;${eur(totals.total)}</td>
-        </tr>
+      <table class="items">
+        <thead>
+          <tr>
+            <th class="c-date">Date</th>
+            <th class="c-desc">Description</th>
+            <th class="c-num">Hours</th>
+            <th class="c-num">Rate</th>
+            <th class="c-num">Amount</th>
+          </tr>
+        </thead>
+        <tbody>${rows}
+        </tbody>
       </table>
-    </div>
 
-    <div class="pay">
-      <div class="eyebrow">Payment &middot; bank transfer</div>
-      <table class="bank">${bankRows}</table>
-    </div>
+      <div class="totals">
+        <table class="totals-t">
+          <tr>
+            <td class="t-label">Subtotal</td>
+            <td class="t-value">&euro;${eur(totals.subtotal)}</td>
+          </tr>
+          ${vatRow}
+          <tr class="grand">
+            <td class="t-label">Total due</td>
+            <td class="t-value">&euro;${eur(totals.total)}</td>
+          </tr>
+        </table>
+      </div>
 
-    <div class="note">Payment due within the stated term by bank transfer. Please quote the invoice number as the payment reference.</div>
+      <div class="payment-section">
+        <p class="payment-due">Payment due by <b>${esc(meta.dueDate)}</b> via bank transfer.</p>
+        <div class="bank-block">
+          <div class="eyebrow">Payment &middot; bank transfer</div>
+          <table class="bank">${bankRows}</table>
+        </div>
+      </div>
 
-    <div class="foot">
-      <span>${esc(from.name)} &middot; ${esc(from.role)}</span>
-      <span>${esc(meta.number)}</span>
-    </div>
+      <div class="foot">
+        <span>${esc(from.name)} &middot; ${esc(from.role)}</span>
+        <span>${esc(meta.number)}</span>
+      </div>
+    </main>
+
   </div>
 </body>
 </html>`;
