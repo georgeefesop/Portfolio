@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, Clock } from 'lucide-react';
+import { ArrowRight, Clock, FileText } from 'lucide-react';
 import { isAdmin } from '@/lib/admin/auth';
 import LoginForm from '@/components/admin/LoginForm';
 
@@ -14,6 +14,12 @@ const TOOLS = [
     title: 'Time tracking',
     description: "Log billable time and see this week's running total.",
     icon: Clock,
+  },
+  {
+    href: '/admin/invoices',
+    title: 'Invoices',
+    description: 'Issue and track invoices from tracked hours.',
+    icon: FileText,
   },
 ];
 
