@@ -4,20 +4,41 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { Loader2, Plus } from 'lucide-react';
-import { parseDurationMinutes, defaultWorkDate } from '@/lib/admin/time';
+import {
+  defaultWorkDate,
+  netMinutes,
+  composeStamp,
+  clockToMinutes,
+  minsToHours,
+  fmtHours,
+} from '@/lib/admin/time';
 
 const field =
   'w-full rounded-lg border border-border-medium bg-bg-tertiary px-3.5 py-2.5 text-sm text-text-primary outline-none transition-colors placeholder:text-text-dim focus:border-accent-primary';
 const labelClass = 'mb-1.5 block text-xs font-medium text-text-muted';
 
+// Break choices, in hours. George expects 0.5 / 1, occasionally 0.25.
+const BREAK_OPTIONS = [0, 0.25, 0.5, 0.75, 1, 1.5, 2];
+
 type FormValues = {
   work_date: string;
-  duration: string;
-  break_minutes: number;
+  start: string;
+  end: string;
+  break_hours: number;
   work_done: string;
   comment: string;
   billable: boolean;
 };
+
+const emptyValues = (): FormValues => ({
+  work_date: defaultWorkDate(),
+  start: '09:00',
+  end: '17:00',
+  break_hours: 0,
+  work_done: '',
+  comment: '',
+  billable: true,
+});
 
 export default function QuickAddForm() {
   const router = useRouter();
@@ -27,27 +48,25 @@ export default function QuickAddForm() {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
-  } = useForm<FormValues>({
-    defaultValues: {
-      work_date: defaultWorkDate(),
-      duration: '',
-      break_minutes: 0,
-      work_done: '',
-      comment: '',
-      billable: true,
-    },
-  });
+    watch,
+    formState: { isSubmitting },
+  } = useForm<FormValues>({ defaultValues: emptyValues() });
+
+  const start = watch('start');
+  const end = watch('end');
+  const breakHours = watch('break_hours');
+  const net = netMinutes(start, end, (Number(breakHours) || 0) * 60);
 
   async function onSubmit(values: FormValues) {
     setSubmitError(null);
-    const parsed = parseDurationMinutes(values.duration);
-    if (parsed === null) {
-      setSubmitError('Could not read that duration.');
+    const breakMinutes = Math.round((Number(values.break_hours) || 0) * 60);
+    const durationMinutes = netMinutes(values.start, values.end, breakMinutes);
+    if (durationMinutes === null || durationMinutes <= 0) {
+      setSubmitError('Check the start and end times.');
       return;
     }
-    const breakMinutes = Number(values.break_minutes) || 0;
-    const durationMinutes = Math.max(0, parsed - breakMinutes);
+    const overnight =
+      (clockToMinutes(values.end) ?? 0) <= (clockToMinutes(values.start) ?? 0);
 
     try {
       const res = await fetch('/api/admin/time', {
@@ -55,8 +74,10 @@ export default function QuickAddForm() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           work_date: values.work_date,
-          duration_minutes: durationMinutes,
+          started_at: composeStamp(values.work_date, values.start),
+          ended_at: composeStamp(values.work_date, values.end, overnight),
           break_minutes: breakMinutes,
+          duration_minutes: durationMinutes,
           work_done: values.work_done,
           comment: values.comment,
           billable: values.billable,
@@ -65,14 +86,7 @@ export default function QuickAddForm() {
       if (!res.ok) {
         throw new Error(res.status === 401 ? 'Session expired.' : 'Save failed.');
       }
-      reset({
-        work_date: defaultWorkDate(),
-        duration: '',
-        break_minutes: 0,
-        work_done: '',
-        comment: '',
-        billable: true,
-      });
+      reset(emptyValues());
       router.refresh();
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : 'Save failed.');
@@ -84,8 +98,8 @@ export default function QuickAddForm() {
       onSubmit={handleSubmit(onSubmit)}
       className="rounded-2xl border border-border-subtle bg-bg-secondary p-5 sm:p-6"
     >
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <div>
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div className="col-span-2 sm:col-span-1">
           <label className={labelClass} htmlFor="work_date">
             Date
           </label>
@@ -98,42 +112,47 @@ export default function QuickAddForm() {
         </div>
 
         <div>
-          <label className={labelClass} htmlFor="duration">
-            Duration
+          <label className={labelClass} htmlFor="start">
+            Start
           </label>
           <input
-            id="duration"
-            type="text"
-            placeholder="e.g. 1.5h, 90m, 9-11:30"
-            autoComplete="off"
+            id="start"
+            type="time"
             className={field}
-            {...register('duration', {
-              required: 'Enter a duration.',
-              validate: (v) =>
-                parseDurationMinutes(v) !== null || 'Could not read that duration.',
-            })}
-          />
-          {errors.duration && (
-            <p className="mt-1 text-xs text-accent-coral" role="alert">
-              {errors.duration.message}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label className={labelClass} htmlFor="break_minutes">
-            Break (minutes)
-          </label>
-          <input
-            id="break_minutes"
-            type="number"
-            min={0}
-            className={field}
-            {...register('break_minutes', { valueAsNumber: true, min: 0 })}
+            {...register('start', { required: true })}
           />
         </div>
 
         <div>
+          <label className={labelClass} htmlFor="end">
+            End
+          </label>
+          <input
+            id="end"
+            type="time"
+            className={field}
+            {...register('end', { required: true })}
+          />
+        </div>
+
+        <div>
+          <label className={labelClass} htmlFor="break_hours">
+            Break (hours)
+          </label>
+          <select
+            id="break_hours"
+            className={field}
+            {...register('break_hours', { valueAsNumber: true })}
+          >
+            {BREAK_OPTIONS.map((h) => (
+              <option key={h} value={h}>
+                {h === 0 ? 'None' : `${fmtHours(h)} h`}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="col-span-2 sm:col-span-3">
           <label className={labelClass} htmlFor="work_done">
             Work done
           </label>
@@ -147,7 +166,18 @@ export default function QuickAddForm() {
           />
         </div>
 
-        <div className="sm:col-span-2">
+        <div className="col-span-2 sm:col-span-1">
+          <label className={labelClass}>Net</label>
+          <div className="flex h-[42px] items-center rounded-lg border border-border-subtle bg-bg-tertiary px-3.5 text-sm tabular-nums text-text-primary">
+            {net === null || net <= 0 ? (
+              <span className="text-text-dim">--</span>
+            ) : (
+              <span className="font-semibold">{fmtHours(minsToHours(net))} h</span>
+            )}
+          </div>
+        </div>
+
+        <div className="col-span-2 sm:col-span-4">
           <label className={labelClass} htmlFor="comment">
             Comment (optional)
           </label>

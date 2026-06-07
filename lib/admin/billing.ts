@@ -16,6 +16,10 @@ import { getBillingSupabase } from './supabase';
 export type TimeEntryRow = {
   id: string;
   work_date: string;
+  started_at: string | null;
+  ended_at: string | null;
+  break_minutes: number;
+  duration_minutes: number;
   hours: number;
   billable: boolean;
   rate_cents_applied: number | null;
@@ -127,6 +131,12 @@ export async function upsertTimeEntry(args: UpsertTimeEntryArgs): Promise<TimeEn
   });
   if (error) throw new Error(error.message);
   return data as TimeEntryRow;
+}
+
+/** Delete a time entry by id. Throws if it is on an invoice (frozen). */
+export async function deleteTimeEntry(id: string): Promise<void> {
+  const { error } = await client().rpc('billing_delete_time_entry', { p_id: id });
+  if (error) throw new Error(error.message);
 }
 
 /** Time entries for a client across a date range (optionally only unbilled). */
