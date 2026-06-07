@@ -145,6 +145,18 @@ export function renderInvoiceHtml(inv: InvoiceModel): string {
             <td class="c-num c-amt">&euro;${eur(it.amount)}</td>
           </tr>`).join('');
 
+  // Items-table footer: total hours + total amount across all day-rows.
+  const totalHours = items.reduce((s, it) => s + (Number(it.hours) || 0), 0);
+  const totalAmount = items.reduce((s, it) => s + (Number(it.amount) || 0), 0);
+  const totalsRow = `
+          <tr class="totals-row">
+            <td class="c-date">Total</td>
+            <td class="c-desc"></td>
+            <td class="c-num">${hrs(totalHours)}</td>
+            <td class="c-num"></td>
+            <td class="c-num c-amt">&euro;${eur(totalAmount)}</td>
+          </tr>`;
+
   const idLines = identityLines(from.identity);
   const clientAddr = (client.addressLines || []).filter(Boolean)
     .map(l => `<div>${esc(l)}</div>`).join('');
@@ -283,6 +295,17 @@ export function renderInvoiceHtml(inv: InvoiceModel): string {
     border-bottom: 1px solid ${BRAND.line}; background: ${BRAND.paper};
   }
   table.items tbody tr.zebra td { background: rgba(236,226,204,0.22); }
+  table.items tfoot td {
+    padding: 10px 8px; font-size: 11px; font-weight: 600;
+    color: ${BRAND.ink}; vertical-align: middle;
+    border-top: 1.5px solid ${BRAND.accent}; border-bottom: 0;
+    background: ${BRAND.paper};
+  }
+  table.items tfoot td.c-date {
+    text-transform: uppercase; letter-spacing: 0.1em; font-size: 9px;
+    color: ${BRAND.inkFaint}; font-weight: 700;
+  }
+  table.items tfoot td.c-amt { color: ${BRAND.accent}; }
   .c-num { text-align: right; white-space: nowrap; }
   th.c-num { text-align: right; }
   .c-date { white-space: nowrap; width: 84px; color: ${BRAND.inkSoft}; }
@@ -380,6 +403,8 @@ export function renderInvoiceHtml(inv: InvoiceModel): string {
         </thead>
         <tbody>${rows}
         </tbody>
+        <tfoot>${totalsRow}
+        </tfoot>
       </table>
 
       <div class="totals">
