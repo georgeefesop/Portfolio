@@ -77,6 +77,22 @@ function periodLabel(from: string | null, to: string | null): string {
   return '';
 }
 
+// Walk a Mon-Sun ISO date range inclusively.
+function eachDay(from: string, to: string): string[] {
+  const out: string[] = [];
+  const start = new Date(`${from}T00:00:00Z`);
+  const end = new Date(`${to}T00:00:00Z`);
+  for (let d = start; d <= end; d.setUTCDate(d.getUTCDate() + 1)) {
+    out.push(d.toISOString().slice(0, 10));
+  }
+  return out;
+}
+
+// Day-of-week 0=Sun..6=Sat from a 'YYYY-MM-DD' ISO date.
+function isoDow(iso: string): number {
+  return new Date(`${iso}T00:00:00Z`).getUTCDay();
+}
+
 const round2 = (n: number): number => Math.round((Number(n) || 0) * 100) / 100;
 
 // Join distinct, non-empty description fragments for a day.
@@ -97,7 +113,15 @@ function joinDescriptions(parts: string[]): string {
 // (TKT-436: merge-by-day invoicing). Storage stays granular; presentation is
 // one row per day. Amounts sum from cents (cent-exact); a day's rate is its
 // single applied rate, or the blended amount/hours when a day mixes rates.
-function rollupLinesByDay(lines: InvoiceLineRow[]): InvoiceItem[] {
+//
+// TKT-441: when `periodRange` (full Mon-Sun ISO week) is provided, synthesize
+// a 0h / EUR 0 "(no billable work)" placeholder row for every weekday in the
+// range that has no real line. Sat/Sun only get a placeholder when the week
+// itself contains a weekend entry. Existing day-rows are never blanked.
+function rollupLinesByDay(
+  lines: InvoiceLineRow[],
+  periodRange?: { start: string; end: string } | null,
+): InvoiceItem[] {
   type Day = { date: string; hours: number; amountCents: number; rates: Set<number>; descs: string[] };
   const byDay = new Map<string, Day>();
   for (const l of lines) {
@@ -111,14 +135,45 @@ function rollupLinesByDay(lines: InvoiceLineRow[]): InvoiceItem[] {
     if (rate) d.rates.add(rate);
     d.descs.push(l.description);
   }
-  return [...byDay.values()]
+  type Item = InvoiceItem & { isoDate: string; zero?: boolean };
+  const real: Item[] = [...byDay.values()]
     .sort((a, b) => a.date.localeCompare(b.date))
     .map((d) => {
       const hours = round2(d.hours);
       const amount = d.amountCents / 100;
       const rate = d.rates.size === 1 ? [...d.rates][0] : round2(hours ? amount / hours : 0);
-      return { date: longDate(d.date), description: joinDescriptions(d.descs), hours, rate, amount };
+      return { isoDate: d.date, date: longDate(d.date), description: joinDescriptions(d.descs), hours, rate, amount };
     });
+
+  // Synthesize placeholder rows for missing days inside the ISO week.
+  if (periodRange?.start && periodRange?.end) {
+    const realSet = new Set(real.map((r) => r.isoDate));
+    const hasWeekendEntry = real.some((r) => {
+      const dow = isoDow(r.isoDate);
+      return dow === 0 || dow === 6;
+    });
+    const synthesized: Item[] = [];
+    for (const iso of eachDay(periodRange.start, periodRange.end)) {
+      if (realSet.has(iso)) continue;
+      const dow = isoDow(iso);
+      const isWeekend = dow === 0 || dow === 6;
+      if (isWeekend && !hasWeekendEntry) continue;
+      synthesized.push({
+        isoDate: iso,
+        date: longDate(iso),
+        description: '(no billable work)',
+        hours: 0,
+        rate: 0,
+        amount: 0,
+        zero: true,
+      });
+    }
+    return [...real, ...synthesized]
+      .sort((a, b) => a.isoDate.localeCompare(b.isoDate))
+      .map(({ isoDate: _iso, ...rest }) => rest);
+  }
+
+  return real.map(({ isoDate: _iso, ...rest }) => rest);
 }
 
 export function buildInvoiceModel(
@@ -150,7 +205,12 @@ export function buildInvoiceModel(
   };
 
   // One row per day (TKT-436): storage stays per-entry, presentation rolls up.
-  const items: InvoiceItem[] = rollupLinesByDay(lines);
+  // TKT-441: pass the persisted Mon..Sun period so missing weekdays synthesize
+  // a "(no billable work)" placeholder row.
+  const periodRange = invoice.period_from && invoice.period_to
+    ? { start: invoice.period_from, end: invoice.period_to }
+    : null;
+  const items: InvoiceItem[] = rollupLinesByDay(lines, periodRange);
 
   const vatRate = Number(invoice.vat_rate) || 0;
   const totals: InvoiceTotals = {

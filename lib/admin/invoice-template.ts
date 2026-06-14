@@ -98,6 +98,9 @@ export interface InvoiceItem {
   hours: number;
   rate: number;
   amount: number;
+  /** TKT-441: synthesized "(no billable work)" placeholder row for a weekday
+   *  with no real entries; renders "-" in Rate + Amount cells. */
+  zero?: boolean;
 }
 
 export interface InvoiceTotals {
@@ -136,14 +139,22 @@ export interface InvoiceModel {
 export function renderInvoiceHtml(inv: InvoiceModel): string {
   const { from, client, meta, items, totals, bank } = inv;
 
-  const rows = items.map((it, i) => `
-          <tr class="${i % 2 ? 'zebra' : ''}">
+  // TKT-441: zero-day placeholder rows show "-" in the Rate + Amount cells
+  // instead of "EUR 0.00", so the row reads as a "no billable work" marker
+  // rather than a charge. Hours still print "0".
+  const rows = items.map((it, i) => {
+    const isZero = it.zero || ((Number(it.hours) || 0) === 0 && (Number(it.amount) || 0) === 0);
+    const rateCell = isZero ? '-' : `&euro;${eur(it.rate)}`;
+    const amtCell = isZero ? '-' : `&euro;${eur(it.amount)}`;
+    return `
+          <tr class="${i % 2 ? 'zebra' : ''}${isZero ? ' zero' : ''}">
             <td class="c-date">${esc(it.date)}</td>
             <td class="c-desc">${esc(it.description)}</td>
             <td class="c-num">${hrs(it.hours)}</td>
-            <td class="c-num">&euro;${eur(it.rate)}</td>
-            <td class="c-num c-amt">&euro;${eur(it.amount)}</td>
-          </tr>`).join('');
+            <td class="c-num">${rateCell}</td>
+            <td class="c-num c-amt">${amtCell}</td>
+          </tr>`;
+  }).join('');
 
   // Items-table footer: total hours + total amount across all day-rows.
   const totalHours = items.reduce((s, it) => s + (Number(it.hours) || 0), 0);
@@ -295,6 +306,10 @@ export function renderInvoiceHtml(inv: InvoiceModel): string {
     border-bottom: 1px solid ${BRAND.line}; background: ${BRAND.paper};
   }
   table.items tbody tr.zebra td { background: rgba(236,226,204,0.22); }
+  /* Zero-day placeholders (TKT-441): soften the row to read as a marker,
+     not a charge. */
+  table.items tbody tr.zero td.c-desc { color: ${BRAND.inkFaint}; font-style: italic; }
+  table.items tbody tr.zero td.c-num { color: ${BRAND.inkFaint}; }
   table.items tfoot td {
     padding: 10px 8px; font-size: 11px; font-weight: 600;
     color: ${BRAND.ink}; vertical-align: middle;
