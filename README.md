@@ -1,19 +1,3 @@
----
-gbrain: v1
-project: ge-portfolio
-doc_type: readme
-tier: 2
-title: ge-portfolio README
-summary: One Next.js 16 app serving George's portfolio at efesop.com, three Stripe-funded sub-apps (/pay, /agora, greg.efesop.com), a Kingfisher microsite, and a private billing admin.
-tags: [nextjs, sanity, stripe, supabase, portfolio]
-data_sources: [sanity-kingfisher-canonical, supabase-george-os-canonical, supabase-agora-crm-canonical]
-canonical_paths:
-  - app/
-  - middleware.ts
-  - data/case-studies/
-  - AGENTS.md
-updated: 2026-06-15
----
 
 # ge-portfolio
 

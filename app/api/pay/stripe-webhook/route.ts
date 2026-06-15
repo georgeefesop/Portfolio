@@ -1,6 +1,6 @@
 /**
  * Stripe webhook for the efesop.com/pay storefront (George Efesopoulos personal
- * account, acct_1Qw1q1GHt7cesuhE - shared with kitchens.efesop.com/Agora).
+ * account, the live personal Stripe account - shared with kitchens.efesop.com/Agora).
  *
  * On `checkout.session.completed` it captures the customer + payment into the
  * `efesop_pay_payments` table in Supabase. The upsert is keyed on

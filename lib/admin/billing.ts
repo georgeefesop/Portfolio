@@ -1,6 +1,6 @@
 /**
  * Typed wrappers over the public `billing_*` SECURITY DEFINER RPCs on the
- * george-os Supabase project. The `billing` schema is private (PostgREST
+ * shared Supabase project. The `billing` schema is private (PostgREST
  * cannot see it); every call goes through a `public.billing_*` function, so
  * this is the single contract the web app and the `time` CLI share.
  *

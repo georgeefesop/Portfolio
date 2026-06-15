@@ -1,22 +1,3 @@
----
-gbrain: v1
-project: ge-portfolio
-doc_type: architecture
-tier: 2
-title: Stripe webhook routing
-summary: The three Stripe webhook endpoints (/pay, /agora, /greg) - which account, what events, where data lands, how idempotency works.
-tags: [stripe, webhooks, integrations, idempotency]
-data_sources: [stripe-efesop-personal, stripe-ge-revamp, supabase-george-os-canonical, supabase-agora-crm-canonical]
-canonical_paths:
-  - app/api/pay/stripe-webhook/route.ts
-  - app/api/agora/stripe-webhook/route.ts
-  - app/api/greg/stripe-webhook/route.ts
-  - lib/pay/stripe.ts
-  - lib/agora/stripe.ts
-  - lib/greg/stripe.ts
-  - lib/agora/crm.ts
-updated: 2026-06-15
----
 
 # Stripe webhook routing
 
@@ -26,7 +7,7 @@ Three accounts, three webhook routes, three Supabase write targets. Each route v
 
 | Route file | Surface | Stripe account | Events | Writes to |
 |---|---|---|---|---|
-| `app/api/pay/stripe-webhook/route.ts` | `/pay` storefront | efesop personal (`acct_1Qw1q1GHt7cesuhE`, LIVE) | `checkout.session.completed` | `efesop_pay_payments` (george-os Supabase) |
+| `app/api/pay/stripe-webhook/route.ts` | `/pay` storefront | efesop personal (live personal account, LIVE) | `checkout.session.completed` | `efesop_pay_payments` (the shared Supabase project) |
 | `app/api/agora/stripe-webhook/route.ts` | `/agora` kitchens funnel | efesop personal (same account, currently TEST) | `checkout.session.completed`, `invoice.payment_succeeded`, `invoice.payment_failed`, `customer.subscription.deleted`, `payment_intent.payment_failed` | `leads`, `deals`, `activities` (agora-crm Supabase) |
 | `app/api/greg/stripe-webhook/route.ts` | `greg.efesop.com` | G.E. Revamp (separate account) | `checkout.session.completed` | `greg_revamp_payments` (+ optional `greg_render_orders` paid-flip, optional Notion mirror, optional Resend email) (george-os Supabase) |
 

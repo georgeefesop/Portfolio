@@ -1,21 +1,3 @@
----
-gbrain: v1
-project: ge-portfolio
-doc_type: how-to
-tier: 2
-title: How to deploy ge-portfolio to Vercel
-summary: Env vars per surface, Stripe webhook endpoints, custom domains, and how to verify a deploy actually landed.
-tags: [how-to, deploy, vercel, stripe]
-data_sources: [stripe-efesop-personal, stripe-ge-revamp]
-canonical_paths:
-  - .env.example
-  - middleware.ts
-  - next.config.ts
-  - app/api/pay/stripe-webhook/route.ts
-  - app/api/agora/stripe-webhook/route.ts
-  - app/api/greg/stripe-webhook/route.ts
-updated: 2026-06-15
----
 
 # How to deploy ge-portfolio to Vercel
 

@@ -1,16 +1,3 @@
----
-gbrain: v1
-project: ge-portfolio
-doc_type: adr
-tier: 2
-title: ADR 0001 - Record architecture decisions
-summary: We use lightweight Nygard-format ADRs for one-way architectural decisions in this repo.
-tags: [adr, process]
-data_sources: []
-canonical_paths:
-  - docs/adr/
-updated: 2026-06-15
----
 
 # ADR 0001 - Record architecture decisions
 

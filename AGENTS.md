@@ -1,24 +1,3 @@
----
-gbrain: v1
-project: ge-portfolio
-doc_type: agents
-tier: 2
-title: ge-portfolio agent guide
-summary: Next.js 16 product-design portfolio plus three Stripe-funded sub-apps (pay, agora, greg) with a Sanity-backed Kingfisher microsite and a private billing admin.
-tags: [nextjs, sanity, stripe, supabase, portfolio]
-data_sources: [sanity-kingfisher-canonical, supabase-george-os-canonical, supabase-agora-crm-canonical, stripe-efesop-personal, stripe-ge-revamp, posthog-eu, vercel-analytics, resend]
-canonical_paths:
-  - app/
-  - middleware.ts
-  - data/case-studies/
-  - sanity/schemas/kingfisher/
-  - lib/admin/billing.ts
-  - app/api/pay/stripe-webhook/route.ts
-  - app/api/agora/stripe-webhook/route.ts
-  - app/api/greg/stripe-webhook/route.ts
-  - scripts/fix-emdashes.mjs
-updated: 2026-06-15
----
 
 # ge-portfolio (agent guide)
 
@@ -90,8 +69,8 @@ npm run seed:kingfisher           # node scripts/seed-kingfisher-sanity.mjs (Kin
 
 | Surface | Account | Secret env | Webhook secret env | Client module |
 |---|---|---|---|---|
-| `/pay` | efesop personal (`acct_1Qw1q1GHt7cesuhE`) LIVE | `STRIPE_PAY_SECRET_KEY` | `STRIPE_PAY_WEBHOOK_SECRET` | `lib/pay/stripe.ts` |
-| `/agora` | efesop personal (same `acct_1Qw1...`) - currently TEST mode | `STRIPE_AGORA_SECRET_KEY` | `STRIPE_AGORA_WEBHOOK_SECRET` | `lib/agora/stripe.ts` |
+| `/pay` | efesop personal (live personal account) LIVE | `STRIPE_PAY_SECRET_KEY` | `STRIPE_PAY_WEBHOOK_SECRET` | `lib/pay/stripe.ts` |
+| `/agora` | efesop personal (same live personal account) - currently TEST mode | `STRIPE_AGORA_SECRET_KEY` | `STRIPE_AGORA_WEBHOOK_SECRET` | `lib/agora/stripe.ts` |
 | `/greg` | G.E. Revamp Services Limited (separate account) | `STRIPE_GREG_SECRET_KEY` | `STRIPE_GREG_WEBHOOK_SECRET` | `lib/greg/stripe.ts` |
 
 **Webhook idempotency.** All three webhook handlers upsert on `stripe_session_id` (`onConflict: 'stripe_session_id'`) so Stripe retries do not duplicate rows. The agora handler additionally guards via `findDealByStripeSession` before insert. Never change these keys.

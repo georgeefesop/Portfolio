@@ -5,10 +5,16 @@
 
 import sharp from 'sharp';
 import { readdirSync, mkdirSync, existsSync } from 'node:fs';
-import { join, parse } from 'node:path';
+import { dirname, join, parse, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const EX = 'C:/Users/georg/Projects/george-os/ceo/specs/case-studies/_exports';
-const PUB = 'C:/Users/georg/Projects/ge-portfolio/public/images';
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const REPO_ROOT = resolve(__dirname, '..');
+
+// Source PNGs live OUTSIDE this repo (Figma exports staging area).
+// Override with DECK_EXPORTS_DIR; default is a sibling `.deck-imports/` dir at the repo root.
+const EX = process.env.DECK_EXPORTS_DIR || resolve(REPO_ROOT, '.deck-imports');
+const PUB = resolve(REPO_ROOT, 'public/images');
 
 // destId = data/case-studies/<id>.ts id; slides land in /images/<destId>/deck/<base>.webp
 const JOBS = [

@@ -1,17 +1,3 @@
----
-gbrain: v1
-project: ge-portfolio
-doc_type: adr
-tier: 2
-title: ADR 0004 - greg.efesop.com served from /greg via middleware rewrite
-summary: greg.efesop.com is host-routed into the /greg tree by middleware.ts; it is NOT a separate deployment.
-tags: [adr, routing, middleware, nextjs]
-data_sources: []
-canonical_paths:
-  - middleware.ts
-  - app/greg/
-updated: 2026-06-15
----
 
 # ADR 0004 - greg.efesop.com served from /greg via middleware rewrite
 

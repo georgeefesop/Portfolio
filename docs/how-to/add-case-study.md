@@ -1,20 +1,3 @@
----
-gbrain: v1
-project: ge-portfolio
-doc_type: how-to
-tier: 2
-title: How to add a case study
-summary: Workflow for adding a portfolio case study (typed source code in data/case-studies, not a CMS).
-tags: [how-to, case-studies, content]
-data_sources: []
-canonical_paths:
-  - data/case-studies/types.ts
-  - data/case-studies/index.ts
-  - data/case-studies/external.ts
-  - components/sections/CaseStudies.tsx
-  - components/ui/CaseStudyModal.tsx
-updated: 2026-06-15
----
 
 # How to add a case study
 

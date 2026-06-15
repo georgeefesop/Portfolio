@@ -1,21 +1,3 @@
----
-gbrain: v1
-project: ge-portfolio
-doc_type: adr
-tier: 2
-title: ADR 0002 - Two Stripe accounts, three webhook routes
-summary: /pay and /agora share the efesop personal Stripe account; greg.efesop.com uses the separate G.E. Revamp company account. Each surface has its own webhook endpoint and signing secret.
-tags: [adr, stripe, payments]
-data_sources: [stripe-efesop-personal, stripe-ge-revamp]
-canonical_paths:
-  - app/api/pay/stripe-webhook/route.ts
-  - app/api/agora/stripe-webhook/route.ts
-  - app/api/greg/stripe-webhook/route.ts
-  - lib/pay/stripe.ts
-  - lib/agora/stripe.ts
-  - lib/greg/stripe.ts
-updated: 2026-06-15
----
 
 # ADR 0002 - Two Stripe accounts, three webhook routes
 
@@ -38,8 +20,8 @@ Two Stripe accounts (efesop personal shared by `/pay` and `/agora`; G.E. Revamp 
 
 | Surface | Stripe account | Mode | Secret env | Webhook env | Webhook route |
 |---|---|---|---|---|---|
-| `/pay` | efesop personal (`acct_1Qw1q1GHt7cesuhE`) | LIVE | `STRIPE_PAY_SECRET_KEY` | `STRIPE_PAY_WEBHOOK_SECRET` | `app/api/pay/stripe-webhook/route.ts` |
-| `/agora` | efesop personal (same `acct_1Qw1...`) | TEST (until activation) | `STRIPE_AGORA_SECRET_KEY` | `STRIPE_AGORA_WEBHOOK_SECRET` | `app/api/agora/stripe-webhook/route.ts` |
+| `/pay` | efesop personal (live personal account) | LIVE | `STRIPE_PAY_SECRET_KEY` | `STRIPE_PAY_WEBHOOK_SECRET` | `app/api/pay/stripe-webhook/route.ts` |
+| `/agora` | efesop personal (same live personal account) | TEST (until activation) | `STRIPE_AGORA_SECRET_KEY` | `STRIPE_AGORA_WEBHOOK_SECRET` | `app/api/agora/stripe-webhook/route.ts` |
 | `greg.efesop.com` | G.E. Revamp Services Limited | LIVE-capable, mode follows the key | `STRIPE_GREG_SECRET_KEY` | `STRIPE_GREG_WEBHOOK_SECRET` | `app/api/greg/stripe-webhook/route.ts` |
 
 `/pay` and `/agora` share the SAME Stripe account but isolate by webhook secret (Stripe lets you register multiple endpoints on the same account, each with its own signing secret). All three Stripe clients pin API version `'2026-04-22.dahlia'`.

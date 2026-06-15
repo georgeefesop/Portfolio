@@ -1,21 +1,3 @@
----
-gbrain: v1
-project: ge-portfolio
-doc_type: adr
-tier: 2
-title: ADR 0003 - Two Supabase projects, intentionally isolated
-summary: agora CRM lives in its own Supabase project; everything else (pay payments, greg payments, billing/admin) lives in the george-os Supabase project.
-tags: [adr, supabase, persistence]
-data_sources: [supabase-george-os-canonical, supabase-agora-crm-canonical]
-canonical_paths:
-  - lib/pay/supabase.ts
-  - lib/greg/supabase.ts
-  - lib/admin/supabase.ts
-  - lib/admin/billing.ts
-  - lib/agora/crm.ts
-  - app/api/agora/stripe-webhook/route.ts
-updated: 2026-06-15
----
 
 # ADR 0003 - Two Supabase projects, intentionally isolated
 

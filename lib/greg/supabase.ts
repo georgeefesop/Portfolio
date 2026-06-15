@@ -1,7 +1,7 @@
 /**
  * Server-only Supabase client for greg.efesop.com payment capture.
  *
- * Writes to the `greg_revamp_payments` table in the George-OS Supabase
+ * Writes to the `greg_revamp_payments` table in the shared Supabase
  * project, using the service-role key. Returns null if not configured so
  * callers can degrade gracefully.
  *

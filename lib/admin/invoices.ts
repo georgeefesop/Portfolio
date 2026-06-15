@@ -1,6 +1,6 @@
 /**
  * Typed wrappers over the public `billing_*` invoice RPCs (SECURITY DEFINER)
- * on the george-os Supabase project. The `billing` schema is private; every
+ * on the shared Supabase project. The `billing` schema is private; every
  * call goes through `public.billing_*` so the web app and `invoice` CLI share
  * one contract.
  *

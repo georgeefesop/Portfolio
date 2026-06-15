@@ -11,10 +11,15 @@ from __future__ import annotations
 
 import base64
 import json
+import os
 import sys
 from pathlib import Path
 
-sys.path.insert(0, "C:/Users/georg/.claude/skills/image-generation")
+# `runware_direct` ships with the local image-generation toolkit and is not vendored
+# into this repo. Set IMAGE_GENERATION_SKILL_DIR to its containing directory.
+_skill_dir = os.environ.get("IMAGE_GENERATION_SKILL_DIR")
+if _skill_dir:
+    sys.path.insert(0, _skill_dir)
 from runware_direct import run_inference  # noqa: E402
 
 REF_PATH = Path("public/images/sidechains/sidechain-thumbnail.png")

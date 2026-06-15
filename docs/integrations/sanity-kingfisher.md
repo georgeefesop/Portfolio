@@ -1,20 +1,3 @@
----
-gbrain: v1
-project: ge-portfolio
-doc_type: architecture
-tier: 2
-title: Sanity Kingfisher schema overview
-summary: Kingfisher Mortgages microsite content lives in Sanity (project bfonjqiz, dataset kingfisher). Studio is mounted in-app at /kingfisher-sanity/studio. 13 schema types.
-tags: [sanity, kingfisher, cms, integrations]
-data_sources: [sanity-kingfisher-canonical]
-canonical_paths:
-  - sanity.config.ts
-  - sanity.cli.ts
-  - sanity/schemas/kingfisher/
-  - sanity/schemas/kingfisher/index.ts
-  - scripts/seed-kingfisher-sanity.mjs
-updated: 2026-06-15
----
 
 # Sanity Kingfisher schema overview
 
