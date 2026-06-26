@@ -101,6 +101,11 @@ export interface InvoiceItem {
   /** TKT-441: synthesized "(no billable work)" placeholder row for a weekday
    *  with no real entries; renders "-" in Rate + Amount cells. */
   zero?: boolean;
+  /** Batched (multi-week / catch-up) invoices: the ISO week number + a short
+   *  range label ("15 - 21 June"). When present the renderer emits a per-week
+   *  group-header row so the weeks read as separate, divided blocks. */
+  week?: number;
+  weekLabel?: string;
 }
 
 export interface InvoiceTotals {
@@ -142,11 +147,21 @@ export function renderInvoiceHtml(inv: InvoiceModel): string {
   // TKT-441: zero-day placeholder rows show "-" in the Rate + Amount cells
   // instead of "EUR 0.00", so the row reads as a "no billable work" marker
   // rather than a charge. Hours still print "0".
+  // Batched invoices tag each row with its ISO `week` + `weekLabel`; emit a
+  // subtle group-header row whenever the week changes so the full week and the
+  // partial week read as separate blocks. Non-batched invoices carry no
+  // `week`, so no headers render and behaviour is unchanged.
+  let prevWeek: number | null = null;
   const rows = items.map((it, i) => {
+    const head = (it.week != null && it.week !== prevWeek)
+      ? `
+          <tr class="week-head"><td class="c-weekhead" colspan="5">${esc(it.weekLabel)}</td></tr>`
+      : '';
+    prevWeek = it.week ?? prevWeek;
     const isZero = it.zero || ((Number(it.hours) || 0) === 0 && (Number(it.amount) || 0) === 0);
     const rateCell = isZero ? '-' : `&euro;${eur(it.rate)}`;
     const amtCell = isZero ? '-' : `&euro;${eur(it.amount)}`;
-    return `
+    return `${head}
           <tr class="${i % 2 ? 'zebra' : ''}${isZero ? ' zero' : ''}">
             <td class="c-date">${esc(it.date)}</td>
             <td class="c-desc">${esc(it.description)}</td>
@@ -310,6 +325,14 @@ export function renderInvoiceHtml(inv: InvoiceModel): string {
      not a charge. */
   table.items tbody tr.zero td.c-desc { color: ${BRAND.inkFaint}; font-style: italic; }
   table.items tbody tr.zero td.c-num { color: ${BRAND.inkFaint}; }
+  /* Batched-invoice week-group header: a light divider + small uppercase
+     week-range label that separates the full week from the partial week. */
+  table.items tbody tr.week-head td.c-weekhead {
+    padding: 9px 8px 3px; font-size: 8px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.11em; color: ${BRAND.accent};
+    border-bottom: 1px solid ${BRAND.lineSoft}; background: ${BRAND.paper};
+  }
+  table.items tbody tr.week-head:first-child td.c-weekhead { padding-top: 2px; }
   table.items tfoot td {
     padding: 10px 8px; font-size: 11px; font-weight: 600;
     color: ${BRAND.ink}; vertical-align: middle;

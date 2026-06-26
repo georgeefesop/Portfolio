@@ -93,6 +93,34 @@ function isoDow(iso: string): number {
   return new Date(`${iso}T00:00:00Z`).getUTCDay();
 }
 
+// ISO week number + Mon/Sun bounds for a 'YYYY-MM-DD' date. Used to group
+// batched (multi-week) invoice rows by week and label each group.
+function isoWeekParts(iso: string): { week: number; monday: string; sunday: string } {
+  const d = new Date(`${iso}T00:00:00Z`);
+  const day = (d.getUTCDay() + 6) % 7; // Mon=0..Sun=6
+  const monday = new Date(d); monday.setUTCDate(d.getUTCDate() - day);
+  const sunday = new Date(monday); sunday.setUTCDate(monday.getUTCDate() + 6);
+  const thu = new Date(d); thu.setUTCDate(d.getUTCDate() - day + 3);
+  const firstThu = new Date(Date.UTC(thu.getUTCFullYear(), 0, 4));
+  const firstDay = (firstThu.getUTCDay() + 6) % 7;
+  firstThu.setUTCDate(firstThu.getUTCDate() - firstDay + 3);
+  const week = 1 + Math.round((thu.getTime() - firstThu.getTime()) / (7 * 24 * 3600 * 1000));
+  const fmt = (x: Date): string => x.toISOString().slice(0, 10);
+  return { week, monday: fmt(monday), sunday: fmt(sunday) };
+}
+
+// Compact day-month range label: "15 - 21 June" (same month) or
+// "29 June - 5 July" (spanning). Used for batched week-group headers.
+function rangeLabel(aIso: string, bIso: string): string {
+  const a = new Date(`${aIso}T00:00:00Z`);
+  const b = new Date(`${bIso}T00:00:00Z`);
+  const aMonth = a.toLocaleDateString('en-GB', { month: 'long', timeZone: 'UTC' });
+  const bMonth = b.toLocaleDateString('en-GB', { month: 'long', timeZone: 'UTC' });
+  return aMonth === bMonth
+    ? `${a.getUTCDate()} - ${b.getUTCDate()} ${bMonth}`
+    : `${a.getUTCDate()} ${aMonth} - ${b.getUTCDate()} ${bMonth}`;
+}
+
 const round2 = (n: number): number => Math.round((Number(n) || 0) * 100) / 100;
 
 // Join distinct, non-empty description fragments for a day.
@@ -121,7 +149,8 @@ function joinDescriptions(parts: string[]): string {
 function rollupLinesByDay(
   lines: InvoiceLineRow[],
   periodRange?: { start: string; end: string } | null,
-): InvoiceItem[] {
+  { keepIso = false }: { keepIso?: boolean } = {},
+): Array<InvoiceItem & { isoDate?: string }> {
   type Day = { date: string; hours: number; amountCents: number; rates: Set<number>; descs: string[] };
   const byDay = new Map<string, Day>();
   for (const l of lines) {
@@ -168,12 +197,11 @@ function rollupLinesByDay(
         zero: true,
       });
     }
-    return [...real, ...synthesized]
-      .sort((a, b) => a.isoDate.localeCompare(b.isoDate))
-      .map(({ isoDate: _iso, ...rest }) => rest);
+    const merged = [...real, ...synthesized].sort((a, b) => a.isoDate.localeCompare(b.isoDate));
+    return keepIso ? merged : merged.map(({ isoDate: _iso, ...rest }) => rest);
   }
 
-  return real.map(({ isoDate: _iso, ...rest }) => rest);
+  return keepIso ? real : real.map(({ isoDate: _iso, ...rest }) => rest);
 }
 
 export function buildInvoiceModel(
@@ -210,7 +238,21 @@ export function buildInvoiceModel(
   const periodRange = invoice.period_from && invoice.period_to
     ? { start: invoice.period_from, end: invoice.period_to }
     : null;
-  const items: InvoiceItem[] = rollupLinesByDay(lines, periodRange);
+  // Batched (catch-up) invoice: when the rows span more than one ISO week,
+  // tag each row with its week + a short range label so the template draws a
+  // per-week divider header (mirrors the CLI's --batch). A normal single-week
+  // invoice spans one week, so nothing is tagged and it renders flat.
+  const rolled = rollupLinesByDay(lines, periodRange, { keepIso: true });
+  const weekKeys = new Set(rolled.map((r) => isoWeekParts(r.isoDate!).monday));
+  const multiWeek = weekKeys.size > 1;
+  const items: InvoiceItem[] = rolled.map(({ isoDate, ...rest }) => {
+    if (!multiWeek || !isoDate) return rest;
+    const p = isoWeekParts(isoDate);
+    const periodEnd = invoice.period_to ?? isoDate;
+    const endShown = p.sunday <= periodEnd ? p.sunday : periodEnd;
+    const partial = endShown < p.sunday;
+    return { ...rest, week: p.week, weekLabel: `${rangeLabel(p.monday, endShown)}${partial ? ' (partial)' : ''}` };
+  });
 
   const vatRate = Number(invoice.vat_rate) || 0;
   const totals: InvoiceTotals = {
